@@ -1,0 +1,10 @@
+Log file created 11/15/2019
+
+09:40:42.039[ABORTED]: Trial n.1 Aborted
+09:40:49.750[GOOD]:  TouchPad right saved to file
+09:40:49.757[GOOD]:  TouchPad left saved to file
+
+
+2 good trials
+1 trials aborted
+3 total trials played

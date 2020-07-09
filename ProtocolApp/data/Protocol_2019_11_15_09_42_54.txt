@@ -1,0 +1,19 @@
+Log file created 11/15/2019
+
+09:42:54.166[GOOD]: Trial n.1 monkey raised its arm in [microsecs]: 667926 -> monkey touched the plates in [microsecs]: 492498
+09:43:08.136[GOOD]: Trial n.2 monkey raised its arm in [microsecs]: 606054 -> monkey touched the plates in [microsecs]: 639173
+09:43:21.898[GOOD]: Trial n.3 monkey raised its arm in [microsecs]: 655088 -> monkey touched the plates in [microsecs]: 329795
+09:43:35.638[GOOD]: Trial n.4 monkey raised its arm in [microsecs]: 481527 -> monkey touched the plates in [microsecs]: 472521
+09:43:49.386[GOOD]: Trial n.5 monkey raised its arm in [microsecs]: 623695 -> monkey touched the plates in [microsecs]: 343233
+09:44:02.885[GOOD]: Trial n.6 monkey raised its arm in [microsecs]: 652378 -> monkey touched the plates in [microsecs]: -500
+09:44:16.433[GOOD]: Trial n.7 monkey raised its arm in [microsecs]: 409205 -> monkey touched the plates in [microsecs]: 312399
+09:44:30.054[GOOD]: Trial n.8 monkey raised its arm in [microsecs]: 346776 -> monkey touched the plates in [microsecs]: 458666
+09:44:43.676[GOOD]: Trial n.9 monkey raised its arm in [microsecs]: 277965 -> monkey touched the plates in [microsecs]: 529382
+09:44:57.374[GOOD]: Trial n.10 monkey raised its arm in [microsecs]: 417545 -> monkey touched the plates in [microsecs]: 487587
+09:45:05.116[GOOD]:  TouchPad right saved to file
+09:45:05.149[GOOD]:  TouchPad left saved to file
+
+
+12 good trials
+0 trials aborted
+12 total trials played

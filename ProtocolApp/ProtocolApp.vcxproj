@@ -1,0 +1,202 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <VCProjectVersion>15.0</VCProjectVersion>
+    <ProjectGuid>{1A96FC3A-B49E-4120-8D75-B92C857EA187}</ProjectGuid>
+    <Keyword>MFCProj</Keyword>
+    <RootNamespace>ProtocolApp</RootNamespace>
+    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v142</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>MultiByte</CharacterSet>
+    <UseOfMfc>Dynamic</UseOfMfc>
+    <SpectreMitigation>false</SpectreMitigation>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v142</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>MultiByte</CharacterSet>
+    <UseOfMfc>Dynamic</UseOfMfc>
+    <SpectreMitigation>false</SpectreMitigation>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="Shared">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <LinkIncremental>true</LinkIncremental>
+    <OutDir>$(SolutionDir)$(SolutionName)\App\</OutDir>
+    <IntDir>$(SolutionDir)$(SolutionName)\TMP\App\</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <LinkIncremental>true</LinkIncremental>
+    <OutDir>$(SolutionDir)$(SolutionName)\App\</OutDir>
+    <IntDir>$(SolutionDir)$(SolutionName)\TMP\App\</IntDir>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;HMI_API_DYNAMIC;_WINDOWS;NDEBUG;_USE_MATH_DEFINES;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>.\;.\libMicrochip3DTouchpad\include;.\libTeknicMotor\include;.\Protocol\;$(NIDAQ_HOME)\NI-DAQ\DAQmx ANSI C Dev\include;$(MCHP_HMI_API_PATH)\include</AdditionalIncludeDirectories>
+      <ForcedIncludeFiles>stdafx.h</ForcedIncludeFiles>
+      <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
+      <WholeProgramOptimization>false</WholeProgramOptimization>
+      <SupportJustMyCode>true</SupportJustMyCode>
+      <OpenMPSupport>true</OpenMPSupport>
+      <DisableSpecificWarnings>4267;4311;4302;4267</DisableSpecificWarnings>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <OptimizeReferences>false</OptimizeReferences>
+      <AdditionalLibraryDirectories>.\libTeknicMotor\lib_x64;.\libMicrochip3DTouchpad\lib_x64;$(NIDAQ_HOME)\Shared\ExternalCompilerSupport\C\lib64\msvc</AdditionalLibraryDirectories>
+      <LinkTimeCodeGeneration>Default</LinkTimeCodeGeneration>
+      <TargetMachine>MachineX64</TargetMachine>
+    </Link>
+    <Midl>
+      <MkTypLibCompatible>false</MkTypLibCompatible>
+      <ValidateAllParameters>true</ValidateAllParameters>
+      <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </Midl>
+    <ResourceCompile>
+      <Culture>0x0409</Culture>
+      <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(IntDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+    <PostBuildEvent>
+      <Command>mkdir  "$(OutDir)configuration\"
+mkdir  "$(OutDir)data\"
+copy /B /V /Y "$(ProjectDir)configuration\*.*" "$(OutDir)configuration\" &gt; NUL
+copy /B /V /Y "$(ProjectDir)libTeknicMotor\lib_x64\*.dll" "$(OutDir)" &gt; NUL
+copy /B /V /Y "$(ProjectDir)libTeknicMotor\lib_x64\*.xml" "$(OutDir)" &gt; NUL
+copy /B /V /Y ".\libMicrochip3DTouchpad\lib_x64\mchp_hmi.dll" "$(OutDir)" &gt; NUL
+del "$(OutDir)$(SolutionName).exp"
+del "$(OutDir)$(SolutionName).lib"
+del "$(OutDir)$(SolutionName).pdb"
+del "$(OutDir)$(SolutionName).ilk"</Command>
+    </PostBuildEvent>
+    <PreBuildEvent>
+      <Command>
+      </Command>
+    </PreBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;HMI_API_DYNAMIC;_WINDOWS;NDEBUG;_USE_MATH_DEFINES;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>.\;.\libMicrochip3DTouchpad\include;.\libTeknicMotor\include;.\Protocol\;$(NIDAQ_HOME)\NI-DAQ\DAQmx ANSI C Dev\include;$(MCHP_HMI_API_PATH)\include</AdditionalIncludeDirectories>
+      <ForcedIncludeFiles>stdafx.h</ForcedIncludeFiles>
+      <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
+      <WholeProgramOptimization>false</WholeProgramOptimization>
+      <SupportJustMyCode>true</SupportJustMyCode>
+      <OpenMPSupport>true</OpenMPSupport>
+      <ExceptionHandling>Sync</ExceptionHandling>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <EnableCOMDATFolding>false</EnableCOMDATFolding>
+      <OptimizeReferences>false</OptimizeReferences>
+      <AdditionalLibraryDirectories>.\libMicrochip3DTouchpad\lib_x64;.\libTeknicMotor\lib_x64;$(NIDAQ_HOME)\Shared\ExternalCompilerSupport\C\lib64\msvc</AdditionalLibraryDirectories>
+      <LinkTimeCodeGeneration>Default</LinkTimeCodeGeneration>
+    </Link>
+    <Midl>
+      <MkTypLibCompatible>false</MkTypLibCompatible>
+      <ValidateAllParameters>true</ValidateAllParameters>
+      <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </Midl>
+    <ResourceCompile>
+      <Culture>0x0409</Culture>
+      <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(IntDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+    <PostBuildEvent>
+      <Command>mkdir  "$(OutDir)configuration\"
+mkdir  "$(OutDir)data\"
+copy /B /V /Y "$(ProjectDir)configuration\*.*" "$(OutDir)configuration\" &gt; NUL
+copy /B /V /Y "$(ProjectDir)libTeknicMotor\lib_x64\*.dll" "$(OutDir)" &gt; NUL
+copy /B /V /Y "$(ProjectDir)libTeknicMotor\lib_x64\*.xml" "$(OutDir)" &gt; NUL
+copy /B /V /Y ".\libMicrochip3DTouchpad\lib_x64\mchp_hmi.dll" "$(OutDir)" &gt; NUL
+</Command>
+    </PostBuildEvent>
+    <PreBuildEvent>
+      <Command>
+      </Command>
+    </PreBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClInclude Include="ProtocolApp.h" />
+    <ClInclude Include="ProtocolAppDlg.h" />
+    <ClInclude Include="Protocol\CStaticColor.h" />
+    <ClInclude Include="Protocol\Logger.h" />
+    <ClInclude Include="Protocol\NIUsb6001card.h" />
+    <ClInclude Include="Protocol\Touchpad3DDevice.h" />
+    <ClInclude Include="Protocol\Protocol.h" />
+    <ClInclude Include="Protocol\ProtocolParameters.h" />
+    <ClInclude Include="Protocol\TeknicMotorDevice.h" />
+    <ClInclude Include="Resource.h" />
+    <ClInclude Include="stdafx.h" />
+    <ClInclude Include="targetver.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="ProtocolApp.cpp" />
+    <ClCompile Include="ProtocolAppDlg.cpp" />
+    <ClCompile Include="Protocol\src\CStaticColor.cpp" />
+    <ClCompile Include="Protocol\src\Logger.cpp" />
+    <ClCompile Include="Protocol\src\NIUsb6001card.cpp" />
+    <ClCompile Include="Protocol\src\Touchpad3DDevice.cpp" />
+    <ClCompile Include="Protocol\src\Protocol.cpp" />
+    <ClCompile Include="Protocol\src\ProtocolParameters.cpp" />
+    <ClCompile Include="Protocol\src\TeknicMotorDevice.cpp" />
+    <ClCompile Include="stdafx.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="ProtocolApp.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="configuration\config.ini" />
+    <None Include="res\ProtocolApp.rc2" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="res\ProtocolApp.ico" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>
