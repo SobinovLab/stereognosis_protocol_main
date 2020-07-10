@@ -17,27 +17,44 @@ void CProtocolAppDlg::DoDataExchange(CDataExchange* pDX)
 {
 	CDialogEx::DoDataExchange(pDX);
 
-	DDX_Control(pDX, IDC_TRIALS_NUM_EDT, m_nTrialsEdtCtrl);
 	DDX_Control(pDX, IDC_REWARD_TIME_EDT, m_rewardDurationEdtCtrl);
 	DDX_Control(pDX, IDC_ACCELERATION_EDT, m_accelerationCtrl);
 	DDX_Control(pDX, IDC_SPEED_EDT, m_speedCtrl);
 	DDX_Control(pDX, IDC_POSITION_EDT, m_positionCtrl);
-	DDX_Control(pDX, IDC_SENSOR_TOUCH_TIME_EDT, m_sensorTimeTouchCtrl);
-	DDX_Control(pDX, IDC_INTERTRIAL_EDT, m_intertrialTimeCtrl);
 	DDX_Control(pDX, IDC_CURRENT_TRIAL_EDT_BOX, m_currentTrialEdtCtrl);
 	DDX_Control(pDX, IDC_PHOTORES_FRONT_LBL, m_frontPhotoresistorCtrl);
 	DDX_Control(pDX, IDC_PHOTORES_REAR_LBL, m_rearPhotoresistorCtrl);
-	DDX_Control(pDX, IDC_MAX_WAIT_EDT_BOX, m_maxWaitEdtCtrl);
 	
-	DDX_Text(pDX, IDC_TRIALS_NUM_EDT, m_protocol.params.nTrialsDesired);
 	DDX_Text(pDX, IDC_REWARD_TIME_EDT, m_protocol.params.rewardDuration);
 	DDX_Text(pDX, IDC_ACCELERATION_EDT, m_protocol.params.acceleration);
 	DDX_Text(pDX, IDC_SPEED_EDT, m_protocol.params.speed);
 	DDX_Text(pDX, IDC_POSITION_EDT, m_protocol.params.position);
-	DDX_Text(pDX, IDC_SENSOR_TOUCH_TIME_EDT, m_protocol.params.sensorGraspingTime);
-	DDX_Text(pDX, IDC_INTERTRIAL_EDT, m_protocol.params.intertrialTime);
-	DDX_Text(pDX, IDC_MAX_WAIT_EDT_BOX, m_protocol.params.maxWaitTime
-	);
+	DDX_Text(pDX, IDC_MAX_WAIT_EDT_BOX, m_protocol.params.maxWaitTime);
+
+	if (m_protocol.params.tstEnCameras) ((CButton*)GetDlgItem(IDC_CAMERAS_CHK))->SetCheck(BST_CHECKED);
+	if (m_protocol.params.tstEnLightSensors) ((CButton*)GetDlgItem(IDC_LIGHT_SENSORS_CHK))->SetCheck(BST_CHECKED);
+	if (m_protocol.params.tstEnMotors) ((CButton*)GetDlgItem(IDC_MOTORS_CHK))->SetCheck(BST_CHECKED);
+	if (m_protocol.params.tstEnReward) ((CButton*)GetDlgItem(IDC_REWARD_CHK))->SetCheck(BST_CHECKED);
+	if (m_protocol.params.tstEnTouchSensors) ((CButton*)GetDlgItem(IDC_TOUCH_SENSORS_CHK))->SetCheck(BST_CHECKED);
+
+
+	/////// Control what is enabled and initialized based on debug/testing interface
+	enableProtocolCtrls(true);
+	enableTrialCtrls(false);
+	GetDlgItem(IDC_RETREAT_FLUSH_WATER_BTN)->EnableWindow(false);
+	GetDlgItem(IDC_RETREAT_BTN)->EnableWindow(false);
+	// Initialize motors
+
+	// Initialize reward
+	enableRewardCtrls(m_protocol.params.tstEnReward);
+
+	// Initialize cameras
+	enableCameraControls(m_protocol.params.tstEnCameras);
+
+	// Initialize light sensors
+
+	// Initialize touch sensors
+
 }
 
 BEGIN_MESSAGE_MAP(CProtocolAppDlg, CDialogEx)
@@ -49,6 +66,9 @@ BEGIN_MESSAGE_MAP(CProtocolAppDlg, CDialogEx)
 	ON_BN_CLICKED(IDC_FLUSH_WATER_BTN, OnFlushWaterBtnClicked)
 	ON_BN_CLICKED(IDC_STOP_PROTOCOL_BTN, OnStopProtocolBtnClicked)
 	ON_BN_CLICKED(IDC_START_PROTOCOL_BTN, OnStartProtocolBtnClicked)
+	ON_BN_CLICKED(IDC_START_TRIAL_BTN, OnStartTrialBtnClicked)
+	ON_BN_CLICKED(IDC_RETREAT_FLUSH_WATER_BTN, OnRetreatFlushWaterBtnClicked)
+	ON_BN_CLICKED(IDC_RETREAT_BTN, OnRetreatBtnClicked)
 END_MESSAGE_MAP()
 
 // CProtocolAppDlg message handlers
@@ -129,18 +149,36 @@ void CProtocolAppDlg::OnStartProtocolBtnClicked()
 	UpdateData(FromControlsToVariables);
 	enableProtocolCtrls(DISABLED);
 	m_stopProtocol.store(false);
-	m_NIUsb6001card.config();
-	m_NIUsb6001card.setFrontPhotoresistorMonitor(&m_frontPhotoresistorCtrl);
-	m_NIUsb6001card.setRearPhotoresistorMonitor(&m_rearPhotoresistorCtrl);
-	m_NIUsb6001card.start();
-	protocolThread = new thread(&Protocol::run, &m_protocol, &m_stopProtocol, &m_NIUsb6001card, &m_currentTrialEdtCtrl);
+	m_startTrial.store(false);
+	m_stopTrial.store(false);
+
+	if (m_protocol.params.isNiCardBeingUsed()) {
+		m_NIUsb6001card.config();
+		if (m_protocol.params.tstEnLightSensors) {
+			m_NIUsb6001card.setFrontPhotoresistorMonitor(&m_frontPhotoresistorCtrl);
+			m_NIUsb6001card.setRearPhotoresistorMonitor(&m_rearPhotoresistorCtrl);
+		}
+		m_NIUsb6001card.start();
+	}
+	
+	protocolThread = new thread(&Protocol::run, &m_protocol, &m_stopProtocol, &m_startTrial, &m_stopTrial, &m_NIUsb6001card, &m_currentTrialEdtCtrl);
+
+	enableTrialCtrls(true);
 }
 
 void CProtocolAppDlg::OnStopProtocolBtnClicked()
 {
-	m_NIUsb6001card.stop();
+	if (m_protocol.params.isNiCardBeingUsed())
+		m_NIUsb6001card.stop();
 	stopProtocolThread();
-	m_NIUsb6001card.resetPhotoresistorsGuiMonitor();
+	if (m_protocol.params.tstEnLightSensors)
+		m_NIUsb6001card.resetPhotoresistorsGuiMonitor();
+
+	// trial controls fully off
+	enableTrialCtrls(DISABLED);
+	GetDlgItem(IDC_RETREAT_FLUSH_WATER_BTN)->EnableWindow(false);
+	GetDlgItem(IDC_RETREAT_BTN)->EnableWindow(false);
+	// protocol controls and edits are on
 	enableProtocolCtrls(ENABLED);
 }
 
@@ -148,6 +186,38 @@ void CProtocolAppDlg::OnFlushWaterBtnClicked()
 {
 	UpdateData(FromControlsToVariables);
 	m_NIUsb6001card.reward(m_protocol.params.rewardDuration);
+}
+
+void CProtocolAppDlg::OnStartTrialBtnClicked()
+{
+	GetDlgItem(IDC_START_TRIAL_BTN)->EnableWindow(false);
+	GetDlgItem(IDC_RETREAT_FLUSH_WATER_BTN)->EnableWindow(m_protocol.params.tstEnReward);
+	GetDlgItem(IDC_RETREAT_BTN)->EnableWindow(true);
+
+	m_startTrial.store(true);
+}
+
+void CProtocolAppDlg::OnRetreatFlushWaterBtnClicked()
+{
+	UpdateData(FromControlsToVariables);
+	m_NIUsb6001card.reward(m_protocol.params.rewardDuration);
+
+	GetDlgItem(IDC_START_TRIAL_BTN)->EnableWindow(true);
+	GetDlgItem(IDC_RETREAT_FLUSH_WATER_BTN)->EnableWindow(false);
+	GetDlgItem(IDC_RETREAT_BTN)->EnableWindow(false);
+
+	// TODO retreat
+	m_stopTrial.store(true);
+}
+
+void CProtocolAppDlg::OnRetreatBtnClicked()
+{
+	GetDlgItem(IDC_START_TRIAL_BTN)->EnableWindow(true);
+	GetDlgItem(IDC_RETREAT_FLUSH_WATER_BTN)->EnableWindow(false);
+	GetDlgItem(IDC_RETREAT_BTN)->EnableWindow(false);
+
+	// TODO retreat
+	m_stopTrial.store(true);
 }
 
 void CProtocolAppDlg::stopProtocolThread()
@@ -162,18 +232,42 @@ void CProtocolAppDlg::stopProtocolThread()
 
 void CProtocolAppDlg::enableProtocolCtrls(bool enable)
 {
-	GetDlgItem(IDC_TRIALS_NUM_EDT)->EnableWindow(enable);
-	GetDlgItem(IDC_REWARD_TIME_EDT)->EnableWindow(enable);
 	GetDlgItem(IDC_START_PROTOCOL_BTN)->EnableWindow(enable);
+	GetDlgItem(IDC_LOAD_CONFIG_BTN)->EnableWindow(enable);
+	GetDlgItem(IDC_SAVE_CONFIG_BTN)->EnableWindow(enable);
+	enableAllParameterCtrls(enable);
+}
+
+void CProtocolAppDlg::enableTrialCtrls(bool enable)
+{
+	GetDlgItem(IDC_START_TRIAL_BTN)->EnableWindow(enable);
+}
+
+void CProtocolAppDlg::enableRewardCtrls(bool enable)
+{
+	GetDlgItem(IDC_REWARD_TIME_EDT)->EnableWindow(enable);
 	GetDlgItem(IDC_FLUSH_WATER_BTN)->EnableWindow(enable);
+}
+
+void CProtocolAppDlg::enableCameraControls(bool enable)
+{
+	// TODO
+}
+
+void CProtocolAppDlg::enableAllParameterCtrls(bool enable)
+{
 	GetDlgItem(IDC_ACCELERATION_EDT)->EnableWindow(enable);
 	GetDlgItem(IDC_SPEED_EDT)->EnableWindow(enable);
 	GetDlgItem(IDC_POSITION_EDT)->EnableWindow(enable);
-	GetDlgItem(IDC_SENSOR_TOUCH_TIME_EDT)->EnableWindow(enable);
-	GetDlgItem(IDC_INTERTRIAL_EDT)->EnableWindow(enable);
-	GetDlgItem(IDC_LOAD_CONFIG_BTN)->EnableWindow(enable);
-	GetDlgItem(IDC_SAVE_CONFIG_BTN)->EnableWindow(enable);
 	GetDlgItem(IDC_MAX_WAIT_EDT_BOX)->EnableWindow(enable);
+
+	// Don't change the state of parameters that are not connected
+	if (m_protocol.params.tstEnReward) {
+		GetDlgItem(IDC_REWARD_TIME_EDT)->EnableWindow(enable);
+	}
+	if (m_protocol.params.tstEnCameras) {
+		// TODO
+	}
 }
 
 /*
@@ -198,12 +292,9 @@ void CProtocolAppDlg::OnSaveProtBtnClicked()
 		std::ofstream os(sFilePath);
 		os << m_protocol.params.maxWaitTime << " ";
 		os << m_protocol.params.rewardDuration << " ";
-		os << m_protocol.params.nTrialsDesired << " ";
 		os << m_protocol.params.acceleration << " ";
 		os << m_protocol.params.speed << " ";
-		os << m_protocol.params.position << " ";
-		os << m_protocol.params.sensorGraspingTime << " ";
-		os << m_protocol.params.intertrialTime << endl;
+		os << m_protocol.params.position << endl;
 	}
 }
 
@@ -224,12 +315,10 @@ void CProtocolAppDlg::OnLoadProtBtnClicked()
 		}
 		m_protocol.params.maxWaitTime = (long)params[0];
 		m_protocol.params.rewardDuration = (long)params[1];
-		m_protocol.params.nTrialsDesired = (int)params[2];
-		m_protocol.params.acceleration = (long)params[3];
-		m_protocol.params.speed = (long)params[4];
-		m_protocol.params.position = (long)params[5];
-		m_protocol.params.sensorGraspingTime = (int)params[6];
-		m_protocol.params.intertrialTime = (int)params[7];
+		m_protocol.params.acceleration = (long)params[2];
+		m_protocol.params.speed = (long)params[3];
+		m_protocol.params.position = (long)params[4];
 		UpdateData(FromVariablesToControls);
 	}
 }
+

@@ -19,12 +19,17 @@ class ProtocolParameters
 		*   Protocol Parameters
 		*/
 		long maxWaitTime; //msecs
-		int nTrialsDesired;
 		long rewardDuration; //msecs
 		long acceleration; // proportional level 1-10 (1 - 4000 RPM/S)
 		long speed;        // proportional level 1-10 (1 - 700 RPM)
 		long position;     // in mm -> proportional CNT -> cycles ((-1) to (-105000) CNTs)
-		int sensorGraspingTime; // msec
-		int intertrialTime; //msec
+
+		bool tstEnMotors;
+		bool tstEnReward;
+		bool tstEnCameras;
+		bool tstEnLightSensors;
+		bool tstEnTouchSensors;
 		virtual void init();
+
+		virtual bool isNiCardBeingUsed();
 };

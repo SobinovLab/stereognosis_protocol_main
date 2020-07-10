@@ -27,6 +27,15 @@
 #define IDC_LOAD_CONFIG_BTN             1032
 #define IDC_SAVE_CONFIG_BTN             1033
 #define IDC_MAX_WAIT_EDT_BOX            1034
+#define IDC_START_TRIAL_BTN             1035
+#define IDC_RETREAT_FLUSH_WATER_BTN     1036
+#define IDC_RETREAT_BTN                 1037
+#define IDC_LIGHT_SENSORS_RBN           1041
+#define IDC_CAMERAS_CHK                 1044
+#define IDC_LIGHT_SENSORS_CHK           1045
+#define IDC_MOTORS_CHK                  1046
+#define IDC_REWARD_CHK                  1047
+#define IDC_TOUCH_SENSORS_CHK           1048
 
 // Next default values for new objects
 // 
@@ -34,7 +43,7 @@
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        130
 #define _APS_NEXT_COMMAND_VALUE         32771
-#define _APS_NEXT_CONTROL_VALUE         1035
+#define _APS_NEXT_CONTROL_VALUE         1049
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif

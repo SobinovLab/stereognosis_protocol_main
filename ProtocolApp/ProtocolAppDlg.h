@@ -28,7 +28,7 @@ public:
 	enum { IDD = IDD_PROTOCOLAPP_DIALOG };
 #endif
 
-	protected:
+protected:
 	virtual void DoDataExchange(CDataExchange* pDX);	// DDX/DDV support
 
 
@@ -37,37 +37,62 @@ protected:
 	enum UpdateDataDirection { FromVariablesToControls = FALSE, FromControlsToVariables = TRUE };
 
 	HICON m_hIcon;
-	
+
+	//////// Field edits
+	// reward
 	CEdit m_rewardDurationEdtCtrl;
-	CEdit m_nTrialsEdtCtrl;
+	// protocol parameters
 	CEdit m_accelerationCtrl;
 	CEdit m_speedCtrl;
 	CEdit m_positionCtrl;
-	CEdit m_sensorTimeTouchCtrl;
-	CEdit m_intertrialTimeCtrl;
 	CEdit m_currentTrialEdtCtrl;
-	CEdit m_maxWaitEdtCtrl;
 
+	// light sensors
 	CStaticColor m_frontPhotoresistorCtrl;
 	CStaticColor m_rearPhotoresistorCtrl;
 
+	///////// running and controlling the protocol
 	std::thread * protocolThread;
 	Protocol m_protocol;
 	atomic<bool> m_stopProtocol;
-
-	NIUsb6001card m_NIUsb6001card;
+	atomic<bool> m_startTrial;
+	atomic<bool> m_stopTrial;
 	void stopProtocolThread();
-	// Generated message map functions
-	virtual BOOL OnInitDialog();
+
+	//////// Local devices
+	NIUsb6001card m_NIUsb6001card;
+	
+	//////// Debug/testing controls
+
+	/////// Enable/disable fields
 	void enableProtocolCtrls(bool enable);
+	void enableTrialCtrls(bool enable);
+	void enableRewardCtrls(bool enable);
+	void enableCameraControls(bool enable);
+	void enableAllParameterCtrls(bool enable);
+
+	/////// Generated message map functions
+	virtual BOOL OnInitDialog();
 	afx_msg void OnSysCommand(UINT nID, LPARAM lParam);
 	afx_msg void OnPaint();
 	afx_msg HCURSOR OnQueryDragIcon();
+
+	// load save
 	afx_msg void OnSaveProtBtnClicked();
 	afx_msg void OnLoadProtBtnClicked();
+
+	// protocol
 	afx_msg void OnStartProtocolBtnClicked();
 	afx_msg void OnStopProtocolBtnClicked();
+
+	// reward
 	afx_msg void OnFlushWaterBtnClicked();
+
+	// trial
+	afx_msg void OnStartTrialBtnClicked();
+	afx_msg void OnRetreatFlushWaterBtnClicked();
+	afx_msg void OnRetreatBtnClicked();
 	
 	DECLARE_MESSAGE_MAP()
+public:
 };

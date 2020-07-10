@@ -54,9 +54,6 @@
     <ClInclude Include="Protocol\TeknicMotorDevice.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Protocol\Touchpad3DDevice.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Protocol\NIUsb6001card.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -84,9 +81,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Protocol\src\TeknicMotorDevice.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Protocol\src\Touchpad3DDevice.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Protocol\src\NIUsb6001card.cpp">

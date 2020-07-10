@@ -23,99 +23,67 @@ Protocol::~Protocol()
 {
 }
 
-void Protocol::run(atomic<bool> * stopProtocol, NIUsb6001card * m_NIUsb6001card, CEdit * currentTrialGUICtrl)
+void Protocol::run(atomic<bool> * stopProtocol, atomic<bool>* startTrial, atomic<bool>* stopTrial, NIUsb6001card * m_NIUsb6001card, CEdit * currentTrialGUICtrl)
 {
 	CreateDirectory(DATA_FOLDER, NULL);
-	long nTotTrialsPlayedUntilNow = 0, nGoodTrials = 0;
+	long nTotTrialsPlayedUntilNow = 0;
 	setFontGuiTrialsCounter(currentTrialGUICtrl);
 
-	Touchpad3DDevice rightTouchPad, leftTouchPad;
-	std::thread rightTouchPadThread(&Touchpad3DDevice::run, &rightTouchPad);
-	Sleep(TOUCHPAD_START_THREAD_DELAY);
-    rightTouchPad.syncWithGlobal(Logger::currentDateTimeInMilliseconds());
-	std::thread	leftTouchPadThread(&Touchpad3DDevice::run, &leftTouchPad);
-    leftTouchPad.syncWithGlobal(Logger::currentDateTimeInMilliseconds());
+	if (params.tstEnTouchSensors) {
+		//Touchpad3DDevice rightTouchPad, leftTouchPad;
+		//std::thread rightTouchPadThread(&Touchpad3DDevice::run, &rightTouchPad);
+		//Sleep(TOUCHPAD_START_THREAD_DELAY);
+	 //   rightTouchPad.syncWithGlobal(Logger::currentDateTimeInMilliseconds());
+		//std::thread	leftTouchPadThread(&Touchpad3DDevice::run, &leftTouchPad);
+	 //   leftTouchPad.syncWithGlobal(Logger::currentDateTimeInMilliseconds());
+	}
 
 	TeknicMotorDevice motorHub;
-	motorHub.init();
-	while (!stopProtocol->load() && nTotTrialsPlayedUntilNow <= params.nTrialsDesired - 1)
+	if (params.tstEnMotors) {
+		motorHub.init();
+	}
+
+	// Run the protocol loop
+	while (!stopProtocol->load())
 	{
-		updateCurrentTrialOnTheGUI(nTotTrialsPlayedUntilNow, nGoodTrials, currentTrialGUICtrl);
-		bool isGoodTrial = false;
-		/*
-		* monkey arm moves before the �start tone� -> photoresistors are not covered -> trial aborted
-		* -> �negative tone" (different from the initial tone)
-		*/
-		if (!isMotorMovementAborted(stopProtocol, m_NIUsb6001card, motorHub))
+		updateCurrentTrialOnTheGUI(nTotTrialsPlayedUntilNow, currentTrialGUICtrl);
+		// wait for start trial signal
+		while (!startTrial->load() && !stopProtocol->load()) {}
+
+		startTrial->store(false);
+
+		if (startForwardMovement(stopProtocol, stopTrial, m_NIUsb6001card, motorHub))
 		{
-			if (!stopProtocol->load()) playStartTaskTone();
-			auto toneStartTime = chrono::steady_clock::now(), touchingPlatesTime = chrono::steady_clock::now(), photoresistorsUncoveredTime = chrono::steady_clock::now();
-			bool TIME_OUT = false;
-			/*
-			* monkey arm is still on the arm-rest from the start task tone?
-			* monkey arm doesn�t move for a max wait period after �start tone� -> TIMEOUT ->  trial aborted -> play �negative tone�
-			* to avoid noise or a fake movements -> the arm is considered raised if the photoresistors are not covered for MIN_UNCOVERED_TIME
-			*/
-			while (!stopProtocol->load() && !TIME_OUT)
-			{
-				if (IS_REAR_PHOTORESISTOR_COVERED && IS_FRONT_PHOTORESISTOR_COVERED)	break;  // are the photoresistors still covered?
-				TIME_OUT = isTimeout(toneStartTime);
+			playStartTaskTone();
+
+			auto toneStartTime = chrono::steady_clock::now();
+
+			// wait for stop trial signal
+			while (!stopProtocol->load() && !stopTrial->load() && !isTimeout(toneStartTime)) {}
+
+			stopTrial->store(false);
+
+			if (params.tstEnMotors) {
+				motorHub.reset();
+				motorHub.home();
 			}
-			while (!stopProtocol->load() && !TIME_OUT )
-			{
-				if (!IS_REAR_PHOTORESISTOR_COVERED && !IS_FRONT_PHOTORESISTOR_COVERED)
-				{
-					storeStartTime(photoresistorsUncoveredTime);
-					break;
-				}
-				TIME_OUT = isTimeout(toneStartTime);
-			}
-			if (!TIME_OUT)
-			{
-				bool bothTouchSensorsAreToucheFirstTime = false;
-				while (!stopProtocol->load() && !TIME_OUT)
-				{
-					if (areBothSensorsTouched(rightTouchPad, leftTouchPad))
-					{
-						if (!bothTouchSensorsAreToucheFirstTime)
-						{
-							storeStartTime(touchingPlatesTime);
-							bothTouchSensorsAreToucheFirstTime = true;
-						}
-						if (getElapsedMilliSecsSince(touchingPlatesTime) >= params.sensorGraspingTime)
-						{
-							isGoodTrial = true; ++nGoodTrials;
-							long microsecsFromStartTaskToneToLiftingMonkeyArm = getElapsedMicroSecsBetween(toneStartTime, photoresistorsUncoveredTime);
-							long microsecsFromMonkeyArmRaisedToPlatesTouching = getElapsedMicroSecsBetween(photoresistorsUncoveredTime, touchingPlatesTime) - params.sensorGraspingTime;
-							long totalMicrosecCurrentTrial = microsecsFromStartTaskToneToLiftingMonkeyArm + microsecsFromMonkeyArmRaisedToPlatesTouching;
-							long rewardProportionalDuration = proportionalRewardCalculation(microToMillisecs(totalMicrosecCurrentTrial));
-							startReward(m_NIUsb6001card, rewardProportionalDuration);
-							logGoodTrial(nTotTrialsPlayedUntilNow + 1, microsecsFromStartTaskToneToLiftingMonkeyArm, microsecsFromMonkeyArmRaisedToPlatesTouching);
-							break;
-						}
-					}
-					TIME_OUT = isTimeout(toneStartTime);
-				}
-			}
-		}
-		if (!stopProtocol->load() && !isGoodTrial)
-		{
-			playErrorTone();
-			logBadTrial(nTotTrialsPlayedUntilNow + 1);
 		}
 		++nTotTrialsPlayedUntilNow;
-		Sleep(params.intertrialTime);
 	}
-	rightTouchPad.stop();
-	leftTouchPad.stop();
 
-	rightTouchPadThread.join();
-    string filename = "./data/TouchPadRight_" + Logger::currentDateTime(DATE_TIME_FORMAT) + ".txt";
-    saveTouchPadInfoToFile(string("right"), filename, rightTouchPad.m_data.to_file_2d);
 
-	leftTouchPadThread.join();
-    filename = "./data/TouchPadLeft_" + Logger::currentDateTime(DATE_TIME_FORMAT) + ".txt";
-    saveTouchPadInfoToFile(string("left"), filename, leftTouchPad.m_data.to_file_2d);
+	if (params.tstEnTouchSensors) {
+		//rightTouchPad.stop();
+		//leftTouchPad.stop();
+
+		//rightTouchPadThread.join();
+	 //   string filename = "./data/TouchPadRight_" + Logger::currentDateTime(DATE_TIME_FORMAT) + ".txt";
+	 //   saveTouchPadInfoToFile(string("right"), filename, rightTouchPad.m_data.to_file_2d);
+
+		//leftTouchPadThread.join();
+	 //   filename = "./data/TouchPadLeft_" + Logger::currentDateTime(DATE_TIME_FORMAT) + ".txt";
+	 //   saveTouchPadInfoToFile(string("left"), filename, leftTouchPad.m_data.to_file_2d);
+	}
 }
 
 void Protocol::saveTouchPadInfoToFile(string & rightleft, string & filename, string & m_data_string)
@@ -162,22 +130,51 @@ void Protocol::logGoodTrial(const long& nCurrentTrial, const long& microsecsFrom
 
 bool Protocol::isMotorMovementAborted(atomic<bool> * stopProtocol, NIUsb6001card* m_NIUsb6001card, TeknicMotorDevice& motorHub)
 {
-	motorHub.reset();
-	if (!stopProtocol->load()) motorHub.home();
+	if (params.tstEnMotors)
+		motorHub.reset();
+	if (!stopProtocol->load() && params.tstEnMotors)
+		motorHub.home();
 	// on waiting for the monkey puts the arm on the armrest before to start the trial
-	while (!stopProtocol->load() && ( !IS_REAR_PHOTORESISTOR_COVERED || !IS_FRONT_PHOTORESISTOR_COVERED)) {}
-	if (stopProtocol->load()) return true;
+	//while (!stopProtocol->load() && ( !IS_REAR_PHOTORESISTOR_COVERED || !IS_FRONT_PHOTORESISTOR_COVERED)) {}
+
+	if (stopProtocol->load()) 
+		return true;
 	// return true -> go() aborted
-	return motorHub.go(&params.position, &params.speed, &params.acceleration);
+	if (params.tstEnMotors)
+		return motorHub.go(&params.position, &params.speed, &params.acceleration);
+	else
+		return true;
 }
 
-void Protocol::updateCurrentTrialOnTheGUI(const long & nTotTrialsPlayedUntilNow, const long & nGoodTrials, CEdit * currentTrialGUICtrl)
+/// <summary>
+/// 
+/// </summary>
+/// <param name="stopProtocol"></param>
+/// <param name="stopTrial"></param>
+/// <param name="m_NIUsb6001card"></param>
+/// <param name="motorHub"></param>
+/// <returns>True iff the motor movement started as planned or no motor connected</returns>
+bool Protocol::startForwardMovement(atomic<bool>* stopProtocol, atomic<bool>* stopTrial, NIUsb6001card* m_NIUsb6001card, TeknicMotorDevice& motorHub)
+{
+	if (params.tstEnMotors) {
+		motorHub.reset();
+		motorHub.home();
+	}
+
+	if (stopProtocol->load() || stopTrial->load())
+		return false;
+
+	if (params.tstEnMotors)
+		return !motorHub.go(&params.position, &params.speed, &params.acceleration);
+	else
+		return true;
+}
+
+void Protocol::updateCurrentTrialOnTheGUI(const long & nTotTrialsPlayedUntilNow, CEdit * currentTrialGUICtrl)
 {
 	CStringA nTrialsConverted;
 	nTrialsConverted.Format(_T(PRECISION), nTotTrialsPlayedUntilNow);
-	CStringA nGoodTrialsConverted;
-	nGoodTrialsConverted.Format(_T(PRECISION), nGoodTrials);
-	currentTrialGUICtrl->SetWindowText(nGoodTrialsConverted + "/" + nTrialsConverted);
+	currentTrialGUICtrl->SetWindowText(nTrialsConverted);
 }
 
 void Protocol::startReward(NIUsb6001card * m_NIUsb6001card, long & proportionalDuration)
@@ -198,7 +195,7 @@ void Protocol::playErrorTone()
 bool Protocol::isTimeout(time_point<std::chrono::steady_clock>& startToneTime)
 {
 	long timeElapsedFromStartTaskTone = getElapsedMicroSecsBetween(startToneTime, chrono::steady_clock::now());
-	if (timeElapsedFromStartTaskTone > milliToMicrosecs(params.maxWaitTime)) return true;
+	if (timeElapsedFromStartTaskTone > secToMicrosecs(params.maxWaitTime)) return true;
 	return false;
 }
 
@@ -208,11 +205,11 @@ long Protocol::proportionalRewardCalculation(long long elapsed)
 	return (long)abs(params.rewardDuration * proportionalFactor);
 }
 
-bool Protocol::areBothSensorsTouched(Touchpad3DDevice& rightTouchPad, Touchpad3DDevice& leftTouchPad)
-{
-	if (rightTouchPad.isTouching && leftTouchPad.isTouching) return true;
-	return false;
-}
+//bool Protocol::areBothSensorsTouched(Touchpad3DDevice& rightTouchPad, Touchpad3DDevice& leftTouchPad)
+//{
+//	if (rightTouchPad.isTouching && leftTouchPad.isTouching) return true;
+//	return false;
+//}
 
 void Protocol::storeStartTime(time_point<std::chrono::steady_clock>& time)
 {
@@ -227,6 +224,11 @@ long Protocol::microToMillisecs(const long & microsecs)
 long Protocol::milliToMicrosecs(const long & millisecs)
 {
 	return millisecs * 1000;
+}
+
+long Protocol::secToMicrosecs(const long& secs)
+{
+	return milliToMicrosecs(secs * 1000);
 }
 
 long Protocol::getElapsedMilliSecsSince(time_point<std::chrono::steady_clock> & startTime)

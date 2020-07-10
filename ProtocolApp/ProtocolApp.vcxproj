@@ -149,7 +149,6 @@ mkdir  "$(OutDir)data\"
 copy /B /V /Y "$(ProjectDir)configuration\*.*" "$(OutDir)configuration\" &gt; NUL
 copy /B /V /Y "$(ProjectDir)libTeknicMotor\lib_x64\*.dll" "$(OutDir)" &gt; NUL
 copy /B /V /Y "$(ProjectDir)libTeknicMotor\lib_x64\*.xml" "$(OutDir)" &gt; NUL
-copy /B /V /Y ".\libMicrochip3DTouchpad\lib_x64\mchp_hmi.dll" "$(OutDir)" &gt; NUL
 </Command>
     </PostBuildEvent>
     <PreBuildEvent>
@@ -163,7 +162,6 @@ copy /B /V /Y ".\libMicrochip3DTouchpad\lib_x64\mchp_hmi.dll" "$(OutDir)" &gt; N
     <ClInclude Include="Protocol\CStaticColor.h" />
     <ClInclude Include="Protocol\Logger.h" />
     <ClInclude Include="Protocol\NIUsb6001card.h" />
-    <ClInclude Include="Protocol\Touchpad3DDevice.h" />
     <ClInclude Include="Protocol\Protocol.h" />
     <ClInclude Include="Protocol\ProtocolParameters.h" />
     <ClInclude Include="Protocol\TeknicMotorDevice.h" />
@@ -177,7 +175,6 @@ copy /B /V /Y ".\libMicrochip3DTouchpad\lib_x64\mchp_hmi.dll" "$(OutDir)" &gt; N
     <ClCompile Include="Protocol\src\CStaticColor.cpp" />
     <ClCompile Include="Protocol\src\Logger.cpp" />
     <ClCompile Include="Protocol\src\NIUsb6001card.cpp" />
-    <ClCompile Include="Protocol\src\Touchpad3DDevice.cpp" />
     <ClCompile Include="Protocol\src\Protocol.cpp" />
     <ClCompile Include="Protocol\src\ProtocolParameters.cpp" />
     <ClCompile Include="Protocol\src\TeknicMotorDevice.cpp" />
