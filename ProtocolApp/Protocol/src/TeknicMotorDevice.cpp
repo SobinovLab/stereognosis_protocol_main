@@ -24,7 +24,7 @@ void TeknicMotorDevice::init()
 		SysManager::FindComHubPorts(comHubPorts);
 		//logInfo(string_format("Found %d SC Hubs\n", comHubPorts.size()).c_str());
 		for (; portCount < comHubPorts.size() && portCount < NET_CONTROLLER_MAX; portCount++) {
-			myMgr->ComHubPort(portCount, comHubPorts[portCount].c_str()); 	//define the first SC Hub port (port 0) to be associated 
+			myMgr->ComHubPort(portCount, comHubPorts[portCount].c_str()); 	//define the first SC Hub port (port 0) to be associated
 																			// with COM portnum (as seen in device manager)
 		}
 		if (portCount < 0) {
@@ -43,7 +43,7 @@ void TeknicMotorDevice::init()
 		theNode = &myPort->Nodes(HORIZONTAL_MOTOR);
 		theNode->EnableReq(false);  //Ensure Node is disabled before loading config file
 		reset();
-		theNode->EnableReq(true);	//Enable node 
+		theNode->EnableReq(true);	//Enable node
 	}
 	catch (mnErr& theErr)
 	{
@@ -76,10 +76,11 @@ bool TeknicMotorDevice::go(const long * positionInMillimeters, const long * spee
 	{
 		theNode->Motion.VelLimit = speed;				        //Set Velocity Limit (RPM)
 		theNode->Motion.AccLimit = acceleration;			//Set Acceleration Limit (RPM/Sec)
-		theNode->Motion.MovePosnStart(newPosCtn);	//Execute encoder count move 
+		theNode->Motion.MovePosnStart(newPosCtn);	//Execute encoder count move
 		double timeout = myMgr->TimeStampMsec() + theNode->Motion.MovePosnDurationMsec(newPosCtn) + 100;	 //define a timeout in case the node is unable to enable
 		while (!theNode->Motion.MoveIsDone()) {
-			if (!IS_REAR_PHOTORESISTOR_COVERED || !IS_FRONT_PHOTORESISTOR_COVERED || myMgr->TimeStampMsec() > timeout) {
+            // if (!IS_REAR_PHOTORESISTOR_COVERED || !IS_FRONT_PHOTORESISTOR_COVERED || myMgr->TimeStampMsec() > timeout) {
+			if (myMgr->TimeStampMsec() > timeout) {
 				stop();
 				isAborted = true;
 				if (myMgr->TimeStampMsec() > timeout) {
@@ -110,9 +111,9 @@ void TeknicMotorDevice::stop()
 void TeknicMotorDevice::reset()
 {
 	if (theNode != NULL)
-	{			   
-		theNode->Status.AlertsClear();				//Clear Alerts on node 
-		theNode->Motion.NodeStopClear();			//Clear Nodestops on Node  					
+	{
+		theNode->Status.AlertsClear();				//Clear Alerts on node
+		theNode->Motion.NodeStopClear();			//Clear Nodestops on Node
 	}
 }
 

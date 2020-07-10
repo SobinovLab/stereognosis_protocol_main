@@ -60,6 +60,7 @@ void Protocol::run(atomic<bool> * stopProtocol, atomic<bool>* startTrial, atomic
 
 			// wait for stop trial signal
 			while (!stopProtocol->load() && !stopTrial->load() && !isTimeout(toneStartTime)) {}
+			playErrorTone();
 
 			stopTrial->store(false);
 
