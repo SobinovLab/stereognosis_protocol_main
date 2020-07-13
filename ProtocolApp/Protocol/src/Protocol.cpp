@@ -70,6 +70,9 @@ void Protocol::run(atomic<bool> * stopProtocol, atomic<bool>* startTrial, atomic
 				motorHub.home();
 			}
 		}
+		else {
+			playErrorTone();
+		}
 		++nTotTrialsPlayedUntilNow;
 	}
 

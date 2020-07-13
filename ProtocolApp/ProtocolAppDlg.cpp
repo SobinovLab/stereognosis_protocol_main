@@ -32,6 +32,10 @@ void CProtocolAppDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Text(pDX, IDC_POSITION_EDT, m_protocol.params.position);
 	DDX_Text(pDX, IDC_MAX_WAIT_EDT_BOX, m_protocol.params.maxWaitTime);
 
+	DDX_Text(pDX, IDC_IP_EDT, m_protocol.params.cs_ip);
+	DDX_Text(pDX, IDC_PORT_EDT, m_protocol.params.cs_port);
+	DDX_Text(pDX, IDC_FRAMERATE_EDT, m_protocol.params.cs_framerate);
+
 	//OutputDebugString(_T("End of DoDataExchange\n"));
 }
 
@@ -47,6 +51,11 @@ BEGIN_MESSAGE_MAP(CProtocolAppDlg, CDialogEx)
 	ON_BN_CLICKED(IDC_START_TRIAL_BTN, OnStartTrialBtnClicked)
 	ON_BN_CLICKED(IDC_RETREAT_FLUSH_WATER_BTN, OnRetreatFlushWaterBtnClicked)
 	ON_BN_CLICKED(IDC_RETREAT_BTN, OnRetreatBtnClicked)
+	ON_BN_CLICKED(IDC_START_SERVER_BTN, OnStartServerBtnClicked)
+	ON_BN_CLICKED(IDC_STOP_SERVER_BTN, OnStopServerBtnClicked)
+	ON_BN_CLICKED(IDC_DISCONNECT_CLIENT_BTN, OnDisconnectClientBtnClicked)
+	ON_BN_CLICKED(IDC_SEND_CONFIG_BTN, OnSendConfigBtnClicked)
+	ON_BN_CLICKED(IDC_SYNC_TIME_BTN, OnSyncTimeBtnClicked)
 END_MESSAGE_MAP()
 
 // CProtocolAppDlg message handlers
@@ -82,16 +91,16 @@ BOOL CProtocolAppDlg::OnInitDialog()
 
 	/////// Control what is enabled and initialized based on debug/testing interface
 	enableProtocolCtrls(true);
-	enableTrialCtrls(false);
-	GetDlgItem(IDC_RETREAT_FLUSH_WATER_BTN)->EnableWindow(false);
-	GetDlgItem(IDC_RETREAT_BTN)->EnableWindow(false);
+	enableTrialCtrls(true);
+	GetDlgItem(IDC_START_TRIAL_BTN)->EnableWindow(false);
 	// Initialize motors
 
 	// Initialize reward
-	enableRewardCtrls(m_protocol.params.tstEnReward);
+	enableRewardCtrls(true);
 
 	// Initialize cameras
-	enableCameraControls(m_protocol.params.tstEnCameras);
+	enableCameraServerCtrls(true);
+
 
 	// Initialize light sensors
 
@@ -144,9 +153,9 @@ void CProtocolAppDlg::OnOK()
 	UpdateData(FromControlsToVariables);
 }
 
-void CProtocolAppDlg::OnCancel()
-{
-}
+//void CProtocolAppDlg::OnCancel()
+//{
+//}
 
 // The system calls this function to obtain the cursor to display while the user drags
 //  the minimized window.
@@ -186,9 +195,8 @@ void CProtocolAppDlg::OnStopProtocolBtnClicked()
 		m_NIUsb6001card.resetPhotoresistorsGuiMonitor();
 
 	// trial controls fully off
-	enableTrialCtrls(DISABLED);
-	GetDlgItem(IDC_RETREAT_FLUSH_WATER_BTN)->EnableWindow(false);
-	GetDlgItem(IDC_RETREAT_BTN)->EnableWindow(false);
+	enableTrialCtrls(true);
+	GetDlgItem(IDC_START_TRIAL_BTN)->EnableWindow(false);
 	// protocol controls and edits are on
 	enableProtocolCtrls(ENABLED);
 }
@@ -201,9 +209,7 @@ void CProtocolAppDlg::OnFlushWaterBtnClicked()
 
 void CProtocolAppDlg::OnStartTrialBtnClicked()
 {
-	GetDlgItem(IDC_START_TRIAL_BTN)->EnableWindow(false);
-	GetDlgItem(IDC_RETREAT_FLUSH_WATER_BTN)->EnableWindow(m_protocol.params.tstEnReward);
-	GetDlgItem(IDC_RETREAT_BTN)->EnableWindow(true);
+	enableTrialCtrls(false);
 
 	m_startTrial.store(true);
 }
@@ -213,9 +219,7 @@ void CProtocolAppDlg::OnRetreatFlushWaterBtnClicked()
 	UpdateData(FromControlsToVariables);
 	m_NIUsb6001card.reward(m_protocol.params.rewardDuration);
 
-	GetDlgItem(IDC_START_TRIAL_BTN)->EnableWindow(true);
-	GetDlgItem(IDC_RETREAT_FLUSH_WATER_BTN)->EnableWindow(false);
-	GetDlgItem(IDC_RETREAT_BTN)->EnableWindow(false);
+	enableTrialCtrls(true);
 
 	// TODO retreat
 	m_stopTrial.store(true);
@@ -223,12 +227,38 @@ void CProtocolAppDlg::OnRetreatFlushWaterBtnClicked()
 
 void CProtocolAppDlg::OnRetreatBtnClicked()
 {
-	GetDlgItem(IDC_START_TRIAL_BTN)->EnableWindow(true);
-	GetDlgItem(IDC_RETREAT_FLUSH_WATER_BTN)->EnableWindow(false);
-	GetDlgItem(IDC_RETREAT_BTN)->EnableWindow(false);
+	enableTrialCtrls(true);
 
 	// TODO retreat
 	m_stopTrial.store(true);
+}
+
+void CProtocolAppDlg::OnStartServerBtnClicked()
+{
+	// start process with m_cameraServer
+
+	enableCameraServerCtrls(false);
+}
+
+void CProtocolAppDlg::OnStopServerBtnClicked()
+{
+	// disconnect client
+	// stop server
+
+	enableCameraServerCtrls(true);
+}
+
+void CProtocolAppDlg::OnDisconnectClientBtnClicked()
+{
+	// TODO
+}
+
+void CProtocolAppDlg::OnSendConfigBtnClicked()
+{
+}
+
+void CProtocolAppDlg::OnSyncTimeBtnClicked()
+{
 }
 
 void CProtocolAppDlg::stopProtocolThread()
@@ -244,42 +274,43 @@ void CProtocolAppDlg::stopProtocolThread()
 void CProtocolAppDlg::enableProtocolCtrls(bool enable)
 {
 	GetDlgItem(IDC_START_PROTOCOL_BTN)->EnableWindow(enable);
+	GetDlgItem(IDC_STOP_PROTOCOL_BTN)->EnableWindow(!enable);
+
 	GetDlgItem(IDC_LOAD_CONFIG_BTN)->EnableWindow(enable);
 	GetDlgItem(IDC_SAVE_CONFIG_BTN)->EnableWindow(enable);
-	enableAllParameterCtrls(enable);
+
+	GetDlgItem(IDC_ACCELERATION_EDT)->EnableWindow(enable);
+	GetDlgItem(IDC_SPEED_EDT)->EnableWindow(enable);
+	GetDlgItem(IDC_POSITION_EDT)->EnableWindow(enable);
+	GetDlgItem(IDC_MAX_WAIT_EDT_BOX)->EnableWindow(enable);
 }
 
 void CProtocolAppDlg::enableTrialCtrls(bool enable)
 {
 	GetDlgItem(IDC_START_TRIAL_BTN)->EnableWindow(enable);
+	GetDlgItem(IDC_RETREAT_FLUSH_WATER_BTN)->EnableWindow(!enable && m_protocol.params.tstEnReward);
+	GetDlgItem(IDC_RETREAT_BTN)->EnableWindow(!enable);
 }
 
 void CProtocolAppDlg::enableRewardCtrls(bool enable)
 {
-	GetDlgItem(IDC_REWARD_TIME_EDT)->EnableWindow(enable);
-	GetDlgItem(IDC_FLUSH_WATER_BTN)->EnableWindow(enable);
+	GetDlgItem(IDC_REWARD_TIME_EDT)->EnableWindow(enable && m_protocol.params.tstEnReward);
+	GetDlgItem(IDC_FLUSH_WATER_BTN)->EnableWindow(enable && m_protocol.params.tstEnReward);
 }
 
-void CProtocolAppDlg::enableCameraControls(bool enable)
+void CProtocolAppDlg::enableCameraServerCtrls(bool enable)
 {
-	// TODO
+	GetDlgItem(IDC_IP_EDT)->EnableWindow(enable && m_protocol.params.tstEnCameras);
+	GetDlgItem(IDC_PORT_EDT)->EnableWindow(enable && m_protocol.params.tstEnCameras);
+	GetDlgItem(IDC_START_SERVER_BTN)->EnableWindow(enable && m_protocol.params.tstEnCameras);
+
+	GetDlgItem(IDC_STOP_SERVER_BTN)->EnableWindow(!enable && m_protocol.params.tstEnCameras);
+	GetDlgItem(IDC_DISCONNECT_CLIENT_BTN)->EnableWindow(!enable && m_protocol.params.tstEnCameras);
+
+	GetDlgItem(IDC_SEND_CONFIG_BTN)->EnableWindow(!enable && m_protocol.params.tstEnCameras);
+	GetDlgItem(IDC_SYNC_TIME_BTN)->EnableWindow(!enable && m_protocol.params.tstEnCameras);
 }
 
-void CProtocolAppDlg::enableAllParameterCtrls(bool enable)
-{
-	GetDlgItem(IDC_ACCELERATION_EDT)->EnableWindow(enable);
-	GetDlgItem(IDC_SPEED_EDT)->EnableWindow(enable);
-	GetDlgItem(IDC_POSITION_EDT)->EnableWindow(enable);
-	GetDlgItem(IDC_MAX_WAIT_EDT_BOX)->EnableWindow(enable);
-
-	// Don't change the state of parameters that are not connected
-	if (m_protocol.params.tstEnReward) {
-		GetDlgItem(IDC_REWARD_TIME_EDT)->EnableWindow(enable);
-	}
-	if (m_protocol.params.tstEnCameras) {
-		// TODO
-	}
-}
 
 /*
 * maxWaitTime = 5000;

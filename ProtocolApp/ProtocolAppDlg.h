@@ -11,6 +11,7 @@
 #include "Protocol.h"
 #include "ProtocolApp.h"
 #include "CStaticColor.h"
+#include "CameraServer.h"
 
 #ifndef NDEBUG
 	#define new DEBUG_NEW
@@ -35,7 +36,7 @@ protected:
 // Implementation
 protected:
 	virtual void OnOK() override;
-	virtual void OnCancel() override;
+	//virtual void OnCancel() override;
 
 	enum UpdateDataDirection { FromVariablesToControls = FALSE, FromControlsToVariables = TRUE };
 
@@ -64,6 +65,8 @@ protected:
 
 	//////// Local devices
 	NIUsb6001card m_NIUsb6001card;
+
+	CameraServer m_cameraServer;
 	
 	//////// Debug/testing controls
 
@@ -71,8 +74,7 @@ protected:
 	void enableProtocolCtrls(bool enable);
 	void enableTrialCtrls(bool enable);
 	void enableRewardCtrls(bool enable);
-	void enableCameraControls(bool enable);
-	void enableAllParameterCtrls(bool enable);
+	void enableCameraServerCtrls(bool enable);
 
 	/////// Generated message map functions
 	virtual BOOL OnInitDialog();
@@ -95,6 +97,13 @@ protected:
 	afx_msg void OnStartTrialBtnClicked();
 	afx_msg void OnRetreatFlushWaterBtnClicked();
 	afx_msg void OnRetreatBtnClicked();
+
+	// server
+	afx_msg void OnStartServerBtnClicked();
+	afx_msg void OnStopServerBtnClicked();
+	afx_msg void OnDisconnectClientBtnClicked();
+	afx_msg void OnSendConfigBtnClicked();
+	afx_msg void OnSyncTimeBtnClicked();
 	
 	DECLARE_MESSAGE_MAP()
 public:

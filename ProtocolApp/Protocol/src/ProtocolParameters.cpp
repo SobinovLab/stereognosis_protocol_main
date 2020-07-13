@@ -13,6 +13,10 @@ ProtocolParameters::ProtocolParameters(const ProtocolParameters & protocolParams
 	this->position = protocolParams.position;
 	this->maxWaitTime = protocolParams.maxWaitTime;
 
+	this->cs_ip = protocolParams.cs_ip;
+	this->cs_port = protocolParams.cs_port;
+	this->cs_framerate = protocolParams.cs_framerate;
+
 	this->tstEnMotors = protocolParams.tstEnMotors;
 	this->tstEnReward = protocolParams.tstEnReward;
 	this->tstEnCameras = protocolParams.tstEnCameras;
@@ -32,13 +36,17 @@ void ProtocolParameters::init()
 	speed = 2;        // proportional level 1-10 (1 - 700 RPM)
 	position = 115;     // 1 to 240 mm -> proportional cycles ((-1) to (-105000) CNTs)
 
+	cs_ip = "localhost";
+	cs_port = 63874;
+	cs_framerate = 100;
+
 	tstEnMotors = false;
 	tstEnReward = false;
 	tstEnLightSensors = false;
 	//tstEnMotors = true;
 	//tstEnReward = true;
 	//tstEnLightSensors = true;
-	tstEnCameras = false;
+	tstEnCameras = true;
 	tstEnTouchSensors = false;
 }
 
