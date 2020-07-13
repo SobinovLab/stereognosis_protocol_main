@@ -19,12 +19,17 @@ void CProtocolAppDlg::DoDataExchange(CDataExchange* pDX)
 	CDialogEx::DoDataExchange(pDX);
 
 	DDX_Control(pDX, IDC_REWARD_TIME_EDT, m_rewardDurationEdtCtrl);
+
 	DDX_Control(pDX, IDC_ACCELERATION_EDT, m_accelerationCtrl);
 	DDX_Control(pDX, IDC_SPEED_EDT, m_speedCtrl);
 	DDX_Control(pDX, IDC_POSITION_EDT, m_positionCtrl);
 	DDX_Control(pDX, IDC_CURRENT_TRIAL_EDT_BOX, m_currentTrialEdtCtrl);
+
 	DDX_Control(pDX, IDC_PHOTORES_FRONT_LBL, m_frontPhotoresistorCtrl);
 	DDX_Control(pDX, IDC_PHOTORES_REAR_LBL, m_rearPhotoresistorCtrl);
+
+	DDX_Control(pDX, IDC_SERVER_STATUS_EDT, m_serverStatusCtrl);
+	DDX_Control(pDX, IDC_SERVER_LOG_EDT, m_serverLogCtrl);
 	
 	DDX_Text(pDX, IDC_REWARD_TIME_EDT, m_protocol.params.rewardDuration);
 	DDX_Text(pDX, IDC_ACCELERATION_EDT, m_protocol.params.acceleration);
@@ -35,6 +40,7 @@ void CProtocolAppDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Text(pDX, IDC_IP_EDT, m_protocol.params.cs_ip);
 	DDX_Text(pDX, IDC_PORT_EDT, m_protocol.params.cs_port);
 	DDX_Text(pDX, IDC_FRAMERATE_EDT, m_protocol.params.cs_framerate);
+	DDX_Text(pDX, IDC_RECORDING_PERIOD_EDT, m_protocol.params.cs_recordingPeriod);
 
 	//OutputDebugString(_T("End of DoDataExchange\n"));
 }
@@ -93,18 +99,20 @@ BOOL CProtocolAppDlg::OnInitDialog()
 	enableProtocolCtrls(true);
 	enableTrialCtrls(true);
 	GetDlgItem(IDC_START_TRIAL_BTN)->EnableWindow(false);
-	// Initialize motors
+	
+	// motors
+	// light sensors
+	// touch sensors
+	// All motors, light, touch go through NI card automatically
 
-	// Initialize reward
+	// reward
 	enableRewardCtrls(true);
 
-	// Initialize cameras
+	// cameras
 	enableCameraServerCtrls(true);
-
-
-	// Initialize light sensors
-
-	// Initialize touch sensors
+	GetDlgItem(IDC_FRAMERATE_EDT)->EnableWindow(m_protocol.params.tstEnCameras);
+	GetDlgItem(IDC_RECORDING_PERIOD_EDT)->EnableWindow(m_protocol.params.tstEnCameras);
+	m_serverStatusCtrl.SetWindowText("Off");
 	
 	return TRUE;  // return TRUE  unless you set the focus to a control
 }
@@ -235,15 +243,27 @@ void CProtocolAppDlg::OnRetreatBtnClicked()
 
 void CProtocolAppDlg::OnStartServerBtnClicked()
 {
-	// start process with m_cameraServer
+	UpdateData(FromControlsToVariables);
+	m_cameraServer.ip = m_protocol.params.cs_ip;
+	m_cameraServer.port = m_protocol.params.cs_port;
+	m_stopCameraServer.store(false);
+	m_startCsRecording.store(false);
+
+	cameraServerThread = new thread(&CameraServer::run, &m_cameraServer, &m_stopCameraServer, &m_serverStatusCtrl, &m_serverLogCtrl);
 
 	enableCameraServerCtrls(false);
 }
 
 void CProtocolAppDlg::OnStopServerBtnClicked()
 {
-	// disconnect client
-	// stop server
+	if (cameraServerThread) {
+		m_stopCameraServer.store(true);
+
+		cameraServerThread->join();
+		OutputDebugString(_T("Thread joined\n"));
+		delete cameraServerThread; cameraServerThread = nullptr; 
+		m_serverStatusCtrl.SetWindowText("Off");
+	}
 
 	enableCameraServerCtrls(true);
 }

@@ -1,6 +1,7 @@
 #pragma once
 
 #include <atomic>
+#include "ProtocolParameters.h"
 
 class CameraServer
 {
@@ -8,13 +9,13 @@ public:
 	CameraServer();
 	virtual ~CameraServer();
 
-	virtual void start();
-	virtual void stop();
+	virtual void run(std::atomic<bool>* stopCameraServer, CEdit* serverStatusGuiEdt, CEdit* serverLogGuiEdt);
 
-	std::atomic<bool> startCameraRecording;
-	std::atomic<bool> stopCameraRecording;
+	CString ip;
+	long port;
 
-private:
-
+//private:
+	void setServerStatusGui(CEdit* serverStatusGuiEdt, CString status);
+	void appendServerLog(CEdit* serverLogGuiEdt, CString text);
 };
 

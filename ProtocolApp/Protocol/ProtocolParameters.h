@@ -28,6 +28,7 @@ class ProtocolParameters
 		CString cs_ip;
 		long cs_port;
 		double cs_framerate;
+		int cs_recordingPeriod;
 
 		// testing and debugging flags
 		bool tstEnMotors;

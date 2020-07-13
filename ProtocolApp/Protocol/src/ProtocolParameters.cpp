@@ -16,6 +16,7 @@ ProtocolParameters::ProtocolParameters(const ProtocolParameters & protocolParams
 	this->cs_ip = protocolParams.cs_ip;
 	this->cs_port = protocolParams.cs_port;
 	this->cs_framerate = protocolParams.cs_framerate;
+	this->cs_recordingPeriod = protocolParams.cs_recordingPeriod;
 
 	this->tstEnMotors = protocolParams.tstEnMotors;
 	this->tstEnReward = protocolParams.tstEnReward;
@@ -39,6 +40,7 @@ void ProtocolParameters::init()
 	cs_ip = "localhost";
 	cs_port = 63874;
 	cs_framerate = 100;
+	cs_recordingPeriod = 25;
 
 	tstEnMotors = false;
 	tstEnReward = false;

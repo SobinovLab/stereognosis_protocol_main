@@ -55,6 +55,10 @@ protected:
 	CStaticColor m_frontPhotoresistorCtrl;
 	CStaticColor m_rearPhotoresistorCtrl;
 
+	// camera
+	CEdit m_serverStatusCtrl;
+	CEdit m_serverLogCtrl;
+
 	///////// running and controlling the protocol
 	std::thread * protocolThread;
 	Protocol m_protocol;
@@ -63,10 +67,14 @@ protected:
 	atomic<bool> m_stopTrial;
 	void stopProtocolThread();
 
+	//////// cameras
+	CameraServer m_cameraServer;
+	std::thread* cameraServerThread;
+	atomic<bool> m_startCsRecording;
+	std::atomic<bool> m_stopCameraServer;
+
 	//////// Local devices
 	NIUsb6001card m_NIUsb6001card;
-
-	CameraServer m_cameraServer;
 	
 	//////// Debug/testing controls
 
