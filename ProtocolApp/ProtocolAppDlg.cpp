@@ -15,6 +15,7 @@ CProtocolAppDlg::CProtocolAppDlg(CWnd* pParent /*=nullptr*/) : CDialogEx(IDD_PRO
 
 void CProtocolAppDlg::DoDataExchange(CDataExchange* pDX)
 {
+	OutputDebugString(_T("Start of DoDataExchange\n"));
 	CDialogEx::DoDataExchange(pDX);
 
 	DDX_Control(pDX, IDC_REWARD_TIME_EDT, m_rewardDurationEdtCtrl);
@@ -31,30 +32,7 @@ void CProtocolAppDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Text(pDX, IDC_POSITION_EDT, m_protocol.params.position);
 	DDX_Text(pDX, IDC_MAX_WAIT_EDT_BOX, m_protocol.params.maxWaitTime);
 
-	if (m_protocol.params.tstEnCameras) ((CButton*)GetDlgItem(IDC_CAMERAS_CHK))->SetCheck(BST_CHECKED);
-	if (m_protocol.params.tstEnLightSensors) ((CButton*)GetDlgItem(IDC_LIGHT_SENSORS_CHK))->SetCheck(BST_CHECKED);
-	if (m_protocol.params.tstEnMotors) ((CButton*)GetDlgItem(IDC_MOTORS_CHK))->SetCheck(BST_CHECKED);
-	if (m_protocol.params.tstEnReward) ((CButton*)GetDlgItem(IDC_REWARD_CHK))->SetCheck(BST_CHECKED);
-	if (m_protocol.params.tstEnTouchSensors) ((CButton*)GetDlgItem(IDC_TOUCH_SENSORS_CHK))->SetCheck(BST_CHECKED);
-
-
-	/////// Control what is enabled and initialized based on debug/testing interface
-	enableProtocolCtrls(true);
-	enableTrialCtrls(false);
-	GetDlgItem(IDC_RETREAT_FLUSH_WATER_BTN)->EnableWindow(false);
-	GetDlgItem(IDC_RETREAT_BTN)->EnableWindow(false);
-	// Initialize motors
-
-	// Initialize reward
-	enableRewardCtrls(m_protocol.params.tstEnReward);
-
-	// Initialize cameras
-	enableCameraControls(m_protocol.params.tstEnCameras);
-
-	// Initialize light sensors
-
-	// Initialize touch sensors
-
+	OutputDebugString(_T("End of DoDataExchange\n"));
 }
 
 BEGIN_MESSAGE_MAP(CProtocolAppDlg, CDialogEx)
@@ -94,6 +72,32 @@ BOOL CProtocolAppDlg::OnInitDialog()
 	//  when the application's main window is not a dialog
 	SetIcon(m_hIcon, TRUE);			// Set big icon
 	SetIcon(m_hIcon, FALSE);		// Set small icon
+
+	// set the visibility and defaults for GUI
+	if (m_protocol.params.tstEnCameras) ((CButton*)GetDlgItem(IDC_CAMERAS_CHK))->SetCheck(BST_CHECKED);
+	if (m_protocol.params.tstEnLightSensors) ((CButton*)GetDlgItem(IDC_LIGHT_SENSORS_CHK))->SetCheck(BST_CHECKED);
+	if (m_protocol.params.tstEnMotors) ((CButton*)GetDlgItem(IDC_MOTORS_CHK))->SetCheck(BST_CHECKED);
+	if (m_protocol.params.tstEnReward) ((CButton*)GetDlgItem(IDC_REWARD_CHK))->SetCheck(BST_CHECKED);
+	if (m_protocol.params.tstEnTouchSensors) ((CButton*)GetDlgItem(IDC_TOUCH_SENSORS_CHK))->SetCheck(BST_CHECKED);
+
+	OutputDebugString(_T("Test\n"));
+
+	/////// Control what is enabled and initialized based on debug/testing interface
+	enableProtocolCtrls(true);
+	enableTrialCtrls(false);
+	GetDlgItem(IDC_RETREAT_FLUSH_WATER_BTN)->EnableWindow(false);
+	GetDlgItem(IDC_RETREAT_BTN)->EnableWindow(false);
+	// Initialize motors
+
+	// Initialize reward
+	enableRewardCtrls(m_protocol.params.tstEnReward);
+
+	// Initialize cameras
+	enableCameraControls(m_protocol.params.tstEnCameras);
+
+	// Initialize light sensors
+
+	// Initialize touch sensors
 	
 	return TRUE;  // return TRUE  unless you set the focus to a control
 }

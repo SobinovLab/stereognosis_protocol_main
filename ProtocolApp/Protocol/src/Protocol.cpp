@@ -58,9 +58,10 @@ void Protocol::run(atomic<bool> * stopProtocol, atomic<bool>* startTrial, atomic
 
 			auto toneStartTime = chrono::steady_clock::now();
 
-			// wait for stop trial signal
-			while (!stopProtocol->load() && !stopTrial->load() && !isTimeout(toneStartTime)) {}
-			playErrorTone();
+			// wait for stop trial signal NO TIMEOUT
+			while (!stopProtocol->load() && !stopTrial->load()) {}
+			//while (!stopProtocol->load() && !stopTrial->load() && !isTimeout(toneStartTime)) {}
+			//playErrorTone();
 
 			stopTrial->store(false);
 
@@ -154,7 +155,7 @@ bool Protocol::isMotorMovementAborted(atomic<bool> * stopProtocol, NIUsb6001card
 /// <param name="stopTrial"></param>
 /// <param name="m_NIUsb6001card"></param>
 /// <param name="motorHub"></param>
-/// <returns>True iff the motor movement started as planned or no motor connected</returns>
+/// <returns>True iff the motor movement started as planned or no motor initialized via testing</returns>
 bool Protocol::startForwardMovement(atomic<bool>* stopProtocol, atomic<bool>* stopTrial, NIUsb6001card* m_NIUsb6001card, TeknicMotorDevice& motorHub)
 {
 	if (params.tstEnMotors) {
