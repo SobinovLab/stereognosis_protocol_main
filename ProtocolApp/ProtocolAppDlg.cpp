@@ -15,7 +15,7 @@ CProtocolAppDlg::CProtocolAppDlg(CWnd* pParent /*=nullptr*/) : CDialogEx(IDD_PRO
 
 void CProtocolAppDlg::DoDataExchange(CDataExchange* pDX)
 {
-	OutputDebugString(_T("Start of DoDataExchange\n"));
+	//OutputDebugString(_T("Start of DoDataExchange\n"));
 	CDialogEx::DoDataExchange(pDX);
 
 	DDX_Control(pDX, IDC_REWARD_TIME_EDT, m_rewardDurationEdtCtrl);
@@ -32,7 +32,7 @@ void CProtocolAppDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Text(pDX, IDC_POSITION_EDT, m_protocol.params.position);
 	DDX_Text(pDX, IDC_MAX_WAIT_EDT_BOX, m_protocol.params.maxWaitTime);
 
-	OutputDebugString(_T("End of DoDataExchange\n"));
+	//OutputDebugString(_T("End of DoDataExchange\n"));
 }
 
 BEGIN_MESSAGE_MAP(CProtocolAppDlg, CDialogEx)
@@ -79,8 +79,6 @@ BOOL CProtocolAppDlg::OnInitDialog()
 	if (m_protocol.params.tstEnMotors) ((CButton*)GetDlgItem(IDC_MOTORS_CHK))->SetCheck(BST_CHECKED);
 	if (m_protocol.params.tstEnReward) ((CButton*)GetDlgItem(IDC_REWARD_CHK))->SetCheck(BST_CHECKED);
 	if (m_protocol.params.tstEnTouchSensors) ((CButton*)GetDlgItem(IDC_TOUCH_SENSORS_CHK))->SetCheck(BST_CHECKED);
-
-	OutputDebugString(_T("Test\n"));
 
 	/////// Control what is enabled and initialized based on debug/testing interface
 	enableProtocolCtrls(true);
@@ -139,6 +137,11 @@ void CProtocolAppDlg::OnPaint()
 	{
 		CDialogEx::OnPaint();
 	}
+}
+
+void CProtocolAppDlg::OnOK()
+{
+	UpdateData(FromControlsToVariables);
 }
 
 // The system calls this function to obtain the cursor to display while the user drags

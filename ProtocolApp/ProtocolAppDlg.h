@@ -34,6 +34,8 @@ protected:
 
 // Implementation
 protected:
+	virtual void OnOK() override;
+
 	enum UpdateDataDirection { FromVariablesToControls = FALSE, FromControlsToVariables = TRUE };
 
 	HICON m_hIcon;
