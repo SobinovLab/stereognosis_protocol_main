@@ -35,6 +35,7 @@ protected:
 // Implementation
 protected:
 	virtual void OnOK() override;
+	virtual void OnCancel() override;
 
 	enum UpdateDataDirection { FromVariablesToControls = FALSE, FromControlsToVariables = TRUE };
 

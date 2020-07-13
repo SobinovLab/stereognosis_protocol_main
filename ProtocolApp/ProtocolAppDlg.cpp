@@ -144,6 +144,10 @@ void CProtocolAppDlg::OnOK()
 	UpdateData(FromControlsToVariables);
 }
 
+void CProtocolAppDlg::OnCancel()
+{
+}
+
 // The system calls this function to obtain the cursor to display while the user drags
 //  the minimized window.
 HCURSOR CProtocolAppDlg::OnQueryDragIcon()
