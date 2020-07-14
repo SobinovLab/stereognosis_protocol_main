@@ -1,7 +1,6 @@
 #pragma once
 
 #include <atomic>
-#include "ProtocolParameters.h"
 
 class CameraServer
 {
@@ -14,7 +13,7 @@ public:
 	CString ip;
 	long port;
 
-//private:
+private:
 	void setServerStatusGui(CEdit* serverStatusGuiEdt, CString status);
 	void appendServerLog(CEdit* serverLogGuiEdt, CString text);
 };
