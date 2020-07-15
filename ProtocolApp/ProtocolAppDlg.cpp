@@ -261,20 +261,24 @@ void CProtocolAppDlg::OnConnect1BtnClicked()
 
 	m_cameraClient1.disconnect.store(false);
 
-	cameraClientThread1 = new thread(&CameraClient::run, &m_cameraClient1);
+	m_cameraClient1.connect_f();
+
+	//cameraClientThread1 = new thread(&CameraClient::run, &m_cameraClient1);
 
 	enableCameraServer1Ctrls(false);
 }
 
 void CProtocolAppDlg::OnDisconnect1BtnClicked()
 {
-	if (cameraClientThread1) {
-		m_cameraClient1.disconnect.store(true);
+	m_cameraClient1.disconnect_f();
+	//if (cameraClientThread1) {
+	//	m_cameraClient1.disconnect.store(true);
 
-		cameraClientThread1->join();
-		delete cameraClientThread1; cameraClientThread1 = nullptr;
-		m_serverStatusCtrl1.SetWindowText("Off");
-	}
+	//	cameraClientThread1->join();
+	//	delete cameraClientThread1; cameraClientThread1 = nullptr;
+	//	
+	//}
+	m_serverStatusCtrl1.SetWindowText("Off");
 
 	enableCameraServer1Ctrls(true);
 }
@@ -310,6 +314,8 @@ void CProtocolAppDlg::OnDisconnect2BtnClicked()
 
 void CProtocolAppDlg::OnSendConfigBtnClicked()
 {
+	UpdateData(FromControlsToVariables);
+	m_cameraClient1.sendFramerate(m_protocol.params.cs_framerate);
 }
 
 void CProtocolAppDlg::OnSyncTimeBtnClicked()

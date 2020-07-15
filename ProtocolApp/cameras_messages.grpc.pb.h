@@ -38,27 +38,27 @@ class CameraCommunicatorS final {
   class StubInterface {
    public:
     virtual ~StubInterface() {}
-    virtual ::grpc::Status SetFramerate(::grpc::ClientContext* context, const ::SetFramerateResponse& request, ::SetFramerateRequest* response) = 0;
-    std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::SetFramerateRequest>> AsyncSetFramerate(::grpc::ClientContext* context, const ::SetFramerateResponse& request, ::grpc::CompletionQueue* cq) {
-      return std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::SetFramerateRequest>>(AsyncSetFramerateRaw(context, request, cq));
+    virtual ::grpc::Status SetFramerate(::grpc::ClientContext* context, const ::SetFramerateRequest& request, ::SetFramerateResponse* response) = 0;
+    std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::SetFramerateResponse>> AsyncSetFramerate(::grpc::ClientContext* context, const ::SetFramerateRequest& request, ::grpc::CompletionQueue* cq) {
+      return std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::SetFramerateResponse>>(AsyncSetFramerateRaw(context, request, cq));
     }
-    std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::SetFramerateRequest>> PrepareAsyncSetFramerate(::grpc::ClientContext* context, const ::SetFramerateResponse& request, ::grpc::CompletionQueue* cq) {
-      return std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::SetFramerateRequest>>(PrepareAsyncSetFramerateRaw(context, request, cq));
+    std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::SetFramerateResponse>> PrepareAsyncSetFramerate(::grpc::ClientContext* context, const ::SetFramerateRequest& request, ::grpc::CompletionQueue* cq) {
+      return std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::SetFramerateResponse>>(PrepareAsyncSetFramerateRaw(context, request, cq));
     }
     class experimental_async_interface {
      public:
       virtual ~experimental_async_interface() {}
-      virtual void SetFramerate(::grpc::ClientContext* context, const ::SetFramerateResponse* request, ::SetFramerateRequest* response, std::function<void(::grpc::Status)>) = 0;
-      virtual void SetFramerate(::grpc::ClientContext* context, const ::grpc::ByteBuffer* request, ::SetFramerateRequest* response, std::function<void(::grpc::Status)>) = 0;
+      virtual void SetFramerate(::grpc::ClientContext* context, const ::SetFramerateRequest* request, ::SetFramerateResponse* response, std::function<void(::grpc::Status)>) = 0;
+      virtual void SetFramerate(::grpc::ClientContext* context, const ::grpc::ByteBuffer* request, ::SetFramerateResponse* response, std::function<void(::grpc::Status)>) = 0;
       #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
-      virtual void SetFramerate(::grpc::ClientContext* context, const ::SetFramerateResponse* request, ::SetFramerateRequest* response, ::grpc::ClientUnaryReactor* reactor) = 0;
+      virtual void SetFramerate(::grpc::ClientContext* context, const ::SetFramerateRequest* request, ::SetFramerateResponse* response, ::grpc::ClientUnaryReactor* reactor) = 0;
       #else
-      virtual void SetFramerate(::grpc::ClientContext* context, const ::SetFramerateResponse* request, ::SetFramerateRequest* response, ::grpc::experimental::ClientUnaryReactor* reactor) = 0;
+      virtual void SetFramerate(::grpc::ClientContext* context, const ::SetFramerateRequest* request, ::SetFramerateResponse* response, ::grpc::experimental::ClientUnaryReactor* reactor) = 0;
       #endif
       #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
-      virtual void SetFramerate(::grpc::ClientContext* context, const ::grpc::ByteBuffer* request, ::SetFramerateRequest* response, ::grpc::ClientUnaryReactor* reactor) = 0;
+      virtual void SetFramerate(::grpc::ClientContext* context, const ::grpc::ByteBuffer* request, ::SetFramerateResponse* response, ::grpc::ClientUnaryReactor* reactor) = 0;
       #else
-      virtual void SetFramerate(::grpc::ClientContext* context, const ::grpc::ByteBuffer* request, ::SetFramerateRequest* response, ::grpc::experimental::ClientUnaryReactor* reactor) = 0;
+      virtual void SetFramerate(::grpc::ClientContext* context, const ::grpc::ByteBuffer* request, ::SetFramerateResponse* response, ::grpc::experimental::ClientUnaryReactor* reactor) = 0;
       #endif
     };
     #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
@@ -69,33 +69,33 @@ class CameraCommunicatorS final {
     #endif
     virtual class experimental_async_interface* experimental_async() { return nullptr; }
   private:
-    virtual ::grpc::ClientAsyncResponseReaderInterface< ::SetFramerateRequest>* AsyncSetFramerateRaw(::grpc::ClientContext* context, const ::SetFramerateResponse& request, ::grpc::CompletionQueue* cq) = 0;
-    virtual ::grpc::ClientAsyncResponseReaderInterface< ::SetFramerateRequest>* PrepareAsyncSetFramerateRaw(::grpc::ClientContext* context, const ::SetFramerateResponse& request, ::grpc::CompletionQueue* cq) = 0;
+    virtual ::grpc::ClientAsyncResponseReaderInterface< ::SetFramerateResponse>* AsyncSetFramerateRaw(::grpc::ClientContext* context, const ::SetFramerateRequest& request, ::grpc::CompletionQueue* cq) = 0;
+    virtual ::grpc::ClientAsyncResponseReaderInterface< ::SetFramerateResponse>* PrepareAsyncSetFramerateRaw(::grpc::ClientContext* context, const ::SetFramerateRequest& request, ::grpc::CompletionQueue* cq) = 0;
   };
   class Stub final : public StubInterface {
    public:
     Stub(const std::shared_ptr< ::grpc::ChannelInterface>& channel);
-    ::grpc::Status SetFramerate(::grpc::ClientContext* context, const ::SetFramerateResponse& request, ::SetFramerateRequest* response) override;
-    std::unique_ptr< ::grpc::ClientAsyncResponseReader< ::SetFramerateRequest>> AsyncSetFramerate(::grpc::ClientContext* context, const ::SetFramerateResponse& request, ::grpc::CompletionQueue* cq) {
-      return std::unique_ptr< ::grpc::ClientAsyncResponseReader< ::SetFramerateRequest>>(AsyncSetFramerateRaw(context, request, cq));
+    ::grpc::Status SetFramerate(::grpc::ClientContext* context, const ::SetFramerateRequest& request, ::SetFramerateResponse* response) override;
+    std::unique_ptr< ::grpc::ClientAsyncResponseReader< ::SetFramerateResponse>> AsyncSetFramerate(::grpc::ClientContext* context, const ::SetFramerateRequest& request, ::grpc::CompletionQueue* cq) {
+      return std::unique_ptr< ::grpc::ClientAsyncResponseReader< ::SetFramerateResponse>>(AsyncSetFramerateRaw(context, request, cq));
     }
-    std::unique_ptr< ::grpc::ClientAsyncResponseReader< ::SetFramerateRequest>> PrepareAsyncSetFramerate(::grpc::ClientContext* context, const ::SetFramerateResponse& request, ::grpc::CompletionQueue* cq) {
-      return std::unique_ptr< ::grpc::ClientAsyncResponseReader< ::SetFramerateRequest>>(PrepareAsyncSetFramerateRaw(context, request, cq));
+    std::unique_ptr< ::grpc::ClientAsyncResponseReader< ::SetFramerateResponse>> PrepareAsyncSetFramerate(::grpc::ClientContext* context, const ::SetFramerateRequest& request, ::grpc::CompletionQueue* cq) {
+      return std::unique_ptr< ::grpc::ClientAsyncResponseReader< ::SetFramerateResponse>>(PrepareAsyncSetFramerateRaw(context, request, cq));
     }
     class experimental_async final :
       public StubInterface::experimental_async_interface {
      public:
-      void SetFramerate(::grpc::ClientContext* context, const ::SetFramerateResponse* request, ::SetFramerateRequest* response, std::function<void(::grpc::Status)>) override;
-      void SetFramerate(::grpc::ClientContext* context, const ::grpc::ByteBuffer* request, ::SetFramerateRequest* response, std::function<void(::grpc::Status)>) override;
+      void SetFramerate(::grpc::ClientContext* context, const ::SetFramerateRequest* request, ::SetFramerateResponse* response, std::function<void(::grpc::Status)>) override;
+      void SetFramerate(::grpc::ClientContext* context, const ::grpc::ByteBuffer* request, ::SetFramerateResponse* response, std::function<void(::grpc::Status)>) override;
       #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
-      void SetFramerate(::grpc::ClientContext* context, const ::SetFramerateResponse* request, ::SetFramerateRequest* response, ::grpc::ClientUnaryReactor* reactor) override;
+      void SetFramerate(::grpc::ClientContext* context, const ::SetFramerateRequest* request, ::SetFramerateResponse* response, ::grpc::ClientUnaryReactor* reactor) override;
       #else
-      void SetFramerate(::grpc::ClientContext* context, const ::SetFramerateResponse* request, ::SetFramerateRequest* response, ::grpc::experimental::ClientUnaryReactor* reactor) override;
+      void SetFramerate(::grpc::ClientContext* context, const ::SetFramerateRequest* request, ::SetFramerateResponse* response, ::grpc::experimental::ClientUnaryReactor* reactor) override;
       #endif
       #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
-      void SetFramerate(::grpc::ClientContext* context, const ::grpc::ByteBuffer* request, ::SetFramerateRequest* response, ::grpc::ClientUnaryReactor* reactor) override;
+      void SetFramerate(::grpc::ClientContext* context, const ::grpc::ByteBuffer* request, ::SetFramerateResponse* response, ::grpc::ClientUnaryReactor* reactor) override;
       #else
-      void SetFramerate(::grpc::ClientContext* context, const ::grpc::ByteBuffer* request, ::SetFramerateRequest* response, ::grpc::experimental::ClientUnaryReactor* reactor) override;
+      void SetFramerate(::grpc::ClientContext* context, const ::grpc::ByteBuffer* request, ::SetFramerateResponse* response, ::grpc::experimental::ClientUnaryReactor* reactor) override;
       #endif
      private:
       friend class Stub;
@@ -108,8 +108,8 @@ class CameraCommunicatorS final {
    private:
     std::shared_ptr< ::grpc::ChannelInterface> channel_;
     class experimental_async async_stub_{this};
-    ::grpc::ClientAsyncResponseReader< ::SetFramerateRequest>* AsyncSetFramerateRaw(::grpc::ClientContext* context, const ::SetFramerateResponse& request, ::grpc::CompletionQueue* cq) override;
-    ::grpc::ClientAsyncResponseReader< ::SetFramerateRequest>* PrepareAsyncSetFramerateRaw(::grpc::ClientContext* context, const ::SetFramerateResponse& request, ::grpc::CompletionQueue* cq) override;
+    ::grpc::ClientAsyncResponseReader< ::SetFramerateResponse>* AsyncSetFramerateRaw(::grpc::ClientContext* context, const ::SetFramerateRequest& request, ::grpc::CompletionQueue* cq) override;
+    ::grpc::ClientAsyncResponseReader< ::SetFramerateResponse>* PrepareAsyncSetFramerateRaw(::grpc::ClientContext* context, const ::SetFramerateRequest& request, ::grpc::CompletionQueue* cq) override;
     const ::grpc::internal::RpcMethod rpcmethod_SetFramerate_;
   };
   static std::unique_ptr<Stub> NewStub(const std::shared_ptr< ::grpc::ChannelInterface>& channel, const ::grpc::StubOptions& options = ::grpc::StubOptions());
@@ -118,7 +118,7 @@ class CameraCommunicatorS final {
    public:
     Service();
     virtual ~Service();
-    virtual ::grpc::Status SetFramerate(::grpc::ServerContext* context, const ::SetFramerateResponse* request, ::SetFramerateRequest* response);
+    virtual ::grpc::Status SetFramerate(::grpc::ServerContext* context, const ::SetFramerateRequest* request, ::SetFramerateResponse* response);
   };
   template <class BaseClass>
   class WithAsyncMethod_SetFramerate : public BaseClass {
@@ -132,11 +132,11 @@ class CameraCommunicatorS final {
       BaseClassMustBeDerivedFromService(this);
     }
     // disable synchronous version of this method
-    ::grpc::Status SetFramerate(::grpc::ServerContext* /*context*/, const ::SetFramerateResponse* /*request*/, ::SetFramerateRequest* /*response*/) override {
+    ::grpc::Status SetFramerate(::grpc::ServerContext* /*context*/, const ::SetFramerateRequest* /*request*/, ::SetFramerateResponse* /*response*/) override {
       abort();
       return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
     }
-    void RequestSetFramerate(::grpc::ServerContext* context, ::SetFramerateResponse* request, ::grpc::ServerAsyncResponseWriter< ::SetFramerateRequest>* response, ::grpc::CompletionQueue* new_call_cq, ::grpc::ServerCompletionQueue* notification_cq, void *tag) {
+    void RequestSetFramerate(::grpc::ServerContext* context, ::SetFramerateRequest* request, ::grpc::ServerAsyncResponseWriter< ::SetFramerateResponse>* response, ::grpc::CompletionQueue* new_call_cq, ::grpc::ServerCompletionQueue* notification_cq, void *tag) {
       ::grpc::Service::RequestAsyncUnary(0, context, request, response, new_call_cq, notification_cq, tag);
     }
   };
@@ -153,38 +153,38 @@ class CameraCommunicatorS final {
       ::grpc::Service::experimental().
     #endif
         MarkMethodCallback(0,
-          new ::grpc_impl::internal::CallbackUnaryHandler< ::SetFramerateResponse, ::SetFramerateRequest>(
+          new ::grpc_impl::internal::CallbackUnaryHandler< ::SetFramerateRequest, ::SetFramerateResponse>(
             [this](
     #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
                    ::grpc::CallbackServerContext*
     #else
                    ::grpc::experimental::CallbackServerContext*
     #endif
-                     context, const ::SetFramerateResponse* request, ::SetFramerateRequest* response) { return this->SetFramerate(context, request, response); }));}
+                     context, const ::SetFramerateRequest* request, ::SetFramerateResponse* response) { return this->SetFramerate(context, request, response); }));}
     void SetMessageAllocatorFor_SetFramerate(
-        ::grpc::experimental::MessageAllocator< ::SetFramerateResponse, ::SetFramerateRequest>* allocator) {
+        ::grpc::experimental::MessageAllocator< ::SetFramerateRequest, ::SetFramerateResponse>* allocator) {
     #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
       ::grpc::internal::MethodHandler* const handler = ::grpc::Service::GetHandler(0);
     #else
       ::grpc::internal::MethodHandler* const handler = ::grpc::Service::experimental().GetHandler(0);
     #endif
-      static_cast<::grpc_impl::internal::CallbackUnaryHandler< ::SetFramerateResponse, ::SetFramerateRequest>*>(handler)
+      static_cast<::grpc_impl::internal::CallbackUnaryHandler< ::SetFramerateRequest, ::SetFramerateResponse>*>(handler)
               ->SetMessageAllocator(allocator);
     }
     ~ExperimentalWithCallbackMethod_SetFramerate() override {
       BaseClassMustBeDerivedFromService(this);
     }
     // disable synchronous version of this method
-    ::grpc::Status SetFramerate(::grpc::ServerContext* /*context*/, const ::SetFramerateResponse* /*request*/, ::SetFramerateRequest* /*response*/) override {
+    ::grpc::Status SetFramerate(::grpc::ServerContext* /*context*/, const ::SetFramerateRequest* /*request*/, ::SetFramerateResponse* /*response*/) override {
       abort();
       return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
     }
     #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
     virtual ::grpc::ServerUnaryReactor* SetFramerate(
-      ::grpc::CallbackServerContext* /*context*/, const ::SetFramerateResponse* /*request*/, ::SetFramerateRequest* /*response*/)
+      ::grpc::CallbackServerContext* /*context*/, const ::SetFramerateRequest* /*request*/, ::SetFramerateResponse* /*response*/)
     #else
     virtual ::grpc::experimental::ServerUnaryReactor* SetFramerate(
-      ::grpc::experimental::CallbackServerContext* /*context*/, const ::SetFramerateResponse* /*request*/, ::SetFramerateRequest* /*response*/)
+      ::grpc::experimental::CallbackServerContext* /*context*/, const ::SetFramerateRequest* /*request*/, ::SetFramerateResponse* /*response*/)
     #endif
       { return nullptr; }
   };
@@ -205,7 +205,7 @@ class CameraCommunicatorS final {
       BaseClassMustBeDerivedFromService(this);
     }
     // disable synchronous version of this method
-    ::grpc::Status SetFramerate(::grpc::ServerContext* /*context*/, const ::SetFramerateResponse* /*request*/, ::SetFramerateRequest* /*response*/) override {
+    ::grpc::Status SetFramerate(::grpc::ServerContext* /*context*/, const ::SetFramerateRequest* /*request*/, ::SetFramerateResponse* /*response*/) override {
       abort();
       return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
     }
@@ -222,7 +222,7 @@ class CameraCommunicatorS final {
       BaseClassMustBeDerivedFromService(this);
     }
     // disable synchronous version of this method
-    ::grpc::Status SetFramerate(::grpc::ServerContext* /*context*/, const ::SetFramerateResponse* /*request*/, ::SetFramerateRequest* /*response*/) override {
+    ::grpc::Status SetFramerate(::grpc::ServerContext* /*context*/, const ::SetFramerateRequest* /*request*/, ::SetFramerateResponse* /*response*/) override {
       abort();
       return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
     }
@@ -255,7 +255,7 @@ class CameraCommunicatorS final {
       BaseClassMustBeDerivedFromService(this);
     }
     // disable synchronous version of this method
-    ::grpc::Status SetFramerate(::grpc::ServerContext* /*context*/, const ::SetFramerateResponse* /*request*/, ::SetFramerateRequest* /*response*/) override {
+    ::grpc::Status SetFramerate(::grpc::ServerContext* /*context*/, const ::SetFramerateRequest* /*request*/, ::SetFramerateResponse* /*response*/) override {
       abort();
       return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
     }
@@ -276,10 +276,10 @@ class CameraCommunicatorS final {
     WithStreamedUnaryMethod_SetFramerate() {
       ::grpc::Service::MarkMethodStreamed(0,
         new ::grpc::internal::StreamedUnaryHandler<
-          ::SetFramerateResponse, ::SetFramerateRequest>(
+          ::SetFramerateRequest, ::SetFramerateResponse>(
             [this](::grpc_impl::ServerContext* context,
                    ::grpc_impl::ServerUnaryStreamer<
-                     ::SetFramerateResponse, ::SetFramerateRequest>* streamer) {
+                     ::SetFramerateRequest, ::SetFramerateResponse>* streamer) {
                        return this->StreamedSetFramerate(context,
                          streamer);
                   }));
@@ -288,12 +288,12 @@ class CameraCommunicatorS final {
       BaseClassMustBeDerivedFromService(this);
     }
     // disable regular version of this method
-    ::grpc::Status SetFramerate(::grpc::ServerContext* /*context*/, const ::SetFramerateResponse* /*request*/, ::SetFramerateRequest* /*response*/) override {
+    ::grpc::Status SetFramerate(::grpc::ServerContext* /*context*/, const ::SetFramerateRequest* /*request*/, ::SetFramerateResponse* /*response*/) override {
       abort();
       return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
     }
     // replace default version of method with streamed unary
-    virtual ::grpc::Status StreamedSetFramerate(::grpc::ServerContext* context, ::grpc::ServerUnaryStreamer< ::SetFramerateResponse,::SetFramerateRequest>* server_unary_streamer) = 0;
+    virtual ::grpc::Status StreamedSetFramerate(::grpc::ServerContext* context, ::grpc::ServerUnaryStreamer< ::SetFramerateRequest,::SetFramerateResponse>* server_unary_streamer) = 0;
   };
   typedef WithStreamedUnaryMethod_SetFramerate<Service > StreamedUnaryService;
   typedef Service SplitStreamedService;

@@ -85,8 +85,8 @@ const char descriptor_table_protodef_cameras_5fmessages_2eproto[] PROTOBUF_SECTI
   "Request\022\014\n\004desc\030\001 \001(\t\022\021\n\tframerate\030\002 \001(\001"
   "\"9\n\024SetFramerateResponse\022\014\n\004code\030\001 \001(\005\022\023"
   "\n\013description\030\002 \001(\t2T\n\023CameraCommunicato"
-  "rS\022=\n\014SetFramerate\022\025.SetFramerateRespons"
-  "e\032\024.SetFramerateRequest\"\000b\006proto3"
+  "rS\022=\n\014SetFramerate\022\024.SetFramerateRequest"
+  "\032\025.SetFramerateResponse\"\000b\006proto3"
   ;
 static const ::PROTOBUF_NAMESPACE_ID::internal::DescriptorTable*const descriptor_table_cameras_5fmessages_2eproto_deps[1] = {
 };

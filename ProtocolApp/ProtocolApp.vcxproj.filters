@@ -63,6 +63,12 @@
     <ClInclude Include="CameraClient.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="cameras_messages.grpc.pb.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="cameras_messages.pb.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -93,6 +99,12 @@
       <Filter>Source Files\GUI</Filter>
     </ClCompile>
     <ClCompile Include="CameraClient.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="cameras_messages.grpc.pb.cc">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="cameras_messages.pb.cc">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

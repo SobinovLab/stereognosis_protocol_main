@@ -117,7 +117,7 @@ del "$(OutDir)$(SolutionName).ilk"</Command>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;HMI_API_DYNAMIC;_WINDOWS;NDEBUG;_USE_MATH_DEFINES;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;HMI_API_DYNAMIC;_WINDOWS;_USE_MATH_DEFINES;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>.\;.\libMicrochip3DTouchpad\include;.\libTeknicMotor\include;.\Protocol\;$(NIDAQ_HOME)\NI-DAQ\DAQmx ANSI C Dev\include;$(MCHP_HMI_API_PATH)\include</AdditionalIncludeDirectories>
       <ForcedIncludeFiles>stdafx.h</ForcedIncludeFiles>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
@@ -125,6 +125,7 @@ del "$(OutDir)$(SolutionName).ilk"</Command>
       <SupportJustMyCode>true</SupportJustMyCode>
       <OpenMPSupport>true</OpenMPSupport>
       <ExceptionHandling>Sync</ExceptionHandling>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -158,6 +159,8 @@ copy /B /V /Y "$(ProjectDir)libTeknicMotor\lib_x64\*.xml" "$(OutDir)" &gt; NUL
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="CameraClient.h" />
+    <ClInclude Include="cameras_messages.grpc.pb.h" />
+    <ClInclude Include="cameras_messages.pb.h" />
     <ClInclude Include="ProtocolApp.h" />
     <ClInclude Include="ProtocolAppDlg.h" />
     <ClInclude Include="Protocol\CStaticColor.h" />
@@ -172,6 +175,8 @@ copy /B /V /Y "$(ProjectDir)libTeknicMotor\lib_x64\*.xml" "$(OutDir)" &gt; NUL
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="CameraClient.cpp" />
+    <ClCompile Include="cameras_messages.grpc.pb.cc" />
+    <ClCompile Include="cameras_messages.pb.cc" />
     <ClCompile Include="ProtocolApp.cpp" />
     <ClCompile Include="ProtocolAppDlg.cpp" />
     <ClCompile Include="Protocol\src\CStaticColor.cpp" />
