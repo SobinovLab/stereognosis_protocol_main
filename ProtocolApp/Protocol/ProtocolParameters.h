@@ -24,9 +24,11 @@ class ProtocolParameters
 		long speed;				// proportional level 1-10 (1 - 700 RPM)
 		long position;			// in mm -> proportional CNT -> cycles ((-1) to (-105000) CNTs)
 
-		// camera server
-		CString cs_ip;
-		long cs_port;
+		// camera servers
+		CString cs_ip1;
+		long cs_port1;
+		CString cs_ip2;
+		long cs_port2;
 		double cs_framerate;
 		int cs_recordingPeriod;
 

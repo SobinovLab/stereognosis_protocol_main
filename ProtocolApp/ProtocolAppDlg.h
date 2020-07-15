@@ -11,7 +11,7 @@
 #include "Protocol.h"
 #include "ProtocolApp.h"
 #include "CStaticColor.h"
-#include "CameraServer.h"
+#include "CameraClient.h"
 
 #ifndef NDEBUG
 	#define new DEBUG_NEW
@@ -56,8 +56,10 @@ protected:
 	CStaticColor m_rearPhotoresistorCtrl;
 
 	// camera
-	CEdit m_serverStatusCtrl;
-	CEdit m_serverLogCtrl;
+	CEdit m_serverStatusCtrl1;
+	CEdit m_serverLogCtrl1;
+	CEdit m_serverStatusCtrl2;
+	CEdit m_serverLogCtrl2;
 
 	///////// running and controlling the protocol
 	std::thread * protocolThread;
@@ -68,10 +70,12 @@ protected:
 	void stopProtocolThread();
 
 	//////// cameras
-	CameraServer m_cameraServer;
-	std::thread* cameraServerThread;
-	atomic<bool> m_startCsRecording;
-	std::atomic<bool> m_stopCameraServer;
+	CameraClient m_cameraClient1;
+	std::thread* cameraClientThread1;
+	atomic<bool> m_startCcRecording1;
+	CameraClient m_cameraClient2;
+	std::thread* cameraClientThread2;
+	atomic<bool> m_startCcRecording2;
 
 	//////// Local devices
 	NIUsb6001card m_NIUsb6001card;
@@ -82,7 +86,8 @@ protected:
 	void enableProtocolCtrls(bool enable);
 	void enableTrialCtrls(bool enable);
 	void enableRewardCtrls(bool enable);
-	void enableCameraServerCtrls(bool enable);
+	void enableCameraServer1Ctrls(bool enable);
+	void enableCameraServer2Ctrls(bool enable);
 
 	/////// Generated message map functions
 	virtual BOOL OnInitDialog();
@@ -107,9 +112,10 @@ protected:
 	afx_msg void OnRetreatBtnClicked();
 
 	// server
-	afx_msg void OnStartServerBtnClicked();
-	afx_msg void OnStopServerBtnClicked();
-	afx_msg void OnDisconnectClientBtnClicked();
+	afx_msg void OnConnect1BtnClicked();
+	afx_msg void OnDisconnect1BtnClicked();
+	afx_msg void OnConnect2BtnClicked();
+	afx_msg void OnDisconnect2BtnClicked();
 	afx_msg void OnSendConfigBtnClicked();
 	afx_msg void OnSyncTimeBtnClicked();
 	

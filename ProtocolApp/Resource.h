@@ -36,17 +36,30 @@
 #define IDC_REWARD_CHK                  1047
 #define IDC_TOUCH_SENSORS_CHK           1048
 #define IDC_IP_EDT                      1050
+#define IDC_IP_EDT1                     1050
 #define IDC_PORT_EDT                    1051
+#define IDC_PORT_EDT1                   1051
 #define IDC_FRAMERATE_EDT               1052
 #define IDC_SERVER_LOG_EDT              1053
+#define IDC_SERVER_LOG_EDT1             1053
 #define IDC_DISCONNECT_CLIENT_BTN       1054
+#define IDC_IP_EDT2                     1054
 #define IDC_SERVER_STATUS_EDT           1055
+#define IDC_SERVER_STATUS_EDT1          1055
 #define IDC_SEND_CONFIG_BTN             1056
 #define IDC_SYNC_TIME_BTN               1057
 #define IDC_START_SERVER_BTN            1058
+#define IDC_CONNECT_BTN1                1058
 #define IDC_STOP_SERVER_BTN             1059
+#define IDC_DISCONNECT_BTN1             1059
 #define IDC_EDIT7                       1060
 #define IDC_RECORDING_PERIOD_EDT        1060
+#define IDC_PORT_EDT2                   1061
+#define IDC_SERVER_LOG_EDT2             1062
+#define IDC_SERVER_STATUS_EDT2          1063
+#define IDC_CONNECT_BTN2                1064
+#define IDC_STOP_SERVER_BTN2            1065
+#define IDC_DISCONNECT_BTN2             1065
 
 // Next default values for new objects
 // 

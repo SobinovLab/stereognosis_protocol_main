@@ -60,7 +60,7 @@
     <ClInclude Include="Protocol\CStaticColor.h">
       <Filter>Header Files\GUI</Filter>
     </ClInclude>
-    <ClInclude Include="CameraServer.h">
+    <ClInclude Include="CameraClient.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -92,7 +92,7 @@
     <ClCompile Include="Protocol\src\CStaticColor.cpp">
       <Filter>Source Files\GUI</Filter>
     </ClCompile>
-    <ClCompile Include="CameraServer.cpp">
+    <ClCompile Include="CameraClient.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

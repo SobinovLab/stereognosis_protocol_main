@@ -157,7 +157,7 @@ copy /B /V /Y "$(ProjectDir)libTeknicMotor\lib_x64\*.xml" "$(OutDir)" &gt; NUL
     </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="CameraServer.h" />
+    <ClInclude Include="CameraClient.h" />
     <ClInclude Include="ProtocolApp.h" />
     <ClInclude Include="ProtocolAppDlg.h" />
     <ClInclude Include="Protocol\CStaticColor.h" />
@@ -171,7 +171,7 @@ copy /B /V /Y "$(ProjectDir)libTeknicMotor\lib_x64\*.xml" "$(OutDir)" &gt; NUL
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="CameraServer.cpp" />
+    <ClCompile Include="CameraClient.cpp" />
     <ClCompile Include="ProtocolApp.cpp" />
     <ClCompile Include="ProtocolAppDlg.cpp" />
     <ClCompile Include="Protocol\src\CStaticColor.cpp" />

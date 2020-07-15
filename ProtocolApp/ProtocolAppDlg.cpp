@@ -28,8 +28,10 @@ void CProtocolAppDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_PHOTORES_FRONT_LBL, m_frontPhotoresistorCtrl);
 	DDX_Control(pDX, IDC_PHOTORES_REAR_LBL, m_rearPhotoresistorCtrl);
 
-	DDX_Control(pDX, IDC_SERVER_STATUS_EDT, m_serverStatusCtrl);
-	DDX_Control(pDX, IDC_SERVER_LOG_EDT, m_serverLogCtrl);
+	DDX_Control(pDX, IDC_SERVER_STATUS_EDT1, m_serverStatusCtrl1);
+	DDX_Control(pDX, IDC_SERVER_LOG_EDT1, m_serverLogCtrl1);
+	DDX_Control(pDX, IDC_SERVER_STATUS_EDT2, m_serverStatusCtrl2);
+	DDX_Control(pDX, IDC_SERVER_LOG_EDT2, m_serverLogCtrl2);
 	
 	DDX_Text(pDX, IDC_REWARD_TIME_EDT, m_protocol.params.rewardDuration);
 	DDX_Text(pDX, IDC_ACCELERATION_EDT, m_protocol.params.acceleration);
@@ -37,8 +39,10 @@ void CProtocolAppDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Text(pDX, IDC_POSITION_EDT, m_protocol.params.position);
 	DDX_Text(pDX, IDC_MAX_WAIT_EDT_BOX, m_protocol.params.maxWaitTime);
 
-	DDX_Text(pDX, IDC_IP_EDT, m_protocol.params.cs_ip);
-	DDX_Text(pDX, IDC_PORT_EDT, m_protocol.params.cs_port);
+	DDX_Text(pDX, IDC_IP_EDT1, m_protocol.params.cs_ip1);
+	DDX_Text(pDX, IDC_PORT_EDT1, m_protocol.params.cs_port1);
+	DDX_Text(pDX, IDC_IP_EDT2, m_protocol.params.cs_ip2);
+	DDX_Text(pDX, IDC_PORT_EDT2, m_protocol.params.cs_port2);
 	DDX_Text(pDX, IDC_FRAMERATE_EDT, m_protocol.params.cs_framerate);
 	DDX_Text(pDX, IDC_RECORDING_PERIOD_EDT, m_protocol.params.cs_recordingPeriod);
 
@@ -57,9 +61,10 @@ BEGIN_MESSAGE_MAP(CProtocolAppDlg, CDialogEx)
 	ON_BN_CLICKED(IDC_START_TRIAL_BTN, OnStartTrialBtnClicked)
 	ON_BN_CLICKED(IDC_RETREAT_FLUSH_WATER_BTN, OnRetreatFlushWaterBtnClicked)
 	ON_BN_CLICKED(IDC_RETREAT_BTN, OnRetreatBtnClicked)
-	ON_BN_CLICKED(IDC_START_SERVER_BTN, OnStartServerBtnClicked)
-	ON_BN_CLICKED(IDC_STOP_SERVER_BTN, OnStopServerBtnClicked)
-	ON_BN_CLICKED(IDC_DISCONNECT_CLIENT_BTN, OnDisconnectClientBtnClicked)
+	ON_BN_CLICKED(IDC_CONNECT_BTN1, OnConnect1BtnClicked)
+	ON_BN_CLICKED(IDC_DISCONNECT_BTN1, OnDisconnect1BtnClicked)
+	ON_BN_CLICKED(IDC_CONNECT_BTN2, OnConnect2BtnClicked)
+	ON_BN_CLICKED(IDC_DISCONNECT_BTN2, OnDisconnect2BtnClicked)
 	ON_BN_CLICKED(IDC_SEND_CONFIG_BTN, OnSendConfigBtnClicked)
 	ON_BN_CLICKED(IDC_SYNC_TIME_BTN, OnSyncTimeBtnClicked)
 END_MESSAGE_MAP()
@@ -109,10 +114,14 @@ BOOL CProtocolAppDlg::OnInitDialog()
 	enableRewardCtrls(true);
 
 	// cameras
-	enableCameraServerCtrls(true);
+	enableCameraServer1Ctrls(true);
+	enableCameraServer2Ctrls(true);
 	GetDlgItem(IDC_FRAMERATE_EDT)->EnableWindow(m_protocol.params.tstEnCameras);
 	GetDlgItem(IDC_RECORDING_PERIOD_EDT)->EnableWindow(m_protocol.params.tstEnCameras);
-	m_serverStatusCtrl.SetWindowText("Off");
+	m_serverStatusCtrl1.SetWindowText("Off");
+	m_serverStatusCtrl2.SetWindowText("Off");
+	GetDlgItem(IDC_SEND_CONFIG_BTN)->EnableWindow(m_protocol.params.tstEnCameras);
+	GetDlgItem(IDC_SYNC_TIME_BTN)->EnableWindow(m_protocol.params.tstEnCameras);
 	
 	return TRUE;  // return TRUE  unless you set the focus to a control
 }
@@ -241,36 +250,62 @@ void CProtocolAppDlg::OnRetreatBtnClicked()
 	m_stopTrial.store(true);
 }
 
-void CProtocolAppDlg::OnStartServerBtnClicked()
+void CProtocolAppDlg::OnConnect1BtnClicked()
 {
 	UpdateData(FromControlsToVariables);
-	m_cameraServer.ip = m_protocol.params.cs_ip;
-	m_cameraServer.port = m_protocol.params.cs_port;
-	m_stopCameraServer.store(false);
-	m_startCsRecording.store(false);
 
-	cameraServerThread = new thread(&CameraServer::run, &m_cameraServer, &m_stopCameraServer, &m_serverStatusCtrl, &m_serverLogCtrl);
+	m_cameraClient1.server_ip = m_protocol.params.cs_ip1;
+	m_cameraClient1.port = m_protocol.params.cs_port1;
+	m_cameraClient1.clientStatusGuiEdt = &m_serverStatusCtrl1;
+	m_cameraClient1.clientLogGuiEdt = &m_serverLogCtrl1;
 
-	enableCameraServerCtrls(false);
+	m_cameraClient1.disconnect.store(false);
+
+	cameraClientThread1 = new thread(&CameraClient::run, &m_cameraClient1);
+
+	enableCameraServer1Ctrls(false);
 }
 
-void CProtocolAppDlg::OnStopServerBtnClicked()
+void CProtocolAppDlg::OnDisconnect1BtnClicked()
 {
-	if (cameraServerThread) {
-		m_stopCameraServer.store(true);
+	if (cameraClientThread1) {
+		m_cameraClient1.disconnect.store(true);
 
-		cameraServerThread->join();
-		OutputDebugString(_T("Thread joined\n"));
-		delete cameraServerThread; cameraServerThread = nullptr; 
-		m_serverStatusCtrl.SetWindowText("Off");
+		cameraClientThread1->join();
+		delete cameraClientThread1; cameraClientThread1 = nullptr;
+		m_serverStatusCtrl1.SetWindowText("Off");
 	}
 
-	enableCameraServerCtrls(true);
+	enableCameraServer1Ctrls(true);
 }
 
-void CProtocolAppDlg::OnDisconnectClientBtnClicked()
+void CProtocolAppDlg::OnConnect2BtnClicked()
 {
-	// TODO
+	UpdateData(FromControlsToVariables);
+
+	m_cameraClient2.server_ip = m_protocol.params.cs_ip2;
+	m_cameraClient2.port = m_protocol.params.cs_port2;
+	m_cameraClient2.clientStatusGuiEdt = &m_serverStatusCtrl2;
+	m_cameraClient2.clientLogGuiEdt = &m_serverLogCtrl2;
+
+	m_cameraClient2.disconnect.store(false);
+
+	cameraClientThread2 = new thread(&CameraClient::run, &m_cameraClient2);
+
+	enableCameraServer2Ctrls(false);
+}
+
+void CProtocolAppDlg::OnDisconnect2BtnClicked()
+{
+	if (cameraClientThread2) {
+		m_cameraClient2.disconnect.store(true);
+
+		cameraClientThread2->join();
+		delete cameraClientThread2; cameraClientThread2 = nullptr;
+		m_serverStatusCtrl2.SetWindowText("Off");
+	}
+
+	enableCameraServer2Ctrls(true);
 }
 
 void CProtocolAppDlg::OnSendConfigBtnClicked()
@@ -318,17 +353,22 @@ void CProtocolAppDlg::enableRewardCtrls(bool enable)
 	GetDlgItem(IDC_FLUSH_WATER_BTN)->EnableWindow(enable && m_protocol.params.tstEnReward);
 }
 
-void CProtocolAppDlg::enableCameraServerCtrls(bool enable)
+void CProtocolAppDlg::enableCameraServer1Ctrls(bool enable)
 {
-	GetDlgItem(IDC_IP_EDT)->EnableWindow(enable && m_protocol.params.tstEnCameras);
-	GetDlgItem(IDC_PORT_EDT)->EnableWindow(enable && m_protocol.params.tstEnCameras);
-	GetDlgItem(IDC_START_SERVER_BTN)->EnableWindow(enable && m_protocol.params.tstEnCameras);
+	GetDlgItem(IDC_IP_EDT1)->EnableWindow(enable && m_protocol.params.tstEnCameras);
+	GetDlgItem(IDC_PORT_EDT1)->EnableWindow(enable && m_protocol.params.tstEnCameras);
+	GetDlgItem(IDC_CONNECT_BTN1)->EnableWindow(enable && m_protocol.params.tstEnCameras);
 
-	GetDlgItem(IDC_STOP_SERVER_BTN)->EnableWindow(!enable && m_protocol.params.tstEnCameras);
-	GetDlgItem(IDC_DISCONNECT_CLIENT_BTN)->EnableWindow(!enable && m_protocol.params.tstEnCameras);
+	GetDlgItem(IDC_DISCONNECT_BTN1)->EnableWindow(!enable && m_protocol.params.tstEnCameras);
+}
 
-	GetDlgItem(IDC_SEND_CONFIG_BTN)->EnableWindow(!enable && m_protocol.params.tstEnCameras);
-	GetDlgItem(IDC_SYNC_TIME_BTN)->EnableWindow(!enable && m_protocol.params.tstEnCameras);
+void CProtocolAppDlg::enableCameraServer2Ctrls(bool enable)
+{
+	GetDlgItem(IDC_IP_EDT2)->EnableWindow(enable && m_protocol.params.tstEnCameras);
+	GetDlgItem(IDC_PORT_EDT2)->EnableWindow(enable && m_protocol.params.tstEnCameras);
+	GetDlgItem(IDC_CONNECT_BTN2)->EnableWindow(enable && m_protocol.params.tstEnCameras);
+
+	GetDlgItem(IDC_DISCONNECT_BTN2)->EnableWindow(!enable && m_protocol.params.tstEnCameras);
 }
 
 
