@@ -49,7 +49,7 @@ class Protocol
 		void storeStartTime(time_point<std::chrono::steady_clock>& time);
 		long microToMillisecs(const long & microsecs);
 		long milliToMicrosecs(const long & millisecs);
-		long secToMicrosecs(const long& millisecs);
+		long secToMicrosecs(const double& millisecs);
 		bool Protocol::isElapsedTheMinUncoveredTime(time_point<std::chrono::steady_clock>& photoresistorsUncoveredTime);
 
 		void setFontGuiTrialsCounter(CEdit * currentTrialGUICtrl);

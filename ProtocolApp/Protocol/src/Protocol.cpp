@@ -231,9 +231,9 @@ long Protocol::milliToMicrosecs(const long & millisecs)
 	return millisecs * 1000;
 }
 
-long Protocol::secToMicrosecs(const long& secs)
+long Protocol::secToMicrosecs(const double& secs)
 {
-	return milliToMicrosecs(secs * 1000);
+	return (long)(secs * 1000000);
 }
 
 long Protocol::getElapsedMilliSecsSince(time_point<std::chrono::steady_clock> & startTime)

@@ -71,11 +71,13 @@ protected:
 
 	//////// cameras
 	CameraClient m_cameraClient1;
-	std::thread* cameraClientThread1;
 	atomic<bool> m_startCcRecording1;
 	CameraClient m_cameraClient2;
-	std::thread* cameraClientThread2;
 	atomic<bool> m_startCcRecording2;
+	void sendConfig();
+	void syncTime();
+	void sendPrepareRecording();
+	void sendStartRecording();
 
 	//////// Local devices
 	NIUsb6001card m_NIUsb6001card;

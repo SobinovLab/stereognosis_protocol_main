@@ -38,27 +38,103 @@ class CameraCommunicatorS final {
   class StubInterface {
    public:
     virtual ~StubInterface() {}
-    virtual ::grpc::Status SetFramerate(::grpc::ClientContext* context, const ::SetFramerateRequest& request, ::SetFramerateResponse* response) = 0;
-    std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::SetFramerateResponse>> AsyncSetFramerate(::grpc::ClientContext* context, const ::SetFramerateRequest& request, ::grpc::CompletionQueue* cq) {
-      return std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::SetFramerateResponse>>(AsyncSetFramerateRaw(context, request, cq));
+    virtual ::grpc::Status SetFramerate(::grpc::ClientContext* context, const ::SetFramerateRequest& request, ::SimpleResponse* response) = 0;
+    std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::SimpleResponse>> AsyncSetFramerate(::grpc::ClientContext* context, const ::SetFramerateRequest& request, ::grpc::CompletionQueue* cq) {
+      return std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::SimpleResponse>>(AsyncSetFramerateRaw(context, request, cq));
     }
-    std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::SetFramerateResponse>> PrepareAsyncSetFramerate(::grpc::ClientContext* context, const ::SetFramerateRequest& request, ::grpc::CompletionQueue* cq) {
-      return std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::SetFramerateResponse>>(PrepareAsyncSetFramerateRaw(context, request, cq));
+    std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::SimpleResponse>> PrepareAsyncSetFramerate(::grpc::ClientContext* context, const ::SetFramerateRequest& request, ::grpc::CompletionQueue* cq) {
+      return std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::SimpleResponse>>(PrepareAsyncSetFramerateRaw(context, request, cq));
+    }
+    virtual ::grpc::Status SetRecordingPeriod(::grpc::ClientContext* context, const ::SetRecordingPeriodRequest& request, ::SimpleResponse* response) = 0;
+    std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::SimpleResponse>> AsyncSetRecordingPeriod(::grpc::ClientContext* context, const ::SetRecordingPeriodRequest& request, ::grpc::CompletionQueue* cq) {
+      return std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::SimpleResponse>>(AsyncSetRecordingPeriodRaw(context, request, cq));
+    }
+    std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::SimpleResponse>> PrepareAsyncSetRecordingPeriod(::grpc::ClientContext* context, const ::SetRecordingPeriodRequest& request, ::grpc::CompletionQueue* cq) {
+      return std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::SimpleResponse>>(PrepareAsyncSetRecordingPeriodRaw(context, request, cq));
+    }
+    virtual ::grpc::Status SetReferenceCamera(::grpc::ClientContext* context, const ::SetReferenceCameraRequest& request, ::SimpleResponse* response) = 0;
+    std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::SimpleResponse>> AsyncSetReferenceCamera(::grpc::ClientContext* context, const ::SetReferenceCameraRequest& request, ::grpc::CompletionQueue* cq) {
+      return std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::SimpleResponse>>(AsyncSetReferenceCameraRaw(context, request, cq));
+    }
+    std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::SimpleResponse>> PrepareAsyncSetReferenceCamera(::grpc::ClientContext* context, const ::SetReferenceCameraRequest& request, ::grpc::CompletionQueue* cq) {
+      return std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::SimpleResponse>>(PrepareAsyncSetReferenceCameraRaw(context, request, cq));
+    }
+    virtual ::grpc::Status PrepareRecording(::grpc::ClientContext* context, const ::SimpleRequest& request, ::SimpleResponse* response) = 0;
+    std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::SimpleResponse>> AsyncPrepareRecording(::grpc::ClientContext* context, const ::SimpleRequest& request, ::grpc::CompletionQueue* cq) {
+      return std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::SimpleResponse>>(AsyncPrepareRecordingRaw(context, request, cq));
+    }
+    std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::SimpleResponse>> PrepareAsyncPrepareRecording(::grpc::ClientContext* context, const ::SimpleRequest& request, ::grpc::CompletionQueue* cq) {
+      return std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::SimpleResponse>>(PrepareAsyncPrepareRecordingRaw(context, request, cq));
+    }
+    virtual ::grpc::Status StartRecording(::grpc::ClientContext* context, const ::SimpleRequest& request, ::SimpleResponse* response) = 0;
+    std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::SimpleResponse>> AsyncStartRecording(::grpc::ClientContext* context, const ::SimpleRequest& request, ::grpc::CompletionQueue* cq) {
+      return std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::SimpleResponse>>(AsyncStartRecordingRaw(context, request, cq));
+    }
+    std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::SimpleResponse>> PrepareAsyncStartRecording(::grpc::ClientContext* context, const ::SimpleRequest& request, ::grpc::CompletionQueue* cq) {
+      return std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::SimpleResponse>>(PrepareAsyncStartRecordingRaw(context, request, cq));
     }
     class experimental_async_interface {
      public:
       virtual ~experimental_async_interface() {}
-      virtual void SetFramerate(::grpc::ClientContext* context, const ::SetFramerateRequest* request, ::SetFramerateResponse* response, std::function<void(::grpc::Status)>) = 0;
-      virtual void SetFramerate(::grpc::ClientContext* context, const ::grpc::ByteBuffer* request, ::SetFramerateResponse* response, std::function<void(::grpc::Status)>) = 0;
+      virtual void SetFramerate(::grpc::ClientContext* context, const ::SetFramerateRequest* request, ::SimpleResponse* response, std::function<void(::grpc::Status)>) = 0;
+      virtual void SetFramerate(::grpc::ClientContext* context, const ::grpc::ByteBuffer* request, ::SimpleResponse* response, std::function<void(::grpc::Status)>) = 0;
       #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
-      virtual void SetFramerate(::grpc::ClientContext* context, const ::SetFramerateRequest* request, ::SetFramerateResponse* response, ::grpc::ClientUnaryReactor* reactor) = 0;
+      virtual void SetFramerate(::grpc::ClientContext* context, const ::SetFramerateRequest* request, ::SimpleResponse* response, ::grpc::ClientUnaryReactor* reactor) = 0;
       #else
-      virtual void SetFramerate(::grpc::ClientContext* context, const ::SetFramerateRequest* request, ::SetFramerateResponse* response, ::grpc::experimental::ClientUnaryReactor* reactor) = 0;
+      virtual void SetFramerate(::grpc::ClientContext* context, const ::SetFramerateRequest* request, ::SimpleResponse* response, ::grpc::experimental::ClientUnaryReactor* reactor) = 0;
       #endif
       #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
-      virtual void SetFramerate(::grpc::ClientContext* context, const ::grpc::ByteBuffer* request, ::SetFramerateResponse* response, ::grpc::ClientUnaryReactor* reactor) = 0;
+      virtual void SetFramerate(::grpc::ClientContext* context, const ::grpc::ByteBuffer* request, ::SimpleResponse* response, ::grpc::ClientUnaryReactor* reactor) = 0;
       #else
-      virtual void SetFramerate(::grpc::ClientContext* context, const ::grpc::ByteBuffer* request, ::SetFramerateResponse* response, ::grpc::experimental::ClientUnaryReactor* reactor) = 0;
+      virtual void SetFramerate(::grpc::ClientContext* context, const ::grpc::ByteBuffer* request, ::SimpleResponse* response, ::grpc::experimental::ClientUnaryReactor* reactor) = 0;
+      #endif
+      virtual void SetRecordingPeriod(::grpc::ClientContext* context, const ::SetRecordingPeriodRequest* request, ::SimpleResponse* response, std::function<void(::grpc::Status)>) = 0;
+      virtual void SetRecordingPeriod(::grpc::ClientContext* context, const ::grpc::ByteBuffer* request, ::SimpleResponse* response, std::function<void(::grpc::Status)>) = 0;
+      #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
+      virtual void SetRecordingPeriod(::grpc::ClientContext* context, const ::SetRecordingPeriodRequest* request, ::SimpleResponse* response, ::grpc::ClientUnaryReactor* reactor) = 0;
+      #else
+      virtual void SetRecordingPeriod(::grpc::ClientContext* context, const ::SetRecordingPeriodRequest* request, ::SimpleResponse* response, ::grpc::experimental::ClientUnaryReactor* reactor) = 0;
+      #endif
+      #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
+      virtual void SetRecordingPeriod(::grpc::ClientContext* context, const ::grpc::ByteBuffer* request, ::SimpleResponse* response, ::grpc::ClientUnaryReactor* reactor) = 0;
+      #else
+      virtual void SetRecordingPeriod(::grpc::ClientContext* context, const ::grpc::ByteBuffer* request, ::SimpleResponse* response, ::grpc::experimental::ClientUnaryReactor* reactor) = 0;
+      #endif
+      virtual void SetReferenceCamera(::grpc::ClientContext* context, const ::SetReferenceCameraRequest* request, ::SimpleResponse* response, std::function<void(::grpc::Status)>) = 0;
+      virtual void SetReferenceCamera(::grpc::ClientContext* context, const ::grpc::ByteBuffer* request, ::SimpleResponse* response, std::function<void(::grpc::Status)>) = 0;
+      #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
+      virtual void SetReferenceCamera(::grpc::ClientContext* context, const ::SetReferenceCameraRequest* request, ::SimpleResponse* response, ::grpc::ClientUnaryReactor* reactor) = 0;
+      #else
+      virtual void SetReferenceCamera(::grpc::ClientContext* context, const ::SetReferenceCameraRequest* request, ::SimpleResponse* response, ::grpc::experimental::ClientUnaryReactor* reactor) = 0;
+      #endif
+      #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
+      virtual void SetReferenceCamera(::grpc::ClientContext* context, const ::grpc::ByteBuffer* request, ::SimpleResponse* response, ::grpc::ClientUnaryReactor* reactor) = 0;
+      #else
+      virtual void SetReferenceCamera(::grpc::ClientContext* context, const ::grpc::ByteBuffer* request, ::SimpleResponse* response, ::grpc::experimental::ClientUnaryReactor* reactor) = 0;
+      #endif
+      virtual void PrepareRecording(::grpc::ClientContext* context, const ::SimpleRequest* request, ::SimpleResponse* response, std::function<void(::grpc::Status)>) = 0;
+      virtual void PrepareRecording(::grpc::ClientContext* context, const ::grpc::ByteBuffer* request, ::SimpleResponse* response, std::function<void(::grpc::Status)>) = 0;
+      #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
+      virtual void PrepareRecording(::grpc::ClientContext* context, const ::SimpleRequest* request, ::SimpleResponse* response, ::grpc::ClientUnaryReactor* reactor) = 0;
+      #else
+      virtual void PrepareRecording(::grpc::ClientContext* context, const ::SimpleRequest* request, ::SimpleResponse* response, ::grpc::experimental::ClientUnaryReactor* reactor) = 0;
+      #endif
+      #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
+      virtual void PrepareRecording(::grpc::ClientContext* context, const ::grpc::ByteBuffer* request, ::SimpleResponse* response, ::grpc::ClientUnaryReactor* reactor) = 0;
+      #else
+      virtual void PrepareRecording(::grpc::ClientContext* context, const ::grpc::ByteBuffer* request, ::SimpleResponse* response, ::grpc::experimental::ClientUnaryReactor* reactor) = 0;
+      #endif
+      virtual void StartRecording(::grpc::ClientContext* context, const ::SimpleRequest* request, ::SimpleResponse* response, std::function<void(::grpc::Status)>) = 0;
+      virtual void StartRecording(::grpc::ClientContext* context, const ::grpc::ByteBuffer* request, ::SimpleResponse* response, std::function<void(::grpc::Status)>) = 0;
+      #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
+      virtual void StartRecording(::grpc::ClientContext* context, const ::SimpleRequest* request, ::SimpleResponse* response, ::grpc::ClientUnaryReactor* reactor) = 0;
+      #else
+      virtual void StartRecording(::grpc::ClientContext* context, const ::SimpleRequest* request, ::SimpleResponse* response, ::grpc::experimental::ClientUnaryReactor* reactor) = 0;
+      #endif
+      #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
+      virtual void StartRecording(::grpc::ClientContext* context, const ::grpc::ByteBuffer* request, ::SimpleResponse* response, ::grpc::ClientUnaryReactor* reactor) = 0;
+      #else
+      virtual void StartRecording(::grpc::ClientContext* context, const ::grpc::ByteBuffer* request, ::SimpleResponse* response, ::grpc::experimental::ClientUnaryReactor* reactor) = 0;
       #endif
     };
     #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
@@ -69,33 +145,117 @@ class CameraCommunicatorS final {
     #endif
     virtual class experimental_async_interface* experimental_async() { return nullptr; }
   private:
-    virtual ::grpc::ClientAsyncResponseReaderInterface< ::SetFramerateResponse>* AsyncSetFramerateRaw(::grpc::ClientContext* context, const ::SetFramerateRequest& request, ::grpc::CompletionQueue* cq) = 0;
-    virtual ::grpc::ClientAsyncResponseReaderInterface< ::SetFramerateResponse>* PrepareAsyncSetFramerateRaw(::grpc::ClientContext* context, const ::SetFramerateRequest& request, ::grpc::CompletionQueue* cq) = 0;
+    virtual ::grpc::ClientAsyncResponseReaderInterface< ::SimpleResponse>* AsyncSetFramerateRaw(::grpc::ClientContext* context, const ::SetFramerateRequest& request, ::grpc::CompletionQueue* cq) = 0;
+    virtual ::grpc::ClientAsyncResponseReaderInterface< ::SimpleResponse>* PrepareAsyncSetFramerateRaw(::grpc::ClientContext* context, const ::SetFramerateRequest& request, ::grpc::CompletionQueue* cq) = 0;
+    virtual ::grpc::ClientAsyncResponseReaderInterface< ::SimpleResponse>* AsyncSetRecordingPeriodRaw(::grpc::ClientContext* context, const ::SetRecordingPeriodRequest& request, ::grpc::CompletionQueue* cq) = 0;
+    virtual ::grpc::ClientAsyncResponseReaderInterface< ::SimpleResponse>* PrepareAsyncSetRecordingPeriodRaw(::grpc::ClientContext* context, const ::SetRecordingPeriodRequest& request, ::grpc::CompletionQueue* cq) = 0;
+    virtual ::grpc::ClientAsyncResponseReaderInterface< ::SimpleResponse>* AsyncSetReferenceCameraRaw(::grpc::ClientContext* context, const ::SetReferenceCameraRequest& request, ::grpc::CompletionQueue* cq) = 0;
+    virtual ::grpc::ClientAsyncResponseReaderInterface< ::SimpleResponse>* PrepareAsyncSetReferenceCameraRaw(::grpc::ClientContext* context, const ::SetReferenceCameraRequest& request, ::grpc::CompletionQueue* cq) = 0;
+    virtual ::grpc::ClientAsyncResponseReaderInterface< ::SimpleResponse>* AsyncPrepareRecordingRaw(::grpc::ClientContext* context, const ::SimpleRequest& request, ::grpc::CompletionQueue* cq) = 0;
+    virtual ::grpc::ClientAsyncResponseReaderInterface< ::SimpleResponse>* PrepareAsyncPrepareRecordingRaw(::grpc::ClientContext* context, const ::SimpleRequest& request, ::grpc::CompletionQueue* cq) = 0;
+    virtual ::grpc::ClientAsyncResponseReaderInterface< ::SimpleResponse>* AsyncStartRecordingRaw(::grpc::ClientContext* context, const ::SimpleRequest& request, ::grpc::CompletionQueue* cq) = 0;
+    virtual ::grpc::ClientAsyncResponseReaderInterface< ::SimpleResponse>* PrepareAsyncStartRecordingRaw(::grpc::ClientContext* context, const ::SimpleRequest& request, ::grpc::CompletionQueue* cq) = 0;
   };
   class Stub final : public StubInterface {
    public:
     Stub(const std::shared_ptr< ::grpc::ChannelInterface>& channel);
-    ::grpc::Status SetFramerate(::grpc::ClientContext* context, const ::SetFramerateRequest& request, ::SetFramerateResponse* response) override;
-    std::unique_ptr< ::grpc::ClientAsyncResponseReader< ::SetFramerateResponse>> AsyncSetFramerate(::grpc::ClientContext* context, const ::SetFramerateRequest& request, ::grpc::CompletionQueue* cq) {
-      return std::unique_ptr< ::grpc::ClientAsyncResponseReader< ::SetFramerateResponse>>(AsyncSetFramerateRaw(context, request, cq));
+    ::grpc::Status SetFramerate(::grpc::ClientContext* context, const ::SetFramerateRequest& request, ::SimpleResponse* response) override;
+    std::unique_ptr< ::grpc::ClientAsyncResponseReader< ::SimpleResponse>> AsyncSetFramerate(::grpc::ClientContext* context, const ::SetFramerateRequest& request, ::grpc::CompletionQueue* cq) {
+      return std::unique_ptr< ::grpc::ClientAsyncResponseReader< ::SimpleResponse>>(AsyncSetFramerateRaw(context, request, cq));
     }
-    std::unique_ptr< ::grpc::ClientAsyncResponseReader< ::SetFramerateResponse>> PrepareAsyncSetFramerate(::grpc::ClientContext* context, const ::SetFramerateRequest& request, ::grpc::CompletionQueue* cq) {
-      return std::unique_ptr< ::grpc::ClientAsyncResponseReader< ::SetFramerateResponse>>(PrepareAsyncSetFramerateRaw(context, request, cq));
+    std::unique_ptr< ::grpc::ClientAsyncResponseReader< ::SimpleResponse>> PrepareAsyncSetFramerate(::grpc::ClientContext* context, const ::SetFramerateRequest& request, ::grpc::CompletionQueue* cq) {
+      return std::unique_ptr< ::grpc::ClientAsyncResponseReader< ::SimpleResponse>>(PrepareAsyncSetFramerateRaw(context, request, cq));
+    }
+    ::grpc::Status SetRecordingPeriod(::grpc::ClientContext* context, const ::SetRecordingPeriodRequest& request, ::SimpleResponse* response) override;
+    std::unique_ptr< ::grpc::ClientAsyncResponseReader< ::SimpleResponse>> AsyncSetRecordingPeriod(::grpc::ClientContext* context, const ::SetRecordingPeriodRequest& request, ::grpc::CompletionQueue* cq) {
+      return std::unique_ptr< ::grpc::ClientAsyncResponseReader< ::SimpleResponse>>(AsyncSetRecordingPeriodRaw(context, request, cq));
+    }
+    std::unique_ptr< ::grpc::ClientAsyncResponseReader< ::SimpleResponse>> PrepareAsyncSetRecordingPeriod(::grpc::ClientContext* context, const ::SetRecordingPeriodRequest& request, ::grpc::CompletionQueue* cq) {
+      return std::unique_ptr< ::grpc::ClientAsyncResponseReader< ::SimpleResponse>>(PrepareAsyncSetRecordingPeriodRaw(context, request, cq));
+    }
+    ::grpc::Status SetReferenceCamera(::grpc::ClientContext* context, const ::SetReferenceCameraRequest& request, ::SimpleResponse* response) override;
+    std::unique_ptr< ::grpc::ClientAsyncResponseReader< ::SimpleResponse>> AsyncSetReferenceCamera(::grpc::ClientContext* context, const ::SetReferenceCameraRequest& request, ::grpc::CompletionQueue* cq) {
+      return std::unique_ptr< ::grpc::ClientAsyncResponseReader< ::SimpleResponse>>(AsyncSetReferenceCameraRaw(context, request, cq));
+    }
+    std::unique_ptr< ::grpc::ClientAsyncResponseReader< ::SimpleResponse>> PrepareAsyncSetReferenceCamera(::grpc::ClientContext* context, const ::SetReferenceCameraRequest& request, ::grpc::CompletionQueue* cq) {
+      return std::unique_ptr< ::grpc::ClientAsyncResponseReader< ::SimpleResponse>>(PrepareAsyncSetReferenceCameraRaw(context, request, cq));
+    }
+    ::grpc::Status PrepareRecording(::grpc::ClientContext* context, const ::SimpleRequest& request, ::SimpleResponse* response) override;
+    std::unique_ptr< ::grpc::ClientAsyncResponseReader< ::SimpleResponse>> AsyncPrepareRecording(::grpc::ClientContext* context, const ::SimpleRequest& request, ::grpc::CompletionQueue* cq) {
+      return std::unique_ptr< ::grpc::ClientAsyncResponseReader< ::SimpleResponse>>(AsyncPrepareRecordingRaw(context, request, cq));
+    }
+    std::unique_ptr< ::grpc::ClientAsyncResponseReader< ::SimpleResponse>> PrepareAsyncPrepareRecording(::grpc::ClientContext* context, const ::SimpleRequest& request, ::grpc::CompletionQueue* cq) {
+      return std::unique_ptr< ::grpc::ClientAsyncResponseReader< ::SimpleResponse>>(PrepareAsyncPrepareRecordingRaw(context, request, cq));
+    }
+    ::grpc::Status StartRecording(::grpc::ClientContext* context, const ::SimpleRequest& request, ::SimpleResponse* response) override;
+    std::unique_ptr< ::grpc::ClientAsyncResponseReader< ::SimpleResponse>> AsyncStartRecording(::grpc::ClientContext* context, const ::SimpleRequest& request, ::grpc::CompletionQueue* cq) {
+      return std::unique_ptr< ::grpc::ClientAsyncResponseReader< ::SimpleResponse>>(AsyncStartRecordingRaw(context, request, cq));
+    }
+    std::unique_ptr< ::grpc::ClientAsyncResponseReader< ::SimpleResponse>> PrepareAsyncStartRecording(::grpc::ClientContext* context, const ::SimpleRequest& request, ::grpc::CompletionQueue* cq) {
+      return std::unique_ptr< ::grpc::ClientAsyncResponseReader< ::SimpleResponse>>(PrepareAsyncStartRecordingRaw(context, request, cq));
     }
     class experimental_async final :
       public StubInterface::experimental_async_interface {
      public:
-      void SetFramerate(::grpc::ClientContext* context, const ::SetFramerateRequest* request, ::SetFramerateResponse* response, std::function<void(::grpc::Status)>) override;
-      void SetFramerate(::grpc::ClientContext* context, const ::grpc::ByteBuffer* request, ::SetFramerateResponse* response, std::function<void(::grpc::Status)>) override;
+      void SetFramerate(::grpc::ClientContext* context, const ::SetFramerateRequest* request, ::SimpleResponse* response, std::function<void(::grpc::Status)>) override;
+      void SetFramerate(::grpc::ClientContext* context, const ::grpc::ByteBuffer* request, ::SimpleResponse* response, std::function<void(::grpc::Status)>) override;
       #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
-      void SetFramerate(::grpc::ClientContext* context, const ::SetFramerateRequest* request, ::SetFramerateResponse* response, ::grpc::ClientUnaryReactor* reactor) override;
+      void SetFramerate(::grpc::ClientContext* context, const ::SetFramerateRequest* request, ::SimpleResponse* response, ::grpc::ClientUnaryReactor* reactor) override;
       #else
-      void SetFramerate(::grpc::ClientContext* context, const ::SetFramerateRequest* request, ::SetFramerateResponse* response, ::grpc::experimental::ClientUnaryReactor* reactor) override;
+      void SetFramerate(::grpc::ClientContext* context, const ::SetFramerateRequest* request, ::SimpleResponse* response, ::grpc::experimental::ClientUnaryReactor* reactor) override;
       #endif
       #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
-      void SetFramerate(::grpc::ClientContext* context, const ::grpc::ByteBuffer* request, ::SetFramerateResponse* response, ::grpc::ClientUnaryReactor* reactor) override;
+      void SetFramerate(::grpc::ClientContext* context, const ::grpc::ByteBuffer* request, ::SimpleResponse* response, ::grpc::ClientUnaryReactor* reactor) override;
       #else
-      void SetFramerate(::grpc::ClientContext* context, const ::grpc::ByteBuffer* request, ::SetFramerateResponse* response, ::grpc::experimental::ClientUnaryReactor* reactor) override;
+      void SetFramerate(::grpc::ClientContext* context, const ::grpc::ByteBuffer* request, ::SimpleResponse* response, ::grpc::experimental::ClientUnaryReactor* reactor) override;
+      #endif
+      void SetRecordingPeriod(::grpc::ClientContext* context, const ::SetRecordingPeriodRequest* request, ::SimpleResponse* response, std::function<void(::grpc::Status)>) override;
+      void SetRecordingPeriod(::grpc::ClientContext* context, const ::grpc::ByteBuffer* request, ::SimpleResponse* response, std::function<void(::grpc::Status)>) override;
+      #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
+      void SetRecordingPeriod(::grpc::ClientContext* context, const ::SetRecordingPeriodRequest* request, ::SimpleResponse* response, ::grpc::ClientUnaryReactor* reactor) override;
+      #else
+      void SetRecordingPeriod(::grpc::ClientContext* context, const ::SetRecordingPeriodRequest* request, ::SimpleResponse* response, ::grpc::experimental::ClientUnaryReactor* reactor) override;
+      #endif
+      #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
+      void SetRecordingPeriod(::grpc::ClientContext* context, const ::grpc::ByteBuffer* request, ::SimpleResponse* response, ::grpc::ClientUnaryReactor* reactor) override;
+      #else
+      void SetRecordingPeriod(::grpc::ClientContext* context, const ::grpc::ByteBuffer* request, ::SimpleResponse* response, ::grpc::experimental::ClientUnaryReactor* reactor) override;
+      #endif
+      void SetReferenceCamera(::grpc::ClientContext* context, const ::SetReferenceCameraRequest* request, ::SimpleResponse* response, std::function<void(::grpc::Status)>) override;
+      void SetReferenceCamera(::grpc::ClientContext* context, const ::grpc::ByteBuffer* request, ::SimpleResponse* response, std::function<void(::grpc::Status)>) override;
+      #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
+      void SetReferenceCamera(::grpc::ClientContext* context, const ::SetReferenceCameraRequest* request, ::SimpleResponse* response, ::grpc::ClientUnaryReactor* reactor) override;
+      #else
+      void SetReferenceCamera(::grpc::ClientContext* context, const ::SetReferenceCameraRequest* request, ::SimpleResponse* response, ::grpc::experimental::ClientUnaryReactor* reactor) override;
+      #endif
+      #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
+      void SetReferenceCamera(::grpc::ClientContext* context, const ::grpc::ByteBuffer* request, ::SimpleResponse* response, ::grpc::ClientUnaryReactor* reactor) override;
+      #else
+      void SetReferenceCamera(::grpc::ClientContext* context, const ::grpc::ByteBuffer* request, ::SimpleResponse* response, ::grpc::experimental::ClientUnaryReactor* reactor) override;
+      #endif
+      void PrepareRecording(::grpc::ClientContext* context, const ::SimpleRequest* request, ::SimpleResponse* response, std::function<void(::grpc::Status)>) override;
+      void PrepareRecording(::grpc::ClientContext* context, const ::grpc::ByteBuffer* request, ::SimpleResponse* response, std::function<void(::grpc::Status)>) override;
+      #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
+      void PrepareRecording(::grpc::ClientContext* context, const ::SimpleRequest* request, ::SimpleResponse* response, ::grpc::ClientUnaryReactor* reactor) override;
+      #else
+      void PrepareRecording(::grpc::ClientContext* context, const ::SimpleRequest* request, ::SimpleResponse* response, ::grpc::experimental::ClientUnaryReactor* reactor) override;
+      #endif
+      #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
+      void PrepareRecording(::grpc::ClientContext* context, const ::grpc::ByteBuffer* request, ::SimpleResponse* response, ::grpc::ClientUnaryReactor* reactor) override;
+      #else
+      void PrepareRecording(::grpc::ClientContext* context, const ::grpc::ByteBuffer* request, ::SimpleResponse* response, ::grpc::experimental::ClientUnaryReactor* reactor) override;
+      #endif
+      void StartRecording(::grpc::ClientContext* context, const ::SimpleRequest* request, ::SimpleResponse* response, std::function<void(::grpc::Status)>) override;
+      void StartRecording(::grpc::ClientContext* context, const ::grpc::ByteBuffer* request, ::SimpleResponse* response, std::function<void(::grpc::Status)>) override;
+      #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
+      void StartRecording(::grpc::ClientContext* context, const ::SimpleRequest* request, ::SimpleResponse* response, ::grpc::ClientUnaryReactor* reactor) override;
+      #else
+      void StartRecording(::grpc::ClientContext* context, const ::SimpleRequest* request, ::SimpleResponse* response, ::grpc::experimental::ClientUnaryReactor* reactor) override;
+      #endif
+      #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
+      void StartRecording(::grpc::ClientContext* context, const ::grpc::ByteBuffer* request, ::SimpleResponse* response, ::grpc::ClientUnaryReactor* reactor) override;
+      #else
+      void StartRecording(::grpc::ClientContext* context, const ::grpc::ByteBuffer* request, ::SimpleResponse* response, ::grpc::experimental::ClientUnaryReactor* reactor) override;
       #endif
      private:
       friend class Stub;
@@ -108,9 +268,21 @@ class CameraCommunicatorS final {
    private:
     std::shared_ptr< ::grpc::ChannelInterface> channel_;
     class experimental_async async_stub_{this};
-    ::grpc::ClientAsyncResponseReader< ::SetFramerateResponse>* AsyncSetFramerateRaw(::grpc::ClientContext* context, const ::SetFramerateRequest& request, ::grpc::CompletionQueue* cq) override;
-    ::grpc::ClientAsyncResponseReader< ::SetFramerateResponse>* PrepareAsyncSetFramerateRaw(::grpc::ClientContext* context, const ::SetFramerateRequest& request, ::grpc::CompletionQueue* cq) override;
+    ::grpc::ClientAsyncResponseReader< ::SimpleResponse>* AsyncSetFramerateRaw(::grpc::ClientContext* context, const ::SetFramerateRequest& request, ::grpc::CompletionQueue* cq) override;
+    ::grpc::ClientAsyncResponseReader< ::SimpleResponse>* PrepareAsyncSetFramerateRaw(::grpc::ClientContext* context, const ::SetFramerateRequest& request, ::grpc::CompletionQueue* cq) override;
+    ::grpc::ClientAsyncResponseReader< ::SimpleResponse>* AsyncSetRecordingPeriodRaw(::grpc::ClientContext* context, const ::SetRecordingPeriodRequest& request, ::grpc::CompletionQueue* cq) override;
+    ::grpc::ClientAsyncResponseReader< ::SimpleResponse>* PrepareAsyncSetRecordingPeriodRaw(::grpc::ClientContext* context, const ::SetRecordingPeriodRequest& request, ::grpc::CompletionQueue* cq) override;
+    ::grpc::ClientAsyncResponseReader< ::SimpleResponse>* AsyncSetReferenceCameraRaw(::grpc::ClientContext* context, const ::SetReferenceCameraRequest& request, ::grpc::CompletionQueue* cq) override;
+    ::grpc::ClientAsyncResponseReader< ::SimpleResponse>* PrepareAsyncSetReferenceCameraRaw(::grpc::ClientContext* context, const ::SetReferenceCameraRequest& request, ::grpc::CompletionQueue* cq) override;
+    ::grpc::ClientAsyncResponseReader< ::SimpleResponse>* AsyncPrepareRecordingRaw(::grpc::ClientContext* context, const ::SimpleRequest& request, ::grpc::CompletionQueue* cq) override;
+    ::grpc::ClientAsyncResponseReader< ::SimpleResponse>* PrepareAsyncPrepareRecordingRaw(::grpc::ClientContext* context, const ::SimpleRequest& request, ::grpc::CompletionQueue* cq) override;
+    ::grpc::ClientAsyncResponseReader< ::SimpleResponse>* AsyncStartRecordingRaw(::grpc::ClientContext* context, const ::SimpleRequest& request, ::grpc::CompletionQueue* cq) override;
+    ::grpc::ClientAsyncResponseReader< ::SimpleResponse>* PrepareAsyncStartRecordingRaw(::grpc::ClientContext* context, const ::SimpleRequest& request, ::grpc::CompletionQueue* cq) override;
     const ::grpc::internal::RpcMethod rpcmethod_SetFramerate_;
+    const ::grpc::internal::RpcMethod rpcmethod_SetRecordingPeriod_;
+    const ::grpc::internal::RpcMethod rpcmethod_SetReferenceCamera_;
+    const ::grpc::internal::RpcMethod rpcmethod_PrepareRecording_;
+    const ::grpc::internal::RpcMethod rpcmethod_StartRecording_;
   };
   static std::unique_ptr<Stub> NewStub(const std::shared_ptr< ::grpc::ChannelInterface>& channel, const ::grpc::StubOptions& options = ::grpc::StubOptions());
 
@@ -118,7 +290,11 @@ class CameraCommunicatorS final {
    public:
     Service();
     virtual ~Service();
-    virtual ::grpc::Status SetFramerate(::grpc::ServerContext* context, const ::SetFramerateRequest* request, ::SetFramerateResponse* response);
+    virtual ::grpc::Status SetFramerate(::grpc::ServerContext* context, const ::SetFramerateRequest* request, ::SimpleResponse* response);
+    virtual ::grpc::Status SetRecordingPeriod(::grpc::ServerContext* context, const ::SetRecordingPeriodRequest* request, ::SimpleResponse* response);
+    virtual ::grpc::Status SetReferenceCamera(::grpc::ServerContext* context, const ::SetReferenceCameraRequest* request, ::SimpleResponse* response);
+    virtual ::grpc::Status PrepareRecording(::grpc::ServerContext* context, const ::SimpleRequest* request, ::SimpleResponse* response);
+    virtual ::grpc::Status StartRecording(::grpc::ServerContext* context, const ::SimpleRequest* request, ::SimpleResponse* response);
   };
   template <class BaseClass>
   class WithAsyncMethod_SetFramerate : public BaseClass {
@@ -132,15 +308,95 @@ class CameraCommunicatorS final {
       BaseClassMustBeDerivedFromService(this);
     }
     // disable synchronous version of this method
-    ::grpc::Status SetFramerate(::grpc::ServerContext* /*context*/, const ::SetFramerateRequest* /*request*/, ::SetFramerateResponse* /*response*/) override {
+    ::grpc::Status SetFramerate(::grpc::ServerContext* /*context*/, const ::SetFramerateRequest* /*request*/, ::SimpleResponse* /*response*/) override {
       abort();
       return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
     }
-    void RequestSetFramerate(::grpc::ServerContext* context, ::SetFramerateRequest* request, ::grpc::ServerAsyncResponseWriter< ::SetFramerateResponse>* response, ::grpc::CompletionQueue* new_call_cq, ::grpc::ServerCompletionQueue* notification_cq, void *tag) {
+    void RequestSetFramerate(::grpc::ServerContext* context, ::SetFramerateRequest* request, ::grpc::ServerAsyncResponseWriter< ::SimpleResponse>* response, ::grpc::CompletionQueue* new_call_cq, ::grpc::ServerCompletionQueue* notification_cq, void *tag) {
       ::grpc::Service::RequestAsyncUnary(0, context, request, response, new_call_cq, notification_cq, tag);
     }
   };
-  typedef WithAsyncMethod_SetFramerate<Service > AsyncService;
+  template <class BaseClass>
+  class WithAsyncMethod_SetRecordingPeriod : public BaseClass {
+   private:
+    void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
+   public:
+    WithAsyncMethod_SetRecordingPeriod() {
+      ::grpc::Service::MarkMethodAsync(1);
+    }
+    ~WithAsyncMethod_SetRecordingPeriod() override {
+      BaseClassMustBeDerivedFromService(this);
+    }
+    // disable synchronous version of this method
+    ::grpc::Status SetRecordingPeriod(::grpc::ServerContext* /*context*/, const ::SetRecordingPeriodRequest* /*request*/, ::SimpleResponse* /*response*/) override {
+      abort();
+      return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
+    }
+    void RequestSetRecordingPeriod(::grpc::ServerContext* context, ::SetRecordingPeriodRequest* request, ::grpc::ServerAsyncResponseWriter< ::SimpleResponse>* response, ::grpc::CompletionQueue* new_call_cq, ::grpc::ServerCompletionQueue* notification_cq, void *tag) {
+      ::grpc::Service::RequestAsyncUnary(1, context, request, response, new_call_cq, notification_cq, tag);
+    }
+  };
+  template <class BaseClass>
+  class WithAsyncMethod_SetReferenceCamera : public BaseClass {
+   private:
+    void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
+   public:
+    WithAsyncMethod_SetReferenceCamera() {
+      ::grpc::Service::MarkMethodAsync(2);
+    }
+    ~WithAsyncMethod_SetReferenceCamera() override {
+      BaseClassMustBeDerivedFromService(this);
+    }
+    // disable synchronous version of this method
+    ::grpc::Status SetReferenceCamera(::grpc::ServerContext* /*context*/, const ::SetReferenceCameraRequest* /*request*/, ::SimpleResponse* /*response*/) override {
+      abort();
+      return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
+    }
+    void RequestSetReferenceCamera(::grpc::ServerContext* context, ::SetReferenceCameraRequest* request, ::grpc::ServerAsyncResponseWriter< ::SimpleResponse>* response, ::grpc::CompletionQueue* new_call_cq, ::grpc::ServerCompletionQueue* notification_cq, void *tag) {
+      ::grpc::Service::RequestAsyncUnary(2, context, request, response, new_call_cq, notification_cq, tag);
+    }
+  };
+  template <class BaseClass>
+  class WithAsyncMethod_PrepareRecording : public BaseClass {
+   private:
+    void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
+   public:
+    WithAsyncMethod_PrepareRecording() {
+      ::grpc::Service::MarkMethodAsync(3);
+    }
+    ~WithAsyncMethod_PrepareRecording() override {
+      BaseClassMustBeDerivedFromService(this);
+    }
+    // disable synchronous version of this method
+    ::grpc::Status PrepareRecording(::grpc::ServerContext* /*context*/, const ::SimpleRequest* /*request*/, ::SimpleResponse* /*response*/) override {
+      abort();
+      return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
+    }
+    void RequestPrepareRecording(::grpc::ServerContext* context, ::SimpleRequest* request, ::grpc::ServerAsyncResponseWriter< ::SimpleResponse>* response, ::grpc::CompletionQueue* new_call_cq, ::grpc::ServerCompletionQueue* notification_cq, void *tag) {
+      ::grpc::Service::RequestAsyncUnary(3, context, request, response, new_call_cq, notification_cq, tag);
+    }
+  };
+  template <class BaseClass>
+  class WithAsyncMethod_StartRecording : public BaseClass {
+   private:
+    void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
+   public:
+    WithAsyncMethod_StartRecording() {
+      ::grpc::Service::MarkMethodAsync(4);
+    }
+    ~WithAsyncMethod_StartRecording() override {
+      BaseClassMustBeDerivedFromService(this);
+    }
+    // disable synchronous version of this method
+    ::grpc::Status StartRecording(::grpc::ServerContext* /*context*/, const ::SimpleRequest* /*request*/, ::SimpleResponse* /*response*/) override {
+      abort();
+      return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
+    }
+    void RequestStartRecording(::grpc::ServerContext* context, ::SimpleRequest* request, ::grpc::ServerAsyncResponseWriter< ::SimpleResponse>* response, ::grpc::CompletionQueue* new_call_cq, ::grpc::ServerCompletionQueue* notification_cq, void *tag) {
+      ::grpc::Service::RequestAsyncUnary(4, context, request, response, new_call_cq, notification_cq, tag);
+    }
+  };
+  typedef WithAsyncMethod_SetFramerate<WithAsyncMethod_SetRecordingPeriod<WithAsyncMethod_SetReferenceCamera<WithAsyncMethod_PrepareRecording<WithAsyncMethod_StartRecording<Service > > > > > AsyncService;
   template <class BaseClass>
   class ExperimentalWithCallbackMethod_SetFramerate : public BaseClass {
    private:
@@ -153,46 +409,234 @@ class CameraCommunicatorS final {
       ::grpc::Service::experimental().
     #endif
         MarkMethodCallback(0,
-          new ::grpc_impl::internal::CallbackUnaryHandler< ::SetFramerateRequest, ::SetFramerateResponse>(
+          new ::grpc_impl::internal::CallbackUnaryHandler< ::SetFramerateRequest, ::SimpleResponse>(
             [this](
     #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
                    ::grpc::CallbackServerContext*
     #else
                    ::grpc::experimental::CallbackServerContext*
     #endif
-                     context, const ::SetFramerateRequest* request, ::SetFramerateResponse* response) { return this->SetFramerate(context, request, response); }));}
+                     context, const ::SetFramerateRequest* request, ::SimpleResponse* response) { return this->SetFramerate(context, request, response); }));}
     void SetMessageAllocatorFor_SetFramerate(
-        ::grpc::experimental::MessageAllocator< ::SetFramerateRequest, ::SetFramerateResponse>* allocator) {
+        ::grpc::experimental::MessageAllocator< ::SetFramerateRequest, ::SimpleResponse>* allocator) {
     #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
       ::grpc::internal::MethodHandler* const handler = ::grpc::Service::GetHandler(0);
     #else
       ::grpc::internal::MethodHandler* const handler = ::grpc::Service::experimental().GetHandler(0);
     #endif
-      static_cast<::grpc_impl::internal::CallbackUnaryHandler< ::SetFramerateRequest, ::SetFramerateResponse>*>(handler)
+      static_cast<::grpc_impl::internal::CallbackUnaryHandler< ::SetFramerateRequest, ::SimpleResponse>*>(handler)
               ->SetMessageAllocator(allocator);
     }
     ~ExperimentalWithCallbackMethod_SetFramerate() override {
       BaseClassMustBeDerivedFromService(this);
     }
     // disable synchronous version of this method
-    ::grpc::Status SetFramerate(::grpc::ServerContext* /*context*/, const ::SetFramerateRequest* /*request*/, ::SetFramerateResponse* /*response*/) override {
+    ::grpc::Status SetFramerate(::grpc::ServerContext* /*context*/, const ::SetFramerateRequest* /*request*/, ::SimpleResponse* /*response*/) override {
       abort();
       return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
     }
     #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
     virtual ::grpc::ServerUnaryReactor* SetFramerate(
-      ::grpc::CallbackServerContext* /*context*/, const ::SetFramerateRequest* /*request*/, ::SetFramerateResponse* /*response*/)
+      ::grpc::CallbackServerContext* /*context*/, const ::SetFramerateRequest* /*request*/, ::SimpleResponse* /*response*/)
     #else
     virtual ::grpc::experimental::ServerUnaryReactor* SetFramerate(
-      ::grpc::experimental::CallbackServerContext* /*context*/, const ::SetFramerateRequest* /*request*/, ::SetFramerateResponse* /*response*/)
+      ::grpc::experimental::CallbackServerContext* /*context*/, const ::SetFramerateRequest* /*request*/, ::SimpleResponse* /*response*/)
+    #endif
+      { return nullptr; }
+  };
+  template <class BaseClass>
+  class ExperimentalWithCallbackMethod_SetRecordingPeriod : public BaseClass {
+   private:
+    void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
+   public:
+    ExperimentalWithCallbackMethod_SetRecordingPeriod() {
+    #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
+      ::grpc::Service::
+    #else
+      ::grpc::Service::experimental().
+    #endif
+        MarkMethodCallback(1,
+          new ::grpc_impl::internal::CallbackUnaryHandler< ::SetRecordingPeriodRequest, ::SimpleResponse>(
+            [this](
+    #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
+                   ::grpc::CallbackServerContext*
+    #else
+                   ::grpc::experimental::CallbackServerContext*
+    #endif
+                     context, const ::SetRecordingPeriodRequest* request, ::SimpleResponse* response) { return this->SetRecordingPeriod(context, request, response); }));}
+    void SetMessageAllocatorFor_SetRecordingPeriod(
+        ::grpc::experimental::MessageAllocator< ::SetRecordingPeriodRequest, ::SimpleResponse>* allocator) {
+    #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
+      ::grpc::internal::MethodHandler* const handler = ::grpc::Service::GetHandler(1);
+    #else
+      ::grpc::internal::MethodHandler* const handler = ::grpc::Service::experimental().GetHandler(1);
+    #endif
+      static_cast<::grpc_impl::internal::CallbackUnaryHandler< ::SetRecordingPeriodRequest, ::SimpleResponse>*>(handler)
+              ->SetMessageAllocator(allocator);
+    }
+    ~ExperimentalWithCallbackMethod_SetRecordingPeriod() override {
+      BaseClassMustBeDerivedFromService(this);
+    }
+    // disable synchronous version of this method
+    ::grpc::Status SetRecordingPeriod(::grpc::ServerContext* /*context*/, const ::SetRecordingPeriodRequest* /*request*/, ::SimpleResponse* /*response*/) override {
+      abort();
+      return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
+    }
+    #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
+    virtual ::grpc::ServerUnaryReactor* SetRecordingPeriod(
+      ::grpc::CallbackServerContext* /*context*/, const ::SetRecordingPeriodRequest* /*request*/, ::SimpleResponse* /*response*/)
+    #else
+    virtual ::grpc::experimental::ServerUnaryReactor* SetRecordingPeriod(
+      ::grpc::experimental::CallbackServerContext* /*context*/, const ::SetRecordingPeriodRequest* /*request*/, ::SimpleResponse* /*response*/)
+    #endif
+      { return nullptr; }
+  };
+  template <class BaseClass>
+  class ExperimentalWithCallbackMethod_SetReferenceCamera : public BaseClass {
+   private:
+    void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
+   public:
+    ExperimentalWithCallbackMethod_SetReferenceCamera() {
+    #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
+      ::grpc::Service::
+    #else
+      ::grpc::Service::experimental().
+    #endif
+        MarkMethodCallback(2,
+          new ::grpc_impl::internal::CallbackUnaryHandler< ::SetReferenceCameraRequest, ::SimpleResponse>(
+            [this](
+    #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
+                   ::grpc::CallbackServerContext*
+    #else
+                   ::grpc::experimental::CallbackServerContext*
+    #endif
+                     context, const ::SetReferenceCameraRequest* request, ::SimpleResponse* response) { return this->SetReferenceCamera(context, request, response); }));}
+    void SetMessageAllocatorFor_SetReferenceCamera(
+        ::grpc::experimental::MessageAllocator< ::SetReferenceCameraRequest, ::SimpleResponse>* allocator) {
+    #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
+      ::grpc::internal::MethodHandler* const handler = ::grpc::Service::GetHandler(2);
+    #else
+      ::grpc::internal::MethodHandler* const handler = ::grpc::Service::experimental().GetHandler(2);
+    #endif
+      static_cast<::grpc_impl::internal::CallbackUnaryHandler< ::SetReferenceCameraRequest, ::SimpleResponse>*>(handler)
+              ->SetMessageAllocator(allocator);
+    }
+    ~ExperimentalWithCallbackMethod_SetReferenceCamera() override {
+      BaseClassMustBeDerivedFromService(this);
+    }
+    // disable synchronous version of this method
+    ::grpc::Status SetReferenceCamera(::grpc::ServerContext* /*context*/, const ::SetReferenceCameraRequest* /*request*/, ::SimpleResponse* /*response*/) override {
+      abort();
+      return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
+    }
+    #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
+    virtual ::grpc::ServerUnaryReactor* SetReferenceCamera(
+      ::grpc::CallbackServerContext* /*context*/, const ::SetReferenceCameraRequest* /*request*/, ::SimpleResponse* /*response*/)
+    #else
+    virtual ::grpc::experimental::ServerUnaryReactor* SetReferenceCamera(
+      ::grpc::experimental::CallbackServerContext* /*context*/, const ::SetReferenceCameraRequest* /*request*/, ::SimpleResponse* /*response*/)
+    #endif
+      { return nullptr; }
+  };
+  template <class BaseClass>
+  class ExperimentalWithCallbackMethod_PrepareRecording : public BaseClass {
+   private:
+    void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
+   public:
+    ExperimentalWithCallbackMethod_PrepareRecording() {
+    #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
+      ::grpc::Service::
+    #else
+      ::grpc::Service::experimental().
+    #endif
+        MarkMethodCallback(3,
+          new ::grpc_impl::internal::CallbackUnaryHandler< ::SimpleRequest, ::SimpleResponse>(
+            [this](
+    #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
+                   ::grpc::CallbackServerContext*
+    #else
+                   ::grpc::experimental::CallbackServerContext*
+    #endif
+                     context, const ::SimpleRequest* request, ::SimpleResponse* response) { return this->PrepareRecording(context, request, response); }));}
+    void SetMessageAllocatorFor_PrepareRecording(
+        ::grpc::experimental::MessageAllocator< ::SimpleRequest, ::SimpleResponse>* allocator) {
+    #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
+      ::grpc::internal::MethodHandler* const handler = ::grpc::Service::GetHandler(3);
+    #else
+      ::grpc::internal::MethodHandler* const handler = ::grpc::Service::experimental().GetHandler(3);
+    #endif
+      static_cast<::grpc_impl::internal::CallbackUnaryHandler< ::SimpleRequest, ::SimpleResponse>*>(handler)
+              ->SetMessageAllocator(allocator);
+    }
+    ~ExperimentalWithCallbackMethod_PrepareRecording() override {
+      BaseClassMustBeDerivedFromService(this);
+    }
+    // disable synchronous version of this method
+    ::grpc::Status PrepareRecording(::grpc::ServerContext* /*context*/, const ::SimpleRequest* /*request*/, ::SimpleResponse* /*response*/) override {
+      abort();
+      return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
+    }
+    #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
+    virtual ::grpc::ServerUnaryReactor* PrepareRecording(
+      ::grpc::CallbackServerContext* /*context*/, const ::SimpleRequest* /*request*/, ::SimpleResponse* /*response*/)
+    #else
+    virtual ::grpc::experimental::ServerUnaryReactor* PrepareRecording(
+      ::grpc::experimental::CallbackServerContext* /*context*/, const ::SimpleRequest* /*request*/, ::SimpleResponse* /*response*/)
+    #endif
+      { return nullptr; }
+  };
+  template <class BaseClass>
+  class ExperimentalWithCallbackMethod_StartRecording : public BaseClass {
+   private:
+    void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
+   public:
+    ExperimentalWithCallbackMethod_StartRecording() {
+    #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
+      ::grpc::Service::
+    #else
+      ::grpc::Service::experimental().
+    #endif
+        MarkMethodCallback(4,
+          new ::grpc_impl::internal::CallbackUnaryHandler< ::SimpleRequest, ::SimpleResponse>(
+            [this](
+    #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
+                   ::grpc::CallbackServerContext*
+    #else
+                   ::grpc::experimental::CallbackServerContext*
+    #endif
+                     context, const ::SimpleRequest* request, ::SimpleResponse* response) { return this->StartRecording(context, request, response); }));}
+    void SetMessageAllocatorFor_StartRecording(
+        ::grpc::experimental::MessageAllocator< ::SimpleRequest, ::SimpleResponse>* allocator) {
+    #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
+      ::grpc::internal::MethodHandler* const handler = ::grpc::Service::GetHandler(4);
+    #else
+      ::grpc::internal::MethodHandler* const handler = ::grpc::Service::experimental().GetHandler(4);
+    #endif
+      static_cast<::grpc_impl::internal::CallbackUnaryHandler< ::SimpleRequest, ::SimpleResponse>*>(handler)
+              ->SetMessageAllocator(allocator);
+    }
+    ~ExperimentalWithCallbackMethod_StartRecording() override {
+      BaseClassMustBeDerivedFromService(this);
+    }
+    // disable synchronous version of this method
+    ::grpc::Status StartRecording(::grpc::ServerContext* /*context*/, const ::SimpleRequest* /*request*/, ::SimpleResponse* /*response*/) override {
+      abort();
+      return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
+    }
+    #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
+    virtual ::grpc::ServerUnaryReactor* StartRecording(
+      ::grpc::CallbackServerContext* /*context*/, const ::SimpleRequest* /*request*/, ::SimpleResponse* /*response*/)
+    #else
+    virtual ::grpc::experimental::ServerUnaryReactor* StartRecording(
+      ::grpc::experimental::CallbackServerContext* /*context*/, const ::SimpleRequest* /*request*/, ::SimpleResponse* /*response*/)
     #endif
       { return nullptr; }
   };
   #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
-  typedef ExperimentalWithCallbackMethod_SetFramerate<Service > CallbackService;
+  typedef ExperimentalWithCallbackMethod_SetFramerate<ExperimentalWithCallbackMethod_SetRecordingPeriod<ExperimentalWithCallbackMethod_SetReferenceCamera<ExperimentalWithCallbackMethod_PrepareRecording<ExperimentalWithCallbackMethod_StartRecording<Service > > > > > CallbackService;
   #endif
 
-  typedef ExperimentalWithCallbackMethod_SetFramerate<Service > ExperimentalCallbackService;
+  typedef ExperimentalWithCallbackMethod_SetFramerate<ExperimentalWithCallbackMethod_SetRecordingPeriod<ExperimentalWithCallbackMethod_SetReferenceCamera<ExperimentalWithCallbackMethod_PrepareRecording<ExperimentalWithCallbackMethod_StartRecording<Service > > > > > ExperimentalCallbackService;
   template <class BaseClass>
   class WithGenericMethod_SetFramerate : public BaseClass {
    private:
@@ -205,7 +649,75 @@ class CameraCommunicatorS final {
       BaseClassMustBeDerivedFromService(this);
     }
     // disable synchronous version of this method
-    ::grpc::Status SetFramerate(::grpc::ServerContext* /*context*/, const ::SetFramerateRequest* /*request*/, ::SetFramerateResponse* /*response*/) override {
+    ::grpc::Status SetFramerate(::grpc::ServerContext* /*context*/, const ::SetFramerateRequest* /*request*/, ::SimpleResponse* /*response*/) override {
+      abort();
+      return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
+    }
+  };
+  template <class BaseClass>
+  class WithGenericMethod_SetRecordingPeriod : public BaseClass {
+   private:
+    void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
+   public:
+    WithGenericMethod_SetRecordingPeriod() {
+      ::grpc::Service::MarkMethodGeneric(1);
+    }
+    ~WithGenericMethod_SetRecordingPeriod() override {
+      BaseClassMustBeDerivedFromService(this);
+    }
+    // disable synchronous version of this method
+    ::grpc::Status SetRecordingPeriod(::grpc::ServerContext* /*context*/, const ::SetRecordingPeriodRequest* /*request*/, ::SimpleResponse* /*response*/) override {
+      abort();
+      return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
+    }
+  };
+  template <class BaseClass>
+  class WithGenericMethod_SetReferenceCamera : public BaseClass {
+   private:
+    void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
+   public:
+    WithGenericMethod_SetReferenceCamera() {
+      ::grpc::Service::MarkMethodGeneric(2);
+    }
+    ~WithGenericMethod_SetReferenceCamera() override {
+      BaseClassMustBeDerivedFromService(this);
+    }
+    // disable synchronous version of this method
+    ::grpc::Status SetReferenceCamera(::grpc::ServerContext* /*context*/, const ::SetReferenceCameraRequest* /*request*/, ::SimpleResponse* /*response*/) override {
+      abort();
+      return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
+    }
+  };
+  template <class BaseClass>
+  class WithGenericMethod_PrepareRecording : public BaseClass {
+   private:
+    void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
+   public:
+    WithGenericMethod_PrepareRecording() {
+      ::grpc::Service::MarkMethodGeneric(3);
+    }
+    ~WithGenericMethod_PrepareRecording() override {
+      BaseClassMustBeDerivedFromService(this);
+    }
+    // disable synchronous version of this method
+    ::grpc::Status PrepareRecording(::grpc::ServerContext* /*context*/, const ::SimpleRequest* /*request*/, ::SimpleResponse* /*response*/) override {
+      abort();
+      return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
+    }
+  };
+  template <class BaseClass>
+  class WithGenericMethod_StartRecording : public BaseClass {
+   private:
+    void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
+   public:
+    WithGenericMethod_StartRecording() {
+      ::grpc::Service::MarkMethodGeneric(4);
+    }
+    ~WithGenericMethod_StartRecording() override {
+      BaseClassMustBeDerivedFromService(this);
+    }
+    // disable synchronous version of this method
+    ::grpc::Status StartRecording(::grpc::ServerContext* /*context*/, const ::SimpleRequest* /*request*/, ::SimpleResponse* /*response*/) override {
       abort();
       return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
     }
@@ -222,12 +734,92 @@ class CameraCommunicatorS final {
       BaseClassMustBeDerivedFromService(this);
     }
     // disable synchronous version of this method
-    ::grpc::Status SetFramerate(::grpc::ServerContext* /*context*/, const ::SetFramerateRequest* /*request*/, ::SetFramerateResponse* /*response*/) override {
+    ::grpc::Status SetFramerate(::grpc::ServerContext* /*context*/, const ::SetFramerateRequest* /*request*/, ::SimpleResponse* /*response*/) override {
       abort();
       return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
     }
     void RequestSetFramerate(::grpc::ServerContext* context, ::grpc::ByteBuffer* request, ::grpc::ServerAsyncResponseWriter< ::grpc::ByteBuffer>* response, ::grpc::CompletionQueue* new_call_cq, ::grpc::ServerCompletionQueue* notification_cq, void *tag) {
       ::grpc::Service::RequestAsyncUnary(0, context, request, response, new_call_cq, notification_cq, tag);
+    }
+  };
+  template <class BaseClass>
+  class WithRawMethod_SetRecordingPeriod : public BaseClass {
+   private:
+    void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
+   public:
+    WithRawMethod_SetRecordingPeriod() {
+      ::grpc::Service::MarkMethodRaw(1);
+    }
+    ~WithRawMethod_SetRecordingPeriod() override {
+      BaseClassMustBeDerivedFromService(this);
+    }
+    // disable synchronous version of this method
+    ::grpc::Status SetRecordingPeriod(::grpc::ServerContext* /*context*/, const ::SetRecordingPeriodRequest* /*request*/, ::SimpleResponse* /*response*/) override {
+      abort();
+      return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
+    }
+    void RequestSetRecordingPeriod(::grpc::ServerContext* context, ::grpc::ByteBuffer* request, ::grpc::ServerAsyncResponseWriter< ::grpc::ByteBuffer>* response, ::grpc::CompletionQueue* new_call_cq, ::grpc::ServerCompletionQueue* notification_cq, void *tag) {
+      ::grpc::Service::RequestAsyncUnary(1, context, request, response, new_call_cq, notification_cq, tag);
+    }
+  };
+  template <class BaseClass>
+  class WithRawMethod_SetReferenceCamera : public BaseClass {
+   private:
+    void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
+   public:
+    WithRawMethod_SetReferenceCamera() {
+      ::grpc::Service::MarkMethodRaw(2);
+    }
+    ~WithRawMethod_SetReferenceCamera() override {
+      BaseClassMustBeDerivedFromService(this);
+    }
+    // disable synchronous version of this method
+    ::grpc::Status SetReferenceCamera(::grpc::ServerContext* /*context*/, const ::SetReferenceCameraRequest* /*request*/, ::SimpleResponse* /*response*/) override {
+      abort();
+      return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
+    }
+    void RequestSetReferenceCamera(::grpc::ServerContext* context, ::grpc::ByteBuffer* request, ::grpc::ServerAsyncResponseWriter< ::grpc::ByteBuffer>* response, ::grpc::CompletionQueue* new_call_cq, ::grpc::ServerCompletionQueue* notification_cq, void *tag) {
+      ::grpc::Service::RequestAsyncUnary(2, context, request, response, new_call_cq, notification_cq, tag);
+    }
+  };
+  template <class BaseClass>
+  class WithRawMethod_PrepareRecording : public BaseClass {
+   private:
+    void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
+   public:
+    WithRawMethod_PrepareRecording() {
+      ::grpc::Service::MarkMethodRaw(3);
+    }
+    ~WithRawMethod_PrepareRecording() override {
+      BaseClassMustBeDerivedFromService(this);
+    }
+    // disable synchronous version of this method
+    ::grpc::Status PrepareRecording(::grpc::ServerContext* /*context*/, const ::SimpleRequest* /*request*/, ::SimpleResponse* /*response*/) override {
+      abort();
+      return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
+    }
+    void RequestPrepareRecording(::grpc::ServerContext* context, ::grpc::ByteBuffer* request, ::grpc::ServerAsyncResponseWriter< ::grpc::ByteBuffer>* response, ::grpc::CompletionQueue* new_call_cq, ::grpc::ServerCompletionQueue* notification_cq, void *tag) {
+      ::grpc::Service::RequestAsyncUnary(3, context, request, response, new_call_cq, notification_cq, tag);
+    }
+  };
+  template <class BaseClass>
+  class WithRawMethod_StartRecording : public BaseClass {
+   private:
+    void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
+   public:
+    WithRawMethod_StartRecording() {
+      ::grpc::Service::MarkMethodRaw(4);
+    }
+    ~WithRawMethod_StartRecording() override {
+      BaseClassMustBeDerivedFromService(this);
+    }
+    // disable synchronous version of this method
+    ::grpc::Status StartRecording(::grpc::ServerContext* /*context*/, const ::SimpleRequest* /*request*/, ::SimpleResponse* /*response*/) override {
+      abort();
+      return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
+    }
+    void RequestStartRecording(::grpc::ServerContext* context, ::grpc::ByteBuffer* request, ::grpc::ServerAsyncResponseWriter< ::grpc::ByteBuffer>* response, ::grpc::CompletionQueue* new_call_cq, ::grpc::ServerCompletionQueue* notification_cq, void *tag) {
+      ::grpc::Service::RequestAsyncUnary(4, context, request, response, new_call_cq, notification_cq, tag);
     }
   };
   template <class BaseClass>
@@ -255,7 +847,7 @@ class CameraCommunicatorS final {
       BaseClassMustBeDerivedFromService(this);
     }
     // disable synchronous version of this method
-    ::grpc::Status SetFramerate(::grpc::ServerContext* /*context*/, const ::SetFramerateRequest* /*request*/, ::SetFramerateResponse* /*response*/) override {
+    ::grpc::Status SetFramerate(::grpc::ServerContext* /*context*/, const ::SetFramerateRequest* /*request*/, ::SimpleResponse* /*response*/) override {
       abort();
       return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
     }
@@ -269,6 +861,158 @@ class CameraCommunicatorS final {
       { return nullptr; }
   };
   template <class BaseClass>
+  class ExperimentalWithRawCallbackMethod_SetRecordingPeriod : public BaseClass {
+   private:
+    void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
+   public:
+    ExperimentalWithRawCallbackMethod_SetRecordingPeriod() {
+    #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
+      ::grpc::Service::
+    #else
+      ::grpc::Service::experimental().
+    #endif
+        MarkMethodRawCallback(1,
+          new ::grpc_impl::internal::CallbackUnaryHandler< ::grpc::ByteBuffer, ::grpc::ByteBuffer>(
+            [this](
+    #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
+                   ::grpc::CallbackServerContext*
+    #else
+                   ::grpc::experimental::CallbackServerContext*
+    #endif
+                     context, const ::grpc::ByteBuffer* request, ::grpc::ByteBuffer* response) { return this->SetRecordingPeriod(context, request, response); }));
+    }
+    ~ExperimentalWithRawCallbackMethod_SetRecordingPeriod() override {
+      BaseClassMustBeDerivedFromService(this);
+    }
+    // disable synchronous version of this method
+    ::grpc::Status SetRecordingPeriod(::grpc::ServerContext* /*context*/, const ::SetRecordingPeriodRequest* /*request*/, ::SimpleResponse* /*response*/) override {
+      abort();
+      return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
+    }
+    #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
+    virtual ::grpc::ServerUnaryReactor* SetRecordingPeriod(
+      ::grpc::CallbackServerContext* /*context*/, const ::grpc::ByteBuffer* /*request*/, ::grpc::ByteBuffer* /*response*/)
+    #else
+    virtual ::grpc::experimental::ServerUnaryReactor* SetRecordingPeriod(
+      ::grpc::experimental::CallbackServerContext* /*context*/, const ::grpc::ByteBuffer* /*request*/, ::grpc::ByteBuffer* /*response*/)
+    #endif
+      { return nullptr; }
+  };
+  template <class BaseClass>
+  class ExperimentalWithRawCallbackMethod_SetReferenceCamera : public BaseClass {
+   private:
+    void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
+   public:
+    ExperimentalWithRawCallbackMethod_SetReferenceCamera() {
+    #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
+      ::grpc::Service::
+    #else
+      ::grpc::Service::experimental().
+    #endif
+        MarkMethodRawCallback(2,
+          new ::grpc_impl::internal::CallbackUnaryHandler< ::grpc::ByteBuffer, ::grpc::ByteBuffer>(
+            [this](
+    #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
+                   ::grpc::CallbackServerContext*
+    #else
+                   ::grpc::experimental::CallbackServerContext*
+    #endif
+                     context, const ::grpc::ByteBuffer* request, ::grpc::ByteBuffer* response) { return this->SetReferenceCamera(context, request, response); }));
+    }
+    ~ExperimentalWithRawCallbackMethod_SetReferenceCamera() override {
+      BaseClassMustBeDerivedFromService(this);
+    }
+    // disable synchronous version of this method
+    ::grpc::Status SetReferenceCamera(::grpc::ServerContext* /*context*/, const ::SetReferenceCameraRequest* /*request*/, ::SimpleResponse* /*response*/) override {
+      abort();
+      return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
+    }
+    #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
+    virtual ::grpc::ServerUnaryReactor* SetReferenceCamera(
+      ::grpc::CallbackServerContext* /*context*/, const ::grpc::ByteBuffer* /*request*/, ::grpc::ByteBuffer* /*response*/)
+    #else
+    virtual ::grpc::experimental::ServerUnaryReactor* SetReferenceCamera(
+      ::grpc::experimental::CallbackServerContext* /*context*/, const ::grpc::ByteBuffer* /*request*/, ::grpc::ByteBuffer* /*response*/)
+    #endif
+      { return nullptr; }
+  };
+  template <class BaseClass>
+  class ExperimentalWithRawCallbackMethod_PrepareRecording : public BaseClass {
+   private:
+    void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
+   public:
+    ExperimentalWithRawCallbackMethod_PrepareRecording() {
+    #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
+      ::grpc::Service::
+    #else
+      ::grpc::Service::experimental().
+    #endif
+        MarkMethodRawCallback(3,
+          new ::grpc_impl::internal::CallbackUnaryHandler< ::grpc::ByteBuffer, ::grpc::ByteBuffer>(
+            [this](
+    #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
+                   ::grpc::CallbackServerContext*
+    #else
+                   ::grpc::experimental::CallbackServerContext*
+    #endif
+                     context, const ::grpc::ByteBuffer* request, ::grpc::ByteBuffer* response) { return this->PrepareRecording(context, request, response); }));
+    }
+    ~ExperimentalWithRawCallbackMethod_PrepareRecording() override {
+      BaseClassMustBeDerivedFromService(this);
+    }
+    // disable synchronous version of this method
+    ::grpc::Status PrepareRecording(::grpc::ServerContext* /*context*/, const ::SimpleRequest* /*request*/, ::SimpleResponse* /*response*/) override {
+      abort();
+      return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
+    }
+    #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
+    virtual ::grpc::ServerUnaryReactor* PrepareRecording(
+      ::grpc::CallbackServerContext* /*context*/, const ::grpc::ByteBuffer* /*request*/, ::grpc::ByteBuffer* /*response*/)
+    #else
+    virtual ::grpc::experimental::ServerUnaryReactor* PrepareRecording(
+      ::grpc::experimental::CallbackServerContext* /*context*/, const ::grpc::ByteBuffer* /*request*/, ::grpc::ByteBuffer* /*response*/)
+    #endif
+      { return nullptr; }
+  };
+  template <class BaseClass>
+  class ExperimentalWithRawCallbackMethod_StartRecording : public BaseClass {
+   private:
+    void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
+   public:
+    ExperimentalWithRawCallbackMethod_StartRecording() {
+    #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
+      ::grpc::Service::
+    #else
+      ::grpc::Service::experimental().
+    #endif
+        MarkMethodRawCallback(4,
+          new ::grpc_impl::internal::CallbackUnaryHandler< ::grpc::ByteBuffer, ::grpc::ByteBuffer>(
+            [this](
+    #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
+                   ::grpc::CallbackServerContext*
+    #else
+                   ::grpc::experimental::CallbackServerContext*
+    #endif
+                     context, const ::grpc::ByteBuffer* request, ::grpc::ByteBuffer* response) { return this->StartRecording(context, request, response); }));
+    }
+    ~ExperimentalWithRawCallbackMethod_StartRecording() override {
+      BaseClassMustBeDerivedFromService(this);
+    }
+    // disable synchronous version of this method
+    ::grpc::Status StartRecording(::grpc::ServerContext* /*context*/, const ::SimpleRequest* /*request*/, ::SimpleResponse* /*response*/) override {
+      abort();
+      return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
+    }
+    #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
+    virtual ::grpc::ServerUnaryReactor* StartRecording(
+      ::grpc::CallbackServerContext* /*context*/, const ::grpc::ByteBuffer* /*request*/, ::grpc::ByteBuffer* /*response*/)
+    #else
+    virtual ::grpc::experimental::ServerUnaryReactor* StartRecording(
+      ::grpc::experimental::CallbackServerContext* /*context*/, const ::grpc::ByteBuffer* /*request*/, ::grpc::ByteBuffer* /*response*/)
+    #endif
+      { return nullptr; }
+  };
+  template <class BaseClass>
   class WithStreamedUnaryMethod_SetFramerate : public BaseClass {
    private:
     void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
@@ -276,10 +1020,10 @@ class CameraCommunicatorS final {
     WithStreamedUnaryMethod_SetFramerate() {
       ::grpc::Service::MarkMethodStreamed(0,
         new ::grpc::internal::StreamedUnaryHandler<
-          ::SetFramerateRequest, ::SetFramerateResponse>(
+          ::SetFramerateRequest, ::SimpleResponse>(
             [this](::grpc_impl::ServerContext* context,
                    ::grpc_impl::ServerUnaryStreamer<
-                     ::SetFramerateRequest, ::SetFramerateResponse>* streamer) {
+                     ::SetFramerateRequest, ::SimpleResponse>* streamer) {
                        return this->StreamedSetFramerate(context,
                          streamer);
                   }));
@@ -288,16 +1032,124 @@ class CameraCommunicatorS final {
       BaseClassMustBeDerivedFromService(this);
     }
     // disable regular version of this method
-    ::grpc::Status SetFramerate(::grpc::ServerContext* /*context*/, const ::SetFramerateRequest* /*request*/, ::SetFramerateResponse* /*response*/) override {
+    ::grpc::Status SetFramerate(::grpc::ServerContext* /*context*/, const ::SetFramerateRequest* /*request*/, ::SimpleResponse* /*response*/) override {
       abort();
       return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
     }
     // replace default version of method with streamed unary
-    virtual ::grpc::Status StreamedSetFramerate(::grpc::ServerContext* context, ::grpc::ServerUnaryStreamer< ::SetFramerateRequest,::SetFramerateResponse>* server_unary_streamer) = 0;
+    virtual ::grpc::Status StreamedSetFramerate(::grpc::ServerContext* context, ::grpc::ServerUnaryStreamer< ::SetFramerateRequest,::SimpleResponse>* server_unary_streamer) = 0;
   };
-  typedef WithStreamedUnaryMethod_SetFramerate<Service > StreamedUnaryService;
+  template <class BaseClass>
+  class WithStreamedUnaryMethod_SetRecordingPeriod : public BaseClass {
+   private:
+    void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
+   public:
+    WithStreamedUnaryMethod_SetRecordingPeriod() {
+      ::grpc::Service::MarkMethodStreamed(1,
+        new ::grpc::internal::StreamedUnaryHandler<
+          ::SetRecordingPeriodRequest, ::SimpleResponse>(
+            [this](::grpc_impl::ServerContext* context,
+                   ::grpc_impl::ServerUnaryStreamer<
+                     ::SetRecordingPeriodRequest, ::SimpleResponse>* streamer) {
+                       return this->StreamedSetRecordingPeriod(context,
+                         streamer);
+                  }));
+    }
+    ~WithStreamedUnaryMethod_SetRecordingPeriod() override {
+      BaseClassMustBeDerivedFromService(this);
+    }
+    // disable regular version of this method
+    ::grpc::Status SetRecordingPeriod(::grpc::ServerContext* /*context*/, const ::SetRecordingPeriodRequest* /*request*/, ::SimpleResponse* /*response*/) override {
+      abort();
+      return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
+    }
+    // replace default version of method with streamed unary
+    virtual ::grpc::Status StreamedSetRecordingPeriod(::grpc::ServerContext* context, ::grpc::ServerUnaryStreamer< ::SetRecordingPeriodRequest,::SimpleResponse>* server_unary_streamer) = 0;
+  };
+  template <class BaseClass>
+  class WithStreamedUnaryMethod_SetReferenceCamera : public BaseClass {
+   private:
+    void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
+   public:
+    WithStreamedUnaryMethod_SetReferenceCamera() {
+      ::grpc::Service::MarkMethodStreamed(2,
+        new ::grpc::internal::StreamedUnaryHandler<
+          ::SetReferenceCameraRequest, ::SimpleResponse>(
+            [this](::grpc_impl::ServerContext* context,
+                   ::grpc_impl::ServerUnaryStreamer<
+                     ::SetReferenceCameraRequest, ::SimpleResponse>* streamer) {
+                       return this->StreamedSetReferenceCamera(context,
+                         streamer);
+                  }));
+    }
+    ~WithStreamedUnaryMethod_SetReferenceCamera() override {
+      BaseClassMustBeDerivedFromService(this);
+    }
+    // disable regular version of this method
+    ::grpc::Status SetReferenceCamera(::grpc::ServerContext* /*context*/, const ::SetReferenceCameraRequest* /*request*/, ::SimpleResponse* /*response*/) override {
+      abort();
+      return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
+    }
+    // replace default version of method with streamed unary
+    virtual ::grpc::Status StreamedSetReferenceCamera(::grpc::ServerContext* context, ::grpc::ServerUnaryStreamer< ::SetReferenceCameraRequest,::SimpleResponse>* server_unary_streamer) = 0;
+  };
+  template <class BaseClass>
+  class WithStreamedUnaryMethod_PrepareRecording : public BaseClass {
+   private:
+    void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
+   public:
+    WithStreamedUnaryMethod_PrepareRecording() {
+      ::grpc::Service::MarkMethodStreamed(3,
+        new ::grpc::internal::StreamedUnaryHandler<
+          ::SimpleRequest, ::SimpleResponse>(
+            [this](::grpc_impl::ServerContext* context,
+                   ::grpc_impl::ServerUnaryStreamer<
+                     ::SimpleRequest, ::SimpleResponse>* streamer) {
+                       return this->StreamedPrepareRecording(context,
+                         streamer);
+                  }));
+    }
+    ~WithStreamedUnaryMethod_PrepareRecording() override {
+      BaseClassMustBeDerivedFromService(this);
+    }
+    // disable regular version of this method
+    ::grpc::Status PrepareRecording(::grpc::ServerContext* /*context*/, const ::SimpleRequest* /*request*/, ::SimpleResponse* /*response*/) override {
+      abort();
+      return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
+    }
+    // replace default version of method with streamed unary
+    virtual ::grpc::Status StreamedPrepareRecording(::grpc::ServerContext* context, ::grpc::ServerUnaryStreamer< ::SimpleRequest,::SimpleResponse>* server_unary_streamer) = 0;
+  };
+  template <class BaseClass>
+  class WithStreamedUnaryMethod_StartRecording : public BaseClass {
+   private:
+    void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
+   public:
+    WithStreamedUnaryMethod_StartRecording() {
+      ::grpc::Service::MarkMethodStreamed(4,
+        new ::grpc::internal::StreamedUnaryHandler<
+          ::SimpleRequest, ::SimpleResponse>(
+            [this](::grpc_impl::ServerContext* context,
+                   ::grpc_impl::ServerUnaryStreamer<
+                     ::SimpleRequest, ::SimpleResponse>* streamer) {
+                       return this->StreamedStartRecording(context,
+                         streamer);
+                  }));
+    }
+    ~WithStreamedUnaryMethod_StartRecording() override {
+      BaseClassMustBeDerivedFromService(this);
+    }
+    // disable regular version of this method
+    ::grpc::Status StartRecording(::grpc::ServerContext* /*context*/, const ::SimpleRequest* /*request*/, ::SimpleResponse* /*response*/) override {
+      abort();
+      return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
+    }
+    // replace default version of method with streamed unary
+    virtual ::grpc::Status StreamedStartRecording(::grpc::ServerContext* context, ::grpc::ServerUnaryStreamer< ::SimpleRequest,::SimpleResponse>* server_unary_streamer) = 0;
+  };
+  typedef WithStreamedUnaryMethod_SetFramerate<WithStreamedUnaryMethod_SetRecordingPeriod<WithStreamedUnaryMethod_SetReferenceCamera<WithStreamedUnaryMethod_PrepareRecording<WithStreamedUnaryMethod_StartRecording<Service > > > > > StreamedUnaryService;
   typedef Service SplitStreamedService;
-  typedef WithStreamedUnaryMethod_SetFramerate<Service > StreamedService;
+  typedef WithStreamedUnaryMethod_SetFramerate<WithStreamedUnaryMethod_SetRecordingPeriod<WithStreamedUnaryMethod_SetReferenceCamera<WithStreamedUnaryMethod_PrepareRecording<WithStreamedUnaryMethod_StartRecording<Service > > > > > StreamedService;
 };
 
 

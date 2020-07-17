@@ -24,9 +24,15 @@ public:
 	CameraCommunicatorSClient(std::shared_ptr<Channel> channel) : stub_(CameraCommunicatorS::NewStub(channel)) {
 	}
 
-	bool SendSetFramerate(const SetFramerateRequest& setFramerateRequest, SetFramerateResponse* setFramerateResponse);
-
 	bool sendFramerate(const double framerate);
+	bool sendRecordingPeriod(const double recordingPeriod);
+	bool sendReferenceCamera(const int serial);
+
+	bool prepareRecording();
+	bool startRecording();
+
+	INT32 lastCode = 0;
+	CString* lastDescritpion;
 
 private:
 	std::unique_ptr<CameraCommunicatorS::Stub> stub_;
@@ -38,16 +44,22 @@ public:
 	CameraClient();
 	virtual ~CameraClient();
 
-	virtual void run();
-
 	virtual void connect_f();
 	virtual void disconnect_f();
+
 	virtual void sendFramerate(const double framerate);
+	virtual void sendRecordingPeriod(const double recordingPeriod);
+	virtual void sendReferenceCamera(const int serial);
+
+	virtual void syncTime();
+
+	virtual void prepareRecording();
+	virtual void startRecording();
+
+	virtual bool isConnected();
 
 	CString server_ip;
 	long port;
-
-	std::atomic<bool> disconnect;
 
 	CEdit* clientStatusGuiEdt;
 	CEdit* clientLogGuiEdt;

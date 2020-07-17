@@ -47,7 +47,7 @@ struct TableStruct_cameras_5fmessages_2eproto {
     PROTOBUF_SECTION_VARIABLE(protodesc_cold);
   static const ::PROTOBUF_NAMESPACE_ID::internal::AuxillaryParseTableField aux[]
     PROTOBUF_SECTION_VARIABLE(protodesc_cold);
-  static const ::PROTOBUF_NAMESPACE_ID::internal::ParseTable schema[2]
+  static const ::PROTOBUF_NAMESPACE_ID::internal::ParseTable schema[5]
     PROTOBUF_SECTION_VARIABLE(protodesc_cold);
   static const ::PROTOBUF_NAMESPACE_ID::internal::FieldMetadata field_metadata[];
   static const ::PROTOBUF_NAMESPACE_ID::internal::SerializationTable serialization_table[];
@@ -57,15 +57,328 @@ extern const ::PROTOBUF_NAMESPACE_ID::internal::DescriptorTable descriptor_table
 class SetFramerateRequest;
 class SetFramerateRequestDefaultTypeInternal;
 extern SetFramerateRequestDefaultTypeInternal _SetFramerateRequest_default_instance_;
-class SetFramerateResponse;
-class SetFramerateResponseDefaultTypeInternal;
-extern SetFramerateResponseDefaultTypeInternal _SetFramerateResponse_default_instance_;
+class SetRecordingPeriodRequest;
+class SetRecordingPeriodRequestDefaultTypeInternal;
+extern SetRecordingPeriodRequestDefaultTypeInternal _SetRecordingPeriodRequest_default_instance_;
+class SetReferenceCameraRequest;
+class SetReferenceCameraRequestDefaultTypeInternal;
+extern SetReferenceCameraRequestDefaultTypeInternal _SetReferenceCameraRequest_default_instance_;
+class SimpleRequest;
+class SimpleRequestDefaultTypeInternal;
+extern SimpleRequestDefaultTypeInternal _SimpleRequest_default_instance_;
+class SimpleResponse;
+class SimpleResponseDefaultTypeInternal;
+extern SimpleResponseDefaultTypeInternal _SimpleResponse_default_instance_;
 PROTOBUF_NAMESPACE_OPEN
 template<> ::SetFramerateRequest* Arena::CreateMaybeMessage<::SetFramerateRequest>(Arena*);
-template<> ::SetFramerateResponse* Arena::CreateMaybeMessage<::SetFramerateResponse>(Arena*);
+template<> ::SetRecordingPeriodRequest* Arena::CreateMaybeMessage<::SetRecordingPeriodRequest>(Arena*);
+template<> ::SetReferenceCameraRequest* Arena::CreateMaybeMessage<::SetReferenceCameraRequest>(Arena*);
+template<> ::SimpleRequest* Arena::CreateMaybeMessage<::SimpleRequest>(Arena*);
+template<> ::SimpleResponse* Arena::CreateMaybeMessage<::SimpleResponse>(Arena*);
 PROTOBUF_NAMESPACE_CLOSE
 
 // ===================================================================
+
+class SimpleRequest PROTOBUF_FINAL :
+    public ::PROTOBUF_NAMESPACE_ID::Message /* @@protoc_insertion_point(class_definition:SimpleRequest) */ {
+ public:
+  inline SimpleRequest() : SimpleRequest(nullptr) {};
+  virtual ~SimpleRequest();
+
+  SimpleRequest(const SimpleRequest& from);
+  SimpleRequest(SimpleRequest&& from) noexcept
+    : SimpleRequest() {
+    *this = ::std::move(from);
+  }
+
+  inline SimpleRequest& operator=(const SimpleRequest& from) {
+    CopyFrom(from);
+    return *this;
+  }
+  inline SimpleRequest& operator=(SimpleRequest&& from) noexcept {
+    if (GetArena() == from.GetArena()) {
+      if (this != &from) InternalSwap(&from);
+    } else {
+      CopyFrom(from);
+    }
+    return *this;
+  }
+
+  static const ::PROTOBUF_NAMESPACE_ID::Descriptor* descriptor() {
+    return GetDescriptor();
+  }
+  static const ::PROTOBUF_NAMESPACE_ID::Descriptor* GetDescriptor() {
+    return GetMetadataStatic().descriptor;
+  }
+  static const ::PROTOBUF_NAMESPACE_ID::Reflection* GetReflection() {
+    return GetMetadataStatic().reflection;
+  }
+  static const SimpleRequest& default_instance();
+
+  static void InitAsDefaultInstance();  // FOR INTERNAL USE ONLY
+  static inline const SimpleRequest* internal_default_instance() {
+    return reinterpret_cast<const SimpleRequest*>(
+               &_SimpleRequest_default_instance_);
+  }
+  static constexpr int kIndexInFileMessages =
+    0;
+
+  friend void swap(SimpleRequest& a, SimpleRequest& b) {
+    a.Swap(&b);
+  }
+  inline void Swap(SimpleRequest* other) {
+    if (other == this) return;
+    if (GetArena() == other->GetArena()) {
+      InternalSwap(other);
+    } else {
+      ::PROTOBUF_NAMESPACE_ID::internal::GenericSwap(this, other);
+    }
+  }
+  void UnsafeArenaSwap(SimpleRequest* other) {
+    if (other == this) return;
+    GOOGLE_DCHECK(GetArena() == other->GetArena());
+    InternalSwap(other);
+  }
+
+  // implements Message ----------------------------------------------
+
+  inline SimpleRequest* New() const final {
+    return CreateMaybeMessage<SimpleRequest>(nullptr);
+  }
+
+  SimpleRequest* New(::PROTOBUF_NAMESPACE_ID::Arena* arena) const final {
+    return CreateMaybeMessage<SimpleRequest>(arena);
+  }
+  void CopyFrom(const ::PROTOBUF_NAMESPACE_ID::Message& from) final;
+  void MergeFrom(const ::PROTOBUF_NAMESPACE_ID::Message& from) final;
+  void CopyFrom(const SimpleRequest& from);
+  void MergeFrom(const SimpleRequest& from);
+  PROTOBUF_ATTRIBUTE_REINITIALIZES void Clear() final;
+  bool IsInitialized() const final;
+
+  size_t ByteSizeLong() const final;
+  const char* _InternalParse(const char* ptr, ::PROTOBUF_NAMESPACE_ID::internal::ParseContext* ctx) final;
+  ::PROTOBUF_NAMESPACE_ID::uint8* _InternalSerialize(
+      ::PROTOBUF_NAMESPACE_ID::uint8* target, ::PROTOBUF_NAMESPACE_ID::io::EpsCopyOutputStream* stream) const final;
+  int GetCachedSize() const final { return _cached_size_.Get(); }
+
+  private:
+  inline void SharedCtor();
+  inline void SharedDtor();
+  void SetCachedSize(int size) const final;
+  void InternalSwap(SimpleRequest* other);
+  friend class ::PROTOBUF_NAMESPACE_ID::internal::AnyMetadata;
+  static ::PROTOBUF_NAMESPACE_ID::StringPiece FullMessageName() {
+    return "SimpleRequest";
+  }
+  protected:
+  explicit SimpleRequest(::PROTOBUF_NAMESPACE_ID::Arena* arena);
+  private:
+  static void ArenaDtor(void* object);
+  inline void RegisterArenaDtor(::PROTOBUF_NAMESPACE_ID::Arena* arena);
+  public:
+
+  ::PROTOBUF_NAMESPACE_ID::Metadata GetMetadata() const final;
+  private:
+  static ::PROTOBUF_NAMESPACE_ID::Metadata GetMetadataStatic() {
+    ::PROTOBUF_NAMESPACE_ID::internal::AssignDescriptors(&::descriptor_table_cameras_5fmessages_2eproto);
+    return ::descriptor_table_cameras_5fmessages_2eproto.file_level_metadata[kIndexInFileMessages];
+  }
+
+  public:
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  enum : int {
+    kCodeFieldNumber = 1,
+  };
+  // int32 code = 1;
+  void clear_code();
+  ::PROTOBUF_NAMESPACE_ID::int32 code() const;
+  void set_code(::PROTOBUF_NAMESPACE_ID::int32 value);
+  private:
+  ::PROTOBUF_NAMESPACE_ID::int32 _internal_code() const;
+  void _internal_set_code(::PROTOBUF_NAMESPACE_ID::int32 value);
+  public:
+
+  // @@protoc_insertion_point(class_scope:SimpleRequest)
+ private:
+  class _Internal;
+
+  template <typename T> friend class ::PROTOBUF_NAMESPACE_ID::Arena::InternalHelper;
+  typedef void InternalArenaConstructable_;
+  typedef void DestructorSkippable_;
+  ::PROTOBUF_NAMESPACE_ID::int32 code_;
+  mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
+  friend struct ::TableStruct_cameras_5fmessages_2eproto;
+};
+// -------------------------------------------------------------------
+
+class SimpleResponse PROTOBUF_FINAL :
+    public ::PROTOBUF_NAMESPACE_ID::Message /* @@protoc_insertion_point(class_definition:SimpleResponse) */ {
+ public:
+  inline SimpleResponse() : SimpleResponse(nullptr) {};
+  virtual ~SimpleResponse();
+
+  SimpleResponse(const SimpleResponse& from);
+  SimpleResponse(SimpleResponse&& from) noexcept
+    : SimpleResponse() {
+    *this = ::std::move(from);
+  }
+
+  inline SimpleResponse& operator=(const SimpleResponse& from) {
+    CopyFrom(from);
+    return *this;
+  }
+  inline SimpleResponse& operator=(SimpleResponse&& from) noexcept {
+    if (GetArena() == from.GetArena()) {
+      if (this != &from) InternalSwap(&from);
+    } else {
+      CopyFrom(from);
+    }
+    return *this;
+  }
+
+  static const ::PROTOBUF_NAMESPACE_ID::Descriptor* descriptor() {
+    return GetDescriptor();
+  }
+  static const ::PROTOBUF_NAMESPACE_ID::Descriptor* GetDescriptor() {
+    return GetMetadataStatic().descriptor;
+  }
+  static const ::PROTOBUF_NAMESPACE_ID::Reflection* GetReflection() {
+    return GetMetadataStatic().reflection;
+  }
+  static const SimpleResponse& default_instance();
+
+  static void InitAsDefaultInstance();  // FOR INTERNAL USE ONLY
+  static inline const SimpleResponse* internal_default_instance() {
+    return reinterpret_cast<const SimpleResponse*>(
+               &_SimpleResponse_default_instance_);
+  }
+  static constexpr int kIndexInFileMessages =
+    1;
+
+  friend void swap(SimpleResponse& a, SimpleResponse& b) {
+    a.Swap(&b);
+  }
+  inline void Swap(SimpleResponse* other) {
+    if (other == this) return;
+    if (GetArena() == other->GetArena()) {
+      InternalSwap(other);
+    } else {
+      ::PROTOBUF_NAMESPACE_ID::internal::GenericSwap(this, other);
+    }
+  }
+  void UnsafeArenaSwap(SimpleResponse* other) {
+    if (other == this) return;
+    GOOGLE_DCHECK(GetArena() == other->GetArena());
+    InternalSwap(other);
+  }
+
+  // implements Message ----------------------------------------------
+
+  inline SimpleResponse* New() const final {
+    return CreateMaybeMessage<SimpleResponse>(nullptr);
+  }
+
+  SimpleResponse* New(::PROTOBUF_NAMESPACE_ID::Arena* arena) const final {
+    return CreateMaybeMessage<SimpleResponse>(arena);
+  }
+  void CopyFrom(const ::PROTOBUF_NAMESPACE_ID::Message& from) final;
+  void MergeFrom(const ::PROTOBUF_NAMESPACE_ID::Message& from) final;
+  void CopyFrom(const SimpleResponse& from);
+  void MergeFrom(const SimpleResponse& from);
+  PROTOBUF_ATTRIBUTE_REINITIALIZES void Clear() final;
+  bool IsInitialized() const final;
+
+  size_t ByteSizeLong() const final;
+  const char* _InternalParse(const char* ptr, ::PROTOBUF_NAMESPACE_ID::internal::ParseContext* ctx) final;
+  ::PROTOBUF_NAMESPACE_ID::uint8* _InternalSerialize(
+      ::PROTOBUF_NAMESPACE_ID::uint8* target, ::PROTOBUF_NAMESPACE_ID::io::EpsCopyOutputStream* stream) const final;
+  int GetCachedSize() const final { return _cached_size_.Get(); }
+
+  private:
+  inline void SharedCtor();
+  inline void SharedDtor();
+  void SetCachedSize(int size) const final;
+  void InternalSwap(SimpleResponse* other);
+  friend class ::PROTOBUF_NAMESPACE_ID::internal::AnyMetadata;
+  static ::PROTOBUF_NAMESPACE_ID::StringPiece FullMessageName() {
+    return "SimpleResponse";
+  }
+  protected:
+  explicit SimpleResponse(::PROTOBUF_NAMESPACE_ID::Arena* arena);
+  private:
+  static void ArenaDtor(void* object);
+  inline void RegisterArenaDtor(::PROTOBUF_NAMESPACE_ID::Arena* arena);
+  public:
+
+  ::PROTOBUF_NAMESPACE_ID::Metadata GetMetadata() const final;
+  private:
+  static ::PROTOBUF_NAMESPACE_ID::Metadata GetMetadataStatic() {
+    ::PROTOBUF_NAMESPACE_ID::internal::AssignDescriptors(&::descriptor_table_cameras_5fmessages_2eproto);
+    return ::descriptor_table_cameras_5fmessages_2eproto.file_level_metadata[kIndexInFileMessages];
+  }
+
+  public:
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  enum : int {
+    kDescriptionFieldNumber = 2,
+    kCodeFieldNumber = 1,
+  };
+  // string description = 2;
+  void clear_description();
+  const std::string& description() const;
+  void set_description(const std::string& value);
+  void set_description(std::string&& value);
+  void set_description(const char* value);
+  void set_description(const char* value, size_t size);
+  std::string* mutable_description();
+  std::string* release_description();
+  void set_allocated_description(std::string* description);
+  GOOGLE_PROTOBUF_RUNTIME_DEPRECATED("The unsafe_arena_ accessors for"
+  "    string fields are deprecated and will be removed in a"
+  "    future release.")
+  std::string* unsafe_arena_release_description();
+  GOOGLE_PROTOBUF_RUNTIME_DEPRECATED("The unsafe_arena_ accessors for"
+  "    string fields are deprecated and will be removed in a"
+  "    future release.")
+  void unsafe_arena_set_allocated_description(
+      std::string* description);
+  private:
+  const std::string& _internal_description() const;
+  void _internal_set_description(const std::string& value);
+  std::string* _internal_mutable_description();
+  public:
+
+  // int32 code = 1;
+  void clear_code();
+  ::PROTOBUF_NAMESPACE_ID::int32 code() const;
+  void set_code(::PROTOBUF_NAMESPACE_ID::int32 value);
+  private:
+  ::PROTOBUF_NAMESPACE_ID::int32 _internal_code() const;
+  void _internal_set_code(::PROTOBUF_NAMESPACE_ID::int32 value);
+  public:
+
+  // @@protoc_insertion_point(class_scope:SimpleResponse)
+ private:
+  class _Internal;
+
+  template <typename T> friend class ::PROTOBUF_NAMESPACE_ID::Arena::InternalHelper;
+  typedef void InternalArenaConstructable_;
+  typedef void DestructorSkippable_;
+  ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr description_;
+  ::PROTOBUF_NAMESPACE_ID::int32 code_;
+  mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
+  friend struct ::TableStruct_cameras_5fmessages_2eproto;
+};
+// -------------------------------------------------------------------
 
 class SetFramerateRequest PROTOBUF_FINAL :
     public ::PROTOBUF_NAMESPACE_ID::Message /* @@protoc_insertion_point(class_definition:SetFramerateRequest) */ {
@@ -109,7 +422,7 @@ class SetFramerateRequest PROTOBUF_FINAL :
                &_SetFramerateRequest_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    0;
+    2;
 
   friend void swap(SetFramerateRequest& a, SetFramerateRequest& b) {
     a.Swap(&b);
@@ -231,23 +544,23 @@ class SetFramerateRequest PROTOBUF_FINAL :
 };
 // -------------------------------------------------------------------
 
-class SetFramerateResponse PROTOBUF_FINAL :
-    public ::PROTOBUF_NAMESPACE_ID::Message /* @@protoc_insertion_point(class_definition:SetFramerateResponse) */ {
+class SetRecordingPeriodRequest PROTOBUF_FINAL :
+    public ::PROTOBUF_NAMESPACE_ID::Message /* @@protoc_insertion_point(class_definition:SetRecordingPeriodRequest) */ {
  public:
-  inline SetFramerateResponse() : SetFramerateResponse(nullptr) {};
-  virtual ~SetFramerateResponse();
+  inline SetRecordingPeriodRequest() : SetRecordingPeriodRequest(nullptr) {};
+  virtual ~SetRecordingPeriodRequest();
 
-  SetFramerateResponse(const SetFramerateResponse& from);
-  SetFramerateResponse(SetFramerateResponse&& from) noexcept
-    : SetFramerateResponse() {
+  SetRecordingPeriodRequest(const SetRecordingPeriodRequest& from);
+  SetRecordingPeriodRequest(SetRecordingPeriodRequest&& from) noexcept
+    : SetRecordingPeriodRequest() {
     *this = ::std::move(from);
   }
 
-  inline SetFramerateResponse& operator=(const SetFramerateResponse& from) {
+  inline SetRecordingPeriodRequest& operator=(const SetRecordingPeriodRequest& from) {
     CopyFrom(from);
     return *this;
   }
-  inline SetFramerateResponse& operator=(SetFramerateResponse&& from) noexcept {
+  inline SetRecordingPeriodRequest& operator=(SetRecordingPeriodRequest&& from) noexcept {
     if (GetArena() == from.GetArena()) {
       if (this != &from) InternalSwap(&from);
     } else {
@@ -265,20 +578,20 @@ class SetFramerateResponse PROTOBUF_FINAL :
   static const ::PROTOBUF_NAMESPACE_ID::Reflection* GetReflection() {
     return GetMetadataStatic().reflection;
   }
-  static const SetFramerateResponse& default_instance();
+  static const SetRecordingPeriodRequest& default_instance();
 
   static void InitAsDefaultInstance();  // FOR INTERNAL USE ONLY
-  static inline const SetFramerateResponse* internal_default_instance() {
-    return reinterpret_cast<const SetFramerateResponse*>(
-               &_SetFramerateResponse_default_instance_);
+  static inline const SetRecordingPeriodRequest* internal_default_instance() {
+    return reinterpret_cast<const SetRecordingPeriodRequest*>(
+               &_SetRecordingPeriodRequest_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    1;
+    3;
 
-  friend void swap(SetFramerateResponse& a, SetFramerateResponse& b) {
+  friend void swap(SetRecordingPeriodRequest& a, SetRecordingPeriodRequest& b) {
     a.Swap(&b);
   }
-  inline void Swap(SetFramerateResponse* other) {
+  inline void Swap(SetRecordingPeriodRequest* other) {
     if (other == this) return;
     if (GetArena() == other->GetArena()) {
       InternalSwap(other);
@@ -286,7 +599,7 @@ class SetFramerateResponse PROTOBUF_FINAL :
       ::PROTOBUF_NAMESPACE_ID::internal::GenericSwap(this, other);
     }
   }
-  void UnsafeArenaSwap(SetFramerateResponse* other) {
+  void UnsafeArenaSwap(SetRecordingPeriodRequest* other) {
     if (other == this) return;
     GOOGLE_DCHECK(GetArena() == other->GetArena());
     InternalSwap(other);
@@ -294,17 +607,17 @@ class SetFramerateResponse PROTOBUF_FINAL :
 
   // implements Message ----------------------------------------------
 
-  inline SetFramerateResponse* New() const final {
-    return CreateMaybeMessage<SetFramerateResponse>(nullptr);
+  inline SetRecordingPeriodRequest* New() const final {
+    return CreateMaybeMessage<SetRecordingPeriodRequest>(nullptr);
   }
 
-  SetFramerateResponse* New(::PROTOBUF_NAMESPACE_ID::Arena* arena) const final {
-    return CreateMaybeMessage<SetFramerateResponse>(arena);
+  SetRecordingPeriodRequest* New(::PROTOBUF_NAMESPACE_ID::Arena* arena) const final {
+    return CreateMaybeMessage<SetRecordingPeriodRequest>(arena);
   }
   void CopyFrom(const ::PROTOBUF_NAMESPACE_ID::Message& from) final;
   void MergeFrom(const ::PROTOBUF_NAMESPACE_ID::Message& from) final;
-  void CopyFrom(const SetFramerateResponse& from);
-  void MergeFrom(const SetFramerateResponse& from);
+  void CopyFrom(const SetRecordingPeriodRequest& from);
+  void MergeFrom(const SetRecordingPeriodRequest& from);
   PROTOBUF_ATTRIBUTE_REINITIALIZES void Clear() final;
   bool IsInitialized() const final;
 
@@ -318,13 +631,13 @@ class SetFramerateResponse PROTOBUF_FINAL :
   inline void SharedCtor();
   inline void SharedDtor();
   void SetCachedSize(int size) const final;
-  void InternalSwap(SetFramerateResponse* other);
+  void InternalSwap(SetRecordingPeriodRequest* other);
   friend class ::PROTOBUF_NAMESPACE_ID::internal::AnyMetadata;
   static ::PROTOBUF_NAMESPACE_ID::StringPiece FullMessageName() {
-    return "SetFramerateResponse";
+    return "SetRecordingPeriodRequest";
   }
   protected:
-  explicit SetFramerateResponse(::PROTOBUF_NAMESPACE_ID::Arena* arena);
+  explicit SetRecordingPeriodRequest(::PROTOBUF_NAMESPACE_ID::Arena* arena);
   private:
   static void ArenaDtor(void* object);
   inline void RegisterArenaDtor(::PROTOBUF_NAMESPACE_ID::Arena* arena);
@@ -344,52 +657,162 @@ class SetFramerateResponse PROTOBUF_FINAL :
   // accessors -------------------------------------------------------
 
   enum : int {
-    kDescriptionFieldNumber = 2,
-    kCodeFieldNumber = 1,
+    kTimeFieldNumber = 1,
   };
-  // string description = 2;
-  void clear_description();
-  const std::string& description() const;
-  void set_description(const std::string& value);
-  void set_description(std::string&& value);
-  void set_description(const char* value);
-  void set_description(const char* value, size_t size);
-  std::string* mutable_description();
-  std::string* release_description();
-  void set_allocated_description(std::string* description);
-  GOOGLE_PROTOBUF_RUNTIME_DEPRECATED("The unsafe_arena_ accessors for"
-  "    string fields are deprecated and will be removed in a"
-  "    future release.")
-  std::string* unsafe_arena_release_description();
-  GOOGLE_PROTOBUF_RUNTIME_DEPRECATED("The unsafe_arena_ accessors for"
-  "    string fields are deprecated and will be removed in a"
-  "    future release.")
-  void unsafe_arena_set_allocated_description(
-      std::string* description);
+  // double time = 1;
+  void clear_time();
+  double time() const;
+  void set_time(double value);
   private:
-  const std::string& _internal_description() const;
-  void _internal_set_description(const std::string& value);
-  std::string* _internal_mutable_description();
+  double _internal_time() const;
+  void _internal_set_time(double value);
   public:
 
-  // int32 code = 1;
-  void clear_code();
-  ::PROTOBUF_NAMESPACE_ID::int32 code() const;
-  void set_code(::PROTOBUF_NAMESPACE_ID::int32 value);
-  private:
-  ::PROTOBUF_NAMESPACE_ID::int32 _internal_code() const;
-  void _internal_set_code(::PROTOBUF_NAMESPACE_ID::int32 value);
-  public:
-
-  // @@protoc_insertion_point(class_scope:SetFramerateResponse)
+  // @@protoc_insertion_point(class_scope:SetRecordingPeriodRequest)
  private:
   class _Internal;
 
   template <typename T> friend class ::PROTOBUF_NAMESPACE_ID::Arena::InternalHelper;
   typedef void InternalArenaConstructable_;
   typedef void DestructorSkippable_;
-  ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr description_;
-  ::PROTOBUF_NAMESPACE_ID::int32 code_;
+  double time_;
+  mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
+  friend struct ::TableStruct_cameras_5fmessages_2eproto;
+};
+// -------------------------------------------------------------------
+
+class SetReferenceCameraRequest PROTOBUF_FINAL :
+    public ::PROTOBUF_NAMESPACE_ID::Message /* @@protoc_insertion_point(class_definition:SetReferenceCameraRequest) */ {
+ public:
+  inline SetReferenceCameraRequest() : SetReferenceCameraRequest(nullptr) {};
+  virtual ~SetReferenceCameraRequest();
+
+  SetReferenceCameraRequest(const SetReferenceCameraRequest& from);
+  SetReferenceCameraRequest(SetReferenceCameraRequest&& from) noexcept
+    : SetReferenceCameraRequest() {
+    *this = ::std::move(from);
+  }
+
+  inline SetReferenceCameraRequest& operator=(const SetReferenceCameraRequest& from) {
+    CopyFrom(from);
+    return *this;
+  }
+  inline SetReferenceCameraRequest& operator=(SetReferenceCameraRequest&& from) noexcept {
+    if (GetArena() == from.GetArena()) {
+      if (this != &from) InternalSwap(&from);
+    } else {
+      CopyFrom(from);
+    }
+    return *this;
+  }
+
+  static const ::PROTOBUF_NAMESPACE_ID::Descriptor* descriptor() {
+    return GetDescriptor();
+  }
+  static const ::PROTOBUF_NAMESPACE_ID::Descriptor* GetDescriptor() {
+    return GetMetadataStatic().descriptor;
+  }
+  static const ::PROTOBUF_NAMESPACE_ID::Reflection* GetReflection() {
+    return GetMetadataStatic().reflection;
+  }
+  static const SetReferenceCameraRequest& default_instance();
+
+  static void InitAsDefaultInstance();  // FOR INTERNAL USE ONLY
+  static inline const SetReferenceCameraRequest* internal_default_instance() {
+    return reinterpret_cast<const SetReferenceCameraRequest*>(
+               &_SetReferenceCameraRequest_default_instance_);
+  }
+  static constexpr int kIndexInFileMessages =
+    4;
+
+  friend void swap(SetReferenceCameraRequest& a, SetReferenceCameraRequest& b) {
+    a.Swap(&b);
+  }
+  inline void Swap(SetReferenceCameraRequest* other) {
+    if (other == this) return;
+    if (GetArena() == other->GetArena()) {
+      InternalSwap(other);
+    } else {
+      ::PROTOBUF_NAMESPACE_ID::internal::GenericSwap(this, other);
+    }
+  }
+  void UnsafeArenaSwap(SetReferenceCameraRequest* other) {
+    if (other == this) return;
+    GOOGLE_DCHECK(GetArena() == other->GetArena());
+    InternalSwap(other);
+  }
+
+  // implements Message ----------------------------------------------
+
+  inline SetReferenceCameraRequest* New() const final {
+    return CreateMaybeMessage<SetReferenceCameraRequest>(nullptr);
+  }
+
+  SetReferenceCameraRequest* New(::PROTOBUF_NAMESPACE_ID::Arena* arena) const final {
+    return CreateMaybeMessage<SetReferenceCameraRequest>(arena);
+  }
+  void CopyFrom(const ::PROTOBUF_NAMESPACE_ID::Message& from) final;
+  void MergeFrom(const ::PROTOBUF_NAMESPACE_ID::Message& from) final;
+  void CopyFrom(const SetReferenceCameraRequest& from);
+  void MergeFrom(const SetReferenceCameraRequest& from);
+  PROTOBUF_ATTRIBUTE_REINITIALIZES void Clear() final;
+  bool IsInitialized() const final;
+
+  size_t ByteSizeLong() const final;
+  const char* _InternalParse(const char* ptr, ::PROTOBUF_NAMESPACE_ID::internal::ParseContext* ctx) final;
+  ::PROTOBUF_NAMESPACE_ID::uint8* _InternalSerialize(
+      ::PROTOBUF_NAMESPACE_ID::uint8* target, ::PROTOBUF_NAMESPACE_ID::io::EpsCopyOutputStream* stream) const final;
+  int GetCachedSize() const final { return _cached_size_.Get(); }
+
+  private:
+  inline void SharedCtor();
+  inline void SharedDtor();
+  void SetCachedSize(int size) const final;
+  void InternalSwap(SetReferenceCameraRequest* other);
+  friend class ::PROTOBUF_NAMESPACE_ID::internal::AnyMetadata;
+  static ::PROTOBUF_NAMESPACE_ID::StringPiece FullMessageName() {
+    return "SetReferenceCameraRequest";
+  }
+  protected:
+  explicit SetReferenceCameraRequest(::PROTOBUF_NAMESPACE_ID::Arena* arena);
+  private:
+  static void ArenaDtor(void* object);
+  inline void RegisterArenaDtor(::PROTOBUF_NAMESPACE_ID::Arena* arena);
+  public:
+
+  ::PROTOBUF_NAMESPACE_ID::Metadata GetMetadata() const final;
+  private:
+  static ::PROTOBUF_NAMESPACE_ID::Metadata GetMetadataStatic() {
+    ::PROTOBUF_NAMESPACE_ID::internal::AssignDescriptors(&::descriptor_table_cameras_5fmessages_2eproto);
+    return ::descriptor_table_cameras_5fmessages_2eproto.file_level_metadata[kIndexInFileMessages];
+  }
+
+  public:
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  enum : int {
+    kSerialFieldNumber = 1,
+  };
+  // int32 serial = 1;
+  void clear_serial();
+  ::PROTOBUF_NAMESPACE_ID::int32 serial() const;
+  void set_serial(::PROTOBUF_NAMESPACE_ID::int32 value);
+  private:
+  ::PROTOBUF_NAMESPACE_ID::int32 _internal_serial() const;
+  void _internal_set_serial(::PROTOBUF_NAMESPACE_ID::int32 value);
+  public:
+
+  // @@protoc_insertion_point(class_scope:SetReferenceCameraRequest)
+ private:
+  class _Internal;
+
+  template <typename T> friend class ::PROTOBUF_NAMESPACE_ID::Arena::InternalHelper;
+  typedef void InternalArenaConstructable_;
+  typedef void DestructorSkippable_;
+  ::PROTOBUF_NAMESPACE_ID::int32 serial_;
   mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
   friend struct ::TableStruct_cameras_5fmessages_2eproto;
 };
@@ -402,6 +825,135 @@ class SetFramerateResponse PROTOBUF_FINAL :
   #pragma GCC diagnostic push
   #pragma GCC diagnostic ignored "-Wstrict-aliasing"
 #endif  // __GNUC__
+// SimpleRequest
+
+// int32 code = 1;
+inline void SimpleRequest::clear_code() {
+  code_ = 0;
+}
+inline ::PROTOBUF_NAMESPACE_ID::int32 SimpleRequest::_internal_code() const {
+  return code_;
+}
+inline ::PROTOBUF_NAMESPACE_ID::int32 SimpleRequest::code() const {
+  // @@protoc_insertion_point(field_get:SimpleRequest.code)
+  return _internal_code();
+}
+inline void SimpleRequest::_internal_set_code(::PROTOBUF_NAMESPACE_ID::int32 value) {
+  
+  code_ = value;
+}
+inline void SimpleRequest::set_code(::PROTOBUF_NAMESPACE_ID::int32 value) {
+  _internal_set_code(value);
+  // @@protoc_insertion_point(field_set:SimpleRequest.code)
+}
+
+// -------------------------------------------------------------------
+
+// SimpleResponse
+
+// int32 code = 1;
+inline void SimpleResponse::clear_code() {
+  code_ = 0;
+}
+inline ::PROTOBUF_NAMESPACE_ID::int32 SimpleResponse::_internal_code() const {
+  return code_;
+}
+inline ::PROTOBUF_NAMESPACE_ID::int32 SimpleResponse::code() const {
+  // @@protoc_insertion_point(field_get:SimpleResponse.code)
+  return _internal_code();
+}
+inline void SimpleResponse::_internal_set_code(::PROTOBUF_NAMESPACE_ID::int32 value) {
+  
+  code_ = value;
+}
+inline void SimpleResponse::set_code(::PROTOBUF_NAMESPACE_ID::int32 value) {
+  _internal_set_code(value);
+  // @@protoc_insertion_point(field_set:SimpleResponse.code)
+}
+
+// string description = 2;
+inline void SimpleResponse::clear_description() {
+  description_.ClearToEmpty(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), GetArena());
+}
+inline const std::string& SimpleResponse::description() const {
+  // @@protoc_insertion_point(field_get:SimpleResponse.description)
+  return _internal_description();
+}
+inline void SimpleResponse::set_description(const std::string& value) {
+  _internal_set_description(value);
+  // @@protoc_insertion_point(field_set:SimpleResponse.description)
+}
+inline std::string* SimpleResponse::mutable_description() {
+  // @@protoc_insertion_point(field_mutable:SimpleResponse.description)
+  return _internal_mutable_description();
+}
+inline const std::string& SimpleResponse::_internal_description() const {
+  return description_.Get();
+}
+inline void SimpleResponse::_internal_set_description(const std::string& value) {
+  
+  description_.Set(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), value, GetArena());
+}
+inline void SimpleResponse::set_description(std::string&& value) {
+  
+  description_.Set(
+    &::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), ::std::move(value), GetArena());
+  // @@protoc_insertion_point(field_set_rvalue:SimpleResponse.description)
+}
+inline void SimpleResponse::set_description(const char* value) {
+  GOOGLE_DCHECK(value != nullptr);
+  
+  description_.Set(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), ::std::string(value),
+              GetArena());
+  // @@protoc_insertion_point(field_set_char:SimpleResponse.description)
+}
+inline void SimpleResponse::set_description(const char* value,
+    size_t size) {
+  
+  description_.Set(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), ::std::string(
+      reinterpret_cast<const char*>(value), size), GetArena());
+  // @@protoc_insertion_point(field_set_pointer:SimpleResponse.description)
+}
+inline std::string* SimpleResponse::_internal_mutable_description() {
+  
+  return description_.Mutable(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), GetArena());
+}
+inline std::string* SimpleResponse::release_description() {
+  // @@protoc_insertion_point(field_release:SimpleResponse.description)
+  return description_.Release(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), GetArena());
+}
+inline void SimpleResponse::set_allocated_description(std::string* description) {
+  if (description != nullptr) {
+    
+  } else {
+    
+  }
+  description_.SetAllocated(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), description,
+      GetArena());
+  // @@protoc_insertion_point(field_set_allocated:SimpleResponse.description)
+}
+inline std::string* SimpleResponse::unsafe_arena_release_description() {
+  // @@protoc_insertion_point(field_unsafe_arena_release:SimpleResponse.description)
+  GOOGLE_DCHECK(GetArena() != nullptr);
+  
+  return description_.UnsafeArenaRelease(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(),
+      GetArena());
+}
+inline void SimpleResponse::unsafe_arena_set_allocated_description(
+    std::string* description) {
+  GOOGLE_DCHECK(GetArena() != nullptr);
+  if (description != nullptr) {
+    
+  } else {
+    
+  }
+  description_.UnsafeArenaSetAllocated(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(),
+      description, GetArena());
+  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:SimpleResponse.description)
+}
+
+// -------------------------------------------------------------------
+
 // SetFramerateRequest
 
 // string desc = 1;
@@ -507,112 +1059,61 @@ inline void SetFramerateRequest::set_framerate(double value) {
 
 // -------------------------------------------------------------------
 
-// SetFramerateResponse
+// SetRecordingPeriodRequest
 
-// int32 code = 1;
-inline void SetFramerateResponse::clear_code() {
-  code_ = 0;
+// double time = 1;
+inline void SetRecordingPeriodRequest::clear_time() {
+  time_ = 0;
 }
-inline ::PROTOBUF_NAMESPACE_ID::int32 SetFramerateResponse::_internal_code() const {
-  return code_;
+inline double SetRecordingPeriodRequest::_internal_time() const {
+  return time_;
 }
-inline ::PROTOBUF_NAMESPACE_ID::int32 SetFramerateResponse::code() const {
-  // @@protoc_insertion_point(field_get:SetFramerateResponse.code)
-  return _internal_code();
+inline double SetRecordingPeriodRequest::time() const {
+  // @@protoc_insertion_point(field_get:SetRecordingPeriodRequest.time)
+  return _internal_time();
 }
-inline void SetFramerateResponse::_internal_set_code(::PROTOBUF_NAMESPACE_ID::int32 value) {
+inline void SetRecordingPeriodRequest::_internal_set_time(double value) {
   
-  code_ = value;
+  time_ = value;
 }
-inline void SetFramerateResponse::set_code(::PROTOBUF_NAMESPACE_ID::int32 value) {
-  _internal_set_code(value);
-  // @@protoc_insertion_point(field_set:SetFramerateResponse.code)
+inline void SetRecordingPeriodRequest::set_time(double value) {
+  _internal_set_time(value);
+  // @@protoc_insertion_point(field_set:SetRecordingPeriodRequest.time)
 }
 
-// string description = 2;
-inline void SetFramerateResponse::clear_description() {
-  description_.ClearToEmpty(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), GetArena());
+// -------------------------------------------------------------------
+
+// SetReferenceCameraRequest
+
+// int32 serial = 1;
+inline void SetReferenceCameraRequest::clear_serial() {
+  serial_ = 0;
 }
-inline const std::string& SetFramerateResponse::description() const {
-  // @@protoc_insertion_point(field_get:SetFramerateResponse.description)
-  return _internal_description();
+inline ::PROTOBUF_NAMESPACE_ID::int32 SetReferenceCameraRequest::_internal_serial() const {
+  return serial_;
 }
-inline void SetFramerateResponse::set_description(const std::string& value) {
-  _internal_set_description(value);
-  // @@protoc_insertion_point(field_set:SetFramerateResponse.description)
+inline ::PROTOBUF_NAMESPACE_ID::int32 SetReferenceCameraRequest::serial() const {
+  // @@protoc_insertion_point(field_get:SetReferenceCameraRequest.serial)
+  return _internal_serial();
 }
-inline std::string* SetFramerateResponse::mutable_description() {
-  // @@protoc_insertion_point(field_mutable:SetFramerateResponse.description)
-  return _internal_mutable_description();
-}
-inline const std::string& SetFramerateResponse::_internal_description() const {
-  return description_.Get();
-}
-inline void SetFramerateResponse::_internal_set_description(const std::string& value) {
+inline void SetReferenceCameraRequest::_internal_set_serial(::PROTOBUF_NAMESPACE_ID::int32 value) {
   
-  description_.Set(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), value, GetArena());
+  serial_ = value;
 }
-inline void SetFramerateResponse::set_description(std::string&& value) {
-  
-  description_.Set(
-    &::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), ::std::move(value), GetArena());
-  // @@protoc_insertion_point(field_set_rvalue:SetFramerateResponse.description)
-}
-inline void SetFramerateResponse::set_description(const char* value) {
-  GOOGLE_DCHECK(value != nullptr);
-  
-  description_.Set(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), ::std::string(value),
-              GetArena());
-  // @@protoc_insertion_point(field_set_char:SetFramerateResponse.description)
-}
-inline void SetFramerateResponse::set_description(const char* value,
-    size_t size) {
-  
-  description_.Set(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), ::std::string(
-      reinterpret_cast<const char*>(value), size), GetArena());
-  // @@protoc_insertion_point(field_set_pointer:SetFramerateResponse.description)
-}
-inline std::string* SetFramerateResponse::_internal_mutable_description() {
-  
-  return description_.Mutable(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), GetArena());
-}
-inline std::string* SetFramerateResponse::release_description() {
-  // @@protoc_insertion_point(field_release:SetFramerateResponse.description)
-  return description_.Release(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), GetArena());
-}
-inline void SetFramerateResponse::set_allocated_description(std::string* description) {
-  if (description != nullptr) {
-    
-  } else {
-    
-  }
-  description_.SetAllocated(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), description,
-      GetArena());
-  // @@protoc_insertion_point(field_set_allocated:SetFramerateResponse.description)
-}
-inline std::string* SetFramerateResponse::unsafe_arena_release_description() {
-  // @@protoc_insertion_point(field_unsafe_arena_release:SetFramerateResponse.description)
-  GOOGLE_DCHECK(GetArena() != nullptr);
-  
-  return description_.UnsafeArenaRelease(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(),
-      GetArena());
-}
-inline void SetFramerateResponse::unsafe_arena_set_allocated_description(
-    std::string* description) {
-  GOOGLE_DCHECK(GetArena() != nullptr);
-  if (description != nullptr) {
-    
-  } else {
-    
-  }
-  description_.UnsafeArenaSetAllocated(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(),
-      description, GetArena());
-  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:SetFramerateResponse.description)
+inline void SetReferenceCameraRequest::set_serial(::PROTOBUF_NAMESPACE_ID::int32 value) {
+  _internal_set_serial(value);
+  // @@protoc_insertion_point(field_set:SetReferenceCameraRequest.serial)
 }
 
 #ifdef __GNUC__
   #pragma GCC diagnostic pop
 #endif  // __GNUC__
+// -------------------------------------------------------------------
+
+// -------------------------------------------------------------------
+
+// -------------------------------------------------------------------
+
 // -------------------------------------------------------------------
 
 

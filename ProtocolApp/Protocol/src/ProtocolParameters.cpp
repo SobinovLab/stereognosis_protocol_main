@@ -19,6 +19,7 @@ ProtocolParameters::ProtocolParameters(const ProtocolParameters & protocolParams
 	this->cs_port2 = protocolParams.cs_port2;
 	this->cs_framerate = protocolParams.cs_framerate;
 	this->cs_recordingPeriod = protocolParams.cs_recordingPeriod;
+	this->cs_refSerial = protocolParams.cs_refSerial;
 
 	this->tstEnMotors = protocolParams.tstEnMotors;
 	this->tstEnReward = protocolParams.tstEnReward;
@@ -45,6 +46,7 @@ void ProtocolParameters::init()
 	cs_port2 = 63875;
 	cs_framerate = 100;
 	cs_recordingPeriod = 25;
+	cs_refSerial = 20050771;
 
 	tstEnMotors = false;
 	tstEnReward = false;

@@ -45,6 +45,7 @@ void CProtocolAppDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Text(pDX, IDC_PORT_EDT2, m_protocol.params.cs_port2);
 	DDX_Text(pDX, IDC_FRAMERATE_EDT, m_protocol.params.cs_framerate);
 	DDX_Text(pDX, IDC_RECORDING_PERIOD_EDT, m_protocol.params.cs_recordingPeriod);
+	DDX_Text(pDX, IDC_REF_SERIAL_EDT, m_protocol.params.cs_refSerial);
 
 	//OutputDebugString(_T("End of DoDataExchange\n"));
 }
@@ -229,6 +230,12 @@ void CProtocolAppDlg::OnStartTrialBtnClicked()
 	enableTrialCtrls(false);
 
 	m_startTrial.store(true);
+
+	UpdateData(FromControlsToVariables);
+	sendConfig();
+	syncTime();
+	sendPrepareRecording();
+	sendStartRecording();
 }
 
 void CProtocolAppDlg::OnRetreatFlushWaterBtnClicked()
@@ -259,11 +266,7 @@ void CProtocolAppDlg::OnConnect1BtnClicked()
 	m_cameraClient1.clientStatusGuiEdt = &m_serverStatusCtrl1;
 	m_cameraClient1.clientLogGuiEdt = &m_serverLogCtrl1;
 
-	m_cameraClient1.disconnect.store(false);
-
 	m_cameraClient1.connect_f();
-
-	//cameraClientThread1 = new thread(&CameraClient::run, &m_cameraClient1);
 
 	enableCameraServer1Ctrls(false);
 }
@@ -271,14 +274,6 @@ void CProtocolAppDlg::OnConnect1BtnClicked()
 void CProtocolAppDlg::OnDisconnect1BtnClicked()
 {
 	m_cameraClient1.disconnect_f();
-	//if (cameraClientThread1) {
-	//	m_cameraClient1.disconnect.store(true);
-
-	//	cameraClientThread1->join();
-	//	delete cameraClientThread1; cameraClientThread1 = nullptr;
-	//	
-	//}
-	m_serverStatusCtrl1.SetWindowText("Off");
 
 	enableCameraServer1Ctrls(true);
 }
@@ -292,22 +287,14 @@ void CProtocolAppDlg::OnConnect2BtnClicked()
 	m_cameraClient2.clientStatusGuiEdt = &m_serverStatusCtrl2;
 	m_cameraClient2.clientLogGuiEdt = &m_serverLogCtrl2;
 
-	m_cameraClient2.disconnect.store(false);
-
-	cameraClientThread2 = new thread(&CameraClient::run, &m_cameraClient2);
+	m_cameraClient2.connect_f();
 
 	enableCameraServer2Ctrls(false);
 }
 
 void CProtocolAppDlg::OnDisconnect2BtnClicked()
 {
-	if (cameraClientThread2) {
-		m_cameraClient2.disconnect.store(true);
-
-		cameraClientThread2->join();
-		delete cameraClientThread2; cameraClientThread2 = nullptr;
-		m_serverStatusCtrl2.SetWindowText("Off");
-	}
+	m_cameraClient2.disconnect_f();
 
 	enableCameraServer2Ctrls(true);
 }
@@ -315,7 +302,7 @@ void CProtocolAppDlg::OnDisconnect2BtnClicked()
 void CProtocolAppDlg::OnSendConfigBtnClicked()
 {
 	UpdateData(FromControlsToVariables);
-	m_cameraClient1.sendFramerate(m_protocol.params.cs_framerate);
+	sendConfig();
 }
 
 void CProtocolAppDlg::OnSyncTimeBtnClicked()
@@ -330,6 +317,50 @@ void CProtocolAppDlg::stopProtocolThread()
 		delete protocolThread; protocolThread = nullptr;
 	}
 	
+}
+
+void CProtocolAppDlg::sendConfig()
+{
+	if (m_cameraClient1.isConnected()) {
+		m_cameraClient1.sendFramerate(m_protocol.params.cs_framerate);
+		m_cameraClient1.sendRecordingPeriod(m_protocol.params.cs_recordingPeriod);
+		m_cameraClient1.sendReferenceCamera(m_protocol.params.cs_refSerial);
+	}
+	if (m_cameraClient2.isConnected()) {
+		m_cameraClient2.sendFramerate(m_protocol.params.cs_framerate);
+		m_cameraClient2.sendRecordingPeriod(m_protocol.params.cs_recordingPeriod);
+		m_cameraClient2.sendReferenceCamera(m_protocol.params.cs_refSerial);
+	}
+}
+
+void CProtocolAppDlg::syncTime()
+{
+	if (m_cameraClient1.isConnected()) {
+		m_cameraClient1.syncTime();
+	}
+	if (m_cameraClient2.isConnected()) {
+		m_cameraClient2.syncTime();
+	}
+}
+
+void CProtocolAppDlg::sendPrepareRecording()
+{
+	if (m_cameraClient1.isConnected()) {
+		m_cameraClient1.prepareRecording();
+	}
+	if (m_cameraClient2.isConnected()) {
+		m_cameraClient2.prepareRecording();
+	}
+}
+
+void CProtocolAppDlg::sendStartRecording()
+{
+	if (m_cameraClient1.isConnected()) {
+		m_cameraClient1.startRecording();
+	}
+	if (m_cameraClient2.isConnected()) {
+		m_cameraClient2.startRecording();
+	}
 }
 
 void CProtocolAppDlg::enableProtocolCtrls(bool enable)

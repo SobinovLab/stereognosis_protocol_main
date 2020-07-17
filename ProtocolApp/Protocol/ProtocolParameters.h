@@ -31,6 +31,7 @@ class ProtocolParameters
 		long cs_port2;
 		double cs_framerate;
 		int cs_recordingPeriod;
+		int cs_refSerial;
 
 		// testing and debugging flags
 		bool tstEnMotors;
