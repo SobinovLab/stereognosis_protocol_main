@@ -189,7 +189,7 @@ bool CameraCommunicatorSClient::sendReferenceCamera(const int serial)
 bool CameraCommunicatorSClient::prepareRecording()
 {
 	SimpleRequest srq;
-	srq.set_code(1);
+	srq.set_code(0);
 	SimpleResponse sr;
 	ClientContext context;
 
@@ -207,7 +207,7 @@ bool CameraCommunicatorSClient::prepareRecording()
 bool CameraCommunicatorSClient::startRecording()
 {
 	SimpleRequest srq;
-	srq.set_code(1);
+	srq.set_code(0);
 	SimpleResponse sr;
 	ClientContext context;
 
