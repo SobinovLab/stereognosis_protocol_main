@@ -31,7 +31,7 @@ Assuming you have a compiled versions of all programs (located usually in "\Prot
 
 ## Build
 
-Required: Visual Studio 2019 with C++ development and MFC libraries for x64.
+Required: Visual Studio 2019 with C++ development, .NET desktop development, Visual++ ATL, Visual++ MFC and MFC libraries for x64.
 
 1. Install [vcpkg](https://github.com/microsoft/vcpkg) package installation system for Windows. Integrate it with Visual Studio:
 
@@ -45,3 +45,11 @@ Required: Visual Studio 2019 with C++ development and MFC libraries for x64.
 ```
 vcpkg install grpc --triplet x64-windows
 ```
+
+3. [NIDAQ 16.0+ Controller](https://www.ni.com/en-us/support/downloads/drivers/download.ni-daqmx.html#348669). For motors and reward?
+
+NIDAQ_HOME (C:\Program Files (x86)\National Instruments) must be added as an environment variable.
+
+4. ClearView Motor Control Library from `\\BENSMAIA-LAB\LabSharing\Stereognosis\Rig Dependencies`.
+
+5. Build for x64 RELEASE. For some reason, DEBUG makes either light sensor or motors break the execution.
