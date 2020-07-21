@@ -96,7 +96,7 @@ void CameraClient::startRecording()
 {
 	appendClientLog(_T("Starting recording. "));
 	if (ccsc) {
-		if (ccsc->prepareRecording()) {
+		if (ccsc->startRecording()) {
 			appendClientLog(_T("Success.\n"));
 			setClientStatusGui(_T("Recording"));
 		}
