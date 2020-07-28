@@ -34,6 +34,46 @@ class SetReferenceCameraRequestDefaultTypeInternal {
  public:
   ::PROTOBUF_NAMESPACE_ID::internal::ExplicitlyConstructed<SetReferenceCameraRequest> _instance;
 } _SetReferenceCameraRequest_default_instance_;
+class SetDirectoryRequestDefaultTypeInternal {
+ public:
+  ::PROTOBUF_NAMESPACE_ID::internal::ExplicitlyConstructed<SetDirectoryRequest> _instance;
+} _SetDirectoryRequest_default_instance_;
+class SetGainRequestDefaultTypeInternal {
+ public:
+  ::PROTOBUF_NAMESPACE_ID::internal::ExplicitlyConstructed<SetGainRequest> _instance;
+} _SetGainRequest_default_instance_;
+class SetExposureRequestDefaultTypeInternal {
+ public:
+  ::PROTOBUF_NAMESPACE_ID::internal::ExplicitlyConstructed<SetExposureRequest> _instance;
+} _SetExposureRequest_default_instance_;
+static void InitDefaultsscc_info_SetDirectoryRequest_cameras_5fmessages_2eproto() {
+  GOOGLE_PROTOBUF_VERIFY_VERSION;
+
+  {
+    void* ptr = &::_SetDirectoryRequest_default_instance_;
+    new (ptr) ::SetDirectoryRequest();
+    ::PROTOBUF_NAMESPACE_ID::internal::OnShutdownDestroyMessage(ptr);
+  }
+  ::SetDirectoryRequest::InitAsDefaultInstance();
+}
+
+::PROTOBUF_NAMESPACE_ID::internal::SCCInfo<0> scc_info_SetDirectoryRequest_cameras_5fmessages_2eproto =
+    {{ATOMIC_VAR_INIT(::PROTOBUF_NAMESPACE_ID::internal::SCCInfoBase::kUninitialized), 0, 0, InitDefaultsscc_info_SetDirectoryRequest_cameras_5fmessages_2eproto}, {}};
+
+static void InitDefaultsscc_info_SetExposureRequest_cameras_5fmessages_2eproto() {
+  GOOGLE_PROTOBUF_VERIFY_VERSION;
+
+  {
+    void* ptr = &::_SetExposureRequest_default_instance_;
+    new (ptr) ::SetExposureRequest();
+    ::PROTOBUF_NAMESPACE_ID::internal::OnShutdownDestroyMessage(ptr);
+  }
+  ::SetExposureRequest::InitAsDefaultInstance();
+}
+
+::PROTOBUF_NAMESPACE_ID::internal::SCCInfo<0> scc_info_SetExposureRequest_cameras_5fmessages_2eproto =
+    {{ATOMIC_VAR_INIT(::PROTOBUF_NAMESPACE_ID::internal::SCCInfoBase::kUninitialized), 0, 0, InitDefaultsscc_info_SetExposureRequest_cameras_5fmessages_2eproto}, {}};
+
 static void InitDefaultsscc_info_SetFramerateRequest_cameras_5fmessages_2eproto() {
   GOOGLE_PROTOBUF_VERIFY_VERSION;
 
@@ -47,6 +87,20 @@ static void InitDefaultsscc_info_SetFramerateRequest_cameras_5fmessages_2eproto(
 
 ::PROTOBUF_NAMESPACE_ID::internal::SCCInfo<0> scc_info_SetFramerateRequest_cameras_5fmessages_2eproto =
     {{ATOMIC_VAR_INIT(::PROTOBUF_NAMESPACE_ID::internal::SCCInfoBase::kUninitialized), 0, 0, InitDefaultsscc_info_SetFramerateRequest_cameras_5fmessages_2eproto}, {}};
+
+static void InitDefaultsscc_info_SetGainRequest_cameras_5fmessages_2eproto() {
+  GOOGLE_PROTOBUF_VERIFY_VERSION;
+
+  {
+    void* ptr = &::_SetGainRequest_default_instance_;
+    new (ptr) ::SetGainRequest();
+    ::PROTOBUF_NAMESPACE_ID::internal::OnShutdownDestroyMessage(ptr);
+  }
+  ::SetGainRequest::InitAsDefaultInstance();
+}
+
+::PROTOBUF_NAMESPACE_ID::internal::SCCInfo<0> scc_info_SetGainRequest_cameras_5fmessages_2eproto =
+    {{ATOMIC_VAR_INIT(::PROTOBUF_NAMESPACE_ID::internal::SCCInfoBase::kUninitialized), 0, 0, InitDefaultsscc_info_SetGainRequest_cameras_5fmessages_2eproto}, {}};
 
 static void InitDefaultsscc_info_SetRecordingPeriodRequest_cameras_5fmessages_2eproto() {
   GOOGLE_PROTOBUF_VERIFY_VERSION;
@@ -104,7 +158,7 @@ static void InitDefaultsscc_info_SimpleResponse_cameras_5fmessages_2eproto() {
 ::PROTOBUF_NAMESPACE_ID::internal::SCCInfo<0> scc_info_SimpleResponse_cameras_5fmessages_2eproto =
     {{ATOMIC_VAR_INIT(::PROTOBUF_NAMESPACE_ID::internal::SCCInfoBase::kUninitialized), 0, 0, InitDefaultsscc_info_SimpleResponse_cameras_5fmessages_2eproto}, {}};
 
-static ::PROTOBUF_NAMESPACE_ID::Metadata file_level_metadata_cameras_5fmessages_2eproto[5];
+static ::PROTOBUF_NAMESPACE_ID::Metadata file_level_metadata_cameras_5fmessages_2eproto[8];
 static constexpr ::PROTOBUF_NAMESPACE_ID::EnumDescriptor const** file_level_enum_descriptors_cameras_5fmessages_2eproto = nullptr;
 static constexpr ::PROTOBUF_NAMESPACE_ID::ServiceDescriptor const** file_level_service_descriptors_cameras_5fmessages_2eproto = nullptr;
 
@@ -141,6 +195,26 @@ const ::PROTOBUF_NAMESPACE_ID::uint32 TableStruct_cameras_5fmessages_2eproto::of
   ~0u,  // no _oneof_case_
   ~0u,  // no _weak_field_map_
   PROTOBUF_FIELD_OFFSET(::SetReferenceCameraRequest, serial_),
+  ~0u,  // no _has_bits_
+  PROTOBUF_FIELD_OFFSET(::SetDirectoryRequest, _internal_metadata_),
+  ~0u,  // no _extensions_
+  ~0u,  // no _oneof_case_
+  ~0u,  // no _weak_field_map_
+  PROTOBUF_FIELD_OFFSET(::SetDirectoryRequest, directory_),
+  ~0u,  // no _has_bits_
+  PROTOBUF_FIELD_OFFSET(::SetGainRequest, _internal_metadata_),
+  ~0u,  // no _extensions_
+  ~0u,  // no _oneof_case_
+  ~0u,  // no _weak_field_map_
+  PROTOBUF_FIELD_OFFSET(::SetGainRequest, gain_),
+  PROTOBUF_FIELD_OFFSET(::SetGainRequest, gain_type_),
+  ~0u,  // no _has_bits_
+  PROTOBUF_FIELD_OFFSET(::SetExposureRequest, _internal_metadata_),
+  ~0u,  // no _extensions_
+  ~0u,  // no _oneof_case_
+  ~0u,  // no _weak_field_map_
+  PROTOBUF_FIELD_OFFSET(::SetExposureRequest, exposure_),
+  PROTOBUF_FIELD_OFFSET(::SetExposureRequest, exposure_type_),
 };
 static const ::PROTOBUF_NAMESPACE_ID::internal::MigrationSchema schemas[] PROTOBUF_SECTION_VARIABLE(protodesc_cold) = {
   { 0, -1, sizeof(::SimpleRequest)},
@@ -148,6 +222,9 @@ static const ::PROTOBUF_NAMESPACE_ID::internal::MigrationSchema schemas[] PROTOB
   { 13, -1, sizeof(::SetFramerateRequest)},
   { 20, -1, sizeof(::SetRecordingPeriodRequest)},
   { 26, -1, sizeof(::SetReferenceCameraRequest)},
+  { 32, -1, sizeof(::SetDirectoryRequest)},
+  { 38, -1, sizeof(::SetGainRequest)},
+  { 45, -1, sizeof(::SetExposureRequest)},
 };
 
 static ::PROTOBUF_NAMESPACE_ID::Message const * const file_default_instances[] = {
@@ -156,6 +233,9 @@ static ::PROTOBUF_NAMESPACE_ID::Message const * const file_default_instances[] =
   reinterpret_cast<const ::PROTOBUF_NAMESPACE_ID::Message*>(&::_SetFramerateRequest_default_instance_),
   reinterpret_cast<const ::PROTOBUF_NAMESPACE_ID::Message*>(&::_SetRecordingPeriodRequest_default_instance_),
   reinterpret_cast<const ::PROTOBUF_NAMESPACE_ID::Message*>(&::_SetReferenceCameraRequest_default_instance_),
+  reinterpret_cast<const ::PROTOBUF_NAMESPACE_ID::Message*>(&::_SetDirectoryRequest_default_instance_),
+  reinterpret_cast<const ::PROTOBUF_NAMESPACE_ID::Message*>(&::_SetGainRequest_default_instance_),
+  reinterpret_cast<const ::PROTOBUF_NAMESPACE_ID::Message*>(&::_SetExposureRequest_default_instance_),
 };
 
 const char descriptor_table_protodef_cameras_5fmessages_2eproto[] PROTOBUF_SECTION_VARIABLE(protodesc_cold) =
@@ -165,20 +245,32 @@ const char descriptor_table_protodef_cameras_5fmessages_2eproto[] PROTOBUF_SECTI
   "rateRequest\022\014\n\004desc\030\001 \001(\t\022\021\n\tframerate\030\002"
   " \001(\001\")\n\031SetRecordingPeriodRequest\022\014\n\004tim"
   "e\030\001 \001(\001\"+\n\031SetReferenceCameraRequest\022\016\n\006"
-  "serial\030\001 \001(\0052\304\002\n\023CameraCommunicatorS\0227\n\014"
-  "SetFramerate\022\024.SetFramerateRequest\032\017.Sim"
-  "pleResponse\"\000\022C\n\022SetRecordingPeriod\022\032.Se"
-  "tRecordingPeriodRequest\032\017.SimpleResponse"
-  "\"\000\022C\n\022SetReferenceCamera\022\032.SetReferenceC"
-  "ameraRequest\032\017.SimpleResponse\"\000\0225\n\020Prepa"
-  "reRecording\022\016.SimpleRequest\032\017.SimpleResp"
-  "onse\"\000\0223\n\016StartRecording\022\016.SimpleRequest"
-  "\032\017.SimpleResponse\"\000b\006proto3"
+  "serial\030\001 \001(\005\"(\n\023SetDirectoryRequest\022\021\n\td"
+  "irectory\030\001 \001(\t\"1\n\016SetGainRequest\022\014\n\004gain"
+  "\030\001 \001(\001\022\021\n\tgain_type\030\002 \001(\005\"=\n\022SetExposure"
+  "Request\022\020\n\010exposure\030\001 \001(\001\022\025\n\rexposure_ty"
+  "pe\030\002 \001(\0052\234\004\n\023CameraCommunicatorS\0227\n\014SetF"
+  "ramerate\022\024.SetFramerateRequest\032\017.SimpleR"
+  "esponse\"\000\022C\n\022SetRecordingPeriod\022\032.SetRec"
+  "ordingPeriodRequest\032\017.SimpleResponse\"\000\022C"
+  "\n\022SetReferenceCamera\022\032.SetReferenceCamer"
+  "aRequest\032\017.SimpleResponse\"\000\0225\n\020PrepareRe"
+  "cording\022\016.SimpleRequest\032\017.SimpleResponse"
+  "\"\000\0223\n\016StartRecording\022\016.SimpleRequest\032\017.S"
+  "impleResponse\"\000\0227\n\022CaptureSingleImage\022\016."
+  "SimpleRequest\032\017.SimpleResponse\"\000\0227\n\014SetD"
+  "irectory\022\024.SetDirectoryRequest\032\017.SimpleR"
+  "esponse\"\000\022-\n\007SetGain\022\017.SetGainRequest\032\017."
+  "SimpleResponse\"\000\0225\n\013SetExposure\022\023.SetExp"
+  "osureRequest\032\017.SimpleResponse\"\000b\006proto3"
   ;
 static const ::PROTOBUF_NAMESPACE_ID::internal::DescriptorTable*const descriptor_table_cameras_5fmessages_2eproto_deps[1] = {
 };
-static ::PROTOBUF_NAMESPACE_ID::internal::SCCInfoBase*const descriptor_table_cameras_5fmessages_2eproto_sccs[5] = {
+static ::PROTOBUF_NAMESPACE_ID::internal::SCCInfoBase*const descriptor_table_cameras_5fmessages_2eproto_sccs[8] = {
+  &scc_info_SetDirectoryRequest_cameras_5fmessages_2eproto.base,
+  &scc_info_SetExposureRequest_cameras_5fmessages_2eproto.base,
   &scc_info_SetFramerateRequest_cameras_5fmessages_2eproto.base,
+  &scc_info_SetGainRequest_cameras_5fmessages_2eproto.base,
   &scc_info_SetRecordingPeriodRequest_cameras_5fmessages_2eproto.base,
   &scc_info_SetReferenceCameraRequest_cameras_5fmessages_2eproto.base,
   &scc_info_SimpleRequest_cameras_5fmessages_2eproto.base,
@@ -186,10 +278,10 @@ static ::PROTOBUF_NAMESPACE_ID::internal::SCCInfoBase*const descriptor_table_cam
 };
 static ::PROTOBUF_NAMESPACE_ID::internal::once_flag descriptor_table_cameras_5fmessages_2eproto_once;
 const ::PROTOBUF_NAMESPACE_ID::internal::DescriptorTable descriptor_table_cameras_5fmessages_2eproto = {
-  false, false, descriptor_table_protodef_cameras_5fmessages_2eproto, "cameras_messages.proto", 587,
-  &descriptor_table_cameras_5fmessages_2eproto_once, descriptor_table_cameras_5fmessages_2eproto_sccs, descriptor_table_cameras_5fmessages_2eproto_deps, 5, 0,
+  false, false, descriptor_table_protodef_cameras_5fmessages_2eproto, "cameras_messages.proto", 959,
+  &descriptor_table_cameras_5fmessages_2eproto_once, descriptor_table_cameras_5fmessages_2eproto_sccs, descriptor_table_cameras_5fmessages_2eproto_deps, 8, 0,
   schemas, file_default_instances, TableStruct_cameras_5fmessages_2eproto::offsets,
-  file_level_metadata_cameras_5fmessages_2eproto, 5, file_level_enum_descriptors_cameras_5fmessages_2eproto, file_level_service_descriptors_cameras_5fmessages_2eproto,
+  file_level_metadata_cameras_5fmessages_2eproto, 8, file_level_enum_descriptors_cameras_5fmessages_2eproto, file_level_service_descriptors_cameras_5fmessages_2eproto,
 };
 
 // Force running AddDescriptors() at dynamic initialization time.
@@ -1254,6 +1346,673 @@ void SetReferenceCameraRequest::InternalSwap(SetReferenceCameraRequest* other) {
 }
 
 
+// ===================================================================
+
+void SetDirectoryRequest::InitAsDefaultInstance() {
+}
+class SetDirectoryRequest::_Internal {
+ public:
+};
+
+SetDirectoryRequest::SetDirectoryRequest(::PROTOBUF_NAMESPACE_ID::Arena* arena)
+  : ::PROTOBUF_NAMESPACE_ID::Message(arena) {
+  SharedCtor();
+  RegisterArenaDtor(arena);
+  // @@protoc_insertion_point(arena_constructor:SetDirectoryRequest)
+}
+SetDirectoryRequest::SetDirectoryRequest(const SetDirectoryRequest& from)
+  : ::PROTOBUF_NAMESPACE_ID::Message() {
+  _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
+  directory_.UnsafeSetDefault(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
+  if (!from._internal_directory().empty()) {
+    directory_.Set(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), from._internal_directory(),
+      GetArena());
+  }
+  // @@protoc_insertion_point(copy_constructor:SetDirectoryRequest)
+}
+
+void SetDirectoryRequest::SharedCtor() {
+  ::PROTOBUF_NAMESPACE_ID::internal::InitSCC(&scc_info_SetDirectoryRequest_cameras_5fmessages_2eproto.base);
+  directory_.UnsafeSetDefault(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
+}
+
+SetDirectoryRequest::~SetDirectoryRequest() {
+  // @@protoc_insertion_point(destructor:SetDirectoryRequest)
+  SharedDtor();
+  _internal_metadata_.Delete<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>();
+}
+
+void SetDirectoryRequest::SharedDtor() {
+  GOOGLE_DCHECK(GetArena() == nullptr);
+  directory_.DestroyNoArena(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
+}
+
+void SetDirectoryRequest::ArenaDtor(void* object) {
+  SetDirectoryRequest* _this = reinterpret_cast< SetDirectoryRequest* >(object);
+  (void)_this;
+}
+void SetDirectoryRequest::RegisterArenaDtor(::PROTOBUF_NAMESPACE_ID::Arena*) {
+}
+void SetDirectoryRequest::SetCachedSize(int size) const {
+  _cached_size_.Set(size);
+}
+const SetDirectoryRequest& SetDirectoryRequest::default_instance() {
+  ::PROTOBUF_NAMESPACE_ID::internal::InitSCC(&::scc_info_SetDirectoryRequest_cameras_5fmessages_2eproto.base);
+  return *internal_default_instance();
+}
+
+
+void SetDirectoryRequest::Clear() {
+// @@protoc_insertion_point(message_clear_start:SetDirectoryRequest)
+  ::PROTOBUF_NAMESPACE_ID::uint32 cached_has_bits = 0;
+  // Prevent compiler warnings about cached_has_bits being unused
+  (void) cached_has_bits;
+
+  directory_.ClearToEmpty(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), GetArena());
+  _internal_metadata_.Clear<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>();
+}
+
+const char* SetDirectoryRequest::_InternalParse(const char* ptr, ::PROTOBUF_NAMESPACE_ID::internal::ParseContext* ctx) {
+#define CHK_(x) if (PROTOBUF_PREDICT_FALSE(!(x))) goto failure
+  ::PROTOBUF_NAMESPACE_ID::Arena* arena = GetArena(); (void)arena;
+  while (!ctx->Done(&ptr)) {
+    ::PROTOBUF_NAMESPACE_ID::uint32 tag;
+    ptr = ::PROTOBUF_NAMESPACE_ID::internal::ReadTag(ptr, &tag);
+    CHK_(ptr);
+    switch (tag >> 3) {
+      // string directory = 1;
+      case 1:
+        if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 10)) {
+          auto str = _internal_mutable_directory();
+          ptr = ::PROTOBUF_NAMESPACE_ID::internal::InlineGreedyStringParser(str, ptr, ctx);
+          CHK_(::PROTOBUF_NAMESPACE_ID::internal::VerifyUTF8(str, "SetDirectoryRequest.directory"));
+          CHK_(ptr);
+        } else goto handle_unusual;
+        continue;
+      default: {
+      handle_unusual:
+        if ((tag & 7) == 4 || tag == 0) {
+          ctx->SetLastTag(tag);
+          goto success;
+        }
+        ptr = UnknownFieldParse(tag,
+            _internal_metadata_.mutable_unknown_fields<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(),
+            ptr, ctx);
+        CHK_(ptr != nullptr);
+        continue;
+      }
+    }  // switch
+  }  // while
+success:
+  return ptr;
+failure:
+  ptr = nullptr;
+  goto success;
+#undef CHK_
+}
+
+::PROTOBUF_NAMESPACE_ID::uint8* SetDirectoryRequest::_InternalSerialize(
+    ::PROTOBUF_NAMESPACE_ID::uint8* target, ::PROTOBUF_NAMESPACE_ID::io::EpsCopyOutputStream* stream) const {
+  // @@protoc_insertion_point(serialize_to_array_start:SetDirectoryRequest)
+  ::PROTOBUF_NAMESPACE_ID::uint32 cached_has_bits = 0;
+  (void) cached_has_bits;
+
+  // string directory = 1;
+  if (this->directory().size() > 0) {
+    ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::VerifyUtf8String(
+      this->_internal_directory().data(), static_cast<int>(this->_internal_directory().length()),
+      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::SERIALIZE,
+      "SetDirectoryRequest.directory");
+    target = stream->WriteStringMaybeAliased(
+        1, this->_internal_directory(), target);
+  }
+
+  if (PROTOBUF_PREDICT_FALSE(_internal_metadata_.have_unknown_fields())) {
+    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormat::InternalSerializeUnknownFieldsToArray(
+        _internal_metadata_.unknown_fields<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(::PROTOBUF_NAMESPACE_ID::UnknownFieldSet::default_instance), target, stream);
+  }
+  // @@protoc_insertion_point(serialize_to_array_end:SetDirectoryRequest)
+  return target;
+}
+
+size_t SetDirectoryRequest::ByteSizeLong() const {
+// @@protoc_insertion_point(message_byte_size_start:SetDirectoryRequest)
+  size_t total_size = 0;
+
+  ::PROTOBUF_NAMESPACE_ID::uint32 cached_has_bits = 0;
+  // Prevent compiler warnings about cached_has_bits being unused
+  (void) cached_has_bits;
+
+  // string directory = 1;
+  if (this->directory().size() > 0) {
+    total_size += 1 +
+      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::StringSize(
+        this->_internal_directory());
+  }
+
+  if (PROTOBUF_PREDICT_FALSE(_internal_metadata_.have_unknown_fields())) {
+    return ::PROTOBUF_NAMESPACE_ID::internal::ComputeUnknownFieldsSize(
+        _internal_metadata_, total_size, &_cached_size_);
+  }
+  int cached_size = ::PROTOBUF_NAMESPACE_ID::internal::ToCachedSize(total_size);
+  SetCachedSize(cached_size);
+  return total_size;
+}
+
+void SetDirectoryRequest::MergeFrom(const ::PROTOBUF_NAMESPACE_ID::Message& from) {
+// @@protoc_insertion_point(generalized_merge_from_start:SetDirectoryRequest)
+  GOOGLE_DCHECK_NE(&from, this);
+  const SetDirectoryRequest* source =
+      ::PROTOBUF_NAMESPACE_ID::DynamicCastToGenerated<SetDirectoryRequest>(
+          &from);
+  if (source == nullptr) {
+  // @@protoc_insertion_point(generalized_merge_from_cast_fail:SetDirectoryRequest)
+    ::PROTOBUF_NAMESPACE_ID::internal::ReflectionOps::Merge(from, this);
+  } else {
+  // @@protoc_insertion_point(generalized_merge_from_cast_success:SetDirectoryRequest)
+    MergeFrom(*source);
+  }
+}
+
+void SetDirectoryRequest::MergeFrom(const SetDirectoryRequest& from) {
+// @@protoc_insertion_point(class_specific_merge_from_start:SetDirectoryRequest)
+  GOOGLE_DCHECK_NE(&from, this);
+  _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
+  ::PROTOBUF_NAMESPACE_ID::uint32 cached_has_bits = 0;
+  (void) cached_has_bits;
+
+  if (from.directory().size() > 0) {
+    _internal_set_directory(from._internal_directory());
+  }
+}
+
+void SetDirectoryRequest::CopyFrom(const ::PROTOBUF_NAMESPACE_ID::Message& from) {
+// @@protoc_insertion_point(generalized_copy_from_start:SetDirectoryRequest)
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+void SetDirectoryRequest::CopyFrom(const SetDirectoryRequest& from) {
+// @@protoc_insertion_point(class_specific_copy_from_start:SetDirectoryRequest)
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+bool SetDirectoryRequest::IsInitialized() const {
+  return true;
+}
+
+void SetDirectoryRequest::InternalSwap(SetDirectoryRequest* other) {
+  using std::swap;
+  _internal_metadata_.Swap<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(&other->_internal_metadata_);
+  directory_.Swap(&other->directory_, &::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), GetArena());
+}
+
+::PROTOBUF_NAMESPACE_ID::Metadata SetDirectoryRequest::GetMetadata() const {
+  return GetMetadataStatic();
+}
+
+
+// ===================================================================
+
+void SetGainRequest::InitAsDefaultInstance() {
+}
+class SetGainRequest::_Internal {
+ public:
+};
+
+SetGainRequest::SetGainRequest(::PROTOBUF_NAMESPACE_ID::Arena* arena)
+  : ::PROTOBUF_NAMESPACE_ID::Message(arena) {
+  SharedCtor();
+  RegisterArenaDtor(arena);
+  // @@protoc_insertion_point(arena_constructor:SetGainRequest)
+}
+SetGainRequest::SetGainRequest(const SetGainRequest& from)
+  : ::PROTOBUF_NAMESPACE_ID::Message() {
+  _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
+  ::memcpy(&gain_, &from.gain_,
+    static_cast<size_t>(reinterpret_cast<char*>(&gain_type_) -
+    reinterpret_cast<char*>(&gain_)) + sizeof(gain_type_));
+  // @@protoc_insertion_point(copy_constructor:SetGainRequest)
+}
+
+void SetGainRequest::SharedCtor() {
+  ::memset(&gain_, 0, static_cast<size_t>(
+      reinterpret_cast<char*>(&gain_type_) -
+      reinterpret_cast<char*>(&gain_)) + sizeof(gain_type_));
+}
+
+SetGainRequest::~SetGainRequest() {
+  // @@protoc_insertion_point(destructor:SetGainRequest)
+  SharedDtor();
+  _internal_metadata_.Delete<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>();
+}
+
+void SetGainRequest::SharedDtor() {
+  GOOGLE_DCHECK(GetArena() == nullptr);
+}
+
+void SetGainRequest::ArenaDtor(void* object) {
+  SetGainRequest* _this = reinterpret_cast< SetGainRequest* >(object);
+  (void)_this;
+}
+void SetGainRequest::RegisterArenaDtor(::PROTOBUF_NAMESPACE_ID::Arena*) {
+}
+void SetGainRequest::SetCachedSize(int size) const {
+  _cached_size_.Set(size);
+}
+const SetGainRequest& SetGainRequest::default_instance() {
+  ::PROTOBUF_NAMESPACE_ID::internal::InitSCC(&::scc_info_SetGainRequest_cameras_5fmessages_2eproto.base);
+  return *internal_default_instance();
+}
+
+
+void SetGainRequest::Clear() {
+// @@protoc_insertion_point(message_clear_start:SetGainRequest)
+  ::PROTOBUF_NAMESPACE_ID::uint32 cached_has_bits = 0;
+  // Prevent compiler warnings about cached_has_bits being unused
+  (void) cached_has_bits;
+
+  ::memset(&gain_, 0, static_cast<size_t>(
+      reinterpret_cast<char*>(&gain_type_) -
+      reinterpret_cast<char*>(&gain_)) + sizeof(gain_type_));
+  _internal_metadata_.Clear<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>();
+}
+
+const char* SetGainRequest::_InternalParse(const char* ptr, ::PROTOBUF_NAMESPACE_ID::internal::ParseContext* ctx) {
+#define CHK_(x) if (PROTOBUF_PREDICT_FALSE(!(x))) goto failure
+  ::PROTOBUF_NAMESPACE_ID::Arena* arena = GetArena(); (void)arena;
+  while (!ctx->Done(&ptr)) {
+    ::PROTOBUF_NAMESPACE_ID::uint32 tag;
+    ptr = ::PROTOBUF_NAMESPACE_ID::internal::ReadTag(ptr, &tag);
+    CHK_(ptr);
+    switch (tag >> 3) {
+      // double gain = 1;
+      case 1:
+        if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 9)) {
+          gain_ = ::PROTOBUF_NAMESPACE_ID::internal::UnalignedLoad<double>(ptr);
+          ptr += sizeof(double);
+        } else goto handle_unusual;
+        continue;
+      // int32 gain_type = 2;
+      case 2:
+        if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 16)) {
+          gain_type_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
+          CHK_(ptr);
+        } else goto handle_unusual;
+        continue;
+      default: {
+      handle_unusual:
+        if ((tag & 7) == 4 || tag == 0) {
+          ctx->SetLastTag(tag);
+          goto success;
+        }
+        ptr = UnknownFieldParse(tag,
+            _internal_metadata_.mutable_unknown_fields<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(),
+            ptr, ctx);
+        CHK_(ptr != nullptr);
+        continue;
+      }
+    }  // switch
+  }  // while
+success:
+  return ptr;
+failure:
+  ptr = nullptr;
+  goto success;
+#undef CHK_
+}
+
+::PROTOBUF_NAMESPACE_ID::uint8* SetGainRequest::_InternalSerialize(
+    ::PROTOBUF_NAMESPACE_ID::uint8* target, ::PROTOBUF_NAMESPACE_ID::io::EpsCopyOutputStream* stream) const {
+  // @@protoc_insertion_point(serialize_to_array_start:SetGainRequest)
+  ::PROTOBUF_NAMESPACE_ID::uint32 cached_has_bits = 0;
+  (void) cached_has_bits;
+
+  // double gain = 1;
+  if (!(this->gain() <= 0 && this->gain() >= 0)) {
+    target = stream->EnsureSpace(target);
+    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteDoubleToArray(1, this->_internal_gain(), target);
+  }
+
+  // int32 gain_type = 2;
+  if (this->gain_type() != 0) {
+    target = stream->EnsureSpace(target);
+    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteInt32ToArray(2, this->_internal_gain_type(), target);
+  }
+
+  if (PROTOBUF_PREDICT_FALSE(_internal_metadata_.have_unknown_fields())) {
+    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormat::InternalSerializeUnknownFieldsToArray(
+        _internal_metadata_.unknown_fields<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(::PROTOBUF_NAMESPACE_ID::UnknownFieldSet::default_instance), target, stream);
+  }
+  // @@protoc_insertion_point(serialize_to_array_end:SetGainRequest)
+  return target;
+}
+
+size_t SetGainRequest::ByteSizeLong() const {
+// @@protoc_insertion_point(message_byte_size_start:SetGainRequest)
+  size_t total_size = 0;
+
+  ::PROTOBUF_NAMESPACE_ID::uint32 cached_has_bits = 0;
+  // Prevent compiler warnings about cached_has_bits being unused
+  (void) cached_has_bits;
+
+  // double gain = 1;
+  if (!(this->gain() <= 0 && this->gain() >= 0)) {
+    total_size += 1 + 8;
+  }
+
+  // int32 gain_type = 2;
+  if (this->gain_type() != 0) {
+    total_size += 1 +
+      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::Int32Size(
+        this->_internal_gain_type());
+  }
+
+  if (PROTOBUF_PREDICT_FALSE(_internal_metadata_.have_unknown_fields())) {
+    return ::PROTOBUF_NAMESPACE_ID::internal::ComputeUnknownFieldsSize(
+        _internal_metadata_, total_size, &_cached_size_);
+  }
+  int cached_size = ::PROTOBUF_NAMESPACE_ID::internal::ToCachedSize(total_size);
+  SetCachedSize(cached_size);
+  return total_size;
+}
+
+void SetGainRequest::MergeFrom(const ::PROTOBUF_NAMESPACE_ID::Message& from) {
+// @@protoc_insertion_point(generalized_merge_from_start:SetGainRequest)
+  GOOGLE_DCHECK_NE(&from, this);
+  const SetGainRequest* source =
+      ::PROTOBUF_NAMESPACE_ID::DynamicCastToGenerated<SetGainRequest>(
+          &from);
+  if (source == nullptr) {
+  // @@protoc_insertion_point(generalized_merge_from_cast_fail:SetGainRequest)
+    ::PROTOBUF_NAMESPACE_ID::internal::ReflectionOps::Merge(from, this);
+  } else {
+  // @@protoc_insertion_point(generalized_merge_from_cast_success:SetGainRequest)
+    MergeFrom(*source);
+  }
+}
+
+void SetGainRequest::MergeFrom(const SetGainRequest& from) {
+// @@protoc_insertion_point(class_specific_merge_from_start:SetGainRequest)
+  GOOGLE_DCHECK_NE(&from, this);
+  _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
+  ::PROTOBUF_NAMESPACE_ID::uint32 cached_has_bits = 0;
+  (void) cached_has_bits;
+
+  if (!(from.gain() <= 0 && from.gain() >= 0)) {
+    _internal_set_gain(from._internal_gain());
+  }
+  if (from.gain_type() != 0) {
+    _internal_set_gain_type(from._internal_gain_type());
+  }
+}
+
+void SetGainRequest::CopyFrom(const ::PROTOBUF_NAMESPACE_ID::Message& from) {
+// @@protoc_insertion_point(generalized_copy_from_start:SetGainRequest)
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+void SetGainRequest::CopyFrom(const SetGainRequest& from) {
+// @@protoc_insertion_point(class_specific_copy_from_start:SetGainRequest)
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+bool SetGainRequest::IsInitialized() const {
+  return true;
+}
+
+void SetGainRequest::InternalSwap(SetGainRequest* other) {
+  using std::swap;
+  _internal_metadata_.Swap<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(&other->_internal_metadata_);
+  ::PROTOBUF_NAMESPACE_ID::internal::memswap<
+      PROTOBUF_FIELD_OFFSET(SetGainRequest, gain_type_)
+      + sizeof(SetGainRequest::gain_type_)
+      - PROTOBUF_FIELD_OFFSET(SetGainRequest, gain_)>(
+          reinterpret_cast<char*>(&gain_),
+          reinterpret_cast<char*>(&other->gain_));
+}
+
+::PROTOBUF_NAMESPACE_ID::Metadata SetGainRequest::GetMetadata() const {
+  return GetMetadataStatic();
+}
+
+
+// ===================================================================
+
+void SetExposureRequest::InitAsDefaultInstance() {
+}
+class SetExposureRequest::_Internal {
+ public:
+};
+
+SetExposureRequest::SetExposureRequest(::PROTOBUF_NAMESPACE_ID::Arena* arena)
+  : ::PROTOBUF_NAMESPACE_ID::Message(arena) {
+  SharedCtor();
+  RegisterArenaDtor(arena);
+  // @@protoc_insertion_point(arena_constructor:SetExposureRequest)
+}
+SetExposureRequest::SetExposureRequest(const SetExposureRequest& from)
+  : ::PROTOBUF_NAMESPACE_ID::Message() {
+  _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
+  ::memcpy(&exposure_, &from.exposure_,
+    static_cast<size_t>(reinterpret_cast<char*>(&exposure_type_) -
+    reinterpret_cast<char*>(&exposure_)) + sizeof(exposure_type_));
+  // @@protoc_insertion_point(copy_constructor:SetExposureRequest)
+}
+
+void SetExposureRequest::SharedCtor() {
+  ::memset(&exposure_, 0, static_cast<size_t>(
+      reinterpret_cast<char*>(&exposure_type_) -
+      reinterpret_cast<char*>(&exposure_)) + sizeof(exposure_type_));
+}
+
+SetExposureRequest::~SetExposureRequest() {
+  // @@protoc_insertion_point(destructor:SetExposureRequest)
+  SharedDtor();
+  _internal_metadata_.Delete<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>();
+}
+
+void SetExposureRequest::SharedDtor() {
+  GOOGLE_DCHECK(GetArena() == nullptr);
+}
+
+void SetExposureRequest::ArenaDtor(void* object) {
+  SetExposureRequest* _this = reinterpret_cast< SetExposureRequest* >(object);
+  (void)_this;
+}
+void SetExposureRequest::RegisterArenaDtor(::PROTOBUF_NAMESPACE_ID::Arena*) {
+}
+void SetExposureRequest::SetCachedSize(int size) const {
+  _cached_size_.Set(size);
+}
+const SetExposureRequest& SetExposureRequest::default_instance() {
+  ::PROTOBUF_NAMESPACE_ID::internal::InitSCC(&::scc_info_SetExposureRequest_cameras_5fmessages_2eproto.base);
+  return *internal_default_instance();
+}
+
+
+void SetExposureRequest::Clear() {
+// @@protoc_insertion_point(message_clear_start:SetExposureRequest)
+  ::PROTOBUF_NAMESPACE_ID::uint32 cached_has_bits = 0;
+  // Prevent compiler warnings about cached_has_bits being unused
+  (void) cached_has_bits;
+
+  ::memset(&exposure_, 0, static_cast<size_t>(
+      reinterpret_cast<char*>(&exposure_type_) -
+      reinterpret_cast<char*>(&exposure_)) + sizeof(exposure_type_));
+  _internal_metadata_.Clear<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>();
+}
+
+const char* SetExposureRequest::_InternalParse(const char* ptr, ::PROTOBUF_NAMESPACE_ID::internal::ParseContext* ctx) {
+#define CHK_(x) if (PROTOBUF_PREDICT_FALSE(!(x))) goto failure
+  ::PROTOBUF_NAMESPACE_ID::Arena* arena = GetArena(); (void)arena;
+  while (!ctx->Done(&ptr)) {
+    ::PROTOBUF_NAMESPACE_ID::uint32 tag;
+    ptr = ::PROTOBUF_NAMESPACE_ID::internal::ReadTag(ptr, &tag);
+    CHK_(ptr);
+    switch (tag >> 3) {
+      // double exposure = 1;
+      case 1:
+        if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 9)) {
+          exposure_ = ::PROTOBUF_NAMESPACE_ID::internal::UnalignedLoad<double>(ptr);
+          ptr += sizeof(double);
+        } else goto handle_unusual;
+        continue;
+      // int32 exposure_type = 2;
+      case 2:
+        if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 16)) {
+          exposure_type_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
+          CHK_(ptr);
+        } else goto handle_unusual;
+        continue;
+      default: {
+      handle_unusual:
+        if ((tag & 7) == 4 || tag == 0) {
+          ctx->SetLastTag(tag);
+          goto success;
+        }
+        ptr = UnknownFieldParse(tag,
+            _internal_metadata_.mutable_unknown_fields<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(),
+            ptr, ctx);
+        CHK_(ptr != nullptr);
+        continue;
+      }
+    }  // switch
+  }  // while
+success:
+  return ptr;
+failure:
+  ptr = nullptr;
+  goto success;
+#undef CHK_
+}
+
+::PROTOBUF_NAMESPACE_ID::uint8* SetExposureRequest::_InternalSerialize(
+    ::PROTOBUF_NAMESPACE_ID::uint8* target, ::PROTOBUF_NAMESPACE_ID::io::EpsCopyOutputStream* stream) const {
+  // @@protoc_insertion_point(serialize_to_array_start:SetExposureRequest)
+  ::PROTOBUF_NAMESPACE_ID::uint32 cached_has_bits = 0;
+  (void) cached_has_bits;
+
+  // double exposure = 1;
+  if (!(this->exposure() <= 0 && this->exposure() >= 0)) {
+    target = stream->EnsureSpace(target);
+    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteDoubleToArray(1, this->_internal_exposure(), target);
+  }
+
+  // int32 exposure_type = 2;
+  if (this->exposure_type() != 0) {
+    target = stream->EnsureSpace(target);
+    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteInt32ToArray(2, this->_internal_exposure_type(), target);
+  }
+
+  if (PROTOBUF_PREDICT_FALSE(_internal_metadata_.have_unknown_fields())) {
+    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormat::InternalSerializeUnknownFieldsToArray(
+        _internal_metadata_.unknown_fields<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(::PROTOBUF_NAMESPACE_ID::UnknownFieldSet::default_instance), target, stream);
+  }
+  // @@protoc_insertion_point(serialize_to_array_end:SetExposureRequest)
+  return target;
+}
+
+size_t SetExposureRequest::ByteSizeLong() const {
+// @@protoc_insertion_point(message_byte_size_start:SetExposureRequest)
+  size_t total_size = 0;
+
+  ::PROTOBUF_NAMESPACE_ID::uint32 cached_has_bits = 0;
+  // Prevent compiler warnings about cached_has_bits being unused
+  (void) cached_has_bits;
+
+  // double exposure = 1;
+  if (!(this->exposure() <= 0 && this->exposure() >= 0)) {
+    total_size += 1 + 8;
+  }
+
+  // int32 exposure_type = 2;
+  if (this->exposure_type() != 0) {
+    total_size += 1 +
+      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::Int32Size(
+        this->_internal_exposure_type());
+  }
+
+  if (PROTOBUF_PREDICT_FALSE(_internal_metadata_.have_unknown_fields())) {
+    return ::PROTOBUF_NAMESPACE_ID::internal::ComputeUnknownFieldsSize(
+        _internal_metadata_, total_size, &_cached_size_);
+  }
+  int cached_size = ::PROTOBUF_NAMESPACE_ID::internal::ToCachedSize(total_size);
+  SetCachedSize(cached_size);
+  return total_size;
+}
+
+void SetExposureRequest::MergeFrom(const ::PROTOBUF_NAMESPACE_ID::Message& from) {
+// @@protoc_insertion_point(generalized_merge_from_start:SetExposureRequest)
+  GOOGLE_DCHECK_NE(&from, this);
+  const SetExposureRequest* source =
+      ::PROTOBUF_NAMESPACE_ID::DynamicCastToGenerated<SetExposureRequest>(
+          &from);
+  if (source == nullptr) {
+  // @@protoc_insertion_point(generalized_merge_from_cast_fail:SetExposureRequest)
+    ::PROTOBUF_NAMESPACE_ID::internal::ReflectionOps::Merge(from, this);
+  } else {
+  // @@protoc_insertion_point(generalized_merge_from_cast_success:SetExposureRequest)
+    MergeFrom(*source);
+  }
+}
+
+void SetExposureRequest::MergeFrom(const SetExposureRequest& from) {
+// @@protoc_insertion_point(class_specific_merge_from_start:SetExposureRequest)
+  GOOGLE_DCHECK_NE(&from, this);
+  _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
+  ::PROTOBUF_NAMESPACE_ID::uint32 cached_has_bits = 0;
+  (void) cached_has_bits;
+
+  if (!(from.exposure() <= 0 && from.exposure() >= 0)) {
+    _internal_set_exposure(from._internal_exposure());
+  }
+  if (from.exposure_type() != 0) {
+    _internal_set_exposure_type(from._internal_exposure_type());
+  }
+}
+
+void SetExposureRequest::CopyFrom(const ::PROTOBUF_NAMESPACE_ID::Message& from) {
+// @@protoc_insertion_point(generalized_copy_from_start:SetExposureRequest)
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+void SetExposureRequest::CopyFrom(const SetExposureRequest& from) {
+// @@protoc_insertion_point(class_specific_copy_from_start:SetExposureRequest)
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+bool SetExposureRequest::IsInitialized() const {
+  return true;
+}
+
+void SetExposureRequest::InternalSwap(SetExposureRequest* other) {
+  using std::swap;
+  _internal_metadata_.Swap<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(&other->_internal_metadata_);
+  ::PROTOBUF_NAMESPACE_ID::internal::memswap<
+      PROTOBUF_FIELD_OFFSET(SetExposureRequest, exposure_type_)
+      + sizeof(SetExposureRequest::exposure_type_)
+      - PROTOBUF_FIELD_OFFSET(SetExposureRequest, exposure_)>(
+          reinterpret_cast<char*>(&exposure_),
+          reinterpret_cast<char*>(&other->exposure_));
+}
+
+::PROTOBUF_NAMESPACE_ID::Metadata SetExposureRequest::GetMetadata() const {
+  return GetMetadataStatic();
+}
+
+
 // @@protoc_insertion_point(namespace_scope)
 PROTOBUF_NAMESPACE_OPEN
 template<> PROTOBUF_NOINLINE ::SimpleRequest* Arena::CreateMaybeMessage< ::SimpleRequest >(Arena* arena) {
@@ -1270,6 +2029,15 @@ template<> PROTOBUF_NOINLINE ::SetRecordingPeriodRequest* Arena::CreateMaybeMess
 }
 template<> PROTOBUF_NOINLINE ::SetReferenceCameraRequest* Arena::CreateMaybeMessage< ::SetReferenceCameraRequest >(Arena* arena) {
   return Arena::CreateMessageInternal< ::SetReferenceCameraRequest >(arena);
+}
+template<> PROTOBUF_NOINLINE ::SetDirectoryRequest* Arena::CreateMaybeMessage< ::SetDirectoryRequest >(Arena* arena) {
+  return Arena::CreateMessageInternal< ::SetDirectoryRequest >(arena);
+}
+template<> PROTOBUF_NOINLINE ::SetGainRequest* Arena::CreateMaybeMessage< ::SetGainRequest >(Arena* arena) {
+  return Arena::CreateMessageInternal< ::SetGainRequest >(arena);
+}
+template<> PROTOBUF_NOINLINE ::SetExposureRequest* Arena::CreateMaybeMessage< ::SetExposureRequest >(Arena* arena) {
+  return Arena::CreateMessageInternal< ::SetExposureRequest >(arena);
 }
 PROTOBUF_NAMESPACE_CLOSE
 

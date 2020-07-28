@@ -47,16 +47,25 @@ struct TableStruct_cameras_5fmessages_2eproto {
     PROTOBUF_SECTION_VARIABLE(protodesc_cold);
   static const ::PROTOBUF_NAMESPACE_ID::internal::AuxillaryParseTableField aux[]
     PROTOBUF_SECTION_VARIABLE(protodesc_cold);
-  static const ::PROTOBUF_NAMESPACE_ID::internal::ParseTable schema[5]
+  static const ::PROTOBUF_NAMESPACE_ID::internal::ParseTable schema[8]
     PROTOBUF_SECTION_VARIABLE(protodesc_cold);
   static const ::PROTOBUF_NAMESPACE_ID::internal::FieldMetadata field_metadata[];
   static const ::PROTOBUF_NAMESPACE_ID::internal::SerializationTable serialization_table[];
   static const ::PROTOBUF_NAMESPACE_ID::uint32 offsets[];
 };
 extern const ::PROTOBUF_NAMESPACE_ID::internal::DescriptorTable descriptor_table_cameras_5fmessages_2eproto;
+class SetDirectoryRequest;
+class SetDirectoryRequestDefaultTypeInternal;
+extern SetDirectoryRequestDefaultTypeInternal _SetDirectoryRequest_default_instance_;
+class SetExposureRequest;
+class SetExposureRequestDefaultTypeInternal;
+extern SetExposureRequestDefaultTypeInternal _SetExposureRequest_default_instance_;
 class SetFramerateRequest;
 class SetFramerateRequestDefaultTypeInternal;
 extern SetFramerateRequestDefaultTypeInternal _SetFramerateRequest_default_instance_;
+class SetGainRequest;
+class SetGainRequestDefaultTypeInternal;
+extern SetGainRequestDefaultTypeInternal _SetGainRequest_default_instance_;
 class SetRecordingPeriodRequest;
 class SetRecordingPeriodRequestDefaultTypeInternal;
 extern SetRecordingPeriodRequestDefaultTypeInternal _SetRecordingPeriodRequest_default_instance_;
@@ -70,7 +79,10 @@ class SimpleResponse;
 class SimpleResponseDefaultTypeInternal;
 extern SimpleResponseDefaultTypeInternal _SimpleResponse_default_instance_;
 PROTOBUF_NAMESPACE_OPEN
+template<> ::SetDirectoryRequest* Arena::CreateMaybeMessage<::SetDirectoryRequest>(Arena*);
+template<> ::SetExposureRequest* Arena::CreateMaybeMessage<::SetExposureRequest>(Arena*);
 template<> ::SetFramerateRequest* Arena::CreateMaybeMessage<::SetFramerateRequest>(Arena*);
+template<> ::SetGainRequest* Arena::CreateMaybeMessage<::SetGainRequest>(Arena*);
 template<> ::SetRecordingPeriodRequest* Arena::CreateMaybeMessage<::SetRecordingPeriodRequest>(Arena*);
 template<> ::SetReferenceCameraRequest* Arena::CreateMaybeMessage<::SetReferenceCameraRequest>(Arena*);
 template<> ::SimpleRequest* Arena::CreateMaybeMessage<::SimpleRequest>(Arena*);
@@ -816,6 +828,455 @@ class SetReferenceCameraRequest PROTOBUF_FINAL :
   mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
   friend struct ::TableStruct_cameras_5fmessages_2eproto;
 };
+// -------------------------------------------------------------------
+
+class SetDirectoryRequest PROTOBUF_FINAL :
+    public ::PROTOBUF_NAMESPACE_ID::Message /* @@protoc_insertion_point(class_definition:SetDirectoryRequest) */ {
+ public:
+  inline SetDirectoryRequest() : SetDirectoryRequest(nullptr) {};
+  virtual ~SetDirectoryRequest();
+
+  SetDirectoryRequest(const SetDirectoryRequest& from);
+  SetDirectoryRequest(SetDirectoryRequest&& from) noexcept
+    : SetDirectoryRequest() {
+    *this = ::std::move(from);
+  }
+
+  inline SetDirectoryRequest& operator=(const SetDirectoryRequest& from) {
+    CopyFrom(from);
+    return *this;
+  }
+  inline SetDirectoryRequest& operator=(SetDirectoryRequest&& from) noexcept {
+    if (GetArena() == from.GetArena()) {
+      if (this != &from) InternalSwap(&from);
+    } else {
+      CopyFrom(from);
+    }
+    return *this;
+  }
+
+  static const ::PROTOBUF_NAMESPACE_ID::Descriptor* descriptor() {
+    return GetDescriptor();
+  }
+  static const ::PROTOBUF_NAMESPACE_ID::Descriptor* GetDescriptor() {
+    return GetMetadataStatic().descriptor;
+  }
+  static const ::PROTOBUF_NAMESPACE_ID::Reflection* GetReflection() {
+    return GetMetadataStatic().reflection;
+  }
+  static const SetDirectoryRequest& default_instance();
+
+  static void InitAsDefaultInstance();  // FOR INTERNAL USE ONLY
+  static inline const SetDirectoryRequest* internal_default_instance() {
+    return reinterpret_cast<const SetDirectoryRequest*>(
+               &_SetDirectoryRequest_default_instance_);
+  }
+  static constexpr int kIndexInFileMessages =
+    5;
+
+  friend void swap(SetDirectoryRequest& a, SetDirectoryRequest& b) {
+    a.Swap(&b);
+  }
+  inline void Swap(SetDirectoryRequest* other) {
+    if (other == this) return;
+    if (GetArena() == other->GetArena()) {
+      InternalSwap(other);
+    } else {
+      ::PROTOBUF_NAMESPACE_ID::internal::GenericSwap(this, other);
+    }
+  }
+  void UnsafeArenaSwap(SetDirectoryRequest* other) {
+    if (other == this) return;
+    GOOGLE_DCHECK(GetArena() == other->GetArena());
+    InternalSwap(other);
+  }
+
+  // implements Message ----------------------------------------------
+
+  inline SetDirectoryRequest* New() const final {
+    return CreateMaybeMessage<SetDirectoryRequest>(nullptr);
+  }
+
+  SetDirectoryRequest* New(::PROTOBUF_NAMESPACE_ID::Arena* arena) const final {
+    return CreateMaybeMessage<SetDirectoryRequest>(arena);
+  }
+  void CopyFrom(const ::PROTOBUF_NAMESPACE_ID::Message& from) final;
+  void MergeFrom(const ::PROTOBUF_NAMESPACE_ID::Message& from) final;
+  void CopyFrom(const SetDirectoryRequest& from);
+  void MergeFrom(const SetDirectoryRequest& from);
+  PROTOBUF_ATTRIBUTE_REINITIALIZES void Clear() final;
+  bool IsInitialized() const final;
+
+  size_t ByteSizeLong() const final;
+  const char* _InternalParse(const char* ptr, ::PROTOBUF_NAMESPACE_ID::internal::ParseContext* ctx) final;
+  ::PROTOBUF_NAMESPACE_ID::uint8* _InternalSerialize(
+      ::PROTOBUF_NAMESPACE_ID::uint8* target, ::PROTOBUF_NAMESPACE_ID::io::EpsCopyOutputStream* stream) const final;
+  int GetCachedSize() const final { return _cached_size_.Get(); }
+
+  private:
+  inline void SharedCtor();
+  inline void SharedDtor();
+  void SetCachedSize(int size) const final;
+  void InternalSwap(SetDirectoryRequest* other);
+  friend class ::PROTOBUF_NAMESPACE_ID::internal::AnyMetadata;
+  static ::PROTOBUF_NAMESPACE_ID::StringPiece FullMessageName() {
+    return "SetDirectoryRequest";
+  }
+  protected:
+  explicit SetDirectoryRequest(::PROTOBUF_NAMESPACE_ID::Arena* arena);
+  private:
+  static void ArenaDtor(void* object);
+  inline void RegisterArenaDtor(::PROTOBUF_NAMESPACE_ID::Arena* arena);
+  public:
+
+  ::PROTOBUF_NAMESPACE_ID::Metadata GetMetadata() const final;
+  private:
+  static ::PROTOBUF_NAMESPACE_ID::Metadata GetMetadataStatic() {
+    ::PROTOBUF_NAMESPACE_ID::internal::AssignDescriptors(&::descriptor_table_cameras_5fmessages_2eproto);
+    return ::descriptor_table_cameras_5fmessages_2eproto.file_level_metadata[kIndexInFileMessages];
+  }
+
+  public:
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  enum : int {
+    kDirectoryFieldNumber = 1,
+  };
+  // string directory = 1;
+  void clear_directory();
+  const std::string& directory() const;
+  void set_directory(const std::string& value);
+  void set_directory(std::string&& value);
+  void set_directory(const char* value);
+  void set_directory(const char* value, size_t size);
+  std::string* mutable_directory();
+  std::string* release_directory();
+  void set_allocated_directory(std::string* directory);
+  GOOGLE_PROTOBUF_RUNTIME_DEPRECATED("The unsafe_arena_ accessors for"
+  "    string fields are deprecated and will be removed in a"
+  "    future release.")
+  std::string* unsafe_arena_release_directory();
+  GOOGLE_PROTOBUF_RUNTIME_DEPRECATED("The unsafe_arena_ accessors for"
+  "    string fields are deprecated and will be removed in a"
+  "    future release.")
+  void unsafe_arena_set_allocated_directory(
+      std::string* directory);
+  private:
+  const std::string& _internal_directory() const;
+  void _internal_set_directory(const std::string& value);
+  std::string* _internal_mutable_directory();
+  public:
+
+  // @@protoc_insertion_point(class_scope:SetDirectoryRequest)
+ private:
+  class _Internal;
+
+  template <typename T> friend class ::PROTOBUF_NAMESPACE_ID::Arena::InternalHelper;
+  typedef void InternalArenaConstructable_;
+  typedef void DestructorSkippable_;
+  ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr directory_;
+  mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
+  friend struct ::TableStruct_cameras_5fmessages_2eproto;
+};
+// -------------------------------------------------------------------
+
+class SetGainRequest PROTOBUF_FINAL :
+    public ::PROTOBUF_NAMESPACE_ID::Message /* @@protoc_insertion_point(class_definition:SetGainRequest) */ {
+ public:
+  inline SetGainRequest() : SetGainRequest(nullptr) {};
+  virtual ~SetGainRequest();
+
+  SetGainRequest(const SetGainRequest& from);
+  SetGainRequest(SetGainRequest&& from) noexcept
+    : SetGainRequest() {
+    *this = ::std::move(from);
+  }
+
+  inline SetGainRequest& operator=(const SetGainRequest& from) {
+    CopyFrom(from);
+    return *this;
+  }
+  inline SetGainRequest& operator=(SetGainRequest&& from) noexcept {
+    if (GetArena() == from.GetArena()) {
+      if (this != &from) InternalSwap(&from);
+    } else {
+      CopyFrom(from);
+    }
+    return *this;
+  }
+
+  static const ::PROTOBUF_NAMESPACE_ID::Descriptor* descriptor() {
+    return GetDescriptor();
+  }
+  static const ::PROTOBUF_NAMESPACE_ID::Descriptor* GetDescriptor() {
+    return GetMetadataStatic().descriptor;
+  }
+  static const ::PROTOBUF_NAMESPACE_ID::Reflection* GetReflection() {
+    return GetMetadataStatic().reflection;
+  }
+  static const SetGainRequest& default_instance();
+
+  static void InitAsDefaultInstance();  // FOR INTERNAL USE ONLY
+  static inline const SetGainRequest* internal_default_instance() {
+    return reinterpret_cast<const SetGainRequest*>(
+               &_SetGainRequest_default_instance_);
+  }
+  static constexpr int kIndexInFileMessages =
+    6;
+
+  friend void swap(SetGainRequest& a, SetGainRequest& b) {
+    a.Swap(&b);
+  }
+  inline void Swap(SetGainRequest* other) {
+    if (other == this) return;
+    if (GetArena() == other->GetArena()) {
+      InternalSwap(other);
+    } else {
+      ::PROTOBUF_NAMESPACE_ID::internal::GenericSwap(this, other);
+    }
+  }
+  void UnsafeArenaSwap(SetGainRequest* other) {
+    if (other == this) return;
+    GOOGLE_DCHECK(GetArena() == other->GetArena());
+    InternalSwap(other);
+  }
+
+  // implements Message ----------------------------------------------
+
+  inline SetGainRequest* New() const final {
+    return CreateMaybeMessage<SetGainRequest>(nullptr);
+  }
+
+  SetGainRequest* New(::PROTOBUF_NAMESPACE_ID::Arena* arena) const final {
+    return CreateMaybeMessage<SetGainRequest>(arena);
+  }
+  void CopyFrom(const ::PROTOBUF_NAMESPACE_ID::Message& from) final;
+  void MergeFrom(const ::PROTOBUF_NAMESPACE_ID::Message& from) final;
+  void CopyFrom(const SetGainRequest& from);
+  void MergeFrom(const SetGainRequest& from);
+  PROTOBUF_ATTRIBUTE_REINITIALIZES void Clear() final;
+  bool IsInitialized() const final;
+
+  size_t ByteSizeLong() const final;
+  const char* _InternalParse(const char* ptr, ::PROTOBUF_NAMESPACE_ID::internal::ParseContext* ctx) final;
+  ::PROTOBUF_NAMESPACE_ID::uint8* _InternalSerialize(
+      ::PROTOBUF_NAMESPACE_ID::uint8* target, ::PROTOBUF_NAMESPACE_ID::io::EpsCopyOutputStream* stream) const final;
+  int GetCachedSize() const final { return _cached_size_.Get(); }
+
+  private:
+  inline void SharedCtor();
+  inline void SharedDtor();
+  void SetCachedSize(int size) const final;
+  void InternalSwap(SetGainRequest* other);
+  friend class ::PROTOBUF_NAMESPACE_ID::internal::AnyMetadata;
+  static ::PROTOBUF_NAMESPACE_ID::StringPiece FullMessageName() {
+    return "SetGainRequest";
+  }
+  protected:
+  explicit SetGainRequest(::PROTOBUF_NAMESPACE_ID::Arena* arena);
+  private:
+  static void ArenaDtor(void* object);
+  inline void RegisterArenaDtor(::PROTOBUF_NAMESPACE_ID::Arena* arena);
+  public:
+
+  ::PROTOBUF_NAMESPACE_ID::Metadata GetMetadata() const final;
+  private:
+  static ::PROTOBUF_NAMESPACE_ID::Metadata GetMetadataStatic() {
+    ::PROTOBUF_NAMESPACE_ID::internal::AssignDescriptors(&::descriptor_table_cameras_5fmessages_2eproto);
+    return ::descriptor_table_cameras_5fmessages_2eproto.file_level_metadata[kIndexInFileMessages];
+  }
+
+  public:
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  enum : int {
+    kGainFieldNumber = 1,
+    kGainTypeFieldNumber = 2,
+  };
+  // double gain = 1;
+  void clear_gain();
+  double gain() const;
+  void set_gain(double value);
+  private:
+  double _internal_gain() const;
+  void _internal_set_gain(double value);
+  public:
+
+  // int32 gain_type = 2;
+  void clear_gain_type();
+  ::PROTOBUF_NAMESPACE_ID::int32 gain_type() const;
+  void set_gain_type(::PROTOBUF_NAMESPACE_ID::int32 value);
+  private:
+  ::PROTOBUF_NAMESPACE_ID::int32 _internal_gain_type() const;
+  void _internal_set_gain_type(::PROTOBUF_NAMESPACE_ID::int32 value);
+  public:
+
+  // @@protoc_insertion_point(class_scope:SetGainRequest)
+ private:
+  class _Internal;
+
+  template <typename T> friend class ::PROTOBUF_NAMESPACE_ID::Arena::InternalHelper;
+  typedef void InternalArenaConstructable_;
+  typedef void DestructorSkippable_;
+  double gain_;
+  ::PROTOBUF_NAMESPACE_ID::int32 gain_type_;
+  mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
+  friend struct ::TableStruct_cameras_5fmessages_2eproto;
+};
+// -------------------------------------------------------------------
+
+class SetExposureRequest PROTOBUF_FINAL :
+    public ::PROTOBUF_NAMESPACE_ID::Message /* @@protoc_insertion_point(class_definition:SetExposureRequest) */ {
+ public:
+  inline SetExposureRequest() : SetExposureRequest(nullptr) {};
+  virtual ~SetExposureRequest();
+
+  SetExposureRequest(const SetExposureRequest& from);
+  SetExposureRequest(SetExposureRequest&& from) noexcept
+    : SetExposureRequest() {
+    *this = ::std::move(from);
+  }
+
+  inline SetExposureRequest& operator=(const SetExposureRequest& from) {
+    CopyFrom(from);
+    return *this;
+  }
+  inline SetExposureRequest& operator=(SetExposureRequest&& from) noexcept {
+    if (GetArena() == from.GetArena()) {
+      if (this != &from) InternalSwap(&from);
+    } else {
+      CopyFrom(from);
+    }
+    return *this;
+  }
+
+  static const ::PROTOBUF_NAMESPACE_ID::Descriptor* descriptor() {
+    return GetDescriptor();
+  }
+  static const ::PROTOBUF_NAMESPACE_ID::Descriptor* GetDescriptor() {
+    return GetMetadataStatic().descriptor;
+  }
+  static const ::PROTOBUF_NAMESPACE_ID::Reflection* GetReflection() {
+    return GetMetadataStatic().reflection;
+  }
+  static const SetExposureRequest& default_instance();
+
+  static void InitAsDefaultInstance();  // FOR INTERNAL USE ONLY
+  static inline const SetExposureRequest* internal_default_instance() {
+    return reinterpret_cast<const SetExposureRequest*>(
+               &_SetExposureRequest_default_instance_);
+  }
+  static constexpr int kIndexInFileMessages =
+    7;
+
+  friend void swap(SetExposureRequest& a, SetExposureRequest& b) {
+    a.Swap(&b);
+  }
+  inline void Swap(SetExposureRequest* other) {
+    if (other == this) return;
+    if (GetArena() == other->GetArena()) {
+      InternalSwap(other);
+    } else {
+      ::PROTOBUF_NAMESPACE_ID::internal::GenericSwap(this, other);
+    }
+  }
+  void UnsafeArenaSwap(SetExposureRequest* other) {
+    if (other == this) return;
+    GOOGLE_DCHECK(GetArena() == other->GetArena());
+    InternalSwap(other);
+  }
+
+  // implements Message ----------------------------------------------
+
+  inline SetExposureRequest* New() const final {
+    return CreateMaybeMessage<SetExposureRequest>(nullptr);
+  }
+
+  SetExposureRequest* New(::PROTOBUF_NAMESPACE_ID::Arena* arena) const final {
+    return CreateMaybeMessage<SetExposureRequest>(arena);
+  }
+  void CopyFrom(const ::PROTOBUF_NAMESPACE_ID::Message& from) final;
+  void MergeFrom(const ::PROTOBUF_NAMESPACE_ID::Message& from) final;
+  void CopyFrom(const SetExposureRequest& from);
+  void MergeFrom(const SetExposureRequest& from);
+  PROTOBUF_ATTRIBUTE_REINITIALIZES void Clear() final;
+  bool IsInitialized() const final;
+
+  size_t ByteSizeLong() const final;
+  const char* _InternalParse(const char* ptr, ::PROTOBUF_NAMESPACE_ID::internal::ParseContext* ctx) final;
+  ::PROTOBUF_NAMESPACE_ID::uint8* _InternalSerialize(
+      ::PROTOBUF_NAMESPACE_ID::uint8* target, ::PROTOBUF_NAMESPACE_ID::io::EpsCopyOutputStream* stream) const final;
+  int GetCachedSize() const final { return _cached_size_.Get(); }
+
+  private:
+  inline void SharedCtor();
+  inline void SharedDtor();
+  void SetCachedSize(int size) const final;
+  void InternalSwap(SetExposureRequest* other);
+  friend class ::PROTOBUF_NAMESPACE_ID::internal::AnyMetadata;
+  static ::PROTOBUF_NAMESPACE_ID::StringPiece FullMessageName() {
+    return "SetExposureRequest";
+  }
+  protected:
+  explicit SetExposureRequest(::PROTOBUF_NAMESPACE_ID::Arena* arena);
+  private:
+  static void ArenaDtor(void* object);
+  inline void RegisterArenaDtor(::PROTOBUF_NAMESPACE_ID::Arena* arena);
+  public:
+
+  ::PROTOBUF_NAMESPACE_ID::Metadata GetMetadata() const final;
+  private:
+  static ::PROTOBUF_NAMESPACE_ID::Metadata GetMetadataStatic() {
+    ::PROTOBUF_NAMESPACE_ID::internal::AssignDescriptors(&::descriptor_table_cameras_5fmessages_2eproto);
+    return ::descriptor_table_cameras_5fmessages_2eproto.file_level_metadata[kIndexInFileMessages];
+  }
+
+  public:
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  enum : int {
+    kExposureFieldNumber = 1,
+    kExposureTypeFieldNumber = 2,
+  };
+  // double exposure = 1;
+  void clear_exposure();
+  double exposure() const;
+  void set_exposure(double value);
+  private:
+  double _internal_exposure() const;
+  void _internal_set_exposure(double value);
+  public:
+
+  // int32 exposure_type = 2;
+  void clear_exposure_type();
+  ::PROTOBUF_NAMESPACE_ID::int32 exposure_type() const;
+  void set_exposure_type(::PROTOBUF_NAMESPACE_ID::int32 value);
+  private:
+  ::PROTOBUF_NAMESPACE_ID::int32 _internal_exposure_type() const;
+  void _internal_set_exposure_type(::PROTOBUF_NAMESPACE_ID::int32 value);
+  public:
+
+  // @@protoc_insertion_point(class_scope:SetExposureRequest)
+ private:
+  class _Internal;
+
+  template <typename T> friend class ::PROTOBUF_NAMESPACE_ID::Arena::InternalHelper;
+  typedef void InternalArenaConstructable_;
+  typedef void DestructorSkippable_;
+  double exposure_;
+  ::PROTOBUF_NAMESPACE_ID::int32 exposure_type_;
+  mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
+  friend struct ::TableStruct_cameras_5fmessages_2eproto;
+};
 // ===================================================================
 
 
@@ -1105,9 +1566,188 @@ inline void SetReferenceCameraRequest::set_serial(::PROTOBUF_NAMESPACE_ID::int32
   // @@protoc_insertion_point(field_set:SetReferenceCameraRequest.serial)
 }
 
+// -------------------------------------------------------------------
+
+// SetDirectoryRequest
+
+// string directory = 1;
+inline void SetDirectoryRequest::clear_directory() {
+  directory_.ClearToEmpty(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), GetArena());
+}
+inline const std::string& SetDirectoryRequest::directory() const {
+  // @@protoc_insertion_point(field_get:SetDirectoryRequest.directory)
+  return _internal_directory();
+}
+inline void SetDirectoryRequest::set_directory(const std::string& value) {
+  _internal_set_directory(value);
+  // @@protoc_insertion_point(field_set:SetDirectoryRequest.directory)
+}
+inline std::string* SetDirectoryRequest::mutable_directory() {
+  // @@protoc_insertion_point(field_mutable:SetDirectoryRequest.directory)
+  return _internal_mutable_directory();
+}
+inline const std::string& SetDirectoryRequest::_internal_directory() const {
+  return directory_.Get();
+}
+inline void SetDirectoryRequest::_internal_set_directory(const std::string& value) {
+  
+  directory_.Set(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), value, GetArena());
+}
+inline void SetDirectoryRequest::set_directory(std::string&& value) {
+  
+  directory_.Set(
+    &::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), ::std::move(value), GetArena());
+  // @@protoc_insertion_point(field_set_rvalue:SetDirectoryRequest.directory)
+}
+inline void SetDirectoryRequest::set_directory(const char* value) {
+  GOOGLE_DCHECK(value != nullptr);
+  
+  directory_.Set(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), ::std::string(value),
+              GetArena());
+  // @@protoc_insertion_point(field_set_char:SetDirectoryRequest.directory)
+}
+inline void SetDirectoryRequest::set_directory(const char* value,
+    size_t size) {
+  
+  directory_.Set(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), ::std::string(
+      reinterpret_cast<const char*>(value), size), GetArena());
+  // @@protoc_insertion_point(field_set_pointer:SetDirectoryRequest.directory)
+}
+inline std::string* SetDirectoryRequest::_internal_mutable_directory() {
+  
+  return directory_.Mutable(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), GetArena());
+}
+inline std::string* SetDirectoryRequest::release_directory() {
+  // @@protoc_insertion_point(field_release:SetDirectoryRequest.directory)
+  return directory_.Release(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), GetArena());
+}
+inline void SetDirectoryRequest::set_allocated_directory(std::string* directory) {
+  if (directory != nullptr) {
+    
+  } else {
+    
+  }
+  directory_.SetAllocated(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), directory,
+      GetArena());
+  // @@protoc_insertion_point(field_set_allocated:SetDirectoryRequest.directory)
+}
+inline std::string* SetDirectoryRequest::unsafe_arena_release_directory() {
+  // @@protoc_insertion_point(field_unsafe_arena_release:SetDirectoryRequest.directory)
+  GOOGLE_DCHECK(GetArena() != nullptr);
+  
+  return directory_.UnsafeArenaRelease(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(),
+      GetArena());
+}
+inline void SetDirectoryRequest::unsafe_arena_set_allocated_directory(
+    std::string* directory) {
+  GOOGLE_DCHECK(GetArena() != nullptr);
+  if (directory != nullptr) {
+    
+  } else {
+    
+  }
+  directory_.UnsafeArenaSetAllocated(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(),
+      directory, GetArena());
+  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:SetDirectoryRequest.directory)
+}
+
+// -------------------------------------------------------------------
+
+// SetGainRequest
+
+// double gain = 1;
+inline void SetGainRequest::clear_gain() {
+  gain_ = 0;
+}
+inline double SetGainRequest::_internal_gain() const {
+  return gain_;
+}
+inline double SetGainRequest::gain() const {
+  // @@protoc_insertion_point(field_get:SetGainRequest.gain)
+  return _internal_gain();
+}
+inline void SetGainRequest::_internal_set_gain(double value) {
+  
+  gain_ = value;
+}
+inline void SetGainRequest::set_gain(double value) {
+  _internal_set_gain(value);
+  // @@protoc_insertion_point(field_set:SetGainRequest.gain)
+}
+
+// int32 gain_type = 2;
+inline void SetGainRequest::clear_gain_type() {
+  gain_type_ = 0;
+}
+inline ::PROTOBUF_NAMESPACE_ID::int32 SetGainRequest::_internal_gain_type() const {
+  return gain_type_;
+}
+inline ::PROTOBUF_NAMESPACE_ID::int32 SetGainRequest::gain_type() const {
+  // @@protoc_insertion_point(field_get:SetGainRequest.gain_type)
+  return _internal_gain_type();
+}
+inline void SetGainRequest::_internal_set_gain_type(::PROTOBUF_NAMESPACE_ID::int32 value) {
+  
+  gain_type_ = value;
+}
+inline void SetGainRequest::set_gain_type(::PROTOBUF_NAMESPACE_ID::int32 value) {
+  _internal_set_gain_type(value);
+  // @@protoc_insertion_point(field_set:SetGainRequest.gain_type)
+}
+
+// -------------------------------------------------------------------
+
+// SetExposureRequest
+
+// double exposure = 1;
+inline void SetExposureRequest::clear_exposure() {
+  exposure_ = 0;
+}
+inline double SetExposureRequest::_internal_exposure() const {
+  return exposure_;
+}
+inline double SetExposureRequest::exposure() const {
+  // @@protoc_insertion_point(field_get:SetExposureRequest.exposure)
+  return _internal_exposure();
+}
+inline void SetExposureRequest::_internal_set_exposure(double value) {
+  
+  exposure_ = value;
+}
+inline void SetExposureRequest::set_exposure(double value) {
+  _internal_set_exposure(value);
+  // @@protoc_insertion_point(field_set:SetExposureRequest.exposure)
+}
+
+// int32 exposure_type = 2;
+inline void SetExposureRequest::clear_exposure_type() {
+  exposure_type_ = 0;
+}
+inline ::PROTOBUF_NAMESPACE_ID::int32 SetExposureRequest::_internal_exposure_type() const {
+  return exposure_type_;
+}
+inline ::PROTOBUF_NAMESPACE_ID::int32 SetExposureRequest::exposure_type() const {
+  // @@protoc_insertion_point(field_get:SetExposureRequest.exposure_type)
+  return _internal_exposure_type();
+}
+inline void SetExposureRequest::_internal_set_exposure_type(::PROTOBUF_NAMESPACE_ID::int32 value) {
+  
+  exposure_type_ = value;
+}
+inline void SetExposureRequest::set_exposure_type(::PROTOBUF_NAMESPACE_ID::int32 value) {
+  _internal_set_exposure_type(value);
+  // @@protoc_insertion_point(field_set:SetExposureRequest.exposure_type)
+}
+
 #ifdef __GNUC__
   #pragma GCC diagnostic pop
 #endif  // __GNUC__
+// -------------------------------------------------------------------
+
+// -------------------------------------------------------------------
+
+// -------------------------------------------------------------------
+
 // -------------------------------------------------------------------
 
 // -------------------------------------------------------------------

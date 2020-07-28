@@ -120,6 +120,7 @@ protected:
 	afx_msg void OnDisconnect2BtnClicked();
 	afx_msg void OnSendConfigBtnClicked();
 	afx_msg void OnSyncTimeBtnClicked();
+	afx_msg void OnCaptureSingleFrameBtnClicked();
 	
 	DECLARE_MESSAGE_MAP()
 public:

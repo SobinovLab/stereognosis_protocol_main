@@ -27,9 +27,13 @@ public:
 	bool sendFramerate(const double framerate);
 	bool sendRecordingPeriod(const double recordingPeriod);
 	bool sendReferenceCamera(const int serial);
+	bool sendDirectory(const CString directory);
+	bool sendGain(const CString gain);
+	bool sendExposure(const CString exposure);
 
 	bool prepareRecording();
 	bool startRecording();
+	bool captureSingleFrame();
 
 	INT32 lastCode = 0;
 	CString* lastDescritpion;
@@ -50,11 +54,15 @@ public:
 	virtual void sendFramerate(const double framerate);
 	virtual void sendRecordingPeriod(const double recordingPeriod);
 	virtual void sendReferenceCamera(const int serial);
+	virtual void sendDirectory(const CString directory);
+	virtual void sendGain(const CString gain);
+	virtual void sendExposure(const CString exposure);
 
 	virtual void syncTime();
 
 	virtual void prepareRecording();
 	virtual void startRecording();
+	virtual void captureSingleFrame();
 
 	virtual bool isConnected();
 

@@ -72,6 +72,39 @@ void CameraClient::sendReferenceCamera(const int serial)
 	}
 }
 
+void CameraClient::sendDirectory(const CString directory)
+{
+	appendClientLog(_T("Sending directory. "));
+	if (ccsc) {
+		if (ccsc->sendDirectory(directory))
+			appendClientLog(_T("Success.\n"));
+		else
+			appendClientLog(_T("Failure.\n"));
+	}
+}
+
+void CameraClient::sendGain(const CString gain)
+{
+	appendClientLog(_T("Sending gain. "));
+	if (ccsc) {
+		if (ccsc->sendGain(gain))
+			appendClientLog(_T("Success.\n"));
+		else
+			appendClientLog(_T("Failure.\n"));
+	}
+}
+
+void CameraClient::sendExposure(const CString exposure)
+{
+	appendClientLog(_T("Sending exposure. "));
+	if (ccsc) {
+		if (ccsc->sendExposure(exposure))
+			appendClientLog(_T("Success.\n"));
+		else
+			appendClientLog(_T("Failure.\n"));
+	}
+}
+
 void CameraClient::syncTime()
 {
 	appendClientLog(_T("Syncing time. "));
@@ -90,6 +123,9 @@ void CameraClient::prepareRecording()
 		else
 			appendClientLog(_T("Failure.\n"));
 	}
+	else {
+		appendClientLog(_T("Not connected.\n "));
+	}
 }
 
 void CameraClient::startRecording()
@@ -102,6 +138,24 @@ void CameraClient::startRecording()
 		}
 		else
 			appendClientLog(_T("Failure.\n"));
+	}
+	else {
+		appendClientLog(_T("Not connected.\n "));
+	}
+}
+
+void CameraClient::captureSingleFrame()
+{
+	appendClientLog(_T("Requesting capture single frame. "));
+	if (ccsc) {
+		if (ccsc->captureSingleFrame()) {
+			appendClientLog(_T("Success.\n"));
+		}
+		else
+			appendClientLog(_T("Failure.\n"));
+	}
+	else {
+		appendClientLog(_T("Not connected.\n "));
 	}
 }
 
@@ -186,6 +240,77 @@ bool CameraCommunicatorSClient::sendReferenceCamera(const int serial)
 	return true;
 }
 
+bool CameraCommunicatorSClient::sendDirectory(const CString directory)
+{
+	SetDirectoryRequest src;
+	src.set_directory(directory);
+
+	SimpleResponse sr;
+	ClientContext context;
+
+	Status status = stub_->SetDirectory(&context, src, &sr);
+	if (!status.ok()) {
+		return false;
+	}
+
+	lastCode = sr.code();
+	lastDescritpion = new CString(sr.description().c_str());
+
+	return true;
+}
+
+bool CameraCommunicatorSClient::sendGain(const CString gain)
+{
+	SetGainRequest src;
+	if (gain == _T("auto")) {
+		src.set_gain_type(1);
+		src.set_gain(0);
+	}
+	else {
+		src.set_gain_type(0);
+		src.set_gain(_tstof(gain));
+	}
+
+	SimpleResponse sr;
+	ClientContext context;
+
+	Status status = stub_->SetGain(&context, src, &sr);
+	if (!status.ok()) {
+		return false;
+	}
+
+	lastCode = sr.code();
+	lastDescritpion = new CString(sr.description().c_str());
+
+	return true;
+}
+
+bool CameraCommunicatorSClient::sendExposure(const CString exposure)
+{
+	SetExposureRequest src;
+	if (exposure == _T("auto")) {
+		src.set_exposure_type(1);
+		src.set_exposure(0);
+	}
+	else {
+		src.set_exposure_type(0);
+		src.set_exposure(_tstof(exposure));
+	}
+
+	SimpleResponse sr;
+	ClientContext context;
+
+	Status status = stub_->SetExposure(&context, src, &sr);
+	if (!status.ok()) {
+		return false;
+	}
+
+	lastCode = sr.code();
+	lastDescritpion = new CString(sr.description().c_str());
+
+	return true;
+}
+
 bool CameraCommunicatorSClient::prepareRecording()
 {
 	SimpleRequest srq;
@@ -212,6 +337,24 @@ bool CameraCommunicatorSClient::startRecording()
 	ClientContext context;
 
 	Status status = stub_->StartRecording(&context, srq, &sr);
+	if (!status.ok()) {
+		return false;
+	}
+
+	lastCode = sr.code();
+	lastDescritpion = new CString(sr.description().c_str());
+
+	return true;
+}
+
+bool CameraCommunicatorSClient::captureSingleFrame()
+{
+	SimpleRequest srq;
+	srq.set_code(0);
+	SimpleResponse sr;
+	ClientContext context;
+
+	Status status = stub_->CaptureSingleImage(&context, srq, &sr);
 	if (!status.ok()) {
 		return false;
 	}

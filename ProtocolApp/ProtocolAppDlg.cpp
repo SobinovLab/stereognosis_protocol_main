@@ -46,6 +46,8 @@ void CProtocolAppDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Text(pDX, IDC_FRAMERATE_EDT, m_protocol.params.cs_framerate);
 	DDX_Text(pDX, IDC_RECORDING_PERIOD_EDT, m_protocol.params.cs_recordingPeriod);
 	DDX_Text(pDX, IDC_REF_SERIAL_EDT, m_protocol.params.cs_refSerial);
+	DDX_Text(pDX, IDC_GAIN_EDT, m_protocol.params.cs_gain);
+	DDX_Text(pDX, IDC_EXPOSURE_EDT, m_protocol.params.cs_exposure);
 
 	//OutputDebugString(_T("End of DoDataExchange\n"));
 }
@@ -68,6 +70,7 @@ BEGIN_MESSAGE_MAP(CProtocolAppDlg, CDialogEx)
 	ON_BN_CLICKED(IDC_DISCONNECT_BTN2, OnDisconnect2BtnClicked)
 	ON_BN_CLICKED(IDC_SEND_CONFIG_BTN, OnSendConfigBtnClicked)
 	ON_BN_CLICKED(IDC_SYNC_TIME_BTN, OnSyncTimeBtnClicked)
+	ON_BN_CLICKED(IDC_CAPTURE_SINGLE_FRAME_BTN, OnCaptureSingleFrameBtnClicked)
 END_MESSAGE_MAP()
 
 // CProtocolAppDlg message handlers
@@ -309,6 +312,19 @@ void CProtocolAppDlg::OnSyncTimeBtnClicked()
 {
 }
 
+void CProtocolAppDlg::OnCaptureSingleFrameBtnClicked()
+{
+	UpdateData(FromControlsToVariables);
+	sendConfig();
+
+	if (m_cameraClient1.isConnected()) {
+		m_cameraClient1.captureSingleFrame();
+	}
+	if (m_cameraClient2.isConnected()) {
+		m_cameraClient2.captureSingleFrame();
+	}
+}
+
 void CProtocolAppDlg::stopProtocolThread()
 {
 	if (protocolThread) {
@@ -325,11 +341,15 @@ void CProtocolAppDlg::sendConfig()
 		m_cameraClient1.sendFramerate(m_protocol.params.cs_framerate);
 		m_cameraClient1.sendRecordingPeriod(m_protocol.params.cs_recordingPeriod);
 		m_cameraClient1.sendReferenceCamera(m_protocol.params.cs_refSerial);
+		m_cameraClient1.sendGain(m_protocol.params.cs_gain);
+		m_cameraClient1.sendExposure(m_protocol.params.cs_exposure);
 	}
 	if (m_cameraClient2.isConnected()) {
 		m_cameraClient2.sendFramerate(m_protocol.params.cs_framerate);
 		m_cameraClient2.sendRecordingPeriod(m_protocol.params.cs_recordingPeriod);
 		m_cameraClient2.sendReferenceCamera(m_protocol.params.cs_refSerial);
+		m_cameraClient2.sendGain(m_protocol.params.cs_gain);
+		m_cameraClient2.sendExposure(m_protocol.params.cs_exposure);
 	}
 }
 

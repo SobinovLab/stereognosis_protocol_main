@@ -20,6 +20,8 @@ ProtocolParameters::ProtocolParameters(const ProtocolParameters & protocolParams
 	this->cs_framerate = protocolParams.cs_framerate;
 	this->cs_recordingPeriod = protocolParams.cs_recordingPeriod;
 	this->cs_refSerial = protocolParams.cs_refSerial;
+	this->cs_exposure = protocolParams.cs_exposure;
+	this->cs_gain = protocolParams.cs_gain;
 
 	this->tstEnMotors = protocolParams.tstEnMotors;
 	this->tstEnReward = protocolParams.tstEnReward;
@@ -47,6 +49,8 @@ void ProtocolParameters::init()
 	cs_framerate = 50;
 	cs_recordingPeriod = 25;
 	cs_refSerial = 19335177;
+	cs_exposure = "2500";
+	cs_gain = "auto";
 
 	//tstEnMotors = false;
 	//tstEnReward = false;

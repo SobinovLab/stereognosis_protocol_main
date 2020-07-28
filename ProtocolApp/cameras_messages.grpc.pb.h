@@ -73,6 +73,34 @@ class CameraCommunicatorS final {
     std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::SimpleResponse>> PrepareAsyncStartRecording(::grpc::ClientContext* context, const ::SimpleRequest& request, ::grpc::CompletionQueue* cq) {
       return std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::SimpleResponse>>(PrepareAsyncStartRecordingRaw(context, request, cq));
     }
+    virtual ::grpc::Status CaptureSingleImage(::grpc::ClientContext* context, const ::SimpleRequest& request, ::SimpleResponse* response) = 0;
+    std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::SimpleResponse>> AsyncCaptureSingleImage(::grpc::ClientContext* context, const ::SimpleRequest& request, ::grpc::CompletionQueue* cq) {
+      return std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::SimpleResponse>>(AsyncCaptureSingleImageRaw(context, request, cq));
+    }
+    std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::SimpleResponse>> PrepareAsyncCaptureSingleImage(::grpc::ClientContext* context, const ::SimpleRequest& request, ::grpc::CompletionQueue* cq) {
+      return std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::SimpleResponse>>(PrepareAsyncCaptureSingleImageRaw(context, request, cq));
+    }
+    virtual ::grpc::Status SetDirectory(::grpc::ClientContext* context, const ::SetDirectoryRequest& request, ::SimpleResponse* response) = 0;
+    std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::SimpleResponse>> AsyncSetDirectory(::grpc::ClientContext* context, const ::SetDirectoryRequest& request, ::grpc::CompletionQueue* cq) {
+      return std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::SimpleResponse>>(AsyncSetDirectoryRaw(context, request, cq));
+    }
+    std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::SimpleResponse>> PrepareAsyncSetDirectory(::grpc::ClientContext* context, const ::SetDirectoryRequest& request, ::grpc::CompletionQueue* cq) {
+      return std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::SimpleResponse>>(PrepareAsyncSetDirectoryRaw(context, request, cq));
+    }
+    virtual ::grpc::Status SetGain(::grpc::ClientContext* context, const ::SetGainRequest& request, ::SimpleResponse* response) = 0;
+    std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::SimpleResponse>> AsyncSetGain(::grpc::ClientContext* context, const ::SetGainRequest& request, ::grpc::CompletionQueue* cq) {
+      return std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::SimpleResponse>>(AsyncSetGainRaw(context, request, cq));
+    }
+    std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::SimpleResponse>> PrepareAsyncSetGain(::grpc::ClientContext* context, const ::SetGainRequest& request, ::grpc::CompletionQueue* cq) {
+      return std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::SimpleResponse>>(PrepareAsyncSetGainRaw(context, request, cq));
+    }
+    virtual ::grpc::Status SetExposure(::grpc::ClientContext* context, const ::SetExposureRequest& request, ::SimpleResponse* response) = 0;
+    std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::SimpleResponse>> AsyncSetExposure(::grpc::ClientContext* context, const ::SetExposureRequest& request, ::grpc::CompletionQueue* cq) {
+      return std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::SimpleResponse>>(AsyncSetExposureRaw(context, request, cq));
+    }
+    std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::SimpleResponse>> PrepareAsyncSetExposure(::grpc::ClientContext* context, const ::SetExposureRequest& request, ::grpc::CompletionQueue* cq) {
+      return std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::SimpleResponse>>(PrepareAsyncSetExposureRaw(context, request, cq));
+    }
     class experimental_async_interface {
      public:
       virtual ~experimental_async_interface() {}
@@ -136,6 +164,54 @@ class CameraCommunicatorS final {
       #else
       virtual void StartRecording(::grpc::ClientContext* context, const ::grpc::ByteBuffer* request, ::SimpleResponse* response, ::grpc::experimental::ClientUnaryReactor* reactor) = 0;
       #endif
+      virtual void CaptureSingleImage(::grpc::ClientContext* context, const ::SimpleRequest* request, ::SimpleResponse* response, std::function<void(::grpc::Status)>) = 0;
+      virtual void CaptureSingleImage(::grpc::ClientContext* context, const ::grpc::ByteBuffer* request, ::SimpleResponse* response, std::function<void(::grpc::Status)>) = 0;
+      #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
+      virtual void CaptureSingleImage(::grpc::ClientContext* context, const ::SimpleRequest* request, ::SimpleResponse* response, ::grpc::ClientUnaryReactor* reactor) = 0;
+      #else
+      virtual void CaptureSingleImage(::grpc::ClientContext* context, const ::SimpleRequest* request, ::SimpleResponse* response, ::grpc::experimental::ClientUnaryReactor* reactor) = 0;
+      #endif
+      #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
+      virtual void CaptureSingleImage(::grpc::ClientContext* context, const ::grpc::ByteBuffer* request, ::SimpleResponse* response, ::grpc::ClientUnaryReactor* reactor) = 0;
+      #else
+      virtual void CaptureSingleImage(::grpc::ClientContext* context, const ::grpc::ByteBuffer* request, ::SimpleResponse* response, ::grpc::experimental::ClientUnaryReactor* reactor) = 0;
+      #endif
+      virtual void SetDirectory(::grpc::ClientContext* context, const ::SetDirectoryRequest* request, ::SimpleResponse* response, std::function<void(::grpc::Status)>) = 0;
+      virtual void SetDirectory(::grpc::ClientContext* context, const ::grpc::ByteBuffer* request, ::SimpleResponse* response, std::function<void(::grpc::Status)>) = 0;
+      #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
+      virtual void SetDirectory(::grpc::ClientContext* context, const ::SetDirectoryRequest* request, ::SimpleResponse* response, ::grpc::ClientUnaryReactor* reactor) = 0;
+      #else
+      virtual void SetDirectory(::grpc::ClientContext* context, const ::SetDirectoryRequest* request, ::SimpleResponse* response, ::grpc::experimental::ClientUnaryReactor* reactor) = 0;
+      #endif
+      #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
+      virtual void SetDirectory(::grpc::ClientContext* context, const ::grpc::ByteBuffer* request, ::SimpleResponse* response, ::grpc::ClientUnaryReactor* reactor) = 0;
+      #else
+      virtual void SetDirectory(::grpc::ClientContext* context, const ::grpc::ByteBuffer* request, ::SimpleResponse* response, ::grpc::experimental::ClientUnaryReactor* reactor) = 0;
+      #endif
+      virtual void SetGain(::grpc::ClientContext* context, const ::SetGainRequest* request, ::SimpleResponse* response, std::function<void(::grpc::Status)>) = 0;
+      virtual void SetGain(::grpc::ClientContext* context, const ::grpc::ByteBuffer* request, ::SimpleResponse* response, std::function<void(::grpc::Status)>) = 0;
+      #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
+      virtual void SetGain(::grpc::ClientContext* context, const ::SetGainRequest* request, ::SimpleResponse* response, ::grpc::ClientUnaryReactor* reactor) = 0;
+      #else
+      virtual void SetGain(::grpc::ClientContext* context, const ::SetGainRequest* request, ::SimpleResponse* response, ::grpc::experimental::ClientUnaryReactor* reactor) = 0;
+      #endif
+      #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
+      virtual void SetGain(::grpc::ClientContext* context, const ::grpc::ByteBuffer* request, ::SimpleResponse* response, ::grpc::ClientUnaryReactor* reactor) = 0;
+      #else
+      virtual void SetGain(::grpc::ClientContext* context, const ::grpc::ByteBuffer* request, ::SimpleResponse* response, ::grpc::experimental::ClientUnaryReactor* reactor) = 0;
+      #endif
+      virtual void SetExposure(::grpc::ClientContext* context, const ::SetExposureRequest* request, ::SimpleResponse* response, std::function<void(::grpc::Status)>) = 0;
+      virtual void SetExposure(::grpc::ClientContext* context, const ::grpc::ByteBuffer* request, ::SimpleResponse* response, std::function<void(::grpc::Status)>) = 0;
+      #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
+      virtual void SetExposure(::grpc::ClientContext* context, const ::SetExposureRequest* request, ::SimpleResponse* response, ::grpc::ClientUnaryReactor* reactor) = 0;
+      #else
+      virtual void SetExposure(::grpc::ClientContext* context, const ::SetExposureRequest* request, ::SimpleResponse* response, ::grpc::experimental::ClientUnaryReactor* reactor) = 0;
+      #endif
+      #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
+      virtual void SetExposure(::grpc::ClientContext* context, const ::grpc::ByteBuffer* request, ::SimpleResponse* response, ::grpc::ClientUnaryReactor* reactor) = 0;
+      #else
+      virtual void SetExposure(::grpc::ClientContext* context, const ::grpc::ByteBuffer* request, ::SimpleResponse* response, ::grpc::experimental::ClientUnaryReactor* reactor) = 0;
+      #endif
     };
     #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
     typedef class experimental_async_interface async_interface;
@@ -155,6 +231,14 @@ class CameraCommunicatorS final {
     virtual ::grpc::ClientAsyncResponseReaderInterface< ::SimpleResponse>* PrepareAsyncPrepareRecordingRaw(::grpc::ClientContext* context, const ::SimpleRequest& request, ::grpc::CompletionQueue* cq) = 0;
     virtual ::grpc::ClientAsyncResponseReaderInterface< ::SimpleResponse>* AsyncStartRecordingRaw(::grpc::ClientContext* context, const ::SimpleRequest& request, ::grpc::CompletionQueue* cq) = 0;
     virtual ::grpc::ClientAsyncResponseReaderInterface< ::SimpleResponse>* PrepareAsyncStartRecordingRaw(::grpc::ClientContext* context, const ::SimpleRequest& request, ::grpc::CompletionQueue* cq) = 0;
+    virtual ::grpc::ClientAsyncResponseReaderInterface< ::SimpleResponse>* AsyncCaptureSingleImageRaw(::grpc::ClientContext* context, const ::SimpleRequest& request, ::grpc::CompletionQueue* cq) = 0;
+    virtual ::grpc::ClientAsyncResponseReaderInterface< ::SimpleResponse>* PrepareAsyncCaptureSingleImageRaw(::grpc::ClientContext* context, const ::SimpleRequest& request, ::grpc::CompletionQueue* cq) = 0;
+    virtual ::grpc::ClientAsyncResponseReaderInterface< ::SimpleResponse>* AsyncSetDirectoryRaw(::grpc::ClientContext* context, const ::SetDirectoryRequest& request, ::grpc::CompletionQueue* cq) = 0;
+    virtual ::grpc::ClientAsyncResponseReaderInterface< ::SimpleResponse>* PrepareAsyncSetDirectoryRaw(::grpc::ClientContext* context, const ::SetDirectoryRequest& request, ::grpc::CompletionQueue* cq) = 0;
+    virtual ::grpc::ClientAsyncResponseReaderInterface< ::SimpleResponse>* AsyncSetGainRaw(::grpc::ClientContext* context, const ::SetGainRequest& request, ::grpc::CompletionQueue* cq) = 0;
+    virtual ::grpc::ClientAsyncResponseReaderInterface< ::SimpleResponse>* PrepareAsyncSetGainRaw(::grpc::ClientContext* context, const ::SetGainRequest& request, ::grpc::CompletionQueue* cq) = 0;
+    virtual ::grpc::ClientAsyncResponseReaderInterface< ::SimpleResponse>* AsyncSetExposureRaw(::grpc::ClientContext* context, const ::SetExposureRequest& request, ::grpc::CompletionQueue* cq) = 0;
+    virtual ::grpc::ClientAsyncResponseReaderInterface< ::SimpleResponse>* PrepareAsyncSetExposureRaw(::grpc::ClientContext* context, const ::SetExposureRequest& request, ::grpc::CompletionQueue* cq) = 0;
   };
   class Stub final : public StubInterface {
    public:
@@ -193,6 +277,34 @@ class CameraCommunicatorS final {
     }
     std::unique_ptr< ::grpc::ClientAsyncResponseReader< ::SimpleResponse>> PrepareAsyncStartRecording(::grpc::ClientContext* context, const ::SimpleRequest& request, ::grpc::CompletionQueue* cq) {
       return std::unique_ptr< ::grpc::ClientAsyncResponseReader< ::SimpleResponse>>(PrepareAsyncStartRecordingRaw(context, request, cq));
+    }
+    ::grpc::Status CaptureSingleImage(::grpc::ClientContext* context, const ::SimpleRequest& request, ::SimpleResponse* response) override;
+    std::unique_ptr< ::grpc::ClientAsyncResponseReader< ::SimpleResponse>> AsyncCaptureSingleImage(::grpc::ClientContext* context, const ::SimpleRequest& request, ::grpc::CompletionQueue* cq) {
+      return std::unique_ptr< ::grpc::ClientAsyncResponseReader< ::SimpleResponse>>(AsyncCaptureSingleImageRaw(context, request, cq));
+    }
+    std::unique_ptr< ::grpc::ClientAsyncResponseReader< ::SimpleResponse>> PrepareAsyncCaptureSingleImage(::grpc::ClientContext* context, const ::SimpleRequest& request, ::grpc::CompletionQueue* cq) {
+      return std::unique_ptr< ::grpc::ClientAsyncResponseReader< ::SimpleResponse>>(PrepareAsyncCaptureSingleImageRaw(context, request, cq));
+    }
+    ::grpc::Status SetDirectory(::grpc::ClientContext* context, const ::SetDirectoryRequest& request, ::SimpleResponse* response) override;
+    std::unique_ptr< ::grpc::ClientAsyncResponseReader< ::SimpleResponse>> AsyncSetDirectory(::grpc::ClientContext* context, const ::SetDirectoryRequest& request, ::grpc::CompletionQueue* cq) {
+      return std::unique_ptr< ::grpc::ClientAsyncResponseReader< ::SimpleResponse>>(AsyncSetDirectoryRaw(context, request, cq));
+    }
+    std::unique_ptr< ::grpc::ClientAsyncResponseReader< ::SimpleResponse>> PrepareAsyncSetDirectory(::grpc::ClientContext* context, const ::SetDirectoryRequest& request, ::grpc::CompletionQueue* cq) {
+      return std::unique_ptr< ::grpc::ClientAsyncResponseReader< ::SimpleResponse>>(PrepareAsyncSetDirectoryRaw(context, request, cq));
+    }
+    ::grpc::Status SetGain(::grpc::ClientContext* context, const ::SetGainRequest& request, ::SimpleResponse* response) override;
+    std::unique_ptr< ::grpc::ClientAsyncResponseReader< ::SimpleResponse>> AsyncSetGain(::grpc::ClientContext* context, const ::SetGainRequest& request, ::grpc::CompletionQueue* cq) {
+      return std::unique_ptr< ::grpc::ClientAsyncResponseReader< ::SimpleResponse>>(AsyncSetGainRaw(context, request, cq));
+    }
+    std::unique_ptr< ::grpc::ClientAsyncResponseReader< ::SimpleResponse>> PrepareAsyncSetGain(::grpc::ClientContext* context, const ::SetGainRequest& request, ::grpc::CompletionQueue* cq) {
+      return std::unique_ptr< ::grpc::ClientAsyncResponseReader< ::SimpleResponse>>(PrepareAsyncSetGainRaw(context, request, cq));
+    }
+    ::grpc::Status SetExposure(::grpc::ClientContext* context, const ::SetExposureRequest& request, ::SimpleResponse* response) override;
+    std::unique_ptr< ::grpc::ClientAsyncResponseReader< ::SimpleResponse>> AsyncSetExposure(::grpc::ClientContext* context, const ::SetExposureRequest& request, ::grpc::CompletionQueue* cq) {
+      return std::unique_ptr< ::grpc::ClientAsyncResponseReader< ::SimpleResponse>>(AsyncSetExposureRaw(context, request, cq));
+    }
+    std::unique_ptr< ::grpc::ClientAsyncResponseReader< ::SimpleResponse>> PrepareAsyncSetExposure(::grpc::ClientContext* context, const ::SetExposureRequest& request, ::grpc::CompletionQueue* cq) {
+      return std::unique_ptr< ::grpc::ClientAsyncResponseReader< ::SimpleResponse>>(PrepareAsyncSetExposureRaw(context, request, cq));
     }
     class experimental_async final :
       public StubInterface::experimental_async_interface {
@@ -257,6 +369,54 @@ class CameraCommunicatorS final {
       #else
       void StartRecording(::grpc::ClientContext* context, const ::grpc::ByteBuffer* request, ::SimpleResponse* response, ::grpc::experimental::ClientUnaryReactor* reactor) override;
       #endif
+      void CaptureSingleImage(::grpc::ClientContext* context, const ::SimpleRequest* request, ::SimpleResponse* response, std::function<void(::grpc::Status)>) override;
+      void CaptureSingleImage(::grpc::ClientContext* context, const ::grpc::ByteBuffer* request, ::SimpleResponse* response, std::function<void(::grpc::Status)>) override;
+      #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
+      void CaptureSingleImage(::grpc::ClientContext* context, const ::SimpleRequest* request, ::SimpleResponse* response, ::grpc::ClientUnaryReactor* reactor) override;
+      #else
+      void CaptureSingleImage(::grpc::ClientContext* context, const ::SimpleRequest* request, ::SimpleResponse* response, ::grpc::experimental::ClientUnaryReactor* reactor) override;
+      #endif
+      #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
+      void CaptureSingleImage(::grpc::ClientContext* context, const ::grpc::ByteBuffer* request, ::SimpleResponse* response, ::grpc::ClientUnaryReactor* reactor) override;
+      #else
+      void CaptureSingleImage(::grpc::ClientContext* context, const ::grpc::ByteBuffer* request, ::SimpleResponse* response, ::grpc::experimental::ClientUnaryReactor* reactor) override;
+      #endif
+      void SetDirectory(::grpc::ClientContext* context, const ::SetDirectoryRequest* request, ::SimpleResponse* response, std::function<void(::grpc::Status)>) override;
+      void SetDirectory(::grpc::ClientContext* context, const ::grpc::ByteBuffer* request, ::SimpleResponse* response, std::function<void(::grpc::Status)>) override;
+      #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
+      void SetDirectory(::grpc::ClientContext* context, const ::SetDirectoryRequest* request, ::SimpleResponse* response, ::grpc::ClientUnaryReactor* reactor) override;
+      #else
+      void SetDirectory(::grpc::ClientContext* context, const ::SetDirectoryRequest* request, ::SimpleResponse* response, ::grpc::experimental::ClientUnaryReactor* reactor) override;
+      #endif
+      #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
+      void SetDirectory(::grpc::ClientContext* context, const ::grpc::ByteBuffer* request, ::SimpleResponse* response, ::grpc::ClientUnaryReactor* reactor) override;
+      #else
+      void SetDirectory(::grpc::ClientContext* context, const ::grpc::ByteBuffer* request, ::SimpleResponse* response, ::grpc::experimental::ClientUnaryReactor* reactor) override;
+      #endif
+      void SetGain(::grpc::ClientContext* context, const ::SetGainRequest* request, ::SimpleResponse* response, std::function<void(::grpc::Status)>) override;
+      void SetGain(::grpc::ClientContext* context, const ::grpc::ByteBuffer* request, ::SimpleResponse* response, std::function<void(::grpc::Status)>) override;
+      #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
+      void SetGain(::grpc::ClientContext* context, const ::SetGainRequest* request, ::SimpleResponse* response, ::grpc::ClientUnaryReactor* reactor) override;
+      #else
+      void SetGain(::grpc::ClientContext* context, const ::SetGainRequest* request, ::SimpleResponse* response, ::grpc::experimental::ClientUnaryReactor* reactor) override;
+      #endif
+      #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
+      void SetGain(::grpc::ClientContext* context, const ::grpc::ByteBuffer* request, ::SimpleResponse* response, ::grpc::ClientUnaryReactor* reactor) override;
+      #else
+      void SetGain(::grpc::ClientContext* context, const ::grpc::ByteBuffer* request, ::SimpleResponse* response, ::grpc::experimental::ClientUnaryReactor* reactor) override;
+      #endif
+      void SetExposure(::grpc::ClientContext* context, const ::SetExposureRequest* request, ::SimpleResponse* response, std::function<void(::grpc::Status)>) override;
+      void SetExposure(::grpc::ClientContext* context, const ::grpc::ByteBuffer* request, ::SimpleResponse* response, std::function<void(::grpc::Status)>) override;
+      #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
+      void SetExposure(::grpc::ClientContext* context, const ::SetExposureRequest* request, ::SimpleResponse* response, ::grpc::ClientUnaryReactor* reactor) override;
+      #else
+      void SetExposure(::grpc::ClientContext* context, const ::SetExposureRequest* request, ::SimpleResponse* response, ::grpc::experimental::ClientUnaryReactor* reactor) override;
+      #endif
+      #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
+      void SetExposure(::grpc::ClientContext* context, const ::grpc::ByteBuffer* request, ::SimpleResponse* response, ::grpc::ClientUnaryReactor* reactor) override;
+      #else
+      void SetExposure(::grpc::ClientContext* context, const ::grpc::ByteBuffer* request, ::SimpleResponse* response, ::grpc::experimental::ClientUnaryReactor* reactor) override;
+      #endif
      private:
       friend class Stub;
       explicit experimental_async(Stub* stub): stub_(stub) { }
@@ -278,11 +438,23 @@ class CameraCommunicatorS final {
     ::grpc::ClientAsyncResponseReader< ::SimpleResponse>* PrepareAsyncPrepareRecordingRaw(::grpc::ClientContext* context, const ::SimpleRequest& request, ::grpc::CompletionQueue* cq) override;
     ::grpc::ClientAsyncResponseReader< ::SimpleResponse>* AsyncStartRecordingRaw(::grpc::ClientContext* context, const ::SimpleRequest& request, ::grpc::CompletionQueue* cq) override;
     ::grpc::ClientAsyncResponseReader< ::SimpleResponse>* PrepareAsyncStartRecordingRaw(::grpc::ClientContext* context, const ::SimpleRequest& request, ::grpc::CompletionQueue* cq) override;
+    ::grpc::ClientAsyncResponseReader< ::SimpleResponse>* AsyncCaptureSingleImageRaw(::grpc::ClientContext* context, const ::SimpleRequest& request, ::grpc::CompletionQueue* cq) override;
+    ::grpc::ClientAsyncResponseReader< ::SimpleResponse>* PrepareAsyncCaptureSingleImageRaw(::grpc::ClientContext* context, const ::SimpleRequest& request, ::grpc::CompletionQueue* cq) override;
+    ::grpc::ClientAsyncResponseReader< ::SimpleResponse>* AsyncSetDirectoryRaw(::grpc::ClientContext* context, const ::SetDirectoryRequest& request, ::grpc::CompletionQueue* cq) override;
+    ::grpc::ClientAsyncResponseReader< ::SimpleResponse>* PrepareAsyncSetDirectoryRaw(::grpc::ClientContext* context, const ::SetDirectoryRequest& request, ::grpc::CompletionQueue* cq) override;
+    ::grpc::ClientAsyncResponseReader< ::SimpleResponse>* AsyncSetGainRaw(::grpc::ClientContext* context, const ::SetGainRequest& request, ::grpc::CompletionQueue* cq) override;
+    ::grpc::ClientAsyncResponseReader< ::SimpleResponse>* PrepareAsyncSetGainRaw(::grpc::ClientContext* context, const ::SetGainRequest& request, ::grpc::CompletionQueue* cq) override;
+    ::grpc::ClientAsyncResponseReader< ::SimpleResponse>* AsyncSetExposureRaw(::grpc::ClientContext* context, const ::SetExposureRequest& request, ::grpc::CompletionQueue* cq) override;
+    ::grpc::ClientAsyncResponseReader< ::SimpleResponse>* PrepareAsyncSetExposureRaw(::grpc::ClientContext* context, const ::SetExposureRequest& request, ::grpc::CompletionQueue* cq) override;
     const ::grpc::internal::RpcMethod rpcmethod_SetFramerate_;
     const ::grpc::internal::RpcMethod rpcmethod_SetRecordingPeriod_;
     const ::grpc::internal::RpcMethod rpcmethod_SetReferenceCamera_;
     const ::grpc::internal::RpcMethod rpcmethod_PrepareRecording_;
     const ::grpc::internal::RpcMethod rpcmethod_StartRecording_;
+    const ::grpc::internal::RpcMethod rpcmethod_CaptureSingleImage_;
+    const ::grpc::internal::RpcMethod rpcmethod_SetDirectory_;
+    const ::grpc::internal::RpcMethod rpcmethod_SetGain_;
+    const ::grpc::internal::RpcMethod rpcmethod_SetExposure_;
   };
   static std::unique_ptr<Stub> NewStub(const std::shared_ptr< ::grpc::ChannelInterface>& channel, const ::grpc::StubOptions& options = ::grpc::StubOptions());
 
@@ -295,6 +467,10 @@ class CameraCommunicatorS final {
     virtual ::grpc::Status SetReferenceCamera(::grpc::ServerContext* context, const ::SetReferenceCameraRequest* request, ::SimpleResponse* response);
     virtual ::grpc::Status PrepareRecording(::grpc::ServerContext* context, const ::SimpleRequest* request, ::SimpleResponse* response);
     virtual ::grpc::Status StartRecording(::grpc::ServerContext* context, const ::SimpleRequest* request, ::SimpleResponse* response);
+    virtual ::grpc::Status CaptureSingleImage(::grpc::ServerContext* context, const ::SimpleRequest* request, ::SimpleResponse* response);
+    virtual ::grpc::Status SetDirectory(::grpc::ServerContext* context, const ::SetDirectoryRequest* request, ::SimpleResponse* response);
+    virtual ::grpc::Status SetGain(::grpc::ServerContext* context, const ::SetGainRequest* request, ::SimpleResponse* response);
+    virtual ::grpc::Status SetExposure(::grpc::ServerContext* context, const ::SetExposureRequest* request, ::SimpleResponse* response);
   };
   template <class BaseClass>
   class WithAsyncMethod_SetFramerate : public BaseClass {
@@ -396,7 +572,87 @@ class CameraCommunicatorS final {
       ::grpc::Service::RequestAsyncUnary(4, context, request, response, new_call_cq, notification_cq, tag);
     }
   };
-  typedef WithAsyncMethod_SetFramerate<WithAsyncMethod_SetRecordingPeriod<WithAsyncMethod_SetReferenceCamera<WithAsyncMethod_PrepareRecording<WithAsyncMethod_StartRecording<Service > > > > > AsyncService;
+  template <class BaseClass>
+  class WithAsyncMethod_CaptureSingleImage : public BaseClass {
+   private:
+    void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
+   public:
+    WithAsyncMethod_CaptureSingleImage() {
+      ::grpc::Service::MarkMethodAsync(5);
+    }
+    ~WithAsyncMethod_CaptureSingleImage() override {
+      BaseClassMustBeDerivedFromService(this);
+    }
+    // disable synchronous version of this method
+    ::grpc::Status CaptureSingleImage(::grpc::ServerContext* /*context*/, const ::SimpleRequest* /*request*/, ::SimpleResponse* /*response*/) override {
+      abort();
+      return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
+    }
+    void RequestCaptureSingleImage(::grpc::ServerContext* context, ::SimpleRequest* request, ::grpc::ServerAsyncResponseWriter< ::SimpleResponse>* response, ::grpc::CompletionQueue* new_call_cq, ::grpc::ServerCompletionQueue* notification_cq, void *tag) {
+      ::grpc::Service::RequestAsyncUnary(5, context, request, response, new_call_cq, notification_cq, tag);
+    }
+  };
+  template <class BaseClass>
+  class WithAsyncMethod_SetDirectory : public BaseClass {
+   private:
+    void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
+   public:
+    WithAsyncMethod_SetDirectory() {
+      ::grpc::Service::MarkMethodAsync(6);
+    }
+    ~WithAsyncMethod_SetDirectory() override {
+      BaseClassMustBeDerivedFromService(this);
+    }
+    // disable synchronous version of this method
+    ::grpc::Status SetDirectory(::grpc::ServerContext* /*context*/, const ::SetDirectoryRequest* /*request*/, ::SimpleResponse* /*response*/) override {
+      abort();
+      return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
+    }
+    void RequestSetDirectory(::grpc::ServerContext* context, ::SetDirectoryRequest* request, ::grpc::ServerAsyncResponseWriter< ::SimpleResponse>* response, ::grpc::CompletionQueue* new_call_cq, ::grpc::ServerCompletionQueue* notification_cq, void *tag) {
+      ::grpc::Service::RequestAsyncUnary(6, context, request, response, new_call_cq, notification_cq, tag);
+    }
+  };
+  template <class BaseClass>
+  class WithAsyncMethod_SetGain : public BaseClass {
+   private:
+    void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
+   public:
+    WithAsyncMethod_SetGain() {
+      ::grpc::Service::MarkMethodAsync(7);
+    }
+    ~WithAsyncMethod_SetGain() override {
+      BaseClassMustBeDerivedFromService(this);
+    }
+    // disable synchronous version of this method
+    ::grpc::Status SetGain(::grpc::ServerContext* /*context*/, const ::SetGainRequest* /*request*/, ::SimpleResponse* /*response*/) override {
+      abort();
+      return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
+    }
+    void RequestSetGain(::grpc::ServerContext* context, ::SetGainRequest* request, ::grpc::ServerAsyncResponseWriter< ::SimpleResponse>* response, ::grpc::CompletionQueue* new_call_cq, ::grpc::ServerCompletionQueue* notification_cq, void *tag) {
+      ::grpc::Service::RequestAsyncUnary(7, context, request, response, new_call_cq, notification_cq, tag);
+    }
+  };
+  template <class BaseClass>
+  class WithAsyncMethod_SetExposure : public BaseClass {
+   private:
+    void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
+   public:
+    WithAsyncMethod_SetExposure() {
+      ::grpc::Service::MarkMethodAsync(8);
+    }
+    ~WithAsyncMethod_SetExposure() override {
+      BaseClassMustBeDerivedFromService(this);
+    }
+    // disable synchronous version of this method
+    ::grpc::Status SetExposure(::grpc::ServerContext* /*context*/, const ::SetExposureRequest* /*request*/, ::SimpleResponse* /*response*/) override {
+      abort();
+      return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
+    }
+    void RequestSetExposure(::grpc::ServerContext* context, ::SetExposureRequest* request, ::grpc::ServerAsyncResponseWriter< ::SimpleResponse>* response, ::grpc::CompletionQueue* new_call_cq, ::grpc::ServerCompletionQueue* notification_cq, void *tag) {
+      ::grpc::Service::RequestAsyncUnary(8, context, request, response, new_call_cq, notification_cq, tag);
+    }
+  };
+  typedef WithAsyncMethod_SetFramerate<WithAsyncMethod_SetRecordingPeriod<WithAsyncMethod_SetReferenceCamera<WithAsyncMethod_PrepareRecording<WithAsyncMethod_StartRecording<WithAsyncMethod_CaptureSingleImage<WithAsyncMethod_SetDirectory<WithAsyncMethod_SetGain<WithAsyncMethod_SetExposure<Service > > > > > > > > > AsyncService;
   template <class BaseClass>
   class ExperimentalWithCallbackMethod_SetFramerate : public BaseClass {
    private:
@@ -632,11 +888,199 @@ class CameraCommunicatorS final {
     #endif
       { return nullptr; }
   };
+  template <class BaseClass>
+  class ExperimentalWithCallbackMethod_CaptureSingleImage : public BaseClass {
+   private:
+    void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
+   public:
+    ExperimentalWithCallbackMethod_CaptureSingleImage() {
+    #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
+      ::grpc::Service::
+    #else
+      ::grpc::Service::experimental().
+    #endif
+        MarkMethodCallback(5,
+          new ::grpc_impl::internal::CallbackUnaryHandler< ::SimpleRequest, ::SimpleResponse>(
+            [this](
+    #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
+                   ::grpc::CallbackServerContext*
+    #else
+                   ::grpc::experimental::CallbackServerContext*
+    #endif
+                     context, const ::SimpleRequest* request, ::SimpleResponse* response) { return this->CaptureSingleImage(context, request, response); }));}
+    void SetMessageAllocatorFor_CaptureSingleImage(
+        ::grpc::experimental::MessageAllocator< ::SimpleRequest, ::SimpleResponse>* allocator) {
+    #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
+      ::grpc::internal::MethodHandler* const handler = ::grpc::Service::GetHandler(5);
+    #else
+      ::grpc::internal::MethodHandler* const handler = ::grpc::Service::experimental().GetHandler(5);
+    #endif
+      static_cast<::grpc_impl::internal::CallbackUnaryHandler< ::SimpleRequest, ::SimpleResponse>*>(handler)
+              ->SetMessageAllocator(allocator);
+    }
+    ~ExperimentalWithCallbackMethod_CaptureSingleImage() override {
+      BaseClassMustBeDerivedFromService(this);
+    }
+    // disable synchronous version of this method
+    ::grpc::Status CaptureSingleImage(::grpc::ServerContext* /*context*/, const ::SimpleRequest* /*request*/, ::SimpleResponse* /*response*/) override {
+      abort();
+      return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
+    }
+    #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
+    virtual ::grpc::ServerUnaryReactor* CaptureSingleImage(
+      ::grpc::CallbackServerContext* /*context*/, const ::SimpleRequest* /*request*/, ::SimpleResponse* /*response*/)
+    #else
+    virtual ::grpc::experimental::ServerUnaryReactor* CaptureSingleImage(
+      ::grpc::experimental::CallbackServerContext* /*context*/, const ::SimpleRequest* /*request*/, ::SimpleResponse* /*response*/)
+    #endif
+      { return nullptr; }
+  };
+  template <class BaseClass>
+  class ExperimentalWithCallbackMethod_SetDirectory : public BaseClass {
+   private:
+    void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
+   public:
+    ExperimentalWithCallbackMethod_SetDirectory() {
+    #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
+      ::grpc::Service::
+    #else
+      ::grpc::Service::experimental().
+    #endif
+        MarkMethodCallback(6,
+          new ::grpc_impl::internal::CallbackUnaryHandler< ::SetDirectoryRequest, ::SimpleResponse>(
+            [this](
+    #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
+                   ::grpc::CallbackServerContext*
+    #else
+                   ::grpc::experimental::CallbackServerContext*
+    #endif
+                     context, const ::SetDirectoryRequest* request, ::SimpleResponse* response) { return this->SetDirectory(context, request, response); }));}
+    void SetMessageAllocatorFor_SetDirectory(
+        ::grpc::experimental::MessageAllocator< ::SetDirectoryRequest, ::SimpleResponse>* allocator) {
+    #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
+      ::grpc::internal::MethodHandler* const handler = ::grpc::Service::GetHandler(6);
+    #else
+      ::grpc::internal::MethodHandler* const handler = ::grpc::Service::experimental().GetHandler(6);
+    #endif
+      static_cast<::grpc_impl::internal::CallbackUnaryHandler< ::SetDirectoryRequest, ::SimpleResponse>*>(handler)
+              ->SetMessageAllocator(allocator);
+    }
+    ~ExperimentalWithCallbackMethod_SetDirectory() override {
+      BaseClassMustBeDerivedFromService(this);
+    }
+    // disable synchronous version of this method
+    ::grpc::Status SetDirectory(::grpc::ServerContext* /*context*/, const ::SetDirectoryRequest* /*request*/, ::SimpleResponse* /*response*/) override {
+      abort();
+      return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
+    }
+    #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
+    virtual ::grpc::ServerUnaryReactor* SetDirectory(
+      ::grpc::CallbackServerContext* /*context*/, const ::SetDirectoryRequest* /*request*/, ::SimpleResponse* /*response*/)
+    #else
+    virtual ::grpc::experimental::ServerUnaryReactor* SetDirectory(
+      ::grpc::experimental::CallbackServerContext* /*context*/, const ::SetDirectoryRequest* /*request*/, ::SimpleResponse* /*response*/)
+    #endif
+      { return nullptr; }
+  };
+  template <class BaseClass>
+  class ExperimentalWithCallbackMethod_SetGain : public BaseClass {
+   private:
+    void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
+   public:
+    ExperimentalWithCallbackMethod_SetGain() {
+    #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
+      ::grpc::Service::
+    #else
+      ::grpc::Service::experimental().
+    #endif
+        MarkMethodCallback(7,
+          new ::grpc_impl::internal::CallbackUnaryHandler< ::SetGainRequest, ::SimpleResponse>(
+            [this](
+    #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
+                   ::grpc::CallbackServerContext*
+    #else
+                   ::grpc::experimental::CallbackServerContext*
+    #endif
+                     context, const ::SetGainRequest* request, ::SimpleResponse* response) { return this->SetGain(context, request, response); }));}
+    void SetMessageAllocatorFor_SetGain(
+        ::grpc::experimental::MessageAllocator< ::SetGainRequest, ::SimpleResponse>* allocator) {
+    #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
+      ::grpc::internal::MethodHandler* const handler = ::grpc::Service::GetHandler(7);
+    #else
+      ::grpc::internal::MethodHandler* const handler = ::grpc::Service::experimental().GetHandler(7);
+    #endif
+      static_cast<::grpc_impl::internal::CallbackUnaryHandler< ::SetGainRequest, ::SimpleResponse>*>(handler)
+              ->SetMessageAllocator(allocator);
+    }
+    ~ExperimentalWithCallbackMethod_SetGain() override {
+      BaseClassMustBeDerivedFromService(this);
+    }
+    // disable synchronous version of this method
+    ::grpc::Status SetGain(::grpc::ServerContext* /*context*/, const ::SetGainRequest* /*request*/, ::SimpleResponse* /*response*/) override {
+      abort();
+      return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
+    }
+    #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
+    virtual ::grpc::ServerUnaryReactor* SetGain(
+      ::grpc::CallbackServerContext* /*context*/, const ::SetGainRequest* /*request*/, ::SimpleResponse* /*response*/)
+    #else
+    virtual ::grpc::experimental::ServerUnaryReactor* SetGain(
+      ::grpc::experimental::CallbackServerContext* /*context*/, const ::SetGainRequest* /*request*/, ::SimpleResponse* /*response*/)
+    #endif
+      { return nullptr; }
+  };
+  template <class BaseClass>
+  class ExperimentalWithCallbackMethod_SetExposure : public BaseClass {
+   private:
+    void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
+   public:
+    ExperimentalWithCallbackMethod_SetExposure() {
+    #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
+      ::grpc::Service::
+    #else
+      ::grpc::Service::experimental().
+    #endif
+        MarkMethodCallback(8,
+          new ::grpc_impl::internal::CallbackUnaryHandler< ::SetExposureRequest, ::SimpleResponse>(
+            [this](
+    #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
+                   ::grpc::CallbackServerContext*
+    #else
+                   ::grpc::experimental::CallbackServerContext*
+    #endif
+                     context, const ::SetExposureRequest* request, ::SimpleResponse* response) { return this->SetExposure(context, request, response); }));}
+    void SetMessageAllocatorFor_SetExposure(
+        ::grpc::experimental::MessageAllocator< ::SetExposureRequest, ::SimpleResponse>* allocator) {
+    #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
+      ::grpc::internal::MethodHandler* const handler = ::grpc::Service::GetHandler(8);
+    #else
+      ::grpc::internal::MethodHandler* const handler = ::grpc::Service::experimental().GetHandler(8);
+    #endif
+      static_cast<::grpc_impl::internal::CallbackUnaryHandler< ::SetExposureRequest, ::SimpleResponse>*>(handler)
+              ->SetMessageAllocator(allocator);
+    }
+    ~ExperimentalWithCallbackMethod_SetExposure() override {
+      BaseClassMustBeDerivedFromService(this);
+    }
+    // disable synchronous version of this method
+    ::grpc::Status SetExposure(::grpc::ServerContext* /*context*/, const ::SetExposureRequest* /*request*/, ::SimpleResponse* /*response*/) override {
+      abort();
+      return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
+    }
+    #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
+    virtual ::grpc::ServerUnaryReactor* SetExposure(
+      ::grpc::CallbackServerContext* /*context*/, const ::SetExposureRequest* /*request*/, ::SimpleResponse* /*response*/)
+    #else
+    virtual ::grpc::experimental::ServerUnaryReactor* SetExposure(
+      ::grpc::experimental::CallbackServerContext* /*context*/, const ::SetExposureRequest* /*request*/, ::SimpleResponse* /*response*/)
+    #endif
+      { return nullptr; }
+  };
   #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
-  typedef ExperimentalWithCallbackMethod_SetFramerate<ExperimentalWithCallbackMethod_SetRecordingPeriod<ExperimentalWithCallbackMethod_SetReferenceCamera<ExperimentalWithCallbackMethod_PrepareRecording<ExperimentalWithCallbackMethod_StartRecording<Service > > > > > CallbackService;
+  typedef ExperimentalWithCallbackMethod_SetFramerate<ExperimentalWithCallbackMethod_SetRecordingPeriod<ExperimentalWithCallbackMethod_SetReferenceCamera<ExperimentalWithCallbackMethod_PrepareRecording<ExperimentalWithCallbackMethod_StartRecording<ExperimentalWithCallbackMethod_CaptureSingleImage<ExperimentalWithCallbackMethod_SetDirectory<ExperimentalWithCallbackMethod_SetGain<ExperimentalWithCallbackMethod_SetExposure<Service > > > > > > > > > CallbackService;
   #endif
 
-  typedef ExperimentalWithCallbackMethod_SetFramerate<ExperimentalWithCallbackMethod_SetRecordingPeriod<ExperimentalWithCallbackMethod_SetReferenceCamera<ExperimentalWithCallbackMethod_PrepareRecording<ExperimentalWithCallbackMethod_StartRecording<Service > > > > > ExperimentalCallbackService;
+  typedef ExperimentalWithCallbackMethod_SetFramerate<ExperimentalWithCallbackMethod_SetRecordingPeriod<ExperimentalWithCallbackMethod_SetReferenceCamera<ExperimentalWithCallbackMethod_PrepareRecording<ExperimentalWithCallbackMethod_StartRecording<ExperimentalWithCallbackMethod_CaptureSingleImage<ExperimentalWithCallbackMethod_SetDirectory<ExperimentalWithCallbackMethod_SetGain<ExperimentalWithCallbackMethod_SetExposure<Service > > > > > > > > > ExperimentalCallbackService;
   template <class BaseClass>
   class WithGenericMethod_SetFramerate : public BaseClass {
    private:
@@ -718,6 +1162,74 @@ class CameraCommunicatorS final {
     }
     // disable synchronous version of this method
     ::grpc::Status StartRecording(::grpc::ServerContext* /*context*/, const ::SimpleRequest* /*request*/, ::SimpleResponse* /*response*/) override {
+      abort();
+      return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
+    }
+  };
+  template <class BaseClass>
+  class WithGenericMethod_CaptureSingleImage : public BaseClass {
+   private:
+    void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
+   public:
+    WithGenericMethod_CaptureSingleImage() {
+      ::grpc::Service::MarkMethodGeneric(5);
+    }
+    ~WithGenericMethod_CaptureSingleImage() override {
+      BaseClassMustBeDerivedFromService(this);
+    }
+    // disable synchronous version of this method
+    ::grpc::Status CaptureSingleImage(::grpc::ServerContext* /*context*/, const ::SimpleRequest* /*request*/, ::SimpleResponse* /*response*/) override {
+      abort();
+      return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
+    }
+  };
+  template <class BaseClass>
+  class WithGenericMethod_SetDirectory : public BaseClass {
+   private:
+    void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
+   public:
+    WithGenericMethod_SetDirectory() {
+      ::grpc::Service::MarkMethodGeneric(6);
+    }
+    ~WithGenericMethod_SetDirectory() override {
+      BaseClassMustBeDerivedFromService(this);
+    }
+    // disable synchronous version of this method
+    ::grpc::Status SetDirectory(::grpc::ServerContext* /*context*/, const ::SetDirectoryRequest* /*request*/, ::SimpleResponse* /*response*/) override {
+      abort();
+      return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
+    }
+  };
+  template <class BaseClass>
+  class WithGenericMethod_SetGain : public BaseClass {
+   private:
+    void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
+   public:
+    WithGenericMethod_SetGain() {
+      ::grpc::Service::MarkMethodGeneric(7);
+    }
+    ~WithGenericMethod_SetGain() override {
+      BaseClassMustBeDerivedFromService(this);
+    }
+    // disable synchronous version of this method
+    ::grpc::Status SetGain(::grpc::ServerContext* /*context*/, const ::SetGainRequest* /*request*/, ::SimpleResponse* /*response*/) override {
+      abort();
+      return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
+    }
+  };
+  template <class BaseClass>
+  class WithGenericMethod_SetExposure : public BaseClass {
+   private:
+    void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
+   public:
+    WithGenericMethod_SetExposure() {
+      ::grpc::Service::MarkMethodGeneric(8);
+    }
+    ~WithGenericMethod_SetExposure() override {
+      BaseClassMustBeDerivedFromService(this);
+    }
+    // disable synchronous version of this method
+    ::grpc::Status SetExposure(::grpc::ServerContext* /*context*/, const ::SetExposureRequest* /*request*/, ::SimpleResponse* /*response*/) override {
       abort();
       return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
     }
@@ -820,6 +1332,86 @@ class CameraCommunicatorS final {
     }
     void RequestStartRecording(::grpc::ServerContext* context, ::grpc::ByteBuffer* request, ::grpc::ServerAsyncResponseWriter< ::grpc::ByteBuffer>* response, ::grpc::CompletionQueue* new_call_cq, ::grpc::ServerCompletionQueue* notification_cq, void *tag) {
       ::grpc::Service::RequestAsyncUnary(4, context, request, response, new_call_cq, notification_cq, tag);
+    }
+  };
+  template <class BaseClass>
+  class WithRawMethod_CaptureSingleImage : public BaseClass {
+   private:
+    void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
+   public:
+    WithRawMethod_CaptureSingleImage() {
+      ::grpc::Service::MarkMethodRaw(5);
+    }
+    ~WithRawMethod_CaptureSingleImage() override {
+      BaseClassMustBeDerivedFromService(this);
+    }
+    // disable synchronous version of this method
+    ::grpc::Status CaptureSingleImage(::grpc::ServerContext* /*context*/, const ::SimpleRequest* /*request*/, ::SimpleResponse* /*response*/) override {
+      abort();
+      return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
+    }
+    void RequestCaptureSingleImage(::grpc::ServerContext* context, ::grpc::ByteBuffer* request, ::grpc::ServerAsyncResponseWriter< ::grpc::ByteBuffer>* response, ::grpc::CompletionQueue* new_call_cq, ::grpc::ServerCompletionQueue* notification_cq, void *tag) {
+      ::grpc::Service::RequestAsyncUnary(5, context, request, response, new_call_cq, notification_cq, tag);
+    }
+  };
+  template <class BaseClass>
+  class WithRawMethod_SetDirectory : public BaseClass {
+   private:
+    void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
+   public:
+    WithRawMethod_SetDirectory() {
+      ::grpc::Service::MarkMethodRaw(6);
+    }
+    ~WithRawMethod_SetDirectory() override {
+      BaseClassMustBeDerivedFromService(this);
+    }
+    // disable synchronous version of this method
+    ::grpc::Status SetDirectory(::grpc::ServerContext* /*context*/, const ::SetDirectoryRequest* /*request*/, ::SimpleResponse* /*response*/) override {
+      abort();
+      return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
+    }
+    void RequestSetDirectory(::grpc::ServerContext* context, ::grpc::ByteBuffer* request, ::grpc::ServerAsyncResponseWriter< ::grpc::ByteBuffer>* response, ::grpc::CompletionQueue* new_call_cq, ::grpc::ServerCompletionQueue* notification_cq, void *tag) {
+      ::grpc::Service::RequestAsyncUnary(6, context, request, response, new_call_cq, notification_cq, tag);
+    }
+  };
+  template <class BaseClass>
+  class WithRawMethod_SetGain : public BaseClass {
+   private:
+    void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
+   public:
+    WithRawMethod_SetGain() {
+      ::grpc::Service::MarkMethodRaw(7);
+    }
+    ~WithRawMethod_SetGain() override {
+      BaseClassMustBeDerivedFromService(this);
+    }
+    // disable synchronous version of this method
+    ::grpc::Status SetGain(::grpc::ServerContext* /*context*/, const ::SetGainRequest* /*request*/, ::SimpleResponse* /*response*/) override {
+      abort();
+      return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
+    }
+    void RequestSetGain(::grpc::ServerContext* context, ::grpc::ByteBuffer* request, ::grpc::ServerAsyncResponseWriter< ::grpc::ByteBuffer>* response, ::grpc::CompletionQueue* new_call_cq, ::grpc::ServerCompletionQueue* notification_cq, void *tag) {
+      ::grpc::Service::RequestAsyncUnary(7, context, request, response, new_call_cq, notification_cq, tag);
+    }
+  };
+  template <class BaseClass>
+  class WithRawMethod_SetExposure : public BaseClass {
+   private:
+    void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
+   public:
+    WithRawMethod_SetExposure() {
+      ::grpc::Service::MarkMethodRaw(8);
+    }
+    ~WithRawMethod_SetExposure() override {
+      BaseClassMustBeDerivedFromService(this);
+    }
+    // disable synchronous version of this method
+    ::grpc::Status SetExposure(::grpc::ServerContext* /*context*/, const ::SetExposureRequest* /*request*/, ::SimpleResponse* /*response*/) override {
+      abort();
+      return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
+    }
+    void RequestSetExposure(::grpc::ServerContext* context, ::grpc::ByteBuffer* request, ::grpc::ServerAsyncResponseWriter< ::grpc::ByteBuffer>* response, ::grpc::CompletionQueue* new_call_cq, ::grpc::ServerCompletionQueue* notification_cq, void *tag) {
+      ::grpc::Service::RequestAsyncUnary(8, context, request, response, new_call_cq, notification_cq, tag);
     }
   };
   template <class BaseClass>
@@ -1013,6 +1605,158 @@ class CameraCommunicatorS final {
       { return nullptr; }
   };
   template <class BaseClass>
+  class ExperimentalWithRawCallbackMethod_CaptureSingleImage : public BaseClass {
+   private:
+    void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
+   public:
+    ExperimentalWithRawCallbackMethod_CaptureSingleImage() {
+    #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
+      ::grpc::Service::
+    #else
+      ::grpc::Service::experimental().
+    #endif
+        MarkMethodRawCallback(5,
+          new ::grpc_impl::internal::CallbackUnaryHandler< ::grpc::ByteBuffer, ::grpc::ByteBuffer>(
+            [this](
+    #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
+                   ::grpc::CallbackServerContext*
+    #else
+                   ::grpc::experimental::CallbackServerContext*
+    #endif
+                     context, const ::grpc::ByteBuffer* request, ::grpc::ByteBuffer* response) { return this->CaptureSingleImage(context, request, response); }));
+    }
+    ~ExperimentalWithRawCallbackMethod_CaptureSingleImage() override {
+      BaseClassMustBeDerivedFromService(this);
+    }
+    // disable synchronous version of this method
+    ::grpc::Status CaptureSingleImage(::grpc::ServerContext* /*context*/, const ::SimpleRequest* /*request*/, ::SimpleResponse* /*response*/) override {
+      abort();
+      return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
+    }
+    #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
+    virtual ::grpc::ServerUnaryReactor* CaptureSingleImage(
+      ::grpc::CallbackServerContext* /*context*/, const ::grpc::ByteBuffer* /*request*/, ::grpc::ByteBuffer* /*response*/)
+    #else
+    virtual ::grpc::experimental::ServerUnaryReactor* CaptureSingleImage(
+      ::grpc::experimental::CallbackServerContext* /*context*/, const ::grpc::ByteBuffer* /*request*/, ::grpc::ByteBuffer* /*response*/)
+    #endif
+      { return nullptr; }
+  };
+  template <class BaseClass>
+  class ExperimentalWithRawCallbackMethod_SetDirectory : public BaseClass {
+   private:
+    void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
+   public:
+    ExperimentalWithRawCallbackMethod_SetDirectory() {
+    #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
+      ::grpc::Service::
+    #else
+      ::grpc::Service::experimental().
+    #endif
+        MarkMethodRawCallback(6,
+          new ::grpc_impl::internal::CallbackUnaryHandler< ::grpc::ByteBuffer, ::grpc::ByteBuffer>(
+            [this](
+    #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
+                   ::grpc::CallbackServerContext*
+    #else
+                   ::grpc::experimental::CallbackServerContext*
+    #endif
+                     context, const ::grpc::ByteBuffer* request, ::grpc::ByteBuffer* response) { return this->SetDirectory(context, request, response); }));
+    }
+    ~ExperimentalWithRawCallbackMethod_SetDirectory() override {
+      BaseClassMustBeDerivedFromService(this);
+    }
+    // disable synchronous version of this method
+    ::grpc::Status SetDirectory(::grpc::ServerContext* /*context*/, const ::SetDirectoryRequest* /*request*/, ::SimpleResponse* /*response*/) override {
+      abort();
+      return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
+    }
+    #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
+    virtual ::grpc::ServerUnaryReactor* SetDirectory(
+      ::grpc::CallbackServerContext* /*context*/, const ::grpc::ByteBuffer* /*request*/, ::grpc::ByteBuffer* /*response*/)
+    #else
+    virtual ::grpc::experimental::ServerUnaryReactor* SetDirectory(
+      ::grpc::experimental::CallbackServerContext* /*context*/, const ::grpc::ByteBuffer* /*request*/, ::grpc::ByteBuffer* /*response*/)
+    #endif
+      { return nullptr; }
+  };
+  template <class BaseClass>
+  class ExperimentalWithRawCallbackMethod_SetGain : public BaseClass {
+   private:
+    void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
+   public:
+    ExperimentalWithRawCallbackMethod_SetGain() {
+    #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
+      ::grpc::Service::
+    #else
+      ::grpc::Service::experimental().
+    #endif
+        MarkMethodRawCallback(7,
+          new ::grpc_impl::internal::CallbackUnaryHandler< ::grpc::ByteBuffer, ::grpc::ByteBuffer>(
+            [this](
+    #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
+                   ::grpc::CallbackServerContext*
+    #else
+                   ::grpc::experimental::CallbackServerContext*
+    #endif
+                     context, const ::grpc::ByteBuffer* request, ::grpc::ByteBuffer* response) { return this->SetGain(context, request, response); }));
+    }
+    ~ExperimentalWithRawCallbackMethod_SetGain() override {
+      BaseClassMustBeDerivedFromService(this);
+    }
+    // disable synchronous version of this method
+    ::grpc::Status SetGain(::grpc::ServerContext* /*context*/, const ::SetGainRequest* /*request*/, ::SimpleResponse* /*response*/) override {
+      abort();
+      return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
+    }
+    #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
+    virtual ::grpc::ServerUnaryReactor* SetGain(
+      ::grpc::CallbackServerContext* /*context*/, const ::grpc::ByteBuffer* /*request*/, ::grpc::ByteBuffer* /*response*/)
+    #else
+    virtual ::grpc::experimental::ServerUnaryReactor* SetGain(
+      ::grpc::experimental::CallbackServerContext* /*context*/, const ::grpc::ByteBuffer* /*request*/, ::grpc::ByteBuffer* /*response*/)
+    #endif
+      { return nullptr; }
+  };
+  template <class BaseClass>
+  class ExperimentalWithRawCallbackMethod_SetExposure : public BaseClass {
+   private:
+    void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
+   public:
+    ExperimentalWithRawCallbackMethod_SetExposure() {
+    #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
+      ::grpc::Service::
+    #else
+      ::grpc::Service::experimental().
+    #endif
+        MarkMethodRawCallback(8,
+          new ::grpc_impl::internal::CallbackUnaryHandler< ::grpc::ByteBuffer, ::grpc::ByteBuffer>(
+            [this](
+    #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
+                   ::grpc::CallbackServerContext*
+    #else
+                   ::grpc::experimental::CallbackServerContext*
+    #endif
+                     context, const ::grpc::ByteBuffer* request, ::grpc::ByteBuffer* response) { return this->SetExposure(context, request, response); }));
+    }
+    ~ExperimentalWithRawCallbackMethod_SetExposure() override {
+      BaseClassMustBeDerivedFromService(this);
+    }
+    // disable synchronous version of this method
+    ::grpc::Status SetExposure(::grpc::ServerContext* /*context*/, const ::SetExposureRequest* /*request*/, ::SimpleResponse* /*response*/) override {
+      abort();
+      return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
+    }
+    #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
+    virtual ::grpc::ServerUnaryReactor* SetExposure(
+      ::grpc::CallbackServerContext* /*context*/, const ::grpc::ByteBuffer* /*request*/, ::grpc::ByteBuffer* /*response*/)
+    #else
+    virtual ::grpc::experimental::ServerUnaryReactor* SetExposure(
+      ::grpc::experimental::CallbackServerContext* /*context*/, const ::grpc::ByteBuffer* /*request*/, ::grpc::ByteBuffer* /*response*/)
+    #endif
+      { return nullptr; }
+  };
+  template <class BaseClass>
   class WithStreamedUnaryMethod_SetFramerate : public BaseClass {
    private:
     void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
@@ -1147,9 +1891,117 @@ class CameraCommunicatorS final {
     // replace default version of method with streamed unary
     virtual ::grpc::Status StreamedStartRecording(::grpc::ServerContext* context, ::grpc::ServerUnaryStreamer< ::SimpleRequest,::SimpleResponse>* server_unary_streamer) = 0;
   };
-  typedef WithStreamedUnaryMethod_SetFramerate<WithStreamedUnaryMethod_SetRecordingPeriod<WithStreamedUnaryMethod_SetReferenceCamera<WithStreamedUnaryMethod_PrepareRecording<WithStreamedUnaryMethod_StartRecording<Service > > > > > StreamedUnaryService;
+  template <class BaseClass>
+  class WithStreamedUnaryMethod_CaptureSingleImage : public BaseClass {
+   private:
+    void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
+   public:
+    WithStreamedUnaryMethod_CaptureSingleImage() {
+      ::grpc::Service::MarkMethodStreamed(5,
+        new ::grpc::internal::StreamedUnaryHandler<
+          ::SimpleRequest, ::SimpleResponse>(
+            [this](::grpc_impl::ServerContext* context,
+                   ::grpc_impl::ServerUnaryStreamer<
+                     ::SimpleRequest, ::SimpleResponse>* streamer) {
+                       return this->StreamedCaptureSingleImage(context,
+                         streamer);
+                  }));
+    }
+    ~WithStreamedUnaryMethod_CaptureSingleImage() override {
+      BaseClassMustBeDerivedFromService(this);
+    }
+    // disable regular version of this method
+    ::grpc::Status CaptureSingleImage(::grpc::ServerContext* /*context*/, const ::SimpleRequest* /*request*/, ::SimpleResponse* /*response*/) override {
+      abort();
+      return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
+    }
+    // replace default version of method with streamed unary
+    virtual ::grpc::Status StreamedCaptureSingleImage(::grpc::ServerContext* context, ::grpc::ServerUnaryStreamer< ::SimpleRequest,::SimpleResponse>* server_unary_streamer) = 0;
+  };
+  template <class BaseClass>
+  class WithStreamedUnaryMethod_SetDirectory : public BaseClass {
+   private:
+    void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
+   public:
+    WithStreamedUnaryMethod_SetDirectory() {
+      ::grpc::Service::MarkMethodStreamed(6,
+        new ::grpc::internal::StreamedUnaryHandler<
+          ::SetDirectoryRequest, ::SimpleResponse>(
+            [this](::grpc_impl::ServerContext* context,
+                   ::grpc_impl::ServerUnaryStreamer<
+                     ::SetDirectoryRequest, ::SimpleResponse>* streamer) {
+                       return this->StreamedSetDirectory(context,
+                         streamer);
+                  }));
+    }
+    ~WithStreamedUnaryMethod_SetDirectory() override {
+      BaseClassMustBeDerivedFromService(this);
+    }
+    // disable regular version of this method
+    ::grpc::Status SetDirectory(::grpc::ServerContext* /*context*/, const ::SetDirectoryRequest* /*request*/, ::SimpleResponse* /*response*/) override {
+      abort();
+      return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
+    }
+    // replace default version of method with streamed unary
+    virtual ::grpc::Status StreamedSetDirectory(::grpc::ServerContext* context, ::grpc::ServerUnaryStreamer< ::SetDirectoryRequest,::SimpleResponse>* server_unary_streamer) = 0;
+  };
+  template <class BaseClass>
+  class WithStreamedUnaryMethod_SetGain : public BaseClass {
+   private:
+    void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
+   public:
+    WithStreamedUnaryMethod_SetGain() {
+      ::grpc::Service::MarkMethodStreamed(7,
+        new ::grpc::internal::StreamedUnaryHandler<
+          ::SetGainRequest, ::SimpleResponse>(
+            [this](::grpc_impl::ServerContext* context,
+                   ::grpc_impl::ServerUnaryStreamer<
+                     ::SetGainRequest, ::SimpleResponse>* streamer) {
+                       return this->StreamedSetGain(context,
+                         streamer);
+                  }));
+    }
+    ~WithStreamedUnaryMethod_SetGain() override {
+      BaseClassMustBeDerivedFromService(this);
+    }
+    // disable regular version of this method
+    ::grpc::Status SetGain(::grpc::ServerContext* /*context*/, const ::SetGainRequest* /*request*/, ::SimpleResponse* /*response*/) override {
+      abort();
+      return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
+    }
+    // replace default version of method with streamed unary
+    virtual ::grpc::Status StreamedSetGain(::grpc::ServerContext* context, ::grpc::ServerUnaryStreamer< ::SetGainRequest,::SimpleResponse>* server_unary_streamer) = 0;
+  };
+  template <class BaseClass>
+  class WithStreamedUnaryMethod_SetExposure : public BaseClass {
+   private:
+    void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
+   public:
+    WithStreamedUnaryMethod_SetExposure() {
+      ::grpc::Service::MarkMethodStreamed(8,
+        new ::grpc::internal::StreamedUnaryHandler<
+          ::SetExposureRequest, ::SimpleResponse>(
+            [this](::grpc_impl::ServerContext* context,
+                   ::grpc_impl::ServerUnaryStreamer<
+                     ::SetExposureRequest, ::SimpleResponse>* streamer) {
+                       return this->StreamedSetExposure(context,
+                         streamer);
+                  }));
+    }
+    ~WithStreamedUnaryMethod_SetExposure() override {
+      BaseClassMustBeDerivedFromService(this);
+    }
+    // disable regular version of this method
+    ::grpc::Status SetExposure(::grpc::ServerContext* /*context*/, const ::SetExposureRequest* /*request*/, ::SimpleResponse* /*response*/) override {
+      abort();
+      return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
+    }
+    // replace default version of method with streamed unary
+    virtual ::grpc::Status StreamedSetExposure(::grpc::ServerContext* context, ::grpc::ServerUnaryStreamer< ::SetExposureRequest,::SimpleResponse>* server_unary_streamer) = 0;
+  };
+  typedef WithStreamedUnaryMethod_SetFramerate<WithStreamedUnaryMethod_SetRecordingPeriod<WithStreamedUnaryMethod_SetReferenceCamera<WithStreamedUnaryMethod_PrepareRecording<WithStreamedUnaryMethod_StartRecording<WithStreamedUnaryMethod_CaptureSingleImage<WithStreamedUnaryMethod_SetDirectory<WithStreamedUnaryMethod_SetGain<WithStreamedUnaryMethod_SetExposure<Service > > > > > > > > > StreamedUnaryService;
   typedef Service SplitStreamedService;
-  typedef WithStreamedUnaryMethod_SetFramerate<WithStreamedUnaryMethod_SetRecordingPeriod<WithStreamedUnaryMethod_SetReferenceCamera<WithStreamedUnaryMethod_PrepareRecording<WithStreamedUnaryMethod_StartRecording<Service > > > > > StreamedService;
+  typedef WithStreamedUnaryMethod_SetFramerate<WithStreamedUnaryMethod_SetRecordingPeriod<WithStreamedUnaryMethod_SetReferenceCamera<WithStreamedUnaryMethod_PrepareRecording<WithStreamedUnaryMethod_StartRecording<WithStreamedUnaryMethod_CaptureSingleImage<WithStreamedUnaryMethod_SetDirectory<WithStreamedUnaryMethod_SetGain<WithStreamedUnaryMethod_SetExposure<Service > > > > > > > > > StreamedService;
 };
 
 

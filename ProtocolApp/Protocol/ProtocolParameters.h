@@ -29,9 +29,14 @@ class ProtocolParameters
 		long cs_port1;
 		CString cs_ip2;
 		long cs_port2;
+
+		// camera config
 		double cs_framerate;
 		int cs_recordingPeriod;
 		int cs_refSerial;
+		CString cs_gain;
+		CString cs_exposure;
+
 
 		// testing and debugging flags
 		bool tstEnMotors;
