@@ -69,6 +69,8 @@ protected:
 	atomic<bool> m_stopTrial;
 	void stopProtocolThread();
 
+	void retreatStopRecording();
+
 	//////// cameras
 	CameraClient m_cameraClient1;
 	atomic<bool> m_startCcRecording1;

@@ -30,6 +30,7 @@ static const char* CameraCommunicatorS_method_names[] = {
   "/CameraCommunicatorS/SetDirectory",
   "/CameraCommunicatorS/SetGain",
   "/CameraCommunicatorS/SetExposure",
+  "/CameraCommunicatorS/BreakRecording",
 };
 
 std::unique_ptr< CameraCommunicatorS::Stub> CameraCommunicatorS::NewStub(const std::shared_ptr< ::grpc::ChannelInterface>& channel, const ::grpc::StubOptions& options) {
@@ -48,6 +49,7 @@ CameraCommunicatorS::Stub::Stub(const std::shared_ptr< ::grpc::ChannelInterface>
   , rpcmethod_SetDirectory_(CameraCommunicatorS_method_names[6], ::grpc::internal::RpcMethod::NORMAL_RPC, channel)
   , rpcmethod_SetGain_(CameraCommunicatorS_method_names[7], ::grpc::internal::RpcMethod::NORMAL_RPC, channel)
   , rpcmethod_SetExposure_(CameraCommunicatorS_method_names[8], ::grpc::internal::RpcMethod::NORMAL_RPC, channel)
+  , rpcmethod_BreakRecording_(CameraCommunicatorS_method_names[9], ::grpc::internal::RpcMethod::NORMAL_RPC, channel)
   {}
 
 ::grpc::Status CameraCommunicatorS::Stub::SetFramerate(::grpc::ClientContext* context, const ::SetFramerateRequest& request, ::SimpleResponse* response) {
@@ -302,6 +304,34 @@ void CameraCommunicatorS::Stub::experimental_async::SetExposure(::grpc::ClientCo
   return ::grpc_impl::internal::ClientAsyncResponseReaderFactory< ::SimpleResponse>::Create(channel_.get(), cq, rpcmethod_SetExposure_, context, request, false);
 }
 
+::grpc::Status CameraCommunicatorS::Stub::BreakRecording(::grpc::ClientContext* context, const ::SimpleRequest& request, ::SimpleResponse* response) {
+  return ::grpc::internal::BlockingUnaryCall(channel_.get(), rpcmethod_BreakRecording_, context, request, response);
+}
+
+void CameraCommunicatorS::Stub::experimental_async::BreakRecording(::grpc::ClientContext* context, const ::SimpleRequest* request, ::SimpleResponse* response, std::function<void(::grpc::Status)> f) {
+  ::grpc_impl::internal::CallbackUnaryCall(stub_->channel_.get(), stub_->rpcmethod_BreakRecording_, context, request, response, std::move(f));
+}
+
+void CameraCommunicatorS::Stub::experimental_async::BreakRecording(::grpc::ClientContext* context, const ::grpc::ByteBuffer* request, ::SimpleResponse* response, std::function<void(::grpc::Status)> f) {
+  ::grpc_impl::internal::CallbackUnaryCall(stub_->channel_.get(), stub_->rpcmethod_BreakRecording_, context, request, response, std::move(f));
+}
+
+void CameraCommunicatorS::Stub::experimental_async::BreakRecording(::grpc::ClientContext* context, const ::SimpleRequest* request, ::SimpleResponse* response, ::grpc::experimental::ClientUnaryReactor* reactor) {
+  ::grpc_impl::internal::ClientCallbackUnaryFactory::Create(stub_->channel_.get(), stub_->rpcmethod_BreakRecording_, context, request, response, reactor);
+}
+
+void CameraCommunicatorS::Stub::experimental_async::BreakRecording(::grpc::ClientContext* context, const ::grpc::ByteBuffer* request, ::SimpleResponse* response, ::grpc::experimental::ClientUnaryReactor* reactor) {
+  ::grpc_impl::internal::ClientCallbackUnaryFactory::Create(stub_->channel_.get(), stub_->rpcmethod_BreakRecording_, context, request, response, reactor);
+}
+
+::grpc::ClientAsyncResponseReader< ::SimpleResponse>* CameraCommunicatorS::Stub::AsyncBreakRecordingRaw(::grpc::ClientContext* context, const ::SimpleRequest& request, ::grpc::CompletionQueue* cq) {
+  return ::grpc_impl::internal::ClientAsyncResponseReaderFactory< ::SimpleResponse>::Create(channel_.get(), cq, rpcmethod_BreakRecording_, context, request, true);
+}
+
+::grpc::ClientAsyncResponseReader< ::SimpleResponse>* CameraCommunicatorS::Stub::PrepareAsyncBreakRecordingRaw(::grpc::ClientContext* context, const ::SimpleRequest& request, ::grpc::CompletionQueue* cq) {
+  return ::grpc_impl::internal::ClientAsyncResponseReaderFactory< ::SimpleResponse>::Create(channel_.get(), cq, rpcmethod_BreakRecording_, context, request, false);
+}
+
 CameraCommunicatorS::Service::Service() {
   AddMethod(new ::grpc::internal::RpcServiceMethod(
       CameraCommunicatorS_method_names[0],
@@ -393,6 +423,16 @@ CameraCommunicatorS::Service::Service() {
              ::SimpleResponse* resp) {
                return service->SetExposure(ctx, req, resp);
              }, this)));
+  AddMethod(new ::grpc::internal::RpcServiceMethod(
+      CameraCommunicatorS_method_names[9],
+      ::grpc::internal::RpcMethod::NORMAL_RPC,
+      new ::grpc::internal::RpcMethodHandler< CameraCommunicatorS::Service, ::SimpleRequest, ::SimpleResponse>(
+          [](CameraCommunicatorS::Service* service,
+             ::grpc_impl::ServerContext* ctx,
+             const ::SimpleRequest* req,
+             ::SimpleResponse* resp) {
+               return service->BreakRecording(ctx, req, resp);
+             }, this)));
 }
 
 CameraCommunicatorS::Service::~Service() {
@@ -455,6 +495,13 @@ CameraCommunicatorS::Service::~Service() {
 }
 
 ::grpc::Status CameraCommunicatorS::Service::SetExposure(::grpc::ServerContext* context, const ::SetExposureRequest* request, ::SimpleResponse* response) {
+  (void) context;
+  (void) request;
+  (void) response;
+  return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
+}
+
+::grpc::Status CameraCommunicatorS::Service::BreakRecording(::grpc::ServerContext* context, const ::SimpleRequest* request, ::SimpleResponse* response) {
   (void) context;
   (void) request;
   (void) response;

@@ -52,12 +52,12 @@ void ProtocolParameters::init()
 	cs_exposure = "2500";
 	cs_gain = "auto";
 
-	//tstEnMotors = false;
-	//tstEnReward = false;
-	//tstEnLightSensors = false;
-	tstEnMotors = true;
-	tstEnReward = true;
-	tstEnLightSensors = true;
+	tstEnMotors = false;
+	tstEnReward = false;
+	tstEnLightSensors = false;
+	//tstEnMotors = true;
+	//tstEnReward = true;
+	//tstEnLightSensors = true;
 
 	tstEnCameras = true;
 	//tstEnCameras = false;

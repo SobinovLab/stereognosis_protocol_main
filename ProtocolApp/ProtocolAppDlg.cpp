@@ -246,18 +246,13 @@ void CProtocolAppDlg::OnRetreatFlushWaterBtnClicked()
 	UpdateData(FromControlsToVariables);
 	m_NIUsb6001card.reward(m_protocol.params.rewardDuration);
 
-	enableTrialCtrls(true);
-
-	// TODO retreat
-	m_stopTrial.store(true);
+	retreatStopRecording();
+	
 }
 
 void CProtocolAppDlg::OnRetreatBtnClicked()
 {
-	enableTrialCtrls(true);
-
-	// TODO retreat
-	m_stopTrial.store(true);
+	retreatStopRecording();
 }
 
 void CProtocolAppDlg::OnConnect1BtnClicked()
@@ -333,6 +328,20 @@ void CProtocolAppDlg::stopProtocolThread()
 		delete protocolThread; protocolThread = nullptr;
 	}
 	
+}
+
+void CProtocolAppDlg::retreatStopRecording()
+{
+	enableTrialCtrls(true);
+
+	// retreat
+	m_stopTrial.store(true);
+
+	// stop recording
+	if (m_cameraClient1.isConnected())
+		m_cameraClient1.breakRecording();
+	if (m_cameraClient2.isConnected())
+		m_cameraClient2.breakRecording();
 }
 
 void CProtocolAppDlg::sendConfig()

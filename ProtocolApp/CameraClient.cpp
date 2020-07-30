@@ -159,6 +159,21 @@ void CameraClient::captureSingleFrame()
 	}
 }
 
+void CameraClient::breakRecording()
+{
+	appendClientLog(_T("Requesting to stop recording. "));
+	if (ccsc) {
+		if (ccsc->breakRecording()) {
+			appendClientLog(_T("Success.\n"));
+		}
+		else
+			appendClientLog(_T("Failure.\n"));
+	}
+	else {
+		appendClientLog(_T("Not connected.\n "));
+	}
+}
+
 bool CameraClient::isConnected()
 {
 	if (ccsc)
@@ -355,6 +370,24 @@ bool CameraCommunicatorSClient::captureSingleFrame()
 	ClientContext context;
 
 	Status status = stub_->CaptureSingleImage(&context, srq, &sr);
+	if (!status.ok()) {
+		return false;
+	}
+
+	lastCode = sr.code();
+	lastDescritpion = new CString(sr.description().c_str());
+
+	return true;
+}
+
+bool CameraCommunicatorSClient::breakRecording()
+{
+	SimpleRequest srq;
+	srq.set_code(0);
+	SimpleResponse sr;
+	ClientContext context;
+
+	Status status = stub_->BreakRecording(&context, srq, &sr);
 	if (!status.ok()) {
 		return false;
 	}

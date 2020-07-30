@@ -34,6 +34,7 @@ public:
 	bool prepareRecording();
 	bool startRecording();
 	bool captureSingleFrame();
+	bool breakRecording();
 
 	INT32 lastCode = 0;
 	CString* lastDescritpion;
@@ -63,6 +64,7 @@ public:
 	virtual void prepareRecording();
 	virtual void startRecording();
 	virtual void captureSingleFrame();
+	virtual void breakRecording();
 
 	virtual bool isConnected();
 
