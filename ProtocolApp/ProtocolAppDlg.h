@@ -9,6 +9,7 @@
 #include <thread>
 #include <future>
 #include "Protocol.h"
+#include "Sounds.h"
 #include "ProtocolApp.h"
 #include "CStaticColor.h"
 #include "CameraClient.h"

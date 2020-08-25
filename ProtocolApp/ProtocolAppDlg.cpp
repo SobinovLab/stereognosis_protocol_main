@@ -248,6 +248,10 @@ void CProtocolAppDlg::OnRetreatFlushWaterBtnClicked()
 
 void CProtocolAppDlg::OnRetreatBtnClicked()
 {
+	if (m_protocol.params.tstEnReward) {
+		Sounds::playErrorTone();
+	}
+
 	retreatStopRecording();
 }
 

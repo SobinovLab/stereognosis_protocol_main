@@ -54,7 +54,7 @@ void Protocol::run(atomic<bool> * stopProtocol, atomic<bool>* startTrial, atomic
 
 		if (startForwardMovement(stopProtocol, stopTrial, m_NIUsb6001card, motorHub))
 		{
-			playStartTaskTone();
+			Sounds::playStartTaskTone();
 
 			auto toneStartTime = chrono::steady_clock::now();
 
@@ -71,7 +71,7 @@ void Protocol::run(atomic<bool> * stopProtocol, atomic<bool>* startTrial, atomic
 			}
 		}
 		else {
-			playErrorTone();
+			//Sounds::playErrorTone();
 		}
 		++nTotTrialsPlayedUntilNow;
 	}
@@ -185,16 +185,6 @@ void Protocol::updateCurrentTrialOnTheGUI(const long & nTotTrialsPlayedUntilNow,
 void Protocol::startReward(NIUsb6001card * m_NIUsb6001card, long & proportionalDuration)
 {
 		m_NIUsb6001card->reward(proportionalDuration);
-}
-
-void Protocol::playStartTaskTone()
-{
-	Beep(FREQUENCY_START_TASK_TONE, DURATION_TONE);
-}
-
-void Protocol::playErrorTone()
-{
-	Beep(FREQUENCY_ERROR_TONE, DURATION_TONE);
 }
 
 bool Protocol::isTimeout(time_point<std::chrono::steady_clock>& startToneTime)

@@ -13,6 +13,7 @@
 #include <chrono>
 #include <atomic>
 #include "Logger.h"
+#include "Sounds.h"
 #include "ProtocolParameters.h"
 #include "TeknicMotorDevice.h"
 #include "NIUsb6001card.h"
@@ -31,8 +32,6 @@ class Protocol
 	private:
 		void updateCurrentTrialOnTheGUI(const long & nTotTrialsPlayedUntilNow, CEdit * currentTrialGUICtrl);
 		void startReward(NIUsb6001card * m_NIUsb6001card, long & proportionalDuration);
-		void playStartTaskTone();
-		void playErrorTone();
 		long getElapsedMicroSecsBetween(time_point<std::chrono::steady_clock> & startTime, time_point<std::chrono::steady_clock> & endTime);
 		long getElapsedMilliSecsSince(time_point<std::chrono::steady_clock> & startTime);
 		long proportionalRewardCalculation(long long elapsed);
