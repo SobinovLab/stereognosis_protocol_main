@@ -27,7 +27,9 @@ class Protocol
 		ProtocolParameters params;
 		Protocol();
 		virtual ~Protocol();
-		virtual void run( atomic<bool>* stopProtocol, atomic<bool>* startTrial, atomic<bool>* stopTrial, NIUsb6001card* m_NIUsb6001card, CEdit* currentTrialGUICtrl);
+		virtual void run( atomic<bool>* stopProtocol, 
+			atomic<bool>* startTrial, atomic<bool>* stopTrial, atomic<bool>* retreatedMotors, 
+			NIUsb6001card* m_NIUsb6001card, CEdit* currentTrialGUICtrl);
 
 	private:
 		void updateCurrentTrialOnTheGUI(const long & nTotTrialsPlayedUntilNow, CEdit * currentTrialGUICtrl);

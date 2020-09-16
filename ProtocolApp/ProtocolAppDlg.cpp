@@ -188,6 +188,7 @@ void CProtocolAppDlg::OnStartProtocolBtnClicked()
 	m_stopProtocol.store(false);
 	m_startTrial.store(false);
 	m_stopTrial.store(false);
+	m_retreatedMotors.store(false);
 
 	if (m_protocol.params.isNiCardBeingUsed()) {
 		m_NIUsb6001card.config();
@@ -198,7 +199,7 @@ void CProtocolAppDlg::OnStartProtocolBtnClicked()
 		m_NIUsb6001card.start();
 	}
 	
-	protocolThread = new thread(&Protocol::run, &m_protocol, &m_stopProtocol, &m_startTrial, &m_stopTrial, &m_NIUsb6001card, &m_currentTrialEdtCtrl);
+	protocolThread = new thread(&Protocol::run, &m_protocol, &m_stopProtocol, &m_startTrial, &m_stopTrial, &m_retreatedMotors, &m_NIUsb6001card, &m_currentTrialEdtCtrl);
 
 	enableTrialCtrls(true);
 }
@@ -336,6 +337,8 @@ void CProtocolAppDlg::retreatStopRecording()
 
 	// retreat
 	m_stopTrial.store(true);
+
+	while (!m_retreatedMotors.load()) {}
 
 	// stop recording
 	if (m_cameraClient1.isConnected())

@@ -23,7 +23,7 @@ Protocol::~Protocol()
 {
 }
 
-void Protocol::run(atomic<bool> * stopProtocol, atomic<bool>* startTrial, atomic<bool>* stopTrial, NIUsb6001card * m_NIUsb6001card, CEdit * currentTrialGUICtrl)
+void Protocol::run(atomic<bool>* stopProtocol, atomic<bool>* startTrial, atomic<bool>* stopTrial, atomic<bool>* retreatedMotors, NIUsb6001card* m_NIUsb6001card, CEdit* currentTrialGUICtrl)
 {
 	CreateDirectory(DATA_FOLDER, NULL);
 	long nTotTrialsPlayedUntilNow = 0;
@@ -54,6 +54,7 @@ void Protocol::run(atomic<bool> * stopProtocol, atomic<bool>* startTrial, atomic
 
 		if (startForwardMovement(stopProtocol, stopTrial, m_NIUsb6001card, motorHub))
 		{
+			retreatedMotors->store(false);
 			Sounds::playStartTaskTone();
 
 			auto toneStartTime = chrono::steady_clock::now();
@@ -69,6 +70,7 @@ void Protocol::run(atomic<bool> * stopProtocol, atomic<bool>* startTrial, atomic
 				motorHub.reset();
 				motorHub.home();
 			}
+			retreatedMotors->store(true);
 		}
 		else {
 			//Sounds::playErrorTone();

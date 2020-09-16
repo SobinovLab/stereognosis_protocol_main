@@ -67,6 +67,7 @@ protected:
 	atomic<bool> m_stopProtocol;
 	atomic<bool> m_startTrial;
 	atomic<bool> m_stopTrial;
+	atomic<bool> m_retreatedMotors;  // needed for delayed stop of recording
 	void stopProtocolThread();
 
 	void retreatStopRecording();

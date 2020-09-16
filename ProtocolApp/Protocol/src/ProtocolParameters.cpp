@@ -42,15 +42,15 @@ void ProtocolParameters::init()
 	speed = 2;        // proportional level 1-10 (1 - 700 RPM)
 	position = 115;     // 1 to 240 mm -> proportional cycles ((-1) to (-105000) CNTs)
 
-	cs_ip1 = "localhost";  // 205.208.63.128
+	cs_ip1 = "205.208.87.188";
 	cs_port1 = 63874;
-	cs_ip2 = "205.208.87.188";
+	cs_ip2 = "205.208.63.128";
 	cs_port2 = 63874;
 	cs_framerate = 50;
 	cs_recordingPeriod = 25;
-	cs_refSerial = 19335177;
+	cs_refSerial = 19334009; // ???
 	cs_exposure = "2500";
-	cs_gain = "auto";
+	cs_gain = "20";
 
 	//tstEnMotors = false;
 	//tstEnReward = false;
