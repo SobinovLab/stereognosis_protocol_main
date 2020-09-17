@@ -37,6 +37,9 @@ class ProtocolParameters
 		CString cs_gain;
 		CString cs_exposure;
 
+		CString tss_ip;
+		long tss_port;
+
 
 		// testing and debugging flags
 		bool tstEnMotors;

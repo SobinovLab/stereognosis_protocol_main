@@ -23,6 +23,9 @@ ProtocolParameters::ProtocolParameters(const ProtocolParameters & protocolParams
 	this->cs_exposure = protocolParams.cs_exposure;
 	this->cs_gain = protocolParams.cs_gain;
 
+	this->tss_ip = protocolParams.tss_ip;
+	this->tss_port = protocolParams.tss_port;
+
 	this->tstEnMotors = protocolParams.tstEnMotors;
 	this->tstEnReward = protocolParams.tstEnReward;
 	this->tstEnCameras = protocolParams.tstEnCameras;
@@ -52,17 +55,20 @@ void ProtocolParameters::init()
 	cs_exposure = "2500";
 	cs_gain = "20";
 
-	//tstEnMotors = false;
-	//tstEnReward = false;
-	//tstEnLightSensors = false;
-	tstEnMotors = true;
-	tstEnReward = true;
-	tstEnLightSensors = true;
+	tss_ip = "localhost";
+	tss_port = 54940;
+
+	tstEnMotors = false;
+	tstEnReward = false;
+	tstEnLightSensors = false;
+	//tstEnMotors = true;
+	//tstEnReward = true;
+	//tstEnLightSensors = true;
 
 	tstEnCameras = true;
 	//tstEnCameras = false;
 
-	tstEnTouchSensors = false;
+	tstEnTouchSensors = true;
 }
 
 bool ProtocolParameters::isNiCardBeingUsed()

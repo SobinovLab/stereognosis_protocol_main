@@ -54,6 +54,7 @@ struct TableStruct_tekscan_5fserver_2eproto {
   static const ::PROTOBUF_NAMESPACE_ID::uint32 offsets[];
 };
 extern const ::PROTOBUF_NAMESPACE_ID::internal::DescriptorTable descriptor_table_tekscan_5fserver_2eproto;
+namespace TekscanServerNamespace {
 class BreakRecordingResponse;
 class BreakRecordingResponseDefaultTypeInternal;
 extern BreakRecordingResponseDefaultTypeInternal _BreakRecordingResponse_default_instance_;
@@ -66,17 +67,19 @@ extern SimpleResponseDefaultTypeInternal _SimpleResponse_default_instance_;
 class StartRecordingRequest;
 class StartRecordingRequestDefaultTypeInternal;
 extern StartRecordingRequestDefaultTypeInternal _StartRecordingRequest_default_instance_;
+}  // namespace TekscanServerNamespace
 PROTOBUF_NAMESPACE_OPEN
-template<> ::BreakRecordingResponse* Arena::CreateMaybeMessage<::BreakRecordingResponse>(Arena*);
-template<> ::SimpleRequest* Arena::CreateMaybeMessage<::SimpleRequest>(Arena*);
-template<> ::SimpleResponse* Arena::CreateMaybeMessage<::SimpleResponse>(Arena*);
-template<> ::StartRecordingRequest* Arena::CreateMaybeMessage<::StartRecordingRequest>(Arena*);
+template<> ::TekscanServerNamespace::BreakRecordingResponse* Arena::CreateMaybeMessage<::TekscanServerNamespace::BreakRecordingResponse>(Arena*);
+template<> ::TekscanServerNamespace::SimpleRequest* Arena::CreateMaybeMessage<::TekscanServerNamespace::SimpleRequest>(Arena*);
+template<> ::TekscanServerNamespace::SimpleResponse* Arena::CreateMaybeMessage<::TekscanServerNamespace::SimpleResponse>(Arena*);
+template<> ::TekscanServerNamespace::StartRecordingRequest* Arena::CreateMaybeMessage<::TekscanServerNamespace::StartRecordingRequest>(Arena*);
 PROTOBUF_NAMESPACE_CLOSE
+namespace TekscanServerNamespace {
 
 // ===================================================================
 
 class SimpleRequest PROTOBUF_FINAL :
-    public ::PROTOBUF_NAMESPACE_ID::Message /* @@protoc_insertion_point(class_definition:SimpleRequest) */ {
+    public ::PROTOBUF_NAMESPACE_ID::Message /* @@protoc_insertion_point(class_definition:TekscanServerNamespace.SimpleRequest) */ {
  public:
   inline SimpleRequest() : SimpleRequest(nullptr) {};
   virtual ~SimpleRequest();
@@ -165,7 +168,7 @@ class SimpleRequest PROTOBUF_FINAL :
   void InternalSwap(SimpleRequest* other);
   friend class ::PROTOBUF_NAMESPACE_ID::internal::AnyMetadata;
   static ::PROTOBUF_NAMESPACE_ID::StringPiece FullMessageName() {
-    return "SimpleRequest";
+    return "TekscanServerNamespace.SimpleRequest";
   }
   protected:
   explicit SimpleRequest(::PROTOBUF_NAMESPACE_ID::Arena* arena);
@@ -199,7 +202,7 @@ class SimpleRequest PROTOBUF_FINAL :
   void _internal_set_code(::PROTOBUF_NAMESPACE_ID::int32 value);
   public:
 
-  // @@protoc_insertion_point(class_scope:SimpleRequest)
+  // @@protoc_insertion_point(class_scope:TekscanServerNamespace.SimpleRequest)
  private:
   class _Internal;
 
@@ -213,7 +216,7 @@ class SimpleRequest PROTOBUF_FINAL :
 // -------------------------------------------------------------------
 
 class SimpleResponse PROTOBUF_FINAL :
-    public ::PROTOBUF_NAMESPACE_ID::Message /* @@protoc_insertion_point(class_definition:SimpleResponse) */ {
+    public ::PROTOBUF_NAMESPACE_ID::Message /* @@protoc_insertion_point(class_definition:TekscanServerNamespace.SimpleResponse) */ {
  public:
   inline SimpleResponse() : SimpleResponse(nullptr) {};
   virtual ~SimpleResponse();
@@ -302,7 +305,7 @@ class SimpleResponse PROTOBUF_FINAL :
   void InternalSwap(SimpleResponse* other);
   friend class ::PROTOBUF_NAMESPACE_ID::internal::AnyMetadata;
   static ::PROTOBUF_NAMESPACE_ID::StringPiece FullMessageName() {
-    return "SimpleResponse";
+    return "TekscanServerNamespace.SimpleResponse";
   }
   protected:
   explicit SimpleResponse(::PROTOBUF_NAMESPACE_ID::Arena* arena);
@@ -362,7 +365,7 @@ class SimpleResponse PROTOBUF_FINAL :
   void _internal_set_code(::PROTOBUF_NAMESPACE_ID::int32 value);
   public:
 
-  // @@protoc_insertion_point(class_scope:SimpleResponse)
+  // @@protoc_insertion_point(class_scope:TekscanServerNamespace.SimpleResponse)
  private:
   class _Internal;
 
@@ -377,7 +380,7 @@ class SimpleResponse PROTOBUF_FINAL :
 // -------------------------------------------------------------------
 
 class StartRecordingRequest PROTOBUF_FINAL :
-    public ::PROTOBUF_NAMESPACE_ID::Message /* @@protoc_insertion_point(class_definition:StartRecordingRequest) */ {
+    public ::PROTOBUF_NAMESPACE_ID::Message /* @@protoc_insertion_point(class_definition:TekscanServerNamespace.StartRecordingRequest) */ {
  public:
   inline StartRecordingRequest() : StartRecordingRequest(nullptr) {};
   virtual ~StartRecordingRequest();
@@ -466,7 +469,7 @@ class StartRecordingRequest PROTOBUF_FINAL :
   void InternalSwap(StartRecordingRequest* other);
   friend class ::PROTOBUF_NAMESPACE_ID::internal::AnyMetadata;
   static ::PROTOBUF_NAMESPACE_ID::StringPiece FullMessageName() {
-    return "StartRecordingRequest";
+    return "TekscanServerNamespace.StartRecordingRequest";
   }
   protected:
   explicit StartRecordingRequest(::PROTOBUF_NAMESPACE_ID::Arena* arena);
@@ -500,7 +503,7 @@ class StartRecordingRequest PROTOBUF_FINAL :
   void _internal_set_trialnum(::PROTOBUF_NAMESPACE_ID::int32 value);
   public:
 
-  // @@protoc_insertion_point(class_scope:StartRecordingRequest)
+  // @@protoc_insertion_point(class_scope:TekscanServerNamespace.StartRecordingRequest)
  private:
   class _Internal;
 
@@ -514,7 +517,7 @@ class StartRecordingRequest PROTOBUF_FINAL :
 // -------------------------------------------------------------------
 
 class BreakRecordingResponse PROTOBUF_FINAL :
-    public ::PROTOBUF_NAMESPACE_ID::Message /* @@protoc_insertion_point(class_definition:BreakRecordingResponse) */ {
+    public ::PROTOBUF_NAMESPACE_ID::Message /* @@protoc_insertion_point(class_definition:TekscanServerNamespace.BreakRecordingResponse) */ {
  public:
   inline BreakRecordingResponse() : BreakRecordingResponse(nullptr) {};
   virtual ~BreakRecordingResponse();
@@ -603,7 +606,7 @@ class BreakRecordingResponse PROTOBUF_FINAL :
   void InternalSwap(BreakRecordingResponse* other);
   friend class ::PROTOBUF_NAMESPACE_ID::internal::AnyMetadata;
   static ::PROTOBUF_NAMESPACE_ID::StringPiece FullMessageName() {
-    return "BreakRecordingResponse";
+    return "TekscanServerNamespace.BreakRecordingResponse";
   }
   protected:
   explicit BreakRecordingResponse(::PROTOBUF_NAMESPACE_ID::Arena* arena);
@@ -647,7 +650,7 @@ class BreakRecordingResponse PROTOBUF_FINAL :
   void _internal_set_successlevel(::PROTOBUF_NAMESPACE_ID::int32 value);
   public:
 
-  // @@protoc_insertion_point(class_scope:BreakRecordingResponse)
+  // @@protoc_insertion_point(class_scope:TekscanServerNamespace.BreakRecordingResponse)
  private:
   class _Internal;
 
@@ -678,7 +681,7 @@ inline ::PROTOBUF_NAMESPACE_ID::int32 SimpleRequest::_internal_code() const {
   return code_;
 }
 inline ::PROTOBUF_NAMESPACE_ID::int32 SimpleRequest::code() const {
-  // @@protoc_insertion_point(field_get:SimpleRequest.code)
+  // @@protoc_insertion_point(field_get:TekscanServerNamespace.SimpleRequest.code)
   return _internal_code();
 }
 inline void SimpleRequest::_internal_set_code(::PROTOBUF_NAMESPACE_ID::int32 value) {
@@ -687,7 +690,7 @@ inline void SimpleRequest::_internal_set_code(::PROTOBUF_NAMESPACE_ID::int32 val
 }
 inline void SimpleRequest::set_code(::PROTOBUF_NAMESPACE_ID::int32 value) {
   _internal_set_code(value);
-  // @@protoc_insertion_point(field_set:SimpleRequest.code)
+  // @@protoc_insertion_point(field_set:TekscanServerNamespace.SimpleRequest.code)
 }
 
 // -------------------------------------------------------------------
@@ -702,7 +705,7 @@ inline ::PROTOBUF_NAMESPACE_ID::int32 SimpleResponse::_internal_code() const {
   return code_;
 }
 inline ::PROTOBUF_NAMESPACE_ID::int32 SimpleResponse::code() const {
-  // @@protoc_insertion_point(field_get:SimpleResponse.code)
+  // @@protoc_insertion_point(field_get:TekscanServerNamespace.SimpleResponse.code)
   return _internal_code();
 }
 inline void SimpleResponse::_internal_set_code(::PROTOBUF_NAMESPACE_ID::int32 value) {
@@ -711,7 +714,7 @@ inline void SimpleResponse::_internal_set_code(::PROTOBUF_NAMESPACE_ID::int32 va
 }
 inline void SimpleResponse::set_code(::PROTOBUF_NAMESPACE_ID::int32 value) {
   _internal_set_code(value);
-  // @@protoc_insertion_point(field_set:SimpleResponse.code)
+  // @@protoc_insertion_point(field_set:TekscanServerNamespace.SimpleResponse.code)
 }
 
 // string description = 2;
@@ -719,15 +722,15 @@ inline void SimpleResponse::clear_description() {
   description_.ClearToEmpty(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), GetArena());
 }
 inline const std::string& SimpleResponse::description() const {
-  // @@protoc_insertion_point(field_get:SimpleResponse.description)
+  // @@protoc_insertion_point(field_get:TekscanServerNamespace.SimpleResponse.description)
   return _internal_description();
 }
 inline void SimpleResponse::set_description(const std::string& value) {
   _internal_set_description(value);
-  // @@protoc_insertion_point(field_set:SimpleResponse.description)
+  // @@protoc_insertion_point(field_set:TekscanServerNamespace.SimpleResponse.description)
 }
 inline std::string* SimpleResponse::mutable_description() {
-  // @@protoc_insertion_point(field_mutable:SimpleResponse.description)
+  // @@protoc_insertion_point(field_mutable:TekscanServerNamespace.SimpleResponse.description)
   return _internal_mutable_description();
 }
 inline const std::string& SimpleResponse::_internal_description() const {
@@ -741,28 +744,28 @@ inline void SimpleResponse::set_description(std::string&& value) {
   
   description_.Set(
     &::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), ::std::move(value), GetArena());
-  // @@protoc_insertion_point(field_set_rvalue:SimpleResponse.description)
+  // @@protoc_insertion_point(field_set_rvalue:TekscanServerNamespace.SimpleResponse.description)
 }
 inline void SimpleResponse::set_description(const char* value) {
   GOOGLE_DCHECK(value != nullptr);
   
   description_.Set(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), ::std::string(value),
               GetArena());
-  // @@protoc_insertion_point(field_set_char:SimpleResponse.description)
+  // @@protoc_insertion_point(field_set_char:TekscanServerNamespace.SimpleResponse.description)
 }
 inline void SimpleResponse::set_description(const char* value,
     size_t size) {
   
   description_.Set(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), ::std::string(
       reinterpret_cast<const char*>(value), size), GetArena());
-  // @@protoc_insertion_point(field_set_pointer:SimpleResponse.description)
+  // @@protoc_insertion_point(field_set_pointer:TekscanServerNamespace.SimpleResponse.description)
 }
 inline std::string* SimpleResponse::_internal_mutable_description() {
   
   return description_.Mutable(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), GetArena());
 }
 inline std::string* SimpleResponse::release_description() {
-  // @@protoc_insertion_point(field_release:SimpleResponse.description)
+  // @@protoc_insertion_point(field_release:TekscanServerNamespace.SimpleResponse.description)
   return description_.Release(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), GetArena());
 }
 inline void SimpleResponse::set_allocated_description(std::string* description) {
@@ -773,10 +776,10 @@ inline void SimpleResponse::set_allocated_description(std::string* description) 
   }
   description_.SetAllocated(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), description,
       GetArena());
-  // @@protoc_insertion_point(field_set_allocated:SimpleResponse.description)
+  // @@protoc_insertion_point(field_set_allocated:TekscanServerNamespace.SimpleResponse.description)
 }
 inline std::string* SimpleResponse::unsafe_arena_release_description() {
-  // @@protoc_insertion_point(field_unsafe_arena_release:SimpleResponse.description)
+  // @@protoc_insertion_point(field_unsafe_arena_release:TekscanServerNamespace.SimpleResponse.description)
   GOOGLE_DCHECK(GetArena() != nullptr);
   
   return description_.UnsafeArenaRelease(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(),
@@ -792,7 +795,7 @@ inline void SimpleResponse::unsafe_arena_set_allocated_description(
   }
   description_.UnsafeArenaSetAllocated(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(),
       description, GetArena());
-  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:SimpleResponse.description)
+  // @@protoc_insertion_point(field_unsafe_arena_set_allocated:TekscanServerNamespace.SimpleResponse.description)
 }
 
 // -------------------------------------------------------------------
@@ -807,7 +810,7 @@ inline ::PROTOBUF_NAMESPACE_ID::int32 StartRecordingRequest::_internal_trialnum(
   return trialnum_;
 }
 inline ::PROTOBUF_NAMESPACE_ID::int32 StartRecordingRequest::trialnum() const {
-  // @@protoc_insertion_point(field_get:StartRecordingRequest.trialNum)
+  // @@protoc_insertion_point(field_get:TekscanServerNamespace.StartRecordingRequest.trialNum)
   return _internal_trialnum();
 }
 inline void StartRecordingRequest::_internal_set_trialnum(::PROTOBUF_NAMESPACE_ID::int32 value) {
@@ -816,7 +819,7 @@ inline void StartRecordingRequest::_internal_set_trialnum(::PROTOBUF_NAMESPACE_I
 }
 inline void StartRecordingRequest::set_trialnum(::PROTOBUF_NAMESPACE_ID::int32 value) {
   _internal_set_trialnum(value);
-  // @@protoc_insertion_point(field_set:StartRecordingRequest.trialNum)
+  // @@protoc_insertion_point(field_set:TekscanServerNamespace.StartRecordingRequest.trialNum)
 }
 
 // -------------------------------------------------------------------
@@ -831,7 +834,7 @@ inline ::PROTOBUF_NAMESPACE_ID::int32 BreakRecordingResponse::_internal_successl
   return successlevel_;
 }
 inline ::PROTOBUF_NAMESPACE_ID::int32 BreakRecordingResponse::successlevel() const {
-  // @@protoc_insertion_point(field_get:BreakRecordingResponse.successLevel)
+  // @@protoc_insertion_point(field_get:TekscanServerNamespace.BreakRecordingResponse.successLevel)
   return _internal_successlevel();
 }
 inline void BreakRecordingResponse::_internal_set_successlevel(::PROTOBUF_NAMESPACE_ID::int32 value) {
@@ -840,7 +843,7 @@ inline void BreakRecordingResponse::_internal_set_successlevel(::PROTOBUF_NAMESP
 }
 inline void BreakRecordingResponse::set_successlevel(::PROTOBUF_NAMESPACE_ID::int32 value) {
   _internal_set_successlevel(value);
-  // @@protoc_insertion_point(field_set:BreakRecordingResponse.successLevel)
+  // @@protoc_insertion_point(field_set:TekscanServerNamespace.BreakRecordingResponse.successLevel)
 }
 
 // double forceLevel = 2;
@@ -851,7 +854,7 @@ inline double BreakRecordingResponse::_internal_forcelevel() const {
   return forcelevel_;
 }
 inline double BreakRecordingResponse::forcelevel() const {
-  // @@protoc_insertion_point(field_get:BreakRecordingResponse.forceLevel)
+  // @@protoc_insertion_point(field_get:TekscanServerNamespace.BreakRecordingResponse.forceLevel)
   return _internal_forcelevel();
 }
 inline void BreakRecordingResponse::_internal_set_forcelevel(double value) {
@@ -860,7 +863,7 @@ inline void BreakRecordingResponse::_internal_set_forcelevel(double value) {
 }
 inline void BreakRecordingResponse::set_forcelevel(double value) {
   _internal_set_forcelevel(value);
-  // @@protoc_insertion_point(field_set:BreakRecordingResponse.forceLevel)
+  // @@protoc_insertion_point(field_set:TekscanServerNamespace.BreakRecordingResponse.forceLevel)
 }
 
 #ifdef __GNUC__
@@ -875,6 +878,7 @@ inline void BreakRecordingResponse::set_forcelevel(double value) {
 
 // @@protoc_insertion_point(namespace_scope)
 
+}  // namespace TekscanServerNamespace
 
 // @@protoc_insertion_point(global_scope)
 

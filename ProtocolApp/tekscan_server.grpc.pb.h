@@ -30,54 +30,56 @@
 #include <grpcpp/impl/codegen/stub_options.h>
 #include <grpcpp/impl/codegen/sync_stream.h>
 
-class TekscanServerS final {
+namespace TekscanServerNamespace {
+
+class TekscanServer final {
  public:
   static constexpr char const* service_full_name() {
-    return "TekscanServerS";
+    return "TekscanServerNamespace.TekscanServer";
   }
   class StubInterface {
    public:
     virtual ~StubInterface() {}
-    virtual ::grpc::Status StartRecording(::grpc::ClientContext* context, const ::StartRecordingRequest& request, ::SimpleResponse* response) = 0;
-    std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::SimpleResponse>> AsyncStartRecording(::grpc::ClientContext* context, const ::StartRecordingRequest& request, ::grpc::CompletionQueue* cq) {
-      return std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::SimpleResponse>>(AsyncStartRecordingRaw(context, request, cq));
+    virtual ::grpc::Status StartRecording(::grpc::ClientContext* context, const ::TekscanServerNamespace::StartRecordingRequest& request, ::TekscanServerNamespace::SimpleResponse* response) = 0;
+    std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::TekscanServerNamespace::SimpleResponse>> AsyncStartRecording(::grpc::ClientContext* context, const ::TekscanServerNamespace::StartRecordingRequest& request, ::grpc::CompletionQueue* cq) {
+      return std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::TekscanServerNamespace::SimpleResponse>>(AsyncStartRecordingRaw(context, request, cq));
     }
-    std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::SimpleResponse>> PrepareAsyncStartRecording(::grpc::ClientContext* context, const ::StartRecordingRequest& request, ::grpc::CompletionQueue* cq) {
-      return std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::SimpleResponse>>(PrepareAsyncStartRecordingRaw(context, request, cq));
+    std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::TekscanServerNamespace::SimpleResponse>> PrepareAsyncStartRecording(::grpc::ClientContext* context, const ::TekscanServerNamespace::StartRecordingRequest& request, ::grpc::CompletionQueue* cq) {
+      return std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::TekscanServerNamespace::SimpleResponse>>(PrepareAsyncStartRecordingRaw(context, request, cq));
     }
-    virtual ::grpc::Status BreakRecording(::grpc::ClientContext* context, const ::SimpleRequest& request, ::BreakRecordingResponse* response) = 0;
-    std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::BreakRecordingResponse>> AsyncBreakRecording(::grpc::ClientContext* context, const ::SimpleRequest& request, ::grpc::CompletionQueue* cq) {
-      return std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::BreakRecordingResponse>>(AsyncBreakRecordingRaw(context, request, cq));
+    virtual ::grpc::Status BreakRecording(::grpc::ClientContext* context, const ::TekscanServerNamespace::SimpleRequest& request, ::TekscanServerNamespace::BreakRecordingResponse* response) = 0;
+    std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::TekscanServerNamespace::BreakRecordingResponse>> AsyncBreakRecording(::grpc::ClientContext* context, const ::TekscanServerNamespace::SimpleRequest& request, ::grpc::CompletionQueue* cq) {
+      return std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::TekscanServerNamespace::BreakRecordingResponse>>(AsyncBreakRecordingRaw(context, request, cq));
     }
-    std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::BreakRecordingResponse>> PrepareAsyncBreakRecording(::grpc::ClientContext* context, const ::SimpleRequest& request, ::grpc::CompletionQueue* cq) {
-      return std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::BreakRecordingResponse>>(PrepareAsyncBreakRecordingRaw(context, request, cq));
+    std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::TekscanServerNamespace::BreakRecordingResponse>> PrepareAsyncBreakRecording(::grpc::ClientContext* context, const ::TekscanServerNamespace::SimpleRequest& request, ::grpc::CompletionQueue* cq) {
+      return std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::TekscanServerNamespace::BreakRecordingResponse>>(PrepareAsyncBreakRecordingRaw(context, request, cq));
     }
     class experimental_async_interface {
      public:
       virtual ~experimental_async_interface() {}
-      virtual void StartRecording(::grpc::ClientContext* context, const ::StartRecordingRequest* request, ::SimpleResponse* response, std::function<void(::grpc::Status)>) = 0;
-      virtual void StartRecording(::grpc::ClientContext* context, const ::grpc::ByteBuffer* request, ::SimpleResponse* response, std::function<void(::grpc::Status)>) = 0;
+      virtual void StartRecording(::grpc::ClientContext* context, const ::TekscanServerNamespace::StartRecordingRequest* request, ::TekscanServerNamespace::SimpleResponse* response, std::function<void(::grpc::Status)>) = 0;
+      virtual void StartRecording(::grpc::ClientContext* context, const ::grpc::ByteBuffer* request, ::TekscanServerNamespace::SimpleResponse* response, std::function<void(::grpc::Status)>) = 0;
       #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
-      virtual void StartRecording(::grpc::ClientContext* context, const ::StartRecordingRequest* request, ::SimpleResponse* response, ::grpc::ClientUnaryReactor* reactor) = 0;
+      virtual void StartRecording(::grpc::ClientContext* context, const ::TekscanServerNamespace::StartRecordingRequest* request, ::TekscanServerNamespace::SimpleResponse* response, ::grpc::ClientUnaryReactor* reactor) = 0;
       #else
-      virtual void StartRecording(::grpc::ClientContext* context, const ::StartRecordingRequest* request, ::SimpleResponse* response, ::grpc::experimental::ClientUnaryReactor* reactor) = 0;
+      virtual void StartRecording(::grpc::ClientContext* context, const ::TekscanServerNamespace::StartRecordingRequest* request, ::TekscanServerNamespace::SimpleResponse* response, ::grpc::experimental::ClientUnaryReactor* reactor) = 0;
       #endif
       #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
-      virtual void StartRecording(::grpc::ClientContext* context, const ::grpc::ByteBuffer* request, ::SimpleResponse* response, ::grpc::ClientUnaryReactor* reactor) = 0;
+      virtual void StartRecording(::grpc::ClientContext* context, const ::grpc::ByteBuffer* request, ::TekscanServerNamespace::SimpleResponse* response, ::grpc::ClientUnaryReactor* reactor) = 0;
       #else
-      virtual void StartRecording(::grpc::ClientContext* context, const ::grpc::ByteBuffer* request, ::SimpleResponse* response, ::grpc::experimental::ClientUnaryReactor* reactor) = 0;
+      virtual void StartRecording(::grpc::ClientContext* context, const ::grpc::ByteBuffer* request, ::TekscanServerNamespace::SimpleResponse* response, ::grpc::experimental::ClientUnaryReactor* reactor) = 0;
       #endif
-      virtual void BreakRecording(::grpc::ClientContext* context, const ::SimpleRequest* request, ::BreakRecordingResponse* response, std::function<void(::grpc::Status)>) = 0;
-      virtual void BreakRecording(::grpc::ClientContext* context, const ::grpc::ByteBuffer* request, ::BreakRecordingResponse* response, std::function<void(::grpc::Status)>) = 0;
+      virtual void BreakRecording(::grpc::ClientContext* context, const ::TekscanServerNamespace::SimpleRequest* request, ::TekscanServerNamespace::BreakRecordingResponse* response, std::function<void(::grpc::Status)>) = 0;
+      virtual void BreakRecording(::grpc::ClientContext* context, const ::grpc::ByteBuffer* request, ::TekscanServerNamespace::BreakRecordingResponse* response, std::function<void(::grpc::Status)>) = 0;
       #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
-      virtual void BreakRecording(::grpc::ClientContext* context, const ::SimpleRequest* request, ::BreakRecordingResponse* response, ::grpc::ClientUnaryReactor* reactor) = 0;
+      virtual void BreakRecording(::grpc::ClientContext* context, const ::TekscanServerNamespace::SimpleRequest* request, ::TekscanServerNamespace::BreakRecordingResponse* response, ::grpc::ClientUnaryReactor* reactor) = 0;
       #else
-      virtual void BreakRecording(::grpc::ClientContext* context, const ::SimpleRequest* request, ::BreakRecordingResponse* response, ::grpc::experimental::ClientUnaryReactor* reactor) = 0;
+      virtual void BreakRecording(::grpc::ClientContext* context, const ::TekscanServerNamespace::SimpleRequest* request, ::TekscanServerNamespace::BreakRecordingResponse* response, ::grpc::experimental::ClientUnaryReactor* reactor) = 0;
       #endif
       #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
-      virtual void BreakRecording(::grpc::ClientContext* context, const ::grpc::ByteBuffer* request, ::BreakRecordingResponse* response, ::grpc::ClientUnaryReactor* reactor) = 0;
+      virtual void BreakRecording(::grpc::ClientContext* context, const ::grpc::ByteBuffer* request, ::TekscanServerNamespace::BreakRecordingResponse* response, ::grpc::ClientUnaryReactor* reactor) = 0;
       #else
-      virtual void BreakRecording(::grpc::ClientContext* context, const ::grpc::ByteBuffer* request, ::BreakRecordingResponse* response, ::grpc::experimental::ClientUnaryReactor* reactor) = 0;
+      virtual void BreakRecording(::grpc::ClientContext* context, const ::grpc::ByteBuffer* request, ::TekscanServerNamespace::BreakRecordingResponse* response, ::grpc::experimental::ClientUnaryReactor* reactor) = 0;
       #endif
     };
     #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
@@ -88,54 +90,54 @@ class TekscanServerS final {
     #endif
     virtual class experimental_async_interface* experimental_async() { return nullptr; }
   private:
-    virtual ::grpc::ClientAsyncResponseReaderInterface< ::SimpleResponse>* AsyncStartRecordingRaw(::grpc::ClientContext* context, const ::StartRecordingRequest& request, ::grpc::CompletionQueue* cq) = 0;
-    virtual ::grpc::ClientAsyncResponseReaderInterface< ::SimpleResponse>* PrepareAsyncStartRecordingRaw(::grpc::ClientContext* context, const ::StartRecordingRequest& request, ::grpc::CompletionQueue* cq) = 0;
-    virtual ::grpc::ClientAsyncResponseReaderInterface< ::BreakRecordingResponse>* AsyncBreakRecordingRaw(::grpc::ClientContext* context, const ::SimpleRequest& request, ::grpc::CompletionQueue* cq) = 0;
-    virtual ::grpc::ClientAsyncResponseReaderInterface< ::BreakRecordingResponse>* PrepareAsyncBreakRecordingRaw(::grpc::ClientContext* context, const ::SimpleRequest& request, ::grpc::CompletionQueue* cq) = 0;
+    virtual ::grpc::ClientAsyncResponseReaderInterface< ::TekscanServerNamespace::SimpleResponse>* AsyncStartRecordingRaw(::grpc::ClientContext* context, const ::TekscanServerNamespace::StartRecordingRequest& request, ::grpc::CompletionQueue* cq) = 0;
+    virtual ::grpc::ClientAsyncResponseReaderInterface< ::TekscanServerNamespace::SimpleResponse>* PrepareAsyncStartRecordingRaw(::grpc::ClientContext* context, const ::TekscanServerNamespace::StartRecordingRequest& request, ::grpc::CompletionQueue* cq) = 0;
+    virtual ::grpc::ClientAsyncResponseReaderInterface< ::TekscanServerNamespace::BreakRecordingResponse>* AsyncBreakRecordingRaw(::grpc::ClientContext* context, const ::TekscanServerNamespace::SimpleRequest& request, ::grpc::CompletionQueue* cq) = 0;
+    virtual ::grpc::ClientAsyncResponseReaderInterface< ::TekscanServerNamespace::BreakRecordingResponse>* PrepareAsyncBreakRecordingRaw(::grpc::ClientContext* context, const ::TekscanServerNamespace::SimpleRequest& request, ::grpc::CompletionQueue* cq) = 0;
   };
   class Stub final : public StubInterface {
    public:
     Stub(const std::shared_ptr< ::grpc::ChannelInterface>& channel);
-    ::grpc::Status StartRecording(::grpc::ClientContext* context, const ::StartRecordingRequest& request, ::SimpleResponse* response) override;
-    std::unique_ptr< ::grpc::ClientAsyncResponseReader< ::SimpleResponse>> AsyncStartRecording(::grpc::ClientContext* context, const ::StartRecordingRequest& request, ::grpc::CompletionQueue* cq) {
-      return std::unique_ptr< ::grpc::ClientAsyncResponseReader< ::SimpleResponse>>(AsyncStartRecordingRaw(context, request, cq));
+    ::grpc::Status StartRecording(::grpc::ClientContext* context, const ::TekscanServerNamespace::StartRecordingRequest& request, ::TekscanServerNamespace::SimpleResponse* response) override;
+    std::unique_ptr< ::grpc::ClientAsyncResponseReader< ::TekscanServerNamespace::SimpleResponse>> AsyncStartRecording(::grpc::ClientContext* context, const ::TekscanServerNamespace::StartRecordingRequest& request, ::grpc::CompletionQueue* cq) {
+      return std::unique_ptr< ::grpc::ClientAsyncResponseReader< ::TekscanServerNamespace::SimpleResponse>>(AsyncStartRecordingRaw(context, request, cq));
     }
-    std::unique_ptr< ::grpc::ClientAsyncResponseReader< ::SimpleResponse>> PrepareAsyncStartRecording(::grpc::ClientContext* context, const ::StartRecordingRequest& request, ::grpc::CompletionQueue* cq) {
-      return std::unique_ptr< ::grpc::ClientAsyncResponseReader< ::SimpleResponse>>(PrepareAsyncStartRecordingRaw(context, request, cq));
+    std::unique_ptr< ::grpc::ClientAsyncResponseReader< ::TekscanServerNamespace::SimpleResponse>> PrepareAsyncStartRecording(::grpc::ClientContext* context, const ::TekscanServerNamespace::StartRecordingRequest& request, ::grpc::CompletionQueue* cq) {
+      return std::unique_ptr< ::grpc::ClientAsyncResponseReader< ::TekscanServerNamespace::SimpleResponse>>(PrepareAsyncStartRecordingRaw(context, request, cq));
     }
-    ::grpc::Status BreakRecording(::grpc::ClientContext* context, const ::SimpleRequest& request, ::BreakRecordingResponse* response) override;
-    std::unique_ptr< ::grpc::ClientAsyncResponseReader< ::BreakRecordingResponse>> AsyncBreakRecording(::grpc::ClientContext* context, const ::SimpleRequest& request, ::grpc::CompletionQueue* cq) {
-      return std::unique_ptr< ::grpc::ClientAsyncResponseReader< ::BreakRecordingResponse>>(AsyncBreakRecordingRaw(context, request, cq));
+    ::grpc::Status BreakRecording(::grpc::ClientContext* context, const ::TekscanServerNamespace::SimpleRequest& request, ::TekscanServerNamespace::BreakRecordingResponse* response) override;
+    std::unique_ptr< ::grpc::ClientAsyncResponseReader< ::TekscanServerNamespace::BreakRecordingResponse>> AsyncBreakRecording(::grpc::ClientContext* context, const ::TekscanServerNamespace::SimpleRequest& request, ::grpc::CompletionQueue* cq) {
+      return std::unique_ptr< ::grpc::ClientAsyncResponseReader< ::TekscanServerNamespace::BreakRecordingResponse>>(AsyncBreakRecordingRaw(context, request, cq));
     }
-    std::unique_ptr< ::grpc::ClientAsyncResponseReader< ::BreakRecordingResponse>> PrepareAsyncBreakRecording(::grpc::ClientContext* context, const ::SimpleRequest& request, ::grpc::CompletionQueue* cq) {
-      return std::unique_ptr< ::grpc::ClientAsyncResponseReader< ::BreakRecordingResponse>>(PrepareAsyncBreakRecordingRaw(context, request, cq));
+    std::unique_ptr< ::grpc::ClientAsyncResponseReader< ::TekscanServerNamespace::BreakRecordingResponse>> PrepareAsyncBreakRecording(::grpc::ClientContext* context, const ::TekscanServerNamespace::SimpleRequest& request, ::grpc::CompletionQueue* cq) {
+      return std::unique_ptr< ::grpc::ClientAsyncResponseReader< ::TekscanServerNamespace::BreakRecordingResponse>>(PrepareAsyncBreakRecordingRaw(context, request, cq));
     }
     class experimental_async final :
       public StubInterface::experimental_async_interface {
      public:
-      void StartRecording(::grpc::ClientContext* context, const ::StartRecordingRequest* request, ::SimpleResponse* response, std::function<void(::grpc::Status)>) override;
-      void StartRecording(::grpc::ClientContext* context, const ::grpc::ByteBuffer* request, ::SimpleResponse* response, std::function<void(::grpc::Status)>) override;
+      void StartRecording(::grpc::ClientContext* context, const ::TekscanServerNamespace::StartRecordingRequest* request, ::TekscanServerNamespace::SimpleResponse* response, std::function<void(::grpc::Status)>) override;
+      void StartRecording(::grpc::ClientContext* context, const ::grpc::ByteBuffer* request, ::TekscanServerNamespace::SimpleResponse* response, std::function<void(::grpc::Status)>) override;
       #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
-      void StartRecording(::grpc::ClientContext* context, const ::StartRecordingRequest* request, ::SimpleResponse* response, ::grpc::ClientUnaryReactor* reactor) override;
+      void StartRecording(::grpc::ClientContext* context, const ::TekscanServerNamespace::StartRecordingRequest* request, ::TekscanServerNamespace::SimpleResponse* response, ::grpc::ClientUnaryReactor* reactor) override;
       #else
-      void StartRecording(::grpc::ClientContext* context, const ::StartRecordingRequest* request, ::SimpleResponse* response, ::grpc::experimental::ClientUnaryReactor* reactor) override;
+      void StartRecording(::grpc::ClientContext* context, const ::TekscanServerNamespace::StartRecordingRequest* request, ::TekscanServerNamespace::SimpleResponse* response, ::grpc::experimental::ClientUnaryReactor* reactor) override;
       #endif
       #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
-      void StartRecording(::grpc::ClientContext* context, const ::grpc::ByteBuffer* request, ::SimpleResponse* response, ::grpc::ClientUnaryReactor* reactor) override;
+      void StartRecording(::grpc::ClientContext* context, const ::grpc::ByteBuffer* request, ::TekscanServerNamespace::SimpleResponse* response, ::grpc::ClientUnaryReactor* reactor) override;
       #else
-      void StartRecording(::grpc::ClientContext* context, const ::grpc::ByteBuffer* request, ::SimpleResponse* response, ::grpc::experimental::ClientUnaryReactor* reactor) override;
+      void StartRecording(::grpc::ClientContext* context, const ::grpc::ByteBuffer* request, ::TekscanServerNamespace::SimpleResponse* response, ::grpc::experimental::ClientUnaryReactor* reactor) override;
       #endif
-      void BreakRecording(::grpc::ClientContext* context, const ::SimpleRequest* request, ::BreakRecordingResponse* response, std::function<void(::grpc::Status)>) override;
-      void BreakRecording(::grpc::ClientContext* context, const ::grpc::ByteBuffer* request, ::BreakRecordingResponse* response, std::function<void(::grpc::Status)>) override;
+      void BreakRecording(::grpc::ClientContext* context, const ::TekscanServerNamespace::SimpleRequest* request, ::TekscanServerNamespace::BreakRecordingResponse* response, std::function<void(::grpc::Status)>) override;
+      void BreakRecording(::grpc::ClientContext* context, const ::grpc::ByteBuffer* request, ::TekscanServerNamespace::BreakRecordingResponse* response, std::function<void(::grpc::Status)>) override;
       #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
-      void BreakRecording(::grpc::ClientContext* context, const ::SimpleRequest* request, ::BreakRecordingResponse* response, ::grpc::ClientUnaryReactor* reactor) override;
+      void BreakRecording(::grpc::ClientContext* context, const ::TekscanServerNamespace::SimpleRequest* request, ::TekscanServerNamespace::BreakRecordingResponse* response, ::grpc::ClientUnaryReactor* reactor) override;
       #else
-      void BreakRecording(::grpc::ClientContext* context, const ::SimpleRequest* request, ::BreakRecordingResponse* response, ::grpc::experimental::ClientUnaryReactor* reactor) override;
+      void BreakRecording(::grpc::ClientContext* context, const ::TekscanServerNamespace::SimpleRequest* request, ::TekscanServerNamespace::BreakRecordingResponse* response, ::grpc::experimental::ClientUnaryReactor* reactor) override;
       #endif
       #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
-      void BreakRecording(::grpc::ClientContext* context, const ::grpc::ByteBuffer* request, ::BreakRecordingResponse* response, ::grpc::ClientUnaryReactor* reactor) override;
+      void BreakRecording(::grpc::ClientContext* context, const ::grpc::ByteBuffer* request, ::TekscanServerNamespace::BreakRecordingResponse* response, ::grpc::ClientUnaryReactor* reactor) override;
       #else
-      void BreakRecording(::grpc::ClientContext* context, const ::grpc::ByteBuffer* request, ::BreakRecordingResponse* response, ::grpc::experimental::ClientUnaryReactor* reactor) override;
+      void BreakRecording(::grpc::ClientContext* context, const ::grpc::ByteBuffer* request, ::TekscanServerNamespace::BreakRecordingResponse* response, ::grpc::experimental::ClientUnaryReactor* reactor) override;
       #endif
      private:
       friend class Stub;
@@ -148,10 +150,10 @@ class TekscanServerS final {
    private:
     std::shared_ptr< ::grpc::ChannelInterface> channel_;
     class experimental_async async_stub_{this};
-    ::grpc::ClientAsyncResponseReader< ::SimpleResponse>* AsyncStartRecordingRaw(::grpc::ClientContext* context, const ::StartRecordingRequest& request, ::grpc::CompletionQueue* cq) override;
-    ::grpc::ClientAsyncResponseReader< ::SimpleResponse>* PrepareAsyncStartRecordingRaw(::grpc::ClientContext* context, const ::StartRecordingRequest& request, ::grpc::CompletionQueue* cq) override;
-    ::grpc::ClientAsyncResponseReader< ::BreakRecordingResponse>* AsyncBreakRecordingRaw(::grpc::ClientContext* context, const ::SimpleRequest& request, ::grpc::CompletionQueue* cq) override;
-    ::grpc::ClientAsyncResponseReader< ::BreakRecordingResponse>* PrepareAsyncBreakRecordingRaw(::grpc::ClientContext* context, const ::SimpleRequest& request, ::grpc::CompletionQueue* cq) override;
+    ::grpc::ClientAsyncResponseReader< ::TekscanServerNamespace::SimpleResponse>* AsyncStartRecordingRaw(::grpc::ClientContext* context, const ::TekscanServerNamespace::StartRecordingRequest& request, ::grpc::CompletionQueue* cq) override;
+    ::grpc::ClientAsyncResponseReader< ::TekscanServerNamespace::SimpleResponse>* PrepareAsyncStartRecordingRaw(::grpc::ClientContext* context, const ::TekscanServerNamespace::StartRecordingRequest& request, ::grpc::CompletionQueue* cq) override;
+    ::grpc::ClientAsyncResponseReader< ::TekscanServerNamespace::BreakRecordingResponse>* AsyncBreakRecordingRaw(::grpc::ClientContext* context, const ::TekscanServerNamespace::SimpleRequest& request, ::grpc::CompletionQueue* cq) override;
+    ::grpc::ClientAsyncResponseReader< ::TekscanServerNamespace::BreakRecordingResponse>* PrepareAsyncBreakRecordingRaw(::grpc::ClientContext* context, const ::TekscanServerNamespace::SimpleRequest& request, ::grpc::CompletionQueue* cq) override;
     const ::grpc::internal::RpcMethod rpcmethod_StartRecording_;
     const ::grpc::internal::RpcMethod rpcmethod_BreakRecording_;
   };
@@ -161,8 +163,8 @@ class TekscanServerS final {
    public:
     Service();
     virtual ~Service();
-    virtual ::grpc::Status StartRecording(::grpc::ServerContext* context, const ::StartRecordingRequest* request, ::SimpleResponse* response);
-    virtual ::grpc::Status BreakRecording(::grpc::ServerContext* context, const ::SimpleRequest* request, ::BreakRecordingResponse* response);
+    virtual ::grpc::Status StartRecording(::grpc::ServerContext* context, const ::TekscanServerNamespace::StartRecordingRequest* request, ::TekscanServerNamespace::SimpleResponse* response);
+    virtual ::grpc::Status BreakRecording(::grpc::ServerContext* context, const ::TekscanServerNamespace::SimpleRequest* request, ::TekscanServerNamespace::BreakRecordingResponse* response);
   };
   template <class BaseClass>
   class WithAsyncMethod_StartRecording : public BaseClass {
@@ -176,11 +178,11 @@ class TekscanServerS final {
       BaseClassMustBeDerivedFromService(this);
     }
     // disable synchronous version of this method
-    ::grpc::Status StartRecording(::grpc::ServerContext* /*context*/, const ::StartRecordingRequest* /*request*/, ::SimpleResponse* /*response*/) override {
+    ::grpc::Status StartRecording(::grpc::ServerContext* /*context*/, const ::TekscanServerNamespace::StartRecordingRequest* /*request*/, ::TekscanServerNamespace::SimpleResponse* /*response*/) override {
       abort();
       return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
     }
-    void RequestStartRecording(::grpc::ServerContext* context, ::StartRecordingRequest* request, ::grpc::ServerAsyncResponseWriter< ::SimpleResponse>* response, ::grpc::CompletionQueue* new_call_cq, ::grpc::ServerCompletionQueue* notification_cq, void *tag) {
+    void RequestStartRecording(::grpc::ServerContext* context, ::TekscanServerNamespace::StartRecordingRequest* request, ::grpc::ServerAsyncResponseWriter< ::TekscanServerNamespace::SimpleResponse>* response, ::grpc::CompletionQueue* new_call_cq, ::grpc::ServerCompletionQueue* notification_cq, void *tag) {
       ::grpc::Service::RequestAsyncUnary(0, context, request, response, new_call_cq, notification_cq, tag);
     }
   };
@@ -196,11 +198,11 @@ class TekscanServerS final {
       BaseClassMustBeDerivedFromService(this);
     }
     // disable synchronous version of this method
-    ::grpc::Status BreakRecording(::grpc::ServerContext* /*context*/, const ::SimpleRequest* /*request*/, ::BreakRecordingResponse* /*response*/) override {
+    ::grpc::Status BreakRecording(::grpc::ServerContext* /*context*/, const ::TekscanServerNamespace::SimpleRequest* /*request*/, ::TekscanServerNamespace::BreakRecordingResponse* /*response*/) override {
       abort();
       return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
     }
-    void RequestBreakRecording(::grpc::ServerContext* context, ::SimpleRequest* request, ::grpc::ServerAsyncResponseWriter< ::BreakRecordingResponse>* response, ::grpc::CompletionQueue* new_call_cq, ::grpc::ServerCompletionQueue* notification_cq, void *tag) {
+    void RequestBreakRecording(::grpc::ServerContext* context, ::TekscanServerNamespace::SimpleRequest* request, ::grpc::ServerAsyncResponseWriter< ::TekscanServerNamespace::BreakRecordingResponse>* response, ::grpc::CompletionQueue* new_call_cq, ::grpc::ServerCompletionQueue* notification_cq, void *tag) {
       ::grpc::Service::RequestAsyncUnary(1, context, request, response, new_call_cq, notification_cq, tag);
     }
   };
@@ -217,38 +219,38 @@ class TekscanServerS final {
       ::grpc::Service::experimental().
     #endif
         MarkMethodCallback(0,
-          new ::grpc_impl::internal::CallbackUnaryHandler< ::StartRecordingRequest, ::SimpleResponse>(
+          new ::grpc_impl::internal::CallbackUnaryHandler< ::TekscanServerNamespace::StartRecordingRequest, ::TekscanServerNamespace::SimpleResponse>(
             [this](
     #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
                    ::grpc::CallbackServerContext*
     #else
                    ::grpc::experimental::CallbackServerContext*
     #endif
-                     context, const ::StartRecordingRequest* request, ::SimpleResponse* response) { return this->StartRecording(context, request, response); }));}
+                     context, const ::TekscanServerNamespace::StartRecordingRequest* request, ::TekscanServerNamespace::SimpleResponse* response) { return this->StartRecording(context, request, response); }));}
     void SetMessageAllocatorFor_StartRecording(
-        ::grpc::experimental::MessageAllocator< ::StartRecordingRequest, ::SimpleResponse>* allocator) {
+        ::grpc::experimental::MessageAllocator< ::TekscanServerNamespace::StartRecordingRequest, ::TekscanServerNamespace::SimpleResponse>* allocator) {
     #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
       ::grpc::internal::MethodHandler* const handler = ::grpc::Service::GetHandler(0);
     #else
       ::grpc::internal::MethodHandler* const handler = ::grpc::Service::experimental().GetHandler(0);
     #endif
-      static_cast<::grpc_impl::internal::CallbackUnaryHandler< ::StartRecordingRequest, ::SimpleResponse>*>(handler)
+      static_cast<::grpc_impl::internal::CallbackUnaryHandler< ::TekscanServerNamespace::StartRecordingRequest, ::TekscanServerNamespace::SimpleResponse>*>(handler)
               ->SetMessageAllocator(allocator);
     }
     ~ExperimentalWithCallbackMethod_StartRecording() override {
       BaseClassMustBeDerivedFromService(this);
     }
     // disable synchronous version of this method
-    ::grpc::Status StartRecording(::grpc::ServerContext* /*context*/, const ::StartRecordingRequest* /*request*/, ::SimpleResponse* /*response*/) override {
+    ::grpc::Status StartRecording(::grpc::ServerContext* /*context*/, const ::TekscanServerNamespace::StartRecordingRequest* /*request*/, ::TekscanServerNamespace::SimpleResponse* /*response*/) override {
       abort();
       return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
     }
     #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
     virtual ::grpc::ServerUnaryReactor* StartRecording(
-      ::grpc::CallbackServerContext* /*context*/, const ::StartRecordingRequest* /*request*/, ::SimpleResponse* /*response*/)
+      ::grpc::CallbackServerContext* /*context*/, const ::TekscanServerNamespace::StartRecordingRequest* /*request*/, ::TekscanServerNamespace::SimpleResponse* /*response*/)
     #else
     virtual ::grpc::experimental::ServerUnaryReactor* StartRecording(
-      ::grpc::experimental::CallbackServerContext* /*context*/, const ::StartRecordingRequest* /*request*/, ::SimpleResponse* /*response*/)
+      ::grpc::experimental::CallbackServerContext* /*context*/, const ::TekscanServerNamespace::StartRecordingRequest* /*request*/, ::TekscanServerNamespace::SimpleResponse* /*response*/)
     #endif
       { return nullptr; }
   };
@@ -264,38 +266,38 @@ class TekscanServerS final {
       ::grpc::Service::experimental().
     #endif
         MarkMethodCallback(1,
-          new ::grpc_impl::internal::CallbackUnaryHandler< ::SimpleRequest, ::BreakRecordingResponse>(
+          new ::grpc_impl::internal::CallbackUnaryHandler< ::TekscanServerNamespace::SimpleRequest, ::TekscanServerNamespace::BreakRecordingResponse>(
             [this](
     #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
                    ::grpc::CallbackServerContext*
     #else
                    ::grpc::experimental::CallbackServerContext*
     #endif
-                     context, const ::SimpleRequest* request, ::BreakRecordingResponse* response) { return this->BreakRecording(context, request, response); }));}
+                     context, const ::TekscanServerNamespace::SimpleRequest* request, ::TekscanServerNamespace::BreakRecordingResponse* response) { return this->BreakRecording(context, request, response); }));}
     void SetMessageAllocatorFor_BreakRecording(
-        ::grpc::experimental::MessageAllocator< ::SimpleRequest, ::BreakRecordingResponse>* allocator) {
+        ::grpc::experimental::MessageAllocator< ::TekscanServerNamespace::SimpleRequest, ::TekscanServerNamespace::BreakRecordingResponse>* allocator) {
     #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
       ::grpc::internal::MethodHandler* const handler = ::grpc::Service::GetHandler(1);
     #else
       ::grpc::internal::MethodHandler* const handler = ::grpc::Service::experimental().GetHandler(1);
     #endif
-      static_cast<::grpc_impl::internal::CallbackUnaryHandler< ::SimpleRequest, ::BreakRecordingResponse>*>(handler)
+      static_cast<::grpc_impl::internal::CallbackUnaryHandler< ::TekscanServerNamespace::SimpleRequest, ::TekscanServerNamespace::BreakRecordingResponse>*>(handler)
               ->SetMessageAllocator(allocator);
     }
     ~ExperimentalWithCallbackMethod_BreakRecording() override {
       BaseClassMustBeDerivedFromService(this);
     }
     // disable synchronous version of this method
-    ::grpc::Status BreakRecording(::grpc::ServerContext* /*context*/, const ::SimpleRequest* /*request*/, ::BreakRecordingResponse* /*response*/) override {
+    ::grpc::Status BreakRecording(::grpc::ServerContext* /*context*/, const ::TekscanServerNamespace::SimpleRequest* /*request*/, ::TekscanServerNamespace::BreakRecordingResponse* /*response*/) override {
       abort();
       return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
     }
     #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
     virtual ::grpc::ServerUnaryReactor* BreakRecording(
-      ::grpc::CallbackServerContext* /*context*/, const ::SimpleRequest* /*request*/, ::BreakRecordingResponse* /*response*/)
+      ::grpc::CallbackServerContext* /*context*/, const ::TekscanServerNamespace::SimpleRequest* /*request*/, ::TekscanServerNamespace::BreakRecordingResponse* /*response*/)
     #else
     virtual ::grpc::experimental::ServerUnaryReactor* BreakRecording(
-      ::grpc::experimental::CallbackServerContext* /*context*/, const ::SimpleRequest* /*request*/, ::BreakRecordingResponse* /*response*/)
+      ::grpc::experimental::CallbackServerContext* /*context*/, const ::TekscanServerNamespace::SimpleRequest* /*request*/, ::TekscanServerNamespace::BreakRecordingResponse* /*response*/)
     #endif
       { return nullptr; }
   };
@@ -316,7 +318,7 @@ class TekscanServerS final {
       BaseClassMustBeDerivedFromService(this);
     }
     // disable synchronous version of this method
-    ::grpc::Status StartRecording(::grpc::ServerContext* /*context*/, const ::StartRecordingRequest* /*request*/, ::SimpleResponse* /*response*/) override {
+    ::grpc::Status StartRecording(::grpc::ServerContext* /*context*/, const ::TekscanServerNamespace::StartRecordingRequest* /*request*/, ::TekscanServerNamespace::SimpleResponse* /*response*/) override {
       abort();
       return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
     }
@@ -333,7 +335,7 @@ class TekscanServerS final {
       BaseClassMustBeDerivedFromService(this);
     }
     // disable synchronous version of this method
-    ::grpc::Status BreakRecording(::grpc::ServerContext* /*context*/, const ::SimpleRequest* /*request*/, ::BreakRecordingResponse* /*response*/) override {
+    ::grpc::Status BreakRecording(::grpc::ServerContext* /*context*/, const ::TekscanServerNamespace::SimpleRequest* /*request*/, ::TekscanServerNamespace::BreakRecordingResponse* /*response*/) override {
       abort();
       return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
     }
@@ -350,7 +352,7 @@ class TekscanServerS final {
       BaseClassMustBeDerivedFromService(this);
     }
     // disable synchronous version of this method
-    ::grpc::Status StartRecording(::grpc::ServerContext* /*context*/, const ::StartRecordingRequest* /*request*/, ::SimpleResponse* /*response*/) override {
+    ::grpc::Status StartRecording(::grpc::ServerContext* /*context*/, const ::TekscanServerNamespace::StartRecordingRequest* /*request*/, ::TekscanServerNamespace::SimpleResponse* /*response*/) override {
       abort();
       return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
     }
@@ -370,7 +372,7 @@ class TekscanServerS final {
       BaseClassMustBeDerivedFromService(this);
     }
     // disable synchronous version of this method
-    ::grpc::Status BreakRecording(::grpc::ServerContext* /*context*/, const ::SimpleRequest* /*request*/, ::BreakRecordingResponse* /*response*/) override {
+    ::grpc::Status BreakRecording(::grpc::ServerContext* /*context*/, const ::TekscanServerNamespace::SimpleRequest* /*request*/, ::TekscanServerNamespace::BreakRecordingResponse* /*response*/) override {
       abort();
       return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
     }
@@ -403,7 +405,7 @@ class TekscanServerS final {
       BaseClassMustBeDerivedFromService(this);
     }
     // disable synchronous version of this method
-    ::grpc::Status StartRecording(::grpc::ServerContext* /*context*/, const ::StartRecordingRequest* /*request*/, ::SimpleResponse* /*response*/) override {
+    ::grpc::Status StartRecording(::grpc::ServerContext* /*context*/, const ::TekscanServerNamespace::StartRecordingRequest* /*request*/, ::TekscanServerNamespace::SimpleResponse* /*response*/) override {
       abort();
       return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
     }
@@ -441,7 +443,7 @@ class TekscanServerS final {
       BaseClassMustBeDerivedFromService(this);
     }
     // disable synchronous version of this method
-    ::grpc::Status BreakRecording(::grpc::ServerContext* /*context*/, const ::SimpleRequest* /*request*/, ::BreakRecordingResponse* /*response*/) override {
+    ::grpc::Status BreakRecording(::grpc::ServerContext* /*context*/, const ::TekscanServerNamespace::SimpleRequest* /*request*/, ::TekscanServerNamespace::BreakRecordingResponse* /*response*/) override {
       abort();
       return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
     }
@@ -462,10 +464,10 @@ class TekscanServerS final {
     WithStreamedUnaryMethod_StartRecording() {
       ::grpc::Service::MarkMethodStreamed(0,
         new ::grpc::internal::StreamedUnaryHandler<
-          ::StartRecordingRequest, ::SimpleResponse>(
+          ::TekscanServerNamespace::StartRecordingRequest, ::TekscanServerNamespace::SimpleResponse>(
             [this](::grpc_impl::ServerContext* context,
                    ::grpc_impl::ServerUnaryStreamer<
-                     ::StartRecordingRequest, ::SimpleResponse>* streamer) {
+                     ::TekscanServerNamespace::StartRecordingRequest, ::TekscanServerNamespace::SimpleResponse>* streamer) {
                        return this->StreamedStartRecording(context,
                          streamer);
                   }));
@@ -474,12 +476,12 @@ class TekscanServerS final {
       BaseClassMustBeDerivedFromService(this);
     }
     // disable regular version of this method
-    ::grpc::Status StartRecording(::grpc::ServerContext* /*context*/, const ::StartRecordingRequest* /*request*/, ::SimpleResponse* /*response*/) override {
+    ::grpc::Status StartRecording(::grpc::ServerContext* /*context*/, const ::TekscanServerNamespace::StartRecordingRequest* /*request*/, ::TekscanServerNamespace::SimpleResponse* /*response*/) override {
       abort();
       return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
     }
     // replace default version of method with streamed unary
-    virtual ::grpc::Status StreamedStartRecording(::grpc::ServerContext* context, ::grpc::ServerUnaryStreamer< ::StartRecordingRequest,::SimpleResponse>* server_unary_streamer) = 0;
+    virtual ::grpc::Status StreamedStartRecording(::grpc::ServerContext* context, ::grpc::ServerUnaryStreamer< ::TekscanServerNamespace::StartRecordingRequest,::TekscanServerNamespace::SimpleResponse>* server_unary_streamer) = 0;
   };
   template <class BaseClass>
   class WithStreamedUnaryMethod_BreakRecording : public BaseClass {
@@ -489,10 +491,10 @@ class TekscanServerS final {
     WithStreamedUnaryMethod_BreakRecording() {
       ::grpc::Service::MarkMethodStreamed(1,
         new ::grpc::internal::StreamedUnaryHandler<
-          ::SimpleRequest, ::BreakRecordingResponse>(
+          ::TekscanServerNamespace::SimpleRequest, ::TekscanServerNamespace::BreakRecordingResponse>(
             [this](::grpc_impl::ServerContext* context,
                    ::grpc_impl::ServerUnaryStreamer<
-                     ::SimpleRequest, ::BreakRecordingResponse>* streamer) {
+                     ::TekscanServerNamespace::SimpleRequest, ::TekscanServerNamespace::BreakRecordingResponse>* streamer) {
                        return this->StreamedBreakRecording(context,
                          streamer);
                   }));
@@ -501,17 +503,19 @@ class TekscanServerS final {
       BaseClassMustBeDerivedFromService(this);
     }
     // disable regular version of this method
-    ::grpc::Status BreakRecording(::grpc::ServerContext* /*context*/, const ::SimpleRequest* /*request*/, ::BreakRecordingResponse* /*response*/) override {
+    ::grpc::Status BreakRecording(::grpc::ServerContext* /*context*/, const ::TekscanServerNamespace::SimpleRequest* /*request*/, ::TekscanServerNamespace::BreakRecordingResponse* /*response*/) override {
       abort();
       return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
     }
     // replace default version of method with streamed unary
-    virtual ::grpc::Status StreamedBreakRecording(::grpc::ServerContext* context, ::grpc::ServerUnaryStreamer< ::SimpleRequest,::BreakRecordingResponse>* server_unary_streamer) = 0;
+    virtual ::grpc::Status StreamedBreakRecording(::grpc::ServerContext* context, ::grpc::ServerUnaryStreamer< ::TekscanServerNamespace::SimpleRequest,::TekscanServerNamespace::BreakRecordingResponse>* server_unary_streamer) = 0;
   };
   typedef WithStreamedUnaryMethod_StartRecording<WithStreamedUnaryMethod_BreakRecording<Service > > StreamedUnaryService;
   typedef Service SplitStreamedService;
   typedef WithStreamedUnaryMethod_StartRecording<WithStreamedUnaryMethod_BreakRecording<Service > > StreamedService;
 };
+
+}  // namespace TekscanServerNamespace
 
 
 #endif  // GRPC_tekscan_5fserver_2eproto__INCLUDED

@@ -31,8 +31,10 @@ void CProtocolAppDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_SERVER_STATUS_EDT1, m_serverStatusCtrl1);
 	DDX_Control(pDX, IDC_SERVER_LOG_EDT1, m_serverLogCtrl1);
 	DDX_Control(pDX, IDC_SERVER_STATUS_EDT2, m_serverStatusCtrl2);
-	DDX_Control(pDX, IDC_SERVER_LOG_EDT2, m_serverLogCtrl2);
-	
+	DDX_Control(pDX, IDC_SERVER_LOG_EDT3, m_serverLogCtrl2);
+
+	DDX_Control(pDX, IDC_TOUCH_SENSOR_SERVER_LOG_EDT, m_touchServerLogCtrl);
+
 	DDX_Text(pDX, IDC_REWARD_TIME_EDT, m_protocol.params.rewardDuration);
 	DDX_Text(pDX, IDC_ACCELERATION_EDT, m_protocol.params.acceleration);
 	DDX_Text(pDX, IDC_SPEED_EDT, m_protocol.params.speed);
@@ -48,6 +50,9 @@ void CProtocolAppDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Text(pDX, IDC_REF_SERIAL_EDT, m_protocol.params.cs_refSerial);
 	DDX_Text(pDX, IDC_GAIN_EDT, m_protocol.params.cs_gain);
 	DDX_Text(pDX, IDC_EXPOSURE_EDT, m_protocol.params.cs_exposure);
+
+	DDX_Text(pDX, IDC_TOUCH_SENSOR_IP_EDT, m_protocol.params.tss_ip);
+	DDX_Text(pDX, IDC_TOUCH_SENSOR_PORT_EDT, m_protocol.params.tss_port);
 
 	//OutputDebugString(_T("End of DoDataExchange\n"));
 }
@@ -71,6 +76,8 @@ BEGIN_MESSAGE_MAP(CProtocolAppDlg, CDialogEx)
 	ON_BN_CLICKED(IDC_SEND_CONFIG_BTN, OnSendConfigBtnClicked)
 	ON_BN_CLICKED(IDC_SYNC_TIME_BTN, OnSyncTimeBtnClicked)
 	ON_BN_CLICKED(IDC_CAPTURE_SINGLE_FRAME_BTN, OnCaptureSingleFrameBtnClicked)
+	ON_BN_CLICKED(IDC_CONNECT_TOUCH_SENSOR_BTN, OnConnectTouchSensorBtnClicked)
+	ON_BN_CLICKED(IDC_DISCONNECT_TOUCH_SENSOR_BTN, OnDisconnectTouchSensorBtnClicked)
 END_MESSAGE_MAP()
 
 // CProtocolAppDlg message handlers
@@ -108,7 +115,7 @@ BOOL CProtocolAppDlg::OnInitDialog()
 	enableProtocolCtrls(true);
 	enableTrialCtrls(true);
 	GetDlgItem(IDC_START_TRIAL_BTN)->EnableWindow(false);
-	
+
 	// motors
 	// light sensors
 	// touch sensors
@@ -126,7 +133,10 @@ BOOL CProtocolAppDlg::OnInitDialog()
 	m_serverStatusCtrl2.SetWindowText("Off");
 	GetDlgItem(IDC_SEND_CONFIG_BTN)->EnableWindow(m_protocol.params.tstEnCameras);
 	GetDlgItem(IDC_SYNC_TIME_BTN)->EnableWindow(m_protocol.params.tstEnCameras);
-	
+
+	// touch sensor
+	enableTouchServerCtrls(true);
+
 	return TRUE;  // return TRUE  unless you set the focus to a control
 }
 
@@ -198,7 +208,7 @@ void CProtocolAppDlg::OnStartProtocolBtnClicked()
 		}
 		m_NIUsb6001card.start();
 	}
-	
+
 	protocolThread = new thread(&Protocol::run, &m_protocol, &m_stopProtocol, &m_startTrial, &m_stopTrial, &m_retreatedMotors, &m_NIUsb6001card, &m_currentTrialEdtCtrl);
 
 	enableTrialCtrls(true);
@@ -244,7 +254,7 @@ void CProtocolAppDlg::OnRetreatFlushWaterBtnClicked()
 	m_NIUsb6001card.reward(m_protocol.params.rewardDuration);
 
 	retreatStopRecording();
-	
+
 }
 
 void CProtocolAppDlg::OnRetreatBtnClicked()
@@ -321,6 +331,27 @@ void CProtocolAppDlg::OnCaptureSingleFrameBtnClicked()
 	}
 }
 
+void CProtocolAppDlg::OnConnectTouchSensorBtnClicked()
+{
+	UpdateData(FromControlsToVariables);
+
+	m_touchSensorClient.server_ip = m_protocol.params.tss_ip;
+	m_touchSensorClient.port = m_protocol.params.tss_port;
+	m_touchSensorClient.clientLogGuiEdt = &m_touchServerLogCtrl;
+
+	m_touchSensorClient.connect_f();
+
+	enableTouchServerCtrls(false);
+
+}
+
+void CProtocolAppDlg::OnDisconnectTouchSensorBtnClicked()
+{
+	m_touchSensorClient.disconnect_f();
+
+	enableTouchServerCtrls(true);
+}
+
 void CProtocolAppDlg::stopProtocolThread()
 {
 	if (protocolThread) {
@@ -328,7 +359,7 @@ void CProtocolAppDlg::stopProtocolThread()
 		protocolThread->join();
 		delete protocolThread; protocolThread = nullptr;
 	}
-	
+
 }
 
 void CProtocolAppDlg::retreatStopRecording()
@@ -345,6 +376,11 @@ void CProtocolAppDlg::retreatStopRecording()
 		m_cameraClient1.breakRecording();
 	if (m_cameraClient2.isConnected())
 		m_cameraClient2.breakRecording();
+
+	if (m_touchSensorClient.isConnected()) {
+		atomic<int> result;  // TODO
+		m_touchSensorClient.breakRecording(&result);
+	}
 }
 
 void CProtocolAppDlg::sendConfig()
@@ -393,6 +429,10 @@ void CProtocolAppDlg::sendStartRecording()
 	if (m_cameraClient2.isConnected()) {
 		m_cameraClient2.startRecording();
 	}
+	//if (m_touchSensorClient.isConnected()) {
+	//	m_touchSensorClient.startRecording(-1);  // TODO
+	//}
+
 }
 
 void CProtocolAppDlg::enableProtocolCtrls(bool enable)
@@ -438,6 +478,15 @@ void CProtocolAppDlg::enableCameraServer2Ctrls(bool enable)
 	GetDlgItem(IDC_CONNECT_BTN2)->EnableWindow(enable && m_protocol.params.tstEnCameras);
 
 	GetDlgItem(IDC_DISCONNECT_BTN2)->EnableWindow(!enable && m_protocol.params.tstEnCameras);
+}
+
+void CProtocolAppDlg::enableTouchServerCtrls(bool enable)
+{
+	GetDlgItem(IDC_TOUCH_SENSOR_IP_EDT)->EnableWindow(enable && m_protocol.params.tstEnTouchSensors);
+	GetDlgItem(IDC_TOUCH_SENSOR_PORT_EDT)->EnableWindow(enable && m_protocol.params.tstEnTouchSensors);
+	GetDlgItem(IDC_CONNECT_TOUCH_SENSOR_BTN)->EnableWindow(enable && m_protocol.params.tstEnTouchSensors);
+
+	GetDlgItem(IDC_DISCONNECT_TOUCH_SENSOR_BTN)->EnableWindow(!enable && m_protocol.params.tstEnTouchSensors);
 }
 
 

@@ -13,6 +13,7 @@
 #include "ProtocolApp.h"
 #include "CStaticColor.h"
 #include "CameraClient.h"
+#include "TouchSensorClient.h"
 
 #ifndef NDEBUG
 	#define new DEBUG_NEW
@@ -61,8 +62,11 @@ protected:
 	CEdit m_serverStatusCtrl2;
 	CEdit m_serverLogCtrl2;
 
+	// touch sensors
+	CEdit m_touchServerLogCtrl;
+
 	///////// running and controlling the protocol
-	std::thread * protocolThread;
+	std::thread* protocolThread;
 	Protocol m_protocol;
 	atomic<bool> m_stopProtocol;
 	atomic<bool> m_startTrial;
@@ -70,21 +74,23 @@ protected:
 	atomic<bool> m_retreatedMotors;  // needed for delayed stop of recording
 	void stopProtocolThread();
 
+	//////// both control
+	void sendStartRecording();
 	void retreatStopRecording();
 
 	//////// cameras
 	CameraClient m_cameraClient1;
-	atomic<bool> m_startCcRecording1;
 	CameraClient m_cameraClient2;
-	atomic<bool> m_startCcRecording2;
 	void sendConfig();
 	void syncTime();
 	void sendPrepareRecording();
-	void sendStartRecording();
+
+	//////// touch sensors
+	TouchSensorClient m_touchSensorClient;
 
 	//////// Local devices
 	NIUsb6001card m_NIUsb6001card;
-	
+
 	//////// Debug/testing controls
 
 	/////// Enable/disable fields
@@ -93,6 +99,7 @@ protected:
 	void enableRewardCtrls(bool enable);
 	void enableCameraServer1Ctrls(bool enable);
 	void enableCameraServer2Ctrls(bool enable);
+	void enableTouchServerCtrls(bool enable);
 
 	/////// Generated message map functions
 	virtual BOOL OnInitDialog();
@@ -116,7 +123,7 @@ protected:
 	afx_msg void OnRetreatFlushWaterBtnClicked();
 	afx_msg void OnRetreatBtnClicked();
 
-	// server
+	// CAMERA server
 	afx_msg void OnConnect1BtnClicked();
 	afx_msg void OnDisconnect1BtnClicked();
 	afx_msg void OnConnect2BtnClicked();
@@ -124,6 +131,10 @@ protected:
 	afx_msg void OnSendConfigBtnClicked();
 	afx_msg void OnSyncTimeBtnClicked();
 	afx_msg void OnCaptureSingleFrameBtnClicked();
+
+	// TOUCH server
+	afx_msg void OnConnectTouchSensorBtnClicked();
+	afx_msg void OnDisconnectTouchSensorBtnClicked();
 	
 	DECLARE_MESSAGE_MAP()
 public:

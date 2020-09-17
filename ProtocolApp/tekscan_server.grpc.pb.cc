@@ -19,117 +19,120 @@
 #include <grpcpp/impl/codegen/server_context.h>
 #include <grpcpp/impl/codegen/service_type.h>
 #include <grpcpp/impl/codegen/sync_stream.h>
+namespace TekscanServerNamespace {
 
-static const char* TekscanServerS_method_names[] = {
-  "/TekscanServerS/StartRecording",
-  "/TekscanServerS/BreakRecording",
+static const char* TekscanServer_method_names[] = {
+  "/TekscanServerNamespace.TekscanServer/StartRecording",
+  "/TekscanServerNamespace.TekscanServer/BreakRecording",
 };
 
-std::unique_ptr< TekscanServerS::Stub> TekscanServerS::NewStub(const std::shared_ptr< ::grpc::ChannelInterface>& channel, const ::grpc::StubOptions& options) {
+std::unique_ptr< TekscanServer::Stub> TekscanServer::NewStub(const std::shared_ptr< ::grpc::ChannelInterface>& channel, const ::grpc::StubOptions& options) {
   (void)options;
-  std::unique_ptr< TekscanServerS::Stub> stub(new TekscanServerS::Stub(channel));
+  std::unique_ptr< TekscanServer::Stub> stub(new TekscanServer::Stub(channel));
   return stub;
 }
 
-TekscanServerS::Stub::Stub(const std::shared_ptr< ::grpc::ChannelInterface>& channel)
-  : channel_(channel), rpcmethod_StartRecording_(TekscanServerS_method_names[0], ::grpc::internal::RpcMethod::NORMAL_RPC, channel)
-  , rpcmethod_BreakRecording_(TekscanServerS_method_names[1], ::grpc::internal::RpcMethod::NORMAL_RPC, channel)
+TekscanServer::Stub::Stub(const std::shared_ptr< ::grpc::ChannelInterface>& channel)
+  : channel_(channel), rpcmethod_StartRecording_(TekscanServer_method_names[0], ::grpc::internal::RpcMethod::NORMAL_RPC, channel)
+  , rpcmethod_BreakRecording_(TekscanServer_method_names[1], ::grpc::internal::RpcMethod::NORMAL_RPC, channel)
   {}
 
-::grpc::Status TekscanServerS::Stub::StartRecording(::grpc::ClientContext* context, const ::StartRecordingRequest& request, ::SimpleResponse* response) {
+::grpc::Status TekscanServer::Stub::StartRecording(::grpc::ClientContext* context, const ::TekscanServerNamespace::StartRecordingRequest& request, ::TekscanServerNamespace::SimpleResponse* response) {
   return ::grpc::internal::BlockingUnaryCall(channel_.get(), rpcmethod_StartRecording_, context, request, response);
 }
 
-void TekscanServerS::Stub::experimental_async::StartRecording(::grpc::ClientContext* context, const ::StartRecordingRequest* request, ::SimpleResponse* response, std::function<void(::grpc::Status)> f) {
+void TekscanServer::Stub::experimental_async::StartRecording(::grpc::ClientContext* context, const ::TekscanServerNamespace::StartRecordingRequest* request, ::TekscanServerNamespace::SimpleResponse* response, std::function<void(::grpc::Status)> f) {
   ::grpc_impl::internal::CallbackUnaryCall(stub_->channel_.get(), stub_->rpcmethod_StartRecording_, context, request, response, std::move(f));
 }
 
-void TekscanServerS::Stub::experimental_async::StartRecording(::grpc::ClientContext* context, const ::grpc::ByteBuffer* request, ::SimpleResponse* response, std::function<void(::grpc::Status)> f) {
+void TekscanServer::Stub::experimental_async::StartRecording(::grpc::ClientContext* context, const ::grpc::ByteBuffer* request, ::TekscanServerNamespace::SimpleResponse* response, std::function<void(::grpc::Status)> f) {
   ::grpc_impl::internal::CallbackUnaryCall(stub_->channel_.get(), stub_->rpcmethod_StartRecording_, context, request, response, std::move(f));
 }
 
-void TekscanServerS::Stub::experimental_async::StartRecording(::grpc::ClientContext* context, const ::StartRecordingRequest* request, ::SimpleResponse* response, ::grpc::experimental::ClientUnaryReactor* reactor) {
+void TekscanServer::Stub::experimental_async::StartRecording(::grpc::ClientContext* context, const ::TekscanServerNamespace::StartRecordingRequest* request, ::TekscanServerNamespace::SimpleResponse* response, ::grpc::experimental::ClientUnaryReactor* reactor) {
   ::grpc_impl::internal::ClientCallbackUnaryFactory::Create(stub_->channel_.get(), stub_->rpcmethod_StartRecording_, context, request, response, reactor);
 }
 
-void TekscanServerS::Stub::experimental_async::StartRecording(::grpc::ClientContext* context, const ::grpc::ByteBuffer* request, ::SimpleResponse* response, ::grpc::experimental::ClientUnaryReactor* reactor) {
+void TekscanServer::Stub::experimental_async::StartRecording(::grpc::ClientContext* context, const ::grpc::ByteBuffer* request, ::TekscanServerNamespace::SimpleResponse* response, ::grpc::experimental::ClientUnaryReactor* reactor) {
   ::grpc_impl::internal::ClientCallbackUnaryFactory::Create(stub_->channel_.get(), stub_->rpcmethod_StartRecording_, context, request, response, reactor);
 }
 
-::grpc::ClientAsyncResponseReader< ::SimpleResponse>* TekscanServerS::Stub::AsyncStartRecordingRaw(::grpc::ClientContext* context, const ::StartRecordingRequest& request, ::grpc::CompletionQueue* cq) {
-  return ::grpc_impl::internal::ClientAsyncResponseReaderFactory< ::SimpleResponse>::Create(channel_.get(), cq, rpcmethod_StartRecording_, context, request, true);
+::grpc::ClientAsyncResponseReader< ::TekscanServerNamespace::SimpleResponse>* TekscanServer::Stub::AsyncStartRecordingRaw(::grpc::ClientContext* context, const ::TekscanServerNamespace::StartRecordingRequest& request, ::grpc::CompletionQueue* cq) {
+  return ::grpc_impl::internal::ClientAsyncResponseReaderFactory< ::TekscanServerNamespace::SimpleResponse>::Create(channel_.get(), cq, rpcmethod_StartRecording_, context, request, true);
 }
 
-::grpc::ClientAsyncResponseReader< ::SimpleResponse>* TekscanServerS::Stub::PrepareAsyncStartRecordingRaw(::grpc::ClientContext* context, const ::StartRecordingRequest& request, ::grpc::CompletionQueue* cq) {
-  return ::grpc_impl::internal::ClientAsyncResponseReaderFactory< ::SimpleResponse>::Create(channel_.get(), cq, rpcmethod_StartRecording_, context, request, false);
+::grpc::ClientAsyncResponseReader< ::TekscanServerNamespace::SimpleResponse>* TekscanServer::Stub::PrepareAsyncStartRecordingRaw(::grpc::ClientContext* context, const ::TekscanServerNamespace::StartRecordingRequest& request, ::grpc::CompletionQueue* cq) {
+  return ::grpc_impl::internal::ClientAsyncResponseReaderFactory< ::TekscanServerNamespace::SimpleResponse>::Create(channel_.get(), cq, rpcmethod_StartRecording_, context, request, false);
 }
 
-::grpc::Status TekscanServerS::Stub::BreakRecording(::grpc::ClientContext* context, const ::SimpleRequest& request, ::BreakRecordingResponse* response) {
+::grpc::Status TekscanServer::Stub::BreakRecording(::grpc::ClientContext* context, const ::TekscanServerNamespace::SimpleRequest& request, ::TekscanServerNamespace::BreakRecordingResponse* response) {
   return ::grpc::internal::BlockingUnaryCall(channel_.get(), rpcmethod_BreakRecording_, context, request, response);
 }
 
-void TekscanServerS::Stub::experimental_async::BreakRecording(::grpc::ClientContext* context, const ::SimpleRequest* request, ::BreakRecordingResponse* response, std::function<void(::grpc::Status)> f) {
+void TekscanServer::Stub::experimental_async::BreakRecording(::grpc::ClientContext* context, const ::TekscanServerNamespace::SimpleRequest* request, ::TekscanServerNamespace::BreakRecordingResponse* response, std::function<void(::grpc::Status)> f) {
   ::grpc_impl::internal::CallbackUnaryCall(stub_->channel_.get(), stub_->rpcmethod_BreakRecording_, context, request, response, std::move(f));
 }
 
-void TekscanServerS::Stub::experimental_async::BreakRecording(::grpc::ClientContext* context, const ::grpc::ByteBuffer* request, ::BreakRecordingResponse* response, std::function<void(::grpc::Status)> f) {
+void TekscanServer::Stub::experimental_async::BreakRecording(::grpc::ClientContext* context, const ::grpc::ByteBuffer* request, ::TekscanServerNamespace::BreakRecordingResponse* response, std::function<void(::grpc::Status)> f) {
   ::grpc_impl::internal::CallbackUnaryCall(stub_->channel_.get(), stub_->rpcmethod_BreakRecording_, context, request, response, std::move(f));
 }
 
-void TekscanServerS::Stub::experimental_async::BreakRecording(::grpc::ClientContext* context, const ::SimpleRequest* request, ::BreakRecordingResponse* response, ::grpc::experimental::ClientUnaryReactor* reactor) {
+void TekscanServer::Stub::experimental_async::BreakRecording(::grpc::ClientContext* context, const ::TekscanServerNamespace::SimpleRequest* request, ::TekscanServerNamespace::BreakRecordingResponse* response, ::grpc::experimental::ClientUnaryReactor* reactor) {
   ::grpc_impl::internal::ClientCallbackUnaryFactory::Create(stub_->channel_.get(), stub_->rpcmethod_BreakRecording_, context, request, response, reactor);
 }
 
-void TekscanServerS::Stub::experimental_async::BreakRecording(::grpc::ClientContext* context, const ::grpc::ByteBuffer* request, ::BreakRecordingResponse* response, ::grpc::experimental::ClientUnaryReactor* reactor) {
+void TekscanServer::Stub::experimental_async::BreakRecording(::grpc::ClientContext* context, const ::grpc::ByteBuffer* request, ::TekscanServerNamespace::BreakRecordingResponse* response, ::grpc::experimental::ClientUnaryReactor* reactor) {
   ::grpc_impl::internal::ClientCallbackUnaryFactory::Create(stub_->channel_.get(), stub_->rpcmethod_BreakRecording_, context, request, response, reactor);
 }
 
-::grpc::ClientAsyncResponseReader< ::BreakRecordingResponse>* TekscanServerS::Stub::AsyncBreakRecordingRaw(::grpc::ClientContext* context, const ::SimpleRequest& request, ::grpc::CompletionQueue* cq) {
-  return ::grpc_impl::internal::ClientAsyncResponseReaderFactory< ::BreakRecordingResponse>::Create(channel_.get(), cq, rpcmethod_BreakRecording_, context, request, true);
+::grpc::ClientAsyncResponseReader< ::TekscanServerNamespace::BreakRecordingResponse>* TekscanServer::Stub::AsyncBreakRecordingRaw(::grpc::ClientContext* context, const ::TekscanServerNamespace::SimpleRequest& request, ::grpc::CompletionQueue* cq) {
+  return ::grpc_impl::internal::ClientAsyncResponseReaderFactory< ::TekscanServerNamespace::BreakRecordingResponse>::Create(channel_.get(), cq, rpcmethod_BreakRecording_, context, request, true);
 }
 
-::grpc::ClientAsyncResponseReader< ::BreakRecordingResponse>* TekscanServerS::Stub::PrepareAsyncBreakRecordingRaw(::grpc::ClientContext* context, const ::SimpleRequest& request, ::grpc::CompletionQueue* cq) {
-  return ::grpc_impl::internal::ClientAsyncResponseReaderFactory< ::BreakRecordingResponse>::Create(channel_.get(), cq, rpcmethod_BreakRecording_, context, request, false);
+::grpc::ClientAsyncResponseReader< ::TekscanServerNamespace::BreakRecordingResponse>* TekscanServer::Stub::PrepareAsyncBreakRecordingRaw(::grpc::ClientContext* context, const ::TekscanServerNamespace::SimpleRequest& request, ::grpc::CompletionQueue* cq) {
+  return ::grpc_impl::internal::ClientAsyncResponseReaderFactory< ::TekscanServerNamespace::BreakRecordingResponse>::Create(channel_.get(), cq, rpcmethod_BreakRecording_, context, request, false);
 }
 
-TekscanServerS::Service::Service() {
+TekscanServer::Service::Service() {
   AddMethod(new ::grpc::internal::RpcServiceMethod(
-      TekscanServerS_method_names[0],
+      TekscanServer_method_names[0],
       ::grpc::internal::RpcMethod::NORMAL_RPC,
-      new ::grpc::internal::RpcMethodHandler< TekscanServerS::Service, ::StartRecordingRequest, ::SimpleResponse>(
-          [](TekscanServerS::Service* service,
+      new ::grpc::internal::RpcMethodHandler< TekscanServer::Service, ::TekscanServerNamespace::StartRecordingRequest, ::TekscanServerNamespace::SimpleResponse>(
+          [](TekscanServer::Service* service,
              ::grpc_impl::ServerContext* ctx,
-             const ::StartRecordingRequest* req,
-             ::SimpleResponse* resp) {
+             const ::TekscanServerNamespace::StartRecordingRequest* req,
+             ::TekscanServerNamespace::SimpleResponse* resp) {
                return service->StartRecording(ctx, req, resp);
              }, this)));
   AddMethod(new ::grpc::internal::RpcServiceMethod(
-      TekscanServerS_method_names[1],
+      TekscanServer_method_names[1],
       ::grpc::internal::RpcMethod::NORMAL_RPC,
-      new ::grpc::internal::RpcMethodHandler< TekscanServerS::Service, ::SimpleRequest, ::BreakRecordingResponse>(
-          [](TekscanServerS::Service* service,
+      new ::grpc::internal::RpcMethodHandler< TekscanServer::Service, ::TekscanServerNamespace::SimpleRequest, ::TekscanServerNamespace::BreakRecordingResponse>(
+          [](TekscanServer::Service* service,
              ::grpc_impl::ServerContext* ctx,
-             const ::SimpleRequest* req,
-             ::BreakRecordingResponse* resp) {
+             const ::TekscanServerNamespace::SimpleRequest* req,
+             ::TekscanServerNamespace::BreakRecordingResponse* resp) {
                return service->BreakRecording(ctx, req, resp);
              }, this)));
 }
 
-TekscanServerS::Service::~Service() {
+TekscanServer::Service::~Service() {
 }
 
-::grpc::Status TekscanServerS::Service::StartRecording(::grpc::ServerContext* context, const ::StartRecordingRequest* request, ::SimpleResponse* response) {
+::grpc::Status TekscanServer::Service::StartRecording(::grpc::ServerContext* context, const ::TekscanServerNamespace::StartRecordingRequest* request, ::TekscanServerNamespace::SimpleResponse* response) {
   (void) context;
   (void) request;
   (void) response;
   return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
 }
 
-::grpc::Status TekscanServerS::Service::BreakRecording(::grpc::ServerContext* context, const ::SimpleRequest* request, ::BreakRecordingResponse* response) {
+::grpc::Status TekscanServer::Service::BreakRecording(::grpc::ServerContext* context, const ::TekscanServerNamespace::SimpleRequest* request, ::TekscanServerNamespace::BreakRecordingResponse* response) {
   (void) context;
   (void) request;
   (void) response;
   return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
 }
 
+
+}  // namespace TekscanServerNamespace
 
