@@ -58,12 +58,12 @@ void ProtocolParameters::init()
 	tss_ip = "localhost";
 	tss_port = 54940;
 
-	tstEnMotors = false;
-	tstEnReward = false;
-	tstEnLightSensors = false;
-	//tstEnMotors = true;
-	//tstEnReward = true;
-	//tstEnLightSensors = true;
+	//tstEnMotors = false;
+	//tstEnReward = false;
+	//tstEnLightSensors = false;
+	tstEnMotors = true;
+	tstEnReward = true;
+	tstEnLightSensors = true;
 
 	tstEnCameras = true;
 	//tstEnCameras = false;
