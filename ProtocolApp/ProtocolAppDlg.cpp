@@ -35,6 +35,9 @@ void CProtocolAppDlg::DoDataExchange(CDataExchange* pDX)
 
 	DDX_Control(pDX, IDC_TOUCH_SENSOR_SERVER_LOG_EDT, m_touchServerLogCtrl);
 
+	//DDX_Control(pDX, IDC_RETREAT_BTN, m_retreatButton);
+	//DDX_Control(pDX, IDC_RETREAT_FLUSH_WATER_BTN, m_retreatFlushWaterButton);
+
 	DDX_Text(pDX, IDC_REWARD_TIME_EDT, m_protocol.params.rewardDuration);
 	DDX_Text(pDX, IDC_ACCELERATION_EDT, m_protocol.params.acceleration);
 	DDX_Text(pDX, IDC_SPEED_EDT, m_protocol.params.speed);
@@ -380,6 +383,22 @@ void CProtocolAppDlg::retreatStopRecording()
 	if (m_touchSensorClient.isConnected()) {
 		atomic<int> result;  // TODO
 		m_touchSensorClient.breakRecording(&result);
+
+		if (result.load() > 0) {
+			if (m_protocol.params.tstEnReward) {
+				UpdateData(FromControlsToVariables);
+				m_NIUsb6001card.reward(m_protocol.params.rewardDuration);
+			}
+			//m_retreatFlushWaterButton.SetFaceColor(RGB(76, 175, 80));
+			//m_retreatButton.SetFaceColor(RGB(189, 189, 189));
+		}
+		else {
+			if (m_protocol.params.tstEnReward) {
+				Sounds::playErrorTone();
+			}
+			//m_retreatButton.SetFaceColor(RGB(76, 175, 80));
+			//m_retreatFlushWaterButton.SetFaceColor(RGB(189, 189, 189));
+		}
 	}
 }
 
@@ -429,9 +448,9 @@ void CProtocolAppDlg::sendStartRecording()
 	if (m_cameraClient2.isConnected()) {
 		m_cameraClient2.startRecording();
 	}
-	//if (m_touchSensorClient.isConnected()) {
-	//	m_touchSensorClient.startRecording(-1);  // TODO
-	//}
+	if (m_touchSensorClient.isConnected()) {
+		m_touchSensorClient.startRecording(-1);  // TODO
+	}
 
 }
 

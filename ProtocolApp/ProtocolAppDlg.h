@@ -52,6 +52,10 @@ protected:
 	CEdit m_positionCtrl;
 	CEdit m_currentTrialEdtCtrl;
 
+	//// end trial buttons
+	//CMFCButton m_retreatButton;
+	//CMFCButton m_retreatFlushWaterButton;
+
 	// light sensors
 	CStaticColor m_frontPhotoresistorCtrl;
 	CStaticColor m_rearPhotoresistorCtrl;
