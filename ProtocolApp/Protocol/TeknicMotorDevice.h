@@ -33,7 +33,7 @@
 #define RIGHT_DISH_MOTOR   2
 #define LEFT_DISH_MOTOR    3
 
-#define NUMBERS_OF_MOTORS   4
+#define NUMBERS_OF_MOTORS   3
 #define NUMBERS_OF_ATTEMPTS   10
 #define PORT_NUM   0
 
