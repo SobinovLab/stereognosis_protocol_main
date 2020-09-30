@@ -30,8 +30,7 @@
 
 #define HORIZONTAL_MOTOR   0
 #define ROTATIONAL_MOTOR   1
-#define RIGHT_DISH_MOTOR   2
-#define LEFT_DISH_MOTOR    3
+#define DISH_MOTOR         2
 
 #define NUMBERS_OF_MOTORS   3
 #define NUMBERS_OF_ATTEMPTS   10

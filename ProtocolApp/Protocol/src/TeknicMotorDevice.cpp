@@ -28,17 +28,17 @@ void TeknicMotorDevice::init()
 																			// with COM portnum (as seen in device manager)
 		}
 		if (portCount < 0) {
-			logError("Unable to locate SC hub port\n");
+			logError("Unable to locate SC hub port");
 			return;
 		}
 		myMgr->PortsOpen(portCount); //Open the port
 		myPort = &myMgr->Ports(PORT_NUM);
 		int motors = myPort->NodeCount();
-		while (motors != NUMBERS_OF_MOTORS)
-		{
+		while (motors != NUMBERS_OF_MOTORS) {
 			motors = myPort->NodeCount();
-			logError("Wrong number of motors available\n");
-			Sleep(100);
+			logError("Wrong number of motors available. Nodecount:");
+			logError(to_string(motors).c_str());
+			Sleep(1000);
 		}
 		theNode = &myPort->Nodes(HORIZONTAL_MOTOR);
 		theNode->EnableReq(false);  //Ensure Node is disabled before loading config file
