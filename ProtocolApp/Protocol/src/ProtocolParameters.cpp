@@ -12,6 +12,7 @@ ProtocolParameters::ProtocolParameters(const ProtocolParameters & protocolParams
 	this->speed = protocolParams.speed;
 	this->position = protocolParams.position;
 	this->maxWaitTime = protocolParams.maxWaitTime;
+	this->intertrialWaitTime = protocolParams.intertrialWaitTime;
 
 	this->cs_ip1 = protocolParams.cs_ip1;
 	this->cs_port1 = protocolParams.cs_port1;
@@ -39,7 +40,9 @@ ProtocolParameters::~ProtocolParameters()
 
 void ProtocolParameters::init()
 {
-	maxWaitTime = 10;  // sec
+	maxWaitTime = 20;  // sec
+	intertrialWaitTime = 1; // sec
+
 	rewardDuration = 1000;
 	acceleration = 2; // proportional level 1-10 (1 - 4000 RPM/S)
 	speed = 2;        // proportional level 1-10 (1 - 700 RPM)

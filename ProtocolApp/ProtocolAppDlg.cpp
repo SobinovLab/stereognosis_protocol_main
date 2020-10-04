@@ -35,6 +35,8 @@ void CProtocolAppDlg::DoDataExchange(CDataExchange* pDX)
 
 	DDX_Control(pDX, IDC_TOUCH_SENSOR_SERVER_LOG_EDT, m_touchServerLogCtrl);
 
+	DDX_Control(pDX, IDC_LOOP_TRIALS_CHK, m_trialLoopChk);
+
 	//DDX_Control(pDX, IDC_RETREAT_BTN, m_retreatButton);
 	//DDX_Control(pDX, IDC_RETREAT_FLUSH_WATER_BTN, m_retreatFlushWaterButton);
 
@@ -43,6 +45,7 @@ void CProtocolAppDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Text(pDX, IDC_SPEED_EDT, m_protocol.params.speed);
 	DDX_Text(pDX, IDC_POSITION_EDT, m_protocol.params.position);
 	DDX_Text(pDX, IDC_MAX_WAIT_EDT_BOX, m_protocol.params.maxWaitTime);
+	DDX_Text(pDX, IDC_INTERTRIAL_WAIT_EDT, m_protocol.params.intertrialWaitTime);
 
 	DDX_Text(pDX, IDC_IP_EDT1, m_protocol.params.cs_ip1);
 	DDX_Text(pDX, IDC_PORT_EDT1, m_protocol.params.cs_port1);
@@ -113,6 +116,8 @@ BOOL CProtocolAppDlg::OnInitDialog()
 	if (m_protocol.params.tstEnMotors) ((CButton*)GetDlgItem(IDC_MOTORS_CHK))->SetCheck(BST_CHECKED);
 	if (m_protocol.params.tstEnReward) ((CButton*)GetDlgItem(IDC_REWARD_CHK))->SetCheck(BST_CHECKED);
 	if (m_protocol.params.tstEnTouchSensors) ((CButton*)GetDlgItem(IDC_TOUCH_SENSORS_CHK))->SetCheck(BST_CHECKED);
+
+	m_trialLoopChk.SetCheck(true);
 
 	/////// Control what is enabled and initialized based on debug/testing interface
 	enableProtocolCtrls(true);
@@ -448,7 +453,8 @@ void CProtocolAppDlg::m_touchSensorSuccessMonitor()
 {
 	UpdateData(FromControlsToVariables);
 	long rewardDuration = m_protocol.params.rewardDuration;
-	int maxWaitTime = m_protocol.params.maxWaitTime;
+	double maxWaitTime = m_protocol.params.maxWaitTime;
+	double intertrialWaitTime = m_protocol.params.intertrialWaitTime;
 	auto startTime = chrono::steady_clock::now();
 	std::atomic<int> result;
 	long timePassed;
@@ -468,6 +474,13 @@ void CProtocolAppDlg::m_touchSensorSuccessMonitor()
 
 			// do the for trial break - this also stops this thread
 			retreatStopRecording();
+
+			Sleep(intertrialWaitTime*1000);
+
+			// start the next trial
+			if (m_trialLoopChk.GetCheck()) {
+				OnStartTrialBtnClicked();
+			}
 		}
 		else {
 			// check if out of time and then stop, punish and retreat
@@ -477,6 +490,13 @@ void CProtocolAppDlg::m_touchSensorSuccessMonitor()
 
 				// do the for trial break - this also stops this thread
 				retreatStopRecording();
+
+				Sleep(intertrialWaitTime * 1000);
+
+				// start the next trial
+				if (m_trialLoopChk.GetCheck()) {
+					OnStartTrialBtnClicked();
+				}
 			}
 		}
 
@@ -496,6 +516,8 @@ void CProtocolAppDlg::sendStartRecording()
 	if (m_touchSensorClient.isConnected()) {
 		m_touchSensorClient.startRecording(currentTrialNumber);
 
+		// TODO delete old thread if exists
+		stopTouchSensorSuccessMonitor.store(false);
 		m_touchSensorSuccessMonitorThread = new thread(&CProtocolAppDlg::m_touchSensorSuccessMonitor, this);
 	}
 
@@ -513,6 +535,7 @@ void CProtocolAppDlg::enableProtocolCtrls(bool enable)
 	GetDlgItem(IDC_SPEED_EDT)->EnableWindow(enable);
 	GetDlgItem(IDC_POSITION_EDT)->EnableWindow(enable);
 	GetDlgItem(IDC_MAX_WAIT_EDT_BOX)->EnableWindow(enable);
+	GetDlgItem(IDC_INTERTRIAL_WAIT_EDT)->EnableWindow(enable);
 }
 
 void CProtocolAppDlg::enableTrialCtrls(bool enable)

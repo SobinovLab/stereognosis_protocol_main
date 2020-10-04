@@ -19,6 +19,7 @@ class ProtocolParameters
 		*   Protocol Parameters
 		*/
 		double maxWaitTime;		//secs
+		double intertrialWaitTime; // secs
 		long rewardDuration;	//msecs
 		long acceleration;		// proportional level 1-10 (1 - 4000 RPM/S)
 		long speed;				// proportional level 1-10 (1 - 700 RPM)

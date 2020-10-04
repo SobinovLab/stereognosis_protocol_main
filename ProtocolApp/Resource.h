@@ -68,10 +68,12 @@
 #define IDC_CAPTURE_SINGLE_FRAME_BTN    1069
 #define IDC_CAPTURE_N_IMAGES_BTN        1070
 #define IDC_EDIT1                       1071
+#define IDC_LOOP_TRIALS_CHK             1072
+#define IDC_EDIT3                       1073
+#define IDC_INTERTRIAL_WAIT_EDT         1073
 #define IDC_TOUCH_SENSOR_IP_EDT         1077
 #define IDC_TOUCH_SENSOR_PORT_EDT       1078
 #define IDC_CONNECT_TOUCH_SENSOR_BTN    1079
-#define IDC_DISCONNECT_BTN3             1080
 #define IDC_DISCONNECT_TOUCH_SENSOR_BTN 1080
 #define IDC_SERVER_LOG_EDT3             1081
 
@@ -81,7 +83,7 @@
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        130
 #define _APS_NEXT_COMMAND_VALUE         32771
-#define _APS_NEXT_CONTROL_VALUE         1072
+#define _APS_NEXT_CONTROL_VALUE         1074
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif

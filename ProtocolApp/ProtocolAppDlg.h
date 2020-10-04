@@ -69,6 +69,9 @@ protected:
 	// touch sensors
 	CEdit m_touchServerLogCtrl;
 
+	// trial loop
+	CButton m_trialLoopChk;
+
 	///////// running and controlling the protocol
 	std::thread* protocolThread;
 	Protocol m_protocol;
