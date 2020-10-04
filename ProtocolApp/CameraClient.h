@@ -32,7 +32,7 @@ public:
 	bool sendExposure(const CString exposure);
 
 	bool prepareRecording();
-	bool startRecording();
+	bool startRecording(int trialNumber);
 	bool captureSingleFrame();
 	bool breakRecording();
 
@@ -62,7 +62,7 @@ public:
 	virtual void syncTime();
 
 	virtual void prepareRecording();
-	virtual void startRecording();
+	virtual void startRecording(int trialNumber);
 	virtual void captureSingleFrame();
 	virtual void breakRecording();
 

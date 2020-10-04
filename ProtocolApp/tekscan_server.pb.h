@@ -47,7 +47,7 @@ struct TableStruct_tekscan_5fserver_2eproto {
     PROTOBUF_SECTION_VARIABLE(protodesc_cold);
   static const ::PROTOBUF_NAMESPACE_ID::internal::AuxillaryParseTableField aux[]
     PROTOBUF_SECTION_VARIABLE(protodesc_cold);
-  static const ::PROTOBUF_NAMESPACE_ID::internal::ParseTable schema[4]
+  static const ::PROTOBUF_NAMESPACE_ID::internal::ParseTable schema[5]
     PROTOBUF_SECTION_VARIABLE(protodesc_cold);
   static const ::PROTOBUF_NAMESPACE_ID::internal::FieldMetadata field_metadata[];
   static const ::PROTOBUF_NAMESPACE_ID::internal::SerializationTable serialization_table[];
@@ -67,12 +67,16 @@ extern SimpleResponseDefaultTypeInternal _SimpleResponse_default_instance_;
 class StartRecordingRequest;
 class StartRecordingRequestDefaultTypeInternal;
 extern StartRecordingRequestDefaultTypeInternal _StartRecordingRequest_default_instance_;
+class SuccessResponse;
+class SuccessResponseDefaultTypeInternal;
+extern SuccessResponseDefaultTypeInternal _SuccessResponse_default_instance_;
 }  // namespace TekscanServerNamespace
 PROTOBUF_NAMESPACE_OPEN
 template<> ::TekscanServerNamespace::BreakRecordingResponse* Arena::CreateMaybeMessage<::TekscanServerNamespace::BreakRecordingResponse>(Arena*);
 template<> ::TekscanServerNamespace::SimpleRequest* Arena::CreateMaybeMessage<::TekscanServerNamespace::SimpleRequest>(Arena*);
 template<> ::TekscanServerNamespace::SimpleResponse* Arena::CreateMaybeMessage<::TekscanServerNamespace::SimpleResponse>(Arena*);
 template<> ::TekscanServerNamespace::StartRecordingRequest* Arena::CreateMaybeMessage<::TekscanServerNamespace::StartRecordingRequest>(Arena*);
+template<> ::TekscanServerNamespace::SuccessResponse* Arena::CreateMaybeMessage<::TekscanServerNamespace::SuccessResponse>(Arena*);
 PROTOBUF_NAMESPACE_CLOSE
 namespace TekscanServerNamespace {
 
@@ -662,6 +666,143 @@ class BreakRecordingResponse PROTOBUF_FINAL :
   mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
   friend struct ::TableStruct_tekscan_5fserver_2eproto;
 };
+// -------------------------------------------------------------------
+
+class SuccessResponse PROTOBUF_FINAL :
+    public ::PROTOBUF_NAMESPACE_ID::Message /* @@protoc_insertion_point(class_definition:TekscanServerNamespace.SuccessResponse) */ {
+ public:
+  inline SuccessResponse() : SuccessResponse(nullptr) {};
+  virtual ~SuccessResponse();
+
+  SuccessResponse(const SuccessResponse& from);
+  SuccessResponse(SuccessResponse&& from) noexcept
+    : SuccessResponse() {
+    *this = ::std::move(from);
+  }
+
+  inline SuccessResponse& operator=(const SuccessResponse& from) {
+    CopyFrom(from);
+    return *this;
+  }
+  inline SuccessResponse& operator=(SuccessResponse&& from) noexcept {
+    if (GetArena() == from.GetArena()) {
+      if (this != &from) InternalSwap(&from);
+    } else {
+      CopyFrom(from);
+    }
+    return *this;
+  }
+
+  static const ::PROTOBUF_NAMESPACE_ID::Descriptor* descriptor() {
+    return GetDescriptor();
+  }
+  static const ::PROTOBUF_NAMESPACE_ID::Descriptor* GetDescriptor() {
+    return GetMetadataStatic().descriptor;
+  }
+  static const ::PROTOBUF_NAMESPACE_ID::Reflection* GetReflection() {
+    return GetMetadataStatic().reflection;
+  }
+  static const SuccessResponse& default_instance();
+
+  static void InitAsDefaultInstance();  // FOR INTERNAL USE ONLY
+  static inline const SuccessResponse* internal_default_instance() {
+    return reinterpret_cast<const SuccessResponse*>(
+               &_SuccessResponse_default_instance_);
+  }
+  static constexpr int kIndexInFileMessages =
+    4;
+
+  friend void swap(SuccessResponse& a, SuccessResponse& b) {
+    a.Swap(&b);
+  }
+  inline void Swap(SuccessResponse* other) {
+    if (other == this) return;
+    if (GetArena() == other->GetArena()) {
+      InternalSwap(other);
+    } else {
+      ::PROTOBUF_NAMESPACE_ID::internal::GenericSwap(this, other);
+    }
+  }
+  void UnsafeArenaSwap(SuccessResponse* other) {
+    if (other == this) return;
+    GOOGLE_DCHECK(GetArena() == other->GetArena());
+    InternalSwap(other);
+  }
+
+  // implements Message ----------------------------------------------
+
+  inline SuccessResponse* New() const final {
+    return CreateMaybeMessage<SuccessResponse>(nullptr);
+  }
+
+  SuccessResponse* New(::PROTOBUF_NAMESPACE_ID::Arena* arena) const final {
+    return CreateMaybeMessage<SuccessResponse>(arena);
+  }
+  void CopyFrom(const ::PROTOBUF_NAMESPACE_ID::Message& from) final;
+  void MergeFrom(const ::PROTOBUF_NAMESPACE_ID::Message& from) final;
+  void CopyFrom(const SuccessResponse& from);
+  void MergeFrom(const SuccessResponse& from);
+  PROTOBUF_ATTRIBUTE_REINITIALIZES void Clear() final;
+  bool IsInitialized() const final;
+
+  size_t ByteSizeLong() const final;
+  const char* _InternalParse(const char* ptr, ::PROTOBUF_NAMESPACE_ID::internal::ParseContext* ctx) final;
+  ::PROTOBUF_NAMESPACE_ID::uint8* _InternalSerialize(
+      ::PROTOBUF_NAMESPACE_ID::uint8* target, ::PROTOBUF_NAMESPACE_ID::io::EpsCopyOutputStream* stream) const final;
+  int GetCachedSize() const final { return _cached_size_.Get(); }
+
+  private:
+  inline void SharedCtor();
+  inline void SharedDtor();
+  void SetCachedSize(int size) const final;
+  void InternalSwap(SuccessResponse* other);
+  friend class ::PROTOBUF_NAMESPACE_ID::internal::AnyMetadata;
+  static ::PROTOBUF_NAMESPACE_ID::StringPiece FullMessageName() {
+    return "TekscanServerNamespace.SuccessResponse";
+  }
+  protected:
+  explicit SuccessResponse(::PROTOBUF_NAMESPACE_ID::Arena* arena);
+  private:
+  static void ArenaDtor(void* object);
+  inline void RegisterArenaDtor(::PROTOBUF_NAMESPACE_ID::Arena* arena);
+  public:
+
+  ::PROTOBUF_NAMESPACE_ID::Metadata GetMetadata() const final;
+  private:
+  static ::PROTOBUF_NAMESPACE_ID::Metadata GetMetadataStatic() {
+    ::PROTOBUF_NAMESPACE_ID::internal::AssignDescriptors(&::descriptor_table_tekscan_5fserver_2eproto);
+    return ::descriptor_table_tekscan_5fserver_2eproto.file_level_metadata[kIndexInFileMessages];
+  }
+
+  public:
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  enum : int {
+    kSuccessFieldNumber = 1,
+  };
+  // int32 success = 1;
+  void clear_success();
+  ::PROTOBUF_NAMESPACE_ID::int32 success() const;
+  void set_success(::PROTOBUF_NAMESPACE_ID::int32 value);
+  private:
+  ::PROTOBUF_NAMESPACE_ID::int32 _internal_success() const;
+  void _internal_set_success(::PROTOBUF_NAMESPACE_ID::int32 value);
+  public:
+
+  // @@protoc_insertion_point(class_scope:TekscanServerNamespace.SuccessResponse)
+ private:
+  class _Internal;
+
+  template <typename T> friend class ::PROTOBUF_NAMESPACE_ID::Arena::InternalHelper;
+  typedef void InternalArenaConstructable_;
+  typedef void DestructorSkippable_;
+  ::PROTOBUF_NAMESPACE_ID::int32 success_;
+  mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
+  friend struct ::TableStruct_tekscan_5fserver_2eproto;
+};
 // ===================================================================
 
 
@@ -866,9 +1007,35 @@ inline void BreakRecordingResponse::set_forcelevel(double value) {
   // @@protoc_insertion_point(field_set:TekscanServerNamespace.BreakRecordingResponse.forceLevel)
 }
 
+// -------------------------------------------------------------------
+
+// SuccessResponse
+
+// int32 success = 1;
+inline void SuccessResponse::clear_success() {
+  success_ = 0;
+}
+inline ::PROTOBUF_NAMESPACE_ID::int32 SuccessResponse::_internal_success() const {
+  return success_;
+}
+inline ::PROTOBUF_NAMESPACE_ID::int32 SuccessResponse::success() const {
+  // @@protoc_insertion_point(field_get:TekscanServerNamespace.SuccessResponse.success)
+  return _internal_success();
+}
+inline void SuccessResponse::_internal_set_success(::PROTOBUF_NAMESPACE_ID::int32 value) {
+  
+  success_ = value;
+}
+inline void SuccessResponse::set_success(::PROTOBUF_NAMESPACE_ID::int32 value) {
+  _internal_set_success(value);
+  // @@protoc_insertion_point(field_set:TekscanServerNamespace.SuccessResponse.success)
+}
+
 #ifdef __GNUC__
   #pragma GCC diagnostic pop
 #endif  // __GNUC__
+// -------------------------------------------------------------------
+
 // -------------------------------------------------------------------
 
 // -------------------------------------------------------------------

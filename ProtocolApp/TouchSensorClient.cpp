@@ -39,6 +39,24 @@ bool TouchSensorSClient::breakRecording(std::atomic<int>* result)
 	return true;
 }
 
+bool TouchSensorSClient::checkSuccess(std::atomic<int>* result)
+{
+	result->store(-1);
+	SimpleRequest srq;
+	srq.set_code(0);
+	SuccessResponse sr;
+	ClientContext context;
+
+	Status status = stub_->CheckSuccess(&context, srq, &sr);
+	if (!status.ok()) {
+		return false;
+	}
+
+	result->store(sr.success());
+
+	return true;
+}
+
 TouchSensorClient::TouchSensorClient()
 {
 	server_ip = "localhost";
@@ -111,6 +129,13 @@ void TouchSensorClient::breakRecording(std::atomic<int>* result)
 	}
 	else {
 		appendClientLog(_T("Not connected.\n "));
+	}
+}
+
+void TouchSensorClient::checkSuccess(std::atomic<int>* result)
+{
+	if (tssc) {
+		tssc->checkSuccess(result);
 	}
 }
 

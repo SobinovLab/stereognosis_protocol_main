@@ -23,7 +23,8 @@ Protocol::~Protocol()
 {
 }
 
-void Protocol::run(atomic<bool>* stopProtocol, atomic<bool>* startTrial, atomic<bool>* stopTrial, atomic<bool>* retreatedMotors, NIUsb6001card* m_NIUsb6001card, CEdit* currentTrialGUICtrl)
+void Protocol::run(atomic<bool>* stopProtocol, atomic<bool>* startTrial, atomic<bool>* stopTrial, atomic<bool>* retreatedMotors, 
+	NIUsb6001card* m_NIUsb6001card, CEdit* currentTrialGUICtrl)
 {
 	CreateDirectory(DATA_FOLDER, NULL);
 	long nTotTrialsPlayedUntilNow = 0;
@@ -59,10 +60,9 @@ void Protocol::run(atomic<bool>* stopProtocol, atomic<bool>* startTrial, atomic<
 
 			auto toneStartTime = chrono::steady_clock::now();
 
-			// wait for stop trial signal NO TIMEOUT
+			// wait for stop trial signal NO TIMEOUT - timeout in the touch sensor monitor
 			while (!stopProtocol->load() && !stopTrial->load()) {}
 			//while (!stopProtocol->load() && !stopTrial->load() && !isTimeout(toneStartTime)) {}
-			//playErrorTone();
 
 			stopTrial->store(false);
 
@@ -73,23 +73,8 @@ void Protocol::run(atomic<bool>* stopProtocol, atomic<bool>* startTrial, atomic<
 			retreatedMotors->store(true);
 		}
 		else {
-			//Sounds::playErrorTone();
 		}
 		++nTotTrialsPlayedUntilNow;
-	}
-
-
-	if (params.tstEnTouchSensors) {
-		//rightTouchPad.stop();
-		//leftTouchPad.stop();
-
-		//rightTouchPadThread.join();
-	 //   string filename = "./data/TouchPadRight_" + Logger::currentDateTime(DATE_TIME_FORMAT) + ".txt";
-	 //   saveTouchPadInfoToFile(string("right"), filename, rightTouchPad.m_data.to_file_2d);
-
-		//leftTouchPadThread.join();
-	 //   filename = "./data/TouchPadLeft_" + Logger::currentDateTime(DATE_TIME_FORMAT) + ".txt";
-	 //   saveTouchPadInfoToFile(string("left"), filename, leftTouchPad.m_data.to_file_2d);
 	}
 }
 
@@ -182,6 +167,7 @@ void Protocol::updateCurrentTrialOnTheGUI(const long & nTotTrialsPlayedUntilNow,
 	CStringA nTrialsConverted;
 	nTrialsConverted.Format(_T(PRECISION), nTotTrialsPlayedUntilNow);
 	currentTrialGUICtrl->SetWindowText(nTrialsConverted);
+	currentTrialNumber.store(nTotTrialsPlayedUntilNow);
 }
 
 void Protocol::startReward(NIUsb6001card * m_NIUsb6001card, long & proportionalDuration)

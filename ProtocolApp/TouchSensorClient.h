@@ -28,6 +28,7 @@ public:
 
 	bool startRecording(int trialnum);
 	bool breakRecording(std::atomic<int>* result);
+	bool checkSuccess(std::atomic<int>* result);
 
 	INT32 lastCode = 0;
 	CString* lastDescritpion;
@@ -48,6 +49,7 @@ public:
 
 	virtual void startRecording(int trialnum);
 	virtual void breakRecording(std::atomic<int>* result);
+	virtual void checkSuccess(std::atomic<int>* result);
 
 	CString server_ip;
 	long port;

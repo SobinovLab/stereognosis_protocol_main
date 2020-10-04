@@ -30,12 +30,13 @@ class Protocol
 		virtual void run( atomic<bool>* stopProtocol, 
 			atomic<bool>* startTrial, atomic<bool>* stopTrial, atomic<bool>* retreatedMotors, 
 			NIUsb6001card* m_NIUsb6001card, CEdit* currentTrialGUICtrl);
+		std::atomic<long> currentTrialNumber;
 
+		static long getElapsedMicroSecsBetween(time_point<std::chrono::steady_clock>& startTime, time_point<std::chrono::steady_clock>& endTime);
+		static long getElapsedMilliSecsSince(time_point<std::chrono::steady_clock>& startTime);
 	private:
 		void updateCurrentTrialOnTheGUI(const long & nTotTrialsPlayedUntilNow, CEdit * currentTrialGUICtrl);
 		void startReward(NIUsb6001card * m_NIUsb6001card, long & proportionalDuration);
-		long getElapsedMicroSecsBetween(time_point<std::chrono::steady_clock> & startTime, time_point<std::chrono::steady_clock> & endTime);
-		long getElapsedMilliSecsSince(time_point<std::chrono::steady_clock> & startTime);
 		long proportionalRewardCalculation(long long elapsed);
 		//bool areBothSensorsTouched(Touchpad3DDevice & rightTouchPad, Touchpad3DDevice & leftTouchPad);
 		void saveTouchPadInfoToFile(string& rightleft, string& filename, string& m_data_string);

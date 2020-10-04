@@ -91,6 +91,9 @@ protected:
 
 	//////// touch sensors
 	TouchSensorClient m_touchSensorClient;
+	std::thread* m_touchSensorSuccessMonitorThread;
+	void m_touchSensorSuccessMonitor();
+	std::atomic<bool> stopTouchSensorSuccessMonitor;
 
 	//////// Local devices
 	NIUsb6001card m_NIUsb6001card;

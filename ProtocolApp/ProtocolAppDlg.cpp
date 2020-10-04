@@ -367,38 +367,42 @@ void CProtocolAppDlg::stopProtocolThread()
 
 void CProtocolAppDlg::retreatStopRecording()
 {
+	stopTouchSensorSuccessMonitor.store(true);
+
 	enableTrialCtrls(true);
 
 	// retreat
 	m_stopTrial.store(true);
 
+	// wait until the motors fully retracted
 	while (!m_retreatedMotors.load()) {}
 
-	// stop recording
+	// and only then stop recording
 	if (m_cameraClient1.isConnected())
 		m_cameraClient1.breakRecording();
 	if (m_cameraClient2.isConnected())
 		m_cameraClient2.breakRecording();
 
 	if (m_touchSensorClient.isConnected()) {
-		atomic<int> result;  // TODO
+		atomic<int> result;
 		m_touchSensorClient.breakRecording(&result);
 
-		if (result.load() > 0) {
-			if (m_protocol.params.tstEnReward) {
-				UpdateData(FromControlsToVariables);
-				m_NIUsb6001card.reward(m_protocol.params.rewardDuration);
-			}
-			//m_retreatFlushWaterButton.SetFaceColor(RGB(76, 175, 80));
-			//m_retreatButton.SetFaceColor(RGB(189, 189, 189));
-		}
-		else {
-			if (m_protocol.params.tstEnReward) {
-				Sounds::playErrorTone();
-			}
-			//m_retreatButton.SetFaceColor(RGB(76, 175, 80));
-			//m_retreatFlushWaterButton.SetFaceColor(RGB(189, 189, 189));
-		}
+		// THIS ALL was moved to touch sensor monitor thread
+		//if (result.load() > 0) {
+		//	if (m_protocol.params.tstEnReward) {
+		//		UpdateData(FromControlsToVariables);
+		//		m_NIUsb6001card.reward(m_protocol.params.rewardDuration);
+		//	}
+		//	//m_retreatFlushWaterButton.SetFaceColor(RGB(76, 175, 80));
+		//	//m_retreatButton.SetFaceColor(RGB(189, 189, 189));
+		//}
+		//else {
+		//	if (m_protocol.params.tstEnReward) {
+		//		Sounds::playErrorTone();
+		//	}
+		//	//m_retreatButton.SetFaceColor(RGB(76, 175, 80));
+		//	//m_retreatFlushWaterButton.SetFaceColor(RGB(189, 189, 189));
+		//}
 	}
 }
 
@@ -440,16 +444,59 @@ void CProtocolAppDlg::sendPrepareRecording()
 	}
 }
 
+void CProtocolAppDlg::m_touchSensorSuccessMonitor()
+{
+	UpdateData(FromControlsToVariables);
+	long rewardDuration = m_protocol.params.rewardDuration;
+	int maxWaitTime = m_protocol.params.maxWaitTime;
+	auto startTime = chrono::steady_clock::now();
+	std::atomic<int> result;
+	long timePassed;
+
+
+	while (!stopTouchSensorSuccessMonitor.load()) {
+		Sleep(50);  // ms loop, so not too often
+
+		// ask for success
+		m_touchSensorClient.checkSuccess(&result);
+
+		if (result.load() > 0) {
+			// give reward
+			if (m_protocol.params.tstEnReward) {
+				m_NIUsb6001card.reward(rewardDuration);
+			}
+
+			// do the for trial break - this also stops this thread
+			retreatStopRecording();
+		}
+		else {
+			// check if out of time and then stop, punish and retreat
+			timePassed = Protocol::getElapsedMilliSecsSince(startTime);
+			if (timePassed >= maxWaitTime * 1e3) {
+				Sounds::playErrorTone();
+
+				// do the for trial break - this also stops this thread
+				retreatStopRecording();
+			}
+		}
+
+	}
+}
+
 void CProtocolAppDlg::sendStartRecording()
 {
+	long currentTrialNumber = m_protocol.currentTrialNumber.load();
+
 	if (m_cameraClient1.isConnected()) {
-		m_cameraClient1.startRecording();
+		m_cameraClient1.startRecording(currentTrialNumber);
 	}
 	if (m_cameraClient2.isConnected()) {
-		m_cameraClient2.startRecording();
+		m_cameraClient2.startRecording(currentTrialNumber);
 	}
 	if (m_touchSensorClient.isConnected()) {
-		m_touchSensorClient.startRecording(-1);  // TODO
+		m_touchSensorClient.startRecording(currentTrialNumber);
+
+		m_touchSensorSuccessMonitorThread = new thread(&CProtocolAppDlg::m_touchSensorSuccessMonitor, this);
 	}
 
 }

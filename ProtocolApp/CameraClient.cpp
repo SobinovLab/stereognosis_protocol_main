@@ -128,11 +128,11 @@ void CameraClient::prepareRecording()
 	}
 }
 
-void CameraClient::startRecording()
+void CameraClient::startRecording(int trialNumber)
 {
 	appendClientLog(_T("Starting recording. "));
 	if (ccsc) {
-		if (ccsc->startRecording()) {
+		if (ccsc->startRecording(trialNumber)) {
 			appendClientLog(_T("Success.\n"));
 			setClientStatusGui(_T("Recording"));
 		}
@@ -344,10 +344,10 @@ bool CameraCommunicatorSClient::prepareRecording()
 	return true;
 }
 
-bool CameraCommunicatorSClient::startRecording()
+bool CameraCommunicatorSClient::startRecording(int trialNumber)
 {
 	SimpleRequest srq;
-	srq.set_code(0);
+	srq.set_code(trialNumber);
 	SimpleResponse sr;
 	ClientContext context;
 
