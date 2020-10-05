@@ -475,12 +475,15 @@ void CProtocolAppDlg::m_touchSensorSuccessMonitor()
 			// do the for trial break - this also stops this thread
 			retreatStopRecording();
 
-			Sleep(intertrialWaitTime*1000);
+			if (m_trialLoopChk.GetCheck()) {
+				Sleep(intertrialWaitTime * 1000);
+			}
 
 			// start the next trial
 			if (m_trialLoopChk.GetCheck()) {
 				OnStartTrialBtnClicked();
 			}
+			break;
 		}
 		else {
 			// check if out of time and then stop, punish and retreat
@@ -491,12 +494,15 @@ void CProtocolAppDlg::m_touchSensorSuccessMonitor()
 				// do the for trial break - this also stops this thread
 				retreatStopRecording();
 
-				Sleep(intertrialWaitTime * 1000);
+				if (m_trialLoopChk.GetCheck()) {
+					Sleep(intertrialWaitTime * 1000);
+				}
 
 				// start the next trial
 				if (m_trialLoopChk.GetCheck()) {
 					OnStartTrialBtnClicked();
 				}
+				break;
 			}
 		}
 
