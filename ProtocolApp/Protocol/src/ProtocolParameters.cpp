@@ -54,7 +54,7 @@ void ProtocolParameters::init()
 	cs_port2 = 63874;
 	cs_framerate = 50;
 	cs_recordingPeriod = 25;
-	cs_refSerial = 19334009; // ???
+	cs_refSerial = 19194009;
 	cs_exposure = "2500";
 	cs_gain = "20";
 
