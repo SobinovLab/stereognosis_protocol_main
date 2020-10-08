@@ -224,6 +224,13 @@ void CProtocolAppDlg::OnStartProtocolBtnClicked()
 
 void CProtocolAppDlg::OnStopProtocolBtnClicked()
 {
+	// if trials are running, uncheck loop and stop trial
+	bool initState = m_trialLoopChk.GetCheck();
+	m_trialLoopChk.SetCheck(false);
+	if (!stopTouchSensorSuccessMonitor.load()) {
+		retreatStopRecording();
+	}
+
 	if (m_protocol.params.isNiCardBeingUsed())
 		m_NIUsb6001card.stop();
 	stopProtocolThread();
@@ -235,6 +242,9 @@ void CProtocolAppDlg::OnStopProtocolBtnClicked()
 	GetDlgItem(IDC_START_TRIAL_BTN)->EnableWindow(false);
 	// protocol controls and edits are on
 	enableProtocolCtrls(ENABLED);
+
+	// restore the check button
+	m_trialLoopChk.SetCheck(initState);
 }
 
 void CProtocolAppDlg::OnFlushWaterBtnClicked()
@@ -391,23 +401,6 @@ void CProtocolAppDlg::retreatStopRecording()
 	if (m_touchSensorClient.isConnected()) {
 		atomic<int> result;
 		m_touchSensorClient.breakRecording(&result);
-
-		// THIS ALL was moved to touch sensor monitor thread
-		//if (result.load() > 0) {
-		//	if (m_protocol.params.tstEnReward) {
-		//		UpdateData(FromControlsToVariables);
-		//		m_NIUsb6001card.reward(m_protocol.params.rewardDuration);
-		//	}
-		//	//m_retreatFlushWaterButton.SetFaceColor(RGB(76, 175, 80));
-		//	//m_retreatButton.SetFaceColor(RGB(189, 189, 189));
-		//}
-		//else {
-		//	if (m_protocol.params.tstEnReward) {
-		//		Sounds::playErrorTone();
-		//	}
-		//	//m_retreatButton.SetFaceColor(RGB(76, 175, 80));
-		//	//m_retreatFlushWaterButton.SetFaceColor(RGB(189, 189, 189));
-		//}
 	}
 }
 
@@ -462,6 +455,8 @@ void CProtocolAppDlg::m_touchSensorSuccessMonitor()
 
 	while (!stopTouchSensorSuccessMonitor.load()) {
 		Sleep(50);  // ms loop, so not too often
+		if (stopTouchSensorSuccessMonitor.load())
+			break;
 
 		// ask for success
 		m_touchSensorClient.checkSuccess(&result);
