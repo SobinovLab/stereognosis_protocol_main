@@ -63,6 +63,7 @@ void NIUsb6001card::config() {
 	m_physicalChanPhotoresistors = string(value);
 	GetPrivateProfileString(TEXT("Photoresistors"), TEXT("physicalChannelAI"), TEXT("Error loading physical stimulation AI channel"), value, 32, TEXT(USB6001_CFG_FILE));
 	m_physicalChanAI = string(value);
+	//TODO: PulseChannel needs to be renamed to EphysRecord or something more descriptive
 	GetPrivateProfileString(TEXT("TTLPulse"), TEXT("pulseChannel"), TEXT("Error loading TTL Pulse channel"), value, 32, TEXT(USB6001_CFG_FILE));
 	m_ttlPulse = string(value);
 
