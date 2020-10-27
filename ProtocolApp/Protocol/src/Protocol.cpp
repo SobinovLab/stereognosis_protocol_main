@@ -54,7 +54,7 @@ void Protocol::run(atomic<bool>* stopProtocol, atomic<bool>* startTrial, atomic<
 		startTrial->store(false);
 		
 		//? TTL pulse here?
-		m_NIUsb6001card->ttlPulse();
+		m_NIUsb6001card->ephysSync();
 
 		if (startForwardMovement(stopProtocol, stopTrial, m_NIUsb6001card, motorHub))
 		{

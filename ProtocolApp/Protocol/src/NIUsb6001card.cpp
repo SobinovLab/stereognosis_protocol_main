@@ -20,7 +20,7 @@ const char* USB6001_CFG_FILE = "./configuration/config.ini";
 constexpr const char* AI_TASK_NAME = "AI_task";
 constexpr const char* PHOTORESISTORS_STATUS_TASK_NAME = "Photoresistors_Status_task";
 constexpr const char* REWARD_SYSTEM_TASK_NAME = "Reward_System_task";
-constexpr const char* TTL_PULSE_TASK_NAME = "TTL_Pulse_task";
+constexpr const char* EPHYS_SYNC_TASK_NAME = "TTL_Sync_Ephys";
 constexpr float64 NO_RESULT = 0;
 constexpr float64 TIMEOUT = 60.0;
 constexpr float64 MIN_VOLTAGE = -10.0;
@@ -35,7 +35,7 @@ uInt8 ACTIVATE_REWARD_BITS_MAP[1] = { 1 };
 uInt8 DEACTIVATE_REWARD_BITS_MAP[1] = { 0 };
 uInt8 PHOTORESISTORS_STATUS[2] = { 0, 0 }; // monitor buffer
 int32 N_PHOTORESISTORS = 2;
-static TaskHandle  AItaskHandle = 0, PhotoResistorStatus_taskHandle = 0, RewardSystem_taskHandle = 0, TTLPulse_taskHandle = 0;
+static TaskHandle  AItaskHandle = 0, PhotoResistorStatus_taskHandle = 0, RewardSystem_taskHandle = 0, ephysSync_taskHandle = 0;
 
 atomic<bool> IS_REAR_PHOTORESISTOR_COVERED;
 atomic<bool> IS_FRONT_PHOTORESISTOR_COVERED;
@@ -55,25 +55,24 @@ void NIUsb6001card::config() {
 	int32   error = 0, AUTOSTART = 1;
 	float64 TIMEOUT = 10.0;
 	// m_physicalChanAI is used only for the continuous reading of the photoresistors status
-	string m_physicalChanAI, m_physicalChanRewardSystem, m_physicalChanPhotoresistors, m_ttlPulse;
+	string m_physicalChanAI, m_physicalChanRewardSystem, m_physicalChanPhotoresistors, m_physicalChanEphysSync;
 	TCHAR value[32];
-	GetPrivateProfileString(TEXT("RewardSystem"), TEXT("physicalChannel"), TEXT("Error loading physical acquisition channel"), value, 32, TEXT(USB6001_CFG_FILE));
+	GetPrivateProfileString(TEXT("RewardSystem"),   TEXT("physicalChannel"),   TEXT("Error loading physical reward sys channel"), value, 32, TEXT(USB6001_CFG_FILE));
 	m_physicalChanRewardSystem = string(value);
 	GetPrivateProfileString(TEXT("Photoresistors"), TEXT("physicalChannelDI"), TEXT("Error loading physical stimulation DI channel"), value, 32, TEXT(USB6001_CFG_FILE));
 	m_physicalChanPhotoresistors = string(value);
 	GetPrivateProfileString(TEXT("Photoresistors"), TEXT("physicalChannelAI"), TEXT("Error loading physical stimulation AI channel"), value, 32, TEXT(USB6001_CFG_FILE));
 	m_physicalChanAI = string(value);
-	//TODO: PulseChannel needs to be renamed to EphysRecord or something more descriptive
-	GetPrivateProfileString(TEXT("TTLPulse"), TEXT("pulseChannel"), TEXT("Error loading TTL Pulse channel"), value, 32, TEXT(USB6001_CFG_FILE));
-	m_ttlPulse = string(value);
+	GetPrivateProfileString(TEXT("ephysSync"),      TEXT("physicalChannel"),   TEXT("Error loading ephysSync channel"), value, 32, TEXT(USB6001_CFG_FILE));
+	m_physicalChanEphysSync = string(value);
 
 
 	/*********************************************/
 	// DAQmx Configure Code
 	/*********************************************/
 
-	DAQmxErrChk(DAQmxCreateTask(AI_TASK_NAME, &AItaskHandle));
-	DAQmxErrChk(DAQmxCreateAIVoltageChan(AItaskHandle, m_physicalChanAI.c_str(), "", DAQmx_Val_Cfg_Default, MIN_VOLTAGE, MAX_VOLTAGE, DAQmx_Val_Volts, NULL));
+	DAQmxErrChk(DAQmxCreateTask(AI_TASK_NAME,                    &AItaskHandle));
+	DAQmxErrChk(DAQmxCreateAIVoltageChan(AItaskHandle,            m_physicalChanAI.c_str(),             "", DAQmx_Val_Cfg_Default, MIN_VOLTAGE, MAX_VOLTAGE, DAQmx_Val_Volts, NULL));
 	DAQmxErrChk(DAQmxCfgSampClkTiming(AItaskHandle, "", SAMPLE_RATE, DAQmx_Val_Rising, DAQmx_Val_ContSamps, N_SAMPLES));
 	DAQmxErrChk(DAQmxRegisterEveryNSamplesEvent(AItaskHandle, DAQmx_Val_Acquired_Into_Buffer, N_SAMPLES, 0, EveryNCallback, NULL));
 	DAQmxErrChk(DAQmxRegisterDoneEvent(AItaskHandle, 0, DoneCallback, NULL));
@@ -81,29 +80,38 @@ void NIUsb6001card::config() {
 	DAQmxErrChk(DAQmxCreateTask(PHOTORESISTORS_STATUS_TASK_NAME, &PhotoResistorStatus_taskHandle));
 	DAQmxErrChk(DAQmxCreateDIChan(PhotoResistorStatus_taskHandle, m_physicalChanPhotoresistors.c_str(), "", DAQmx_Val_ChanForAllLines));
 
-	DAQmxErrChk(DAQmxCreateTask(REWARD_SYSTEM_TASK_NAME, &RewardSystem_taskHandle));
-	DAQmxErrChk(DAQmxCreateDOChan(RewardSystem_taskHandle, m_physicalChanRewardSystem.c_str(), "", DAQmx_Val_ChanForAllLines));
+	DAQmxErrChk(DAQmxCreateTask(REWARD_SYSTEM_TASK_NAME,         &RewardSystem_taskHandle));
+	DAQmxErrChk(DAQmxCreateDOChan(RewardSystem_taskHandle,        m_physicalChanRewardSystem.c_str(),   "", DAQmx_Val_ChanForAllLines));
 
-	DAQmxErrChk(DAQmxCreateTask(TTL_PULSE_TASK_NAME, &TTLPulse_taskHandle));
-	DAQmxErrChk(DAQmxCreateDOChan(TTLPulse_taskHandle, m_ttlPulse.c_str(), "", DAQmx_Val_ChanForAllLines));
-
+	DAQmxErrChk(DAQmxCreateTask(EPHYS_SYNC_TASK_NAME,            &ephysSync_taskHandle));
+	DAQmxErrChk(DAQmxCreateDOChan(ephysSync_taskHandle,           m_physicalChanEphysSync.c_str(),      "", DAQmx_Val_ChanForAllLines));
 
 	deactivateReward();
+	enableEphysSync();
 
 Error:
 	logErrMsg(error);
 }
 
-void NIUsb6001card::ttlPulse() {
+void NIUsb6001card::ephysSync() {
 	int32   error = 0, AUTOSTART = 1;
 	float64 TIMEOUT = 10.0;
 
-	DAQmxErrChk(DAQmxWriteDigitalLines(TTLPulse_taskHandle, N_SAMPLES, AUTOSTART, TIMEOUT, DAQmx_Val_GroupByChannel, ACTIVATE_REWARD_BITS_MAP, NULL, NULL));
+	DAQmxErrChk(DAQmxWriteDigitalLines(ephysSync_taskHandle, N_SAMPLES, AUTOSTART, TIMEOUT, DAQmx_Val_GroupByChannel, ACTIVATE_REWARD_BITS_MAP, NULL, NULL));
 	//? Do we need a sleep in the middle? Hmm.
-	DAQmxErrChk(DAQmxWriteDigitalLines(TTLPulse_taskHandle, N_SAMPLES, AUTOSTART, TIMEOUT, DAQmx_Val_GroupByChannel, DEACTIVATE_REWARD_BITS_MAP, NULL, NULL));
+	DAQmxErrChk(DAQmxWriteDigitalLines(ephysSync_taskHandle, N_SAMPLES, AUTOSTART, TIMEOUT, DAQmx_Val_GroupByChannel, DEACTIVATE_REWARD_BITS_MAP, NULL, NULL));
 Error:
 	logErrMsg(error);
+}
 
+void NIUsb6001card::enableEphysSync() {
+	// This needs to be run during config() so that the line has a known initial state
+	int32   error = 0, AUTOSTART = 1;
+	float64 TIMEOUT = 10.0;
+	//? Do we need a sleep in the middle? Hmm.
+	DAQmxErrChk(DAQmxWriteDigitalLines(ephysSync_taskHandle, N_SAMPLES, AUTOSTART, TIMEOUT, DAQmx_Val_GroupByChannel, DEACTIVATE_REWARD_BITS_MAP, NULL, NULL));
+Error:
+	logErrMsg(error);
 }
 
 void NIUsb6001card::activateReward() {
@@ -237,4 +245,5 @@ void stopAllTasks()
 	stopTask(AItaskHandle);
 	stopTask(PhotoResistorStatus_taskHandle);
 	stopTask(RewardSystem_taskHandle);
+	stopTask(ephysSync_taskHandle);
 }
