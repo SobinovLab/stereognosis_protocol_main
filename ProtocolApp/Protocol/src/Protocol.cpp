@@ -52,9 +52,7 @@ void Protocol::run(atomic<bool>* stopProtocol, atomic<bool>* startTrial, atomic<
 		while (!startTrial->load() && !stopProtocol->load()) {}
 
 		startTrial->store(false);
-		
-		//? TTL pulse here?
-		m_NIUsb6001card->ephysSync();
+		m_NIUsb6001card->ephysSyncStart();
 
 		if (startForwardMovement(stopProtocol, stopTrial, m_NIUsb6001card, motorHub))
 		{
@@ -68,14 +66,12 @@ void Protocol::run(atomic<bool>* stopProtocol, atomic<bool>* startTrial, atomic<
 			//while (!stopProtocol->load() && !stopTrial->load() && !isTimeout(toneStartTime)) {}
 
 			stopTrial->store(false);
-
 			if (params.tstEnMotors) {
 				motorHub.reset();
 				motorHub.home();
 			}
 			retreatedMotors->store(true);
-		}
-		else {
+			m_NIUsb6001card->ephysSyncStop();
 		}
 		++nTotTrialsPlayedUntilNow;
 	}

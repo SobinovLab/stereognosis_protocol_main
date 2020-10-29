@@ -24,6 +24,7 @@ class NIUsb6001card
         void resetPhotoresistorsGuiMonitor();
         void activateReward();
         void deactivateReward();
-        void ephysSync();
+        void ephysSyncStart();
+        void ephysSyncStop();
         void enableEphysSync();
 };

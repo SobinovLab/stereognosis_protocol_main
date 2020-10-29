@@ -93,12 +93,17 @@ Error:
 	logErrMsg(error);
 }
 
-void NIUsb6001card::ephysSync() {
+void NIUsb6001card::ephysSyncStart() {
 	int32   error = 0, AUTOSTART = 1;
 	float64 TIMEOUT = 10.0;
-
 	DAQmxErrChk(DAQmxWriteDigitalLines(ephysSync_taskHandle, N_SAMPLES, AUTOSTART, TIMEOUT, DAQmx_Val_GroupByChannel, ACTIVATE_REWARD_BITS_MAP, NULL, NULL));
-	//? Do we need a sleep in the middle? Hmm.
+Error:
+	logErrMsg(error);
+}
+
+void NIUsb6001card::ephysSyncStop() {
+	int32   error = 0, AUTOSTART = 1;
+	float64 TIMEOUT = 10.0;
 	DAQmxErrChk(DAQmxWriteDigitalLines(ephysSync_taskHandle, N_SAMPLES, AUTOSTART, TIMEOUT, DAQmx_Val_GroupByChannel, DEACTIVATE_REWARD_BITS_MAP, NULL, NULL));
 Error:
 	logErrMsg(error);
@@ -110,6 +115,7 @@ void NIUsb6001card::enableEphysSync() {
 	float64 TIMEOUT = 10.0;
 	//? Do we need a sleep in the middle? Hmm.
 	DAQmxErrChk(DAQmxWriteDigitalLines(ephysSync_taskHandle, N_SAMPLES, AUTOSTART, TIMEOUT, DAQmx_Val_GroupByChannel, DEACTIVATE_REWARD_BITS_MAP, NULL, NULL));
+
 Error:
 	logErrMsg(error);
 }
