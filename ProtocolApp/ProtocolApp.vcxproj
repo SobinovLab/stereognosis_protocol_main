@@ -97,8 +97,8 @@
       <Command>mkdir  "$(OutDir)configuration\"
 mkdir  "$(OutDir)data\"
 copy /B /V /Y "$(ProjectDir)configuration\*.*" "$(OutDir)configuration\" &gt; NUL
-copy /B /V /Y "$(ProjectDir)libTeknicMotor\lib_x64\*.dll" "$(OutDir)" &gt; NUL
-copy /B /V /Y "$(ProjectDir)libTeknicMotor\lib_x64\*.xml" "$(OutDir)" &gt; NUL
+copy /B /V /Y "$(ProjectDir)libTeknicMotor\lib_x64d\*.dll" "$(OutDir)" &gt; NUL
+
 </Command>
     </PostBuildEvent>
     <PreBuildEvent>
@@ -146,7 +146,7 @@ copy /B /V /Y "$(ProjectDir)libTeknicMotor\lib_x64\*.xml" "$(OutDir)" &gt; NUL
 mkdir  "$(OutDir)data\"
 copy /B /V /Y "$(ProjectDir)configuration\*.*" "$(OutDir)configuration\" &gt; NUL
 copy /B /V /Y "$(ProjectDir)libTeknicMotor\lib_x64\*.dll" "$(OutDir)" &gt; NUL
-copy /B /V /Y "$(ProjectDir)libTeknicMotor\lib_x64\*.xml" "$(OutDir)" &gt; NUL
+
 </Command>
     </PostBuildEvent>
     <PreBuildEvent>
