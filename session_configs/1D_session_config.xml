@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!-- `reps` attribute of the `stereognosis_session_config defines how many times the whole set of trials is repeated. Each new repetition is generated using a new random seed, i.e. they are different. Defaults (if absent) to 1. -->
+<stereognosis_session_config name="1D_t" reps="1">
+	<!-- List of coordinates -->
+	<!-- For each element in the permutation of each coordinate, each permutation of each other	coordinate is used. For example, if coordinate1 generates a list of N1=10 positions and	coordinate2 generates N2=15 positions, it will result in N1*N2=150 positions. -->
+	<!-- Each coordinate should have at least one `control` (position, speed, acceleration). These are dimentions along which the motor will be controlled	during the experimental session.
+	Each `control` NEEDS to have `distribution` attribute, which can be set to:
+		const - constant value defined by `default` attribute, N=1 permutation.
+		uniform - `N` uniformly distributed RANDOM values from `min` to `max`. Each time a value
+			for this parameter is needed, a random number generator is called, i.e. the values are
+			not repeated.
+		grid - `N` uniformly distributed values on a grid from `min` to `max`. If flag
+			`shuffle` is true, permute the order of the grid, otherwise they go from minimum to
+			maximum.
+	`coordinate` reps attribute sets the amount of times the permutations of the coordinate are
+	repeated. -->
+	<coordinate name="translation" reps="1">
+		<control name="position" distribution="grid" N="20" reps="2" min="1" max="240" shuffle="false"/>
+		<control name="speed" distribution="const" min="1" max="10" default="2" />
+		<control name="acceleration" distribution="const" min="1" max="10" default="2" />
+	</coordinate>
+</stereognosis_session_config>
