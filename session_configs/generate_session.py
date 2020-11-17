@@ -6,11 +6,13 @@ import xml.etree.ElementTree as ET
 import random
 import re
 import argparse
+import functools
+from copy import deepcopy
 
 import numpy
 
 
-def get_attrib(e, attrib, raise_error=True):
+def get_attrib(e, attrib, raise_error=True, default=''):
     '''Retrieves an attribute from the element.
 
     Arguments:
@@ -35,7 +37,7 @@ def get_attrib(e, attrib, raise_error=True):
             raise ValueError('Attribute {} not in element {} with attributes: {}'.format(
                 attrib, e, e.attrib.keys()))
         else:
-            return ''
+            return default
 
 class UniformGenerator(object):
     """Generates uniform values in bounds"""
@@ -43,39 +45,30 @@ class UniformGenerator(object):
         self.mi = mi
         self.ma = ma
 
-    def __call__(self):
+    def __call__(self, i=0):
         return random.uniform(self.mi, self.ma)
 
     def __repr__(self):
         return 'uniform({}, {})'.format(self.mi, self.ma)
 
 
-class GridGenerator(object):
-    """Generates values on equidistant grid in bounds"""
-    def __init__(self, mi, ma, N, do_shuffle):
-        self.mi = mi
-        self.ma = ma
-        self.N = N
-        self.v = numpy.linspace(mi, ma, num=N)
-        self.i = -1
+def generate_data_recursively(Ns, reps, sample_values):
+    if len(Ns) == 0:
+        return [[]]
 
-        self.do_shuffle = do_shuffle
-        self.shuffle()
+    dat = generate_data_recursively(Ns[1:], reps[1:], sample_values[1:])
 
-    def shuffle(self):
-        if self.do_shuffle:
-            random.shuffle(self.v)
+    data = []
+    for i in range(Ns[0]):
+        databuf = deepcopy(dat)
+        for j in range(len(databuf)):
+            databuf[j] = [sample_values[0][i]] + databuf[j]
+        data += databuf
 
-    def __call__(self):
-        self.i += 1
-        if self.i == len(self.v):
-            self.shuffle()
-            self.i = 0
-        return self.v[self.i]
+    for _ in range(reps[0]-1):
+        data += data
 
-    def __repr__(self):
-        return 'Grid from {} to {} with {} elements. Current vector: {}, index={}'.format(
-            self.mi, self.ma, self.N, self.v, self.i)
+    return data
 
 
 def generate_session(session_config_filename, session_filename):
@@ -89,10 +82,15 @@ def generate_session(session_config_filename, session_filename):
         print('Processing stereognosis session config `{}`'.format(
             get_attrib(root, 'name', raise_error=False)))
 
-    base_reps = int(root.attrib['reps']) if 'reps' in root.attrib.keys() else 1
+    base_reps = int(get_attrib(root, 'reps', raise_error=False, default='1'))
     if base_reps < 1:
         print('Less than 1 base reps, terminating.')
         return
+
+    if get_attrib(root, 'shuffle', raise_error=False, default='true').lower() == 'true':
+        shuffle = True
+    else:
+        shuffle = False
 
     coordinates_e = root.findall('./coordinate')
     print('Found {} coordinates: {}'.format(
@@ -102,25 +100,32 @@ def generate_session(session_config_filename, session_filename):
     control_names = []
     default_pos = []
     Ns = []
+    reps = []  # repetitions of each control.
     sample_values = []
+    generators = {}  # basically a sparse list for only random generators
     for c_e in coordinates_e:
         c_name = c_e.attrib['name']
 
-        c_reps = int(c_e.attrib['reps']) if 'reps' in c_e.attrib.keys() else 1
-        if c_reps < 1:
+        c_rep = int(get_attrib(c_e, 'reps', raise_error=False, default='1'))
+        if c_rep < 1:
             print('Warning:Coordinate {} has less that 1 repetitions, skipping.'.format(c_name))
+            continue
+        coord_repetitions_applied = False
 
         scs_e = c_e.findall('./control')
         for sc_e in scs_e:
-            coordinate_names.append(c_name)
             sc_name = get_attrib(sc_e, 'name')
+            rep = int(get_attrib(sc_e, 'reps', raise_error=False, default='1'))
+            if rep < 1:
+                print('Warning:Coordinate {} control {} has less that 1 repetitions,'
+                      ' skipping.'.format(c_name, sc_name))
+                continue
+
+            coordinate_names.append(c_name)
             control_names.append(sc_name)
 
             distribution = get_attrib(sc_e, 'distribution')
-            # For the control set: Ns, default_pos, sample_values
-            Ns.append(1)  # default if const
-            default_pos.append(0)  # default if not const
-            sample_values.append(None)  # default if const
+            # For the control set: N, sv
             if distribution == 'const':
                 p = float(get_attrib(sc_e, 'default'))
                 # be nice and check if there are restrictions on the range
@@ -135,35 +140,78 @@ def generate_session(session_config_filename, session_filename):
                         c_name, sc_name))
                     p = float(ma)
 
-                default_pos[-1] = p
+                N = 1
+                sv = [p]
 
             elif distribution == 'uniform':
                 N = int(get_attrib(sc_e, 'N'))
-                Ns[-1] = N
                 mi = float(get_attrib(sc_e, 'min'))
                 ma = float(get_attrib(sc_e, 'max'))
-                sample_values.append(UniformGenerator(mi, ma))
+                sv = [None]*N
+                generators[len(Ns)] = UniformGenerator(mi, ma)
 
             elif distribution == 'grid':
-                N = int(get_attrib(sc_e, 'N'))
-                Ns[-1] = N
-                mi = float(get_attrib(sc_e, 'min'))
-                ma = float(get_attrib(sc_e, 'max'))
-                if 'shuffle' in sc_e.attrib.keys() and sc_e.attrib['shuffle'].lower() == 'true':
-                    do_shuffle = True
+                if 'values' in sc_e.attrib.keys():
+                    sv = [float(i) for i in sc_e.attrib['values'].strip().split(' ')]
+                    mi = get_attrib(sc_e, 'min', raise_error=False)
+                    ma = get_attrib(sc_e, 'max', raise_error=False)
+                    for isv in range(len(sv)):
+                        if len(mi) > 0 and sv[isv] < float(mi):
+                            print('Warning:Value of {}:{} less than minimum, correcting.'.format(
+                                c_name, sc_name))
+                            sv[isv] = float(mi)
+                        if len(ma) > 0 and sv[isv] > float(ma):
+                            print('Warning:Value of {}:{} bigger than maximum, correcting.'.format(
+                                c_name, sc_name))
+                            sv[isv] = float(ma)
+                    N = len(sv)
                 else:
-                    do_shuffle = False
+                    mi = float(get_attrib(sc_e, 'min'))
+                    ma = float(get_attrib(sc_e, 'max'))
+                    N = int(get_attrib(sc_e, 'N'))
+                    sv = numpy.linspace(mi, ma, num=N)
 
-                sample_values.append(GridGenerator(mi, ma, N, do_shuffle))
-            # change Ns to account for reps
-            if 'reps' in sc_e.attrib.keys():
-                Ns[-1] *= int(sc_e.attrib['reps'])
+            print('\tCoordinate {} has {} control. N={}, reps={}, sv={}{}'.format(
+                c_name, sc_name, N, rep, sv,
+                ', randomly generated' if len(Ns) in generators.keys() else ''))
 
-            print('\tCoordinate {} has {} control. Default={}, N*reps={}, generator={}'.format(
-                c_name, sc_name, default_pos[-1], Ns[-1], sample_values[-1]))
+            if not coord_repetitions_applied:
+                rep *= c_rep
+                coord_repetitions_applied = True
+            reps.append(rep)
+            Ns.append(N)
+            sample_values.append(sv)
 
-    print('Ns: {}'.format(', '.join([str(N) for N in Ns])))
-    print('Default position: {}'.format(', '.join([str(p) for p in default_pos])))
+    mult = lambda vec: functools.reduce(lambda x, y: x*y, vec)
+    total_trials = mult(Ns)*mult(reps)*base_reps
+    print('Generating {} total trials'.format(total_trials))
+
+    # generate the array
+    data = generate_data_recursively(Ns, reps, sample_values)
+
+    # add repetitions
+    for _ in range(base_reps-1):
+        data += data
+
+    # re-generate fully random dimensions
+    for idim, generator in generators.items():
+        for itrial in range(len(data)):
+            data[itrial][idim] = generator()
+
+    if shuffle:
+        random.shuffle(data)
+
+    # write to csv
+    with open(session_filename, 'w', newline='') as f:
+        wrr = csv.writer(f)
+
+        wrr.writerow(coordinate_names)
+        wrr.writerow(control_names)
+
+        for dat in data:
+            wrr.writerow(dat)
+
+    print('Wrote {} trials into {}'.format(len(data), session_filename))
 
 
 if __name__ == '__main__':
@@ -188,7 +236,7 @@ if __name__ == '__main__':
         session_filename = args.session_config_filename
         session_filename = re.sub('_config', '', session_filename)
         if session_filename.endswith('.xml'):
-            session_filename = session_filename[-3:]
+            session_filename = session_filename[:-3]
             session_filename += 'csv'
         else:
             session_filename += '.csv'
