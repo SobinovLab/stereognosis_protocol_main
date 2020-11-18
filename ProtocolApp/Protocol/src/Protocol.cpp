@@ -26,32 +26,34 @@ Protocol::~Protocol()
 void Protocol::run(atomic<bool>* stopProtocol, atomic<bool>* startTrial, atomic<bool>* stopTrial, atomic<bool>* retreatedMotors, 
 	NIUsb6001card* m_NIUsb6001card, CEdit* currentTrialGUICtrl)
 {
+	// TODO?: Create directory for log storage
 	CreateDirectory(DATA_FOLDER, NULL);
-	long nTotTrialsPlayedUntilNow = 0;
 	setFontGuiTrialsCounter(currentTrialGUICtrl);
 
-	if (params.tstEnTouchSensors) {
-		//Touchpad3DDevice rightTouchPad, leftTouchPad;
-		//std::thread rightTouchPadThread(&Touchpad3DDevice::run, &rightTouchPad);
-		//Sleep(TOUCHPAD_START_THREAD_DELAY);
-	 //   rightTouchPad.syncWithGlobal(Logger::currentDateTimeInMilliseconds());
-		//std::thread	leftTouchPadThread(&Touchpad3DDevice::run, &leftTouchPad);
-	 //   leftTouchPad.syncWithGlobal(Logger::currentDateTimeInMilliseconds());
-	}
+	// TODO: Load all trials from session config file
 
+	// Initialize the motor
 	TeknicMotorDevice motorHub;
 	if (params.tstEnMotors) {
 		motorHub.init();
 	}
 
+	// TODO class member variable?
+	long nTotTrialsPlayedUntilNow = 0;
 	// Run the protocol loop
 	while (!stopProtocol->load())
 	{
 		updateCurrentTrialOnTheGUI(nTotTrialsPlayedUntilNow, currentTrialGUICtrl);
-		// wait for start trial signal
+		// TODO: load the parameters of the next trial
+
+		// TODO: conditions for waiting for the start of the next trial
 		while (!startTrial->load() && !stopProtocol->load()) {}
 
+		// TODO: start recordings
+
+		// TODO: start motors
 		startTrial->store(false);
+
 		m_NIUsb6001card->ephysSyncStart();
 
 		if (startForwardMovement(stopProtocol, stopTrial, m_NIUsb6001card, motorHub))
@@ -73,23 +75,10 @@ void Protocol::run(atomic<bool>* stopProtocol, atomic<bool>* startTrial, atomic<
 			retreatedMotors->store(true);
 			m_NIUsb6001card->ephysSyncStop();
 		}
+
+		// TODO Conditions for success or fail at the trial 
 		++nTotTrialsPlayedUntilNow;
 	}
-}
-
-void Protocol::saveTouchPadInfoToFile(string & rightleft, string & filename, string & m_data_string)
-{
-    if (std::FILE* f = std::fopen(filename.c_str(), "w")) {
-        std::fprintf(f, "%s %s", rightleft.c_str(), m_data_string.c_str());
-        std::fclose(f);
-
-        string msg = " TouchPad " + rightleft + " saved to file";
-        logInfo(msg.c_str());
-    }
-    else {
-        string msg = " TouchPad " + rightleft + " could NOT save to file";
-        logInfo(msg.c_str());
-    }
 }
 
 bool Protocol::isElapsedTheMinUncoveredTime(time_point<std::chrono::steady_clock>& photoresistorsUncoveredTime)
