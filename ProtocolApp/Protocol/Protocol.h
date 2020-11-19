@@ -2,7 +2,7 @@
 *
 * Description:
 *    This class manages a Protocol:
-*        by generating a sequence of trials 
+*        by generating a sequence of trials
 *        by managing the data from/to GUI
 *        by managing the electronic devices involved in the protocol
 *
@@ -22,25 +22,49 @@
 using namespace std;
 using namespace chrono;
 
+enum class ProtocolState
+{
+	shutdown,
+	initializing,
+	trialReady,
+	trialInProgress,
+	trialFinalizing,
+	shuttingDown,
+};
+
 class Protocol
 {
 	public:
-		ProtocolParameters params;
+		// creator-destructor
 		Protocol();
 		virtual ~Protocol();
-		virtual void run( atomic<bool>* stopProtocol, 
-			atomic<bool>* startTrial, atomic<bool>* stopTrial, atomic<bool>* retreatedMotors, 
-			NIUsb6001card* m_NIUsb6001card, CEdit* currentTrialGUICtrl);
+
+		// General parameters TODO: load ip etc from ini
+		ProtocolParameters params;
+
+		// Control of the protocol running
+		atomic<bool> stopProtocol;
+		atomic<bool> startTrial;
+		atomic<bool> stopTrial;
+		atomic<bool> retreatedMotors;
+
+		ProtocolState getCurrentState();
+
+		// main loop that is run in a thread when StartProtocol is clicked
+		virtual void run(NIUsb6001card* m_NIUsb6001card, CEdit* currentTrialGUICtrl);
+
 		std::atomic<long> currentTrialNumber;
 
 	private:
+		atomic<ProtocolState> protocolState;
+
 		void updateCurrentTrialOnTheGUI(const long & nTotTrialsPlayedUntilNow, CEdit * currentTrialGUICtrl);
 		void startReward(NIUsb6001card * m_NIUsb6001card, long & proportionalDuration);
 		long proportionalRewardCalculation(long long elapsed);
 
 		bool isMotorMovementAborted(atomic<bool> * stopProtocol, NIUsb6001card* m_NIUsb6001card, TeknicMotorDevice& motorHub);
-		bool startForwardMovement(atomic<bool>* stopProtocol, atomic<bool>* stopTrial, NIUsb6001card* m_NIUsb6001card, TeknicMotorDevice& motorHub);
-		
+		bool startForwardMovement(NIUsb6001card* m_NIUsb6001card, TeknicMotorDevice& motorHub);
+
 		void logGoodTrial(const long& nCurrentTrial, const long& timeElapsedFromStartTaskToneToLiftsMonkeyArm, const long& timeElapsedFromStartTaskToneToPlatesTouch);
 		void logBadTrial(const long& nCurrentTrial);
 

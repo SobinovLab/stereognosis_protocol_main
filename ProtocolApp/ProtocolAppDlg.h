@@ -75,10 +75,6 @@ protected:
 	///////// running and controlling the protocol
 	std::thread* protocolThread;
 	Protocol m_protocol;
-	atomic<bool> m_stopProtocol;
-	atomic<bool> m_startTrial;
-	atomic<bool> m_stopTrial;
-	atomic<bool> m_retreatedMotors;  // needed for delayed stop of recording
 	void stopProtocolThread();
 
 	//////// both control
