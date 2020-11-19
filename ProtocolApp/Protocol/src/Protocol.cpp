@@ -78,12 +78,17 @@ void Protocol::run(atomic<bool>* stopProtocol, atomic<bool>* startTrial, atomic<
 
 		// TODO Conditions for success or fail at the trial 
 		++nTotTrialsPlayedUntilNow;
+
+		// TODO wait for the signal from recording devices that the data has been saved
+
+		// TODO display the progress of saving on the GUI
+
 	}
 }
 
 bool Protocol::isElapsedTheMinUncoveredTime(time_point<std::chrono::steady_clock>& photoresistorsUncoveredTime)
 {
-	if (getElapsedMilliSecsSince(photoresistorsUncoveredTime) > MIN_UNCOVERED_TIME) return true;
+	if (Times::getElapsedMilliSecsSince(photoresistorsUncoveredTime) > MIN_UNCOVERED_TIME) return true;
 	return false;
 }
 
@@ -165,8 +170,8 @@ void Protocol::startReward(NIUsb6001card * m_NIUsb6001card, long & proportionalD
 
 bool Protocol::isTimeout(time_point<std::chrono::steady_clock>& startToneTime)
 {
-	long timeElapsedFromStartTaskTone = getElapsedMicroSecsBetween(startToneTime, chrono::steady_clock::now());
-	if (timeElapsedFromStartTaskTone > secToMicrosecs(params.maxWaitTime)) return true;
+	long timeElapsedFromStartTaskTone = Times::getElapsedMicroSecsBetween(startToneTime, chrono::steady_clock::now());
+	if (timeElapsedFromStartTaskTone > Times::secToMicrosecs(params.maxWaitTime)) return true;
 	return false;
 }
 
@@ -176,40 +181,7 @@ long Protocol::proportionalRewardCalculation(long long elapsed)
 	return (long)abs(params.rewardDuration * proportionalFactor);
 }
 
-//bool Protocol::areBothSensorsTouched(Touchpad3DDevice& rightTouchPad, Touchpad3DDevice& leftTouchPad)
-//{
-//	if (rightTouchPad.isTouching && leftTouchPad.isTouching) return true;
-//	return false;
-//}
-
 void Protocol::storeStartTime(time_point<std::chrono::steady_clock>& time)
 {
 	time = chrono::steady_clock::now();
-}
-
-long Protocol::microToMillisecs(const long & microsecs)
-{
-	return (long) (microsecs / 1000);
-}
-
-long Protocol::milliToMicrosecs(const long & millisecs)
-{
-	return millisecs * 1000;
-}
-
-long Protocol::secToMicrosecs(const double& secs)
-{
-	return (long)(secs * 1000000);
-}
-
-long Protocol::getElapsedMilliSecsSince(time_point<std::chrono::steady_clock> & startTime)
-{
-	auto elapsed = duration_cast<chrono::milliseconds>(chrono::steady_clock::now() - startTime);
-	return (long)elapsed.count();
-}
-
-long Protocol::getElapsedMicroSecsBetween(time_point<std::chrono::steady_clock> & startTime, time_point<std::chrono::steady_clock> & endTime)
-{
-	auto elapsed = duration_cast<chrono::microseconds>(endTime - startTime);
-	return (long)elapsed.count();
 }

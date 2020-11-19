@@ -482,7 +482,7 @@ void CProtocolAppDlg::m_touchSensorSuccessMonitor()
 		}
 		else {
 			// check if out of time and then stop, punish and retreat
-			timePassed = Protocol::getElapsedMilliSecsSince(startTime);
+			timePassed = Times::getElapsedMilliSecsSince(startTime);
 			if (timePassed >= maxWaitTime * 1e3) {
 				Sounds::playErrorTone();
 
