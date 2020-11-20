@@ -32,6 +32,8 @@ Protocol::Protocol()
 
 Protocol::~Protocol()
 {
+	// if incorrect termination
+	releaseDevices();
 }
 
 void Protocol::run(NIUsb6001card* m_NIUsb6001card, CEdit* currentTrialGUICtrl)
@@ -43,11 +45,8 @@ void Protocol::run(NIUsb6001card* m_NIUsb6001card, CEdit* currentTrialGUICtrl)
 
 	// TODO: Load all trials from session config file
 
-	// Initialize the motor
-	TeknicMotorDevice motorHub;
-	if (params.tstEnMotors) {
-		motorHub.init();
-	}
+	// Initialize all devices
+	initDevices();
 
 	// TODO class member variable?
 	long nTotTrialsPlayedUntilNow = 0;
@@ -82,8 +81,8 @@ void Protocol::run(NIUsb6001card* m_NIUsb6001card, CEdit* currentTrialGUICtrl)
 
 			this->stopTrial.store(false);
 			if (params.tstEnMotors) {
-				motorHub.reset();
-				motorHub.home();
+				motorHub->reset();
+				motorHub->home();
 			}
 			this->retreatedMotors.store(true);
 			m_NIUsb6001card->ephysSyncStop();
@@ -100,6 +99,9 @@ void Protocol::run(NIUsb6001card* m_NIUsb6001card, CEdit* currentTrialGUICtrl)
 		// TODO display the progress of saving on the GUI
 
 	}
+
+	// release all devices
+	releaseDevices();
 }
 
 bool Protocol::isElapsedTheMinUncoveredTime(time_point<std::chrono::steady_clock>& photoresistorsUncoveredTime)
@@ -115,13 +117,6 @@ void Protocol::setFontGuiTrialsCounter(CEdit * currentTrialGUICtrl)
 	currentTrialGUICtrl->SetFont(cEditControlFont);
 }
 
-void Protocol::logBadTrial(const long& nCurrentTrial)
-{
-	string msg = TRIAL_NUM_STR + to_string(nCurrentTrial);
-	msg = msg + TRIAL_ABORT_STR;
-	logError(msg.c_str());
-}
-
 void Protocol::logGoodTrial(const long& nCurrentTrial, const long& microsecsFromStartTaskToneToLiftingMonkeyArm, const long& microsecsFromMonkeyArmRaisedToPlatesTouching)
 {
 	string msg = TRIAL_NUM_STR + to_string(nCurrentTrial);
@@ -129,12 +124,44 @@ void Protocol::logGoodTrial(const long& nCurrentTrial, const long& microsecsFrom
 	logInfo(msg.c_str());
 }
 
-bool Protocol::isMotorMovementAborted(atomic<bool> * stopProtocol, NIUsb6001card* m_NIUsb6001card, TeknicMotorDevice& motorHub)
+void Protocol::logBadTrial(const long& nCurrentTrial)
+{
+	string msg = TRIAL_NUM_STR + to_string(nCurrentTrial);
+	msg = msg + TRIAL_ABORT_STR;
+	logError(msg.c_str());
+}
+
+void Protocol::initDevices()
+{
+	// motor
+	if (params.tstEnMotors) {
+		if (motorHub) {
+			// WARNING: motor hub already initialized
+		}
+		else {
+			motorHub = new TeknicMotorDevice();
+			motorHub->init();
+		}
+	}
+}
+
+void Protocol::releaseDevices()
+{
+	// motor
+	if (params.tstEnMotors) {
+		if (motorHub) {  // check if nullptr
+			delete motorHub;
+			motorHub = nullptr;
+		}
+	}
+}
+
+bool Protocol::isMotorMovementAborted(atomic<bool> * stopProtocol, NIUsb6001card* m_NIUsb6001card, TeknicMotorDevice* motorHub)
 {
 	if (params.tstEnMotors)
-		motorHub.reset();
+		motorHub->reset();
 	if (!stopProtocol->load() && params.tstEnMotors)
-		motorHub.home();
+		motorHub->home();
 	// on waiting for the monkey puts the arm on the armrest before to start the trial
 	//while (!stopProtocol->load() && ( !IS_REAR_PHOTORESISTOR_COVERED || !IS_FRONT_PHOTORESISTOR_COVERED)) {}
 
@@ -142,7 +169,7 @@ bool Protocol::isMotorMovementAborted(atomic<bool> * stopProtocol, NIUsb6001card
 		return true;
 	// return true -> go() aborted
 	if (params.tstEnMotors)
-		return motorHub.go(&params.position, &params.speed, &params.acceleration);
+		return motorHub->go(&params.position, &params.speed, &params.acceleration);
 	else
 		return true;
 }
@@ -155,18 +182,18 @@ bool Protocol::isMotorMovementAborted(atomic<bool> * stopProtocol, NIUsb6001card
 /// <param name="m_NIUsb6001card"></param>
 /// <param name="motorHub"></param>
 /// <returns>True iff the motor movement started as planned or no motor initialized via testing</returns>
-bool Protocol::startForwardMovement(NIUsb6001card* m_NIUsb6001card, TeknicMotorDevice& motorHub)
+bool Protocol::startForwardMovement(NIUsb6001card* m_NIUsb6001card, TeknicMotorDevice* motorHub)
 {
 	if (params.tstEnMotors) {
-		motorHub.reset();
-		motorHub.home();
+		motorHub->reset();
+		motorHub->home();
 	}
 
 	if (this->stopProtocol.load() || this->stopTrial.load())
 		return false;
 
 	if (params.tstEnMotors)
-		return !motorHub.go(&params.position, &params.speed, &params.acceleration);
+		return !motorHub->go(&params.position, &params.speed, &params.acceleration);
 	else
 		return true;
 }

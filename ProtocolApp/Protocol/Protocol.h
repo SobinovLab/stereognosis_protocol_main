@@ -58,19 +58,32 @@ class Protocol
 	private:
 		atomic<ProtocolState> protocolState;
 
+		//////// GUI
 		void updateCurrentTrialOnTheGUI(const long & nTotTrialsPlayedUntilNow, CEdit * currentTrialGUICtrl);
-		void startReward(NIUsb6001card * m_NIUsb6001card, long & proportionalDuration);
-		long proportionalRewardCalculation(long long elapsed);
+		void setFontGuiTrialsCounter(CEdit* currentTrialGUICtrl);
 
-		bool isMotorMovementAborted(atomic<bool> * stopProtocol, NIUsb6001card* m_NIUsb6001card, TeknicMotorDevice& motorHub);
-		bool startForwardMovement(NIUsb6001card* m_NIUsb6001card, TeknicMotorDevice& motorHub);
-
+		// logging
 		void logGoodTrial(const long& nCurrentTrial, const long& timeElapsedFromStartTaskToneToLiftsMonkeyArm, const long& timeElapsedFromStartTaskToneToPlatesTouch);
 		void logBadTrial(const long& nCurrentTrial);
 
+		//////// devices
+		void initDevices();
+		void releaseDevices();
+
+		// reward
+		void startReward(NIUsb6001card * m_NIUsb6001card, long & proportionalDuration);
+		long proportionalRewardCalculation(long long elapsed);
+
+		// motor
+		NIUsb6001card m_NIUsb6001card;
+		TeknicMotorDevice* motorHub = nullptr;
+		bool isMotorMovementAborted(atomic<bool> * stopProtocol, NIUsb6001card* m_NIUsb6001card, TeknicMotorDevice* motorHub);
+		bool startForwardMovement(NIUsb6001card* m_NIUsb6001card, TeknicMotorDevice* motorHub);
+
+		//////// running protocol support
 		bool isTimeout(time_point<std::chrono::steady_clock>& startToneTime);
 		void storeStartTime(time_point<std::chrono::steady_clock>& time);
 		bool Protocol::isElapsedTheMinUncoveredTime(time_point<std::chrono::steady_clock>& photoresistorsUncoveredTime);
 
-		void setFontGuiTrialsCounter(CEdit * currentTrialGUICtrl);
+
 };
