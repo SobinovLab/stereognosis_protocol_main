@@ -172,6 +172,7 @@ copy /B /V /Y "$(ProjectDir)libTeknicMotor\lib_x64\*.dll" "$(OutDir)" &gt; NUL
     <ClInclude Include="targetver.h" />
     <ClInclude Include="tekscan_server.grpc.pb.h" />
     <ClInclude Include="tekscan_server.pb.h" />
+    <ClInclude Include="Times.h" />
     <ClInclude Include="TouchSensorClient.h" />
   </ItemGroup>
   <ItemGroup>
@@ -193,6 +194,7 @@ copy /B /V /Y "$(ProjectDir)libTeknicMotor\lib_x64\*.dll" "$(OutDir)" &gt; NUL
     </ClCompile>
     <ClCompile Include="tekscan_server.grpc.pb.cc" />
     <ClCompile Include="tekscan_server.pb.cc" />
+    <ClCompile Include="Times.cpp" />
     <ClCompile Include="TouchSensorClient.cpp" />
   </ItemGroup>
   <ItemGroup>

@@ -81,6 +81,9 @@
     <ClInclude Include="TouchSensorClient.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Times.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -129,6 +132,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="TouchSensorClient.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Times.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
