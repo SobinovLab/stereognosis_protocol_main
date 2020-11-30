@@ -15,7 +15,6 @@ CProtocolAppDlg::CProtocolAppDlg(CWnd* pParent /*=nullptr*/) : CDialogEx(IDD_PRO
 
 void CProtocolAppDlg::DoDataExchange(CDataExchange* pDX)
 {
-	//OutputDebugString(_T("Start of DoDataExchange\n"));
 	CDialogEx::DoDataExchange(pDX);
 
 	DDX_Control(pDX, IDC_REWARD_TIME_EDT, m_rewardDurationEdtCtrl);
@@ -37,9 +36,6 @@ void CProtocolAppDlg::DoDataExchange(CDataExchange* pDX)
 
 	DDX_Control(pDX, IDC_LOOP_TRIALS_CHK, m_trialLoopChk);
 
-	//DDX_Control(pDX, IDC_RETREAT_BTN, m_retreatButton);
-	//DDX_Control(pDX, IDC_RETREAT_FLUSH_WATER_BTN, m_retreatFlushWaterButton);
-
 	DDX_Text(pDX, IDC_REWARD_TIME_EDT, m_protocol.params.rewardDuration);
 	DDX_Text(pDX, IDC_ACCELERATION_EDT, m_protocol.params.acceleration);
 	DDX_Text(pDX, IDC_SPEED_EDT, m_protocol.params.speed);
@@ -59,8 +55,6 @@ void CProtocolAppDlg::DoDataExchange(CDataExchange* pDX)
 
 	DDX_Text(pDX, IDC_TOUCH_SENSOR_IP_EDT, m_protocol.params.tss_ip);
 	DDX_Text(pDX, IDC_TOUCH_SENSOR_PORT_EDT, m_protocol.params.tss_port);
-
-	//OutputDebugString(_T("End of DoDataExchange\n"));
 }
 
 BEGIN_MESSAGE_MAP(CProtocolAppDlg, CDialogEx)
@@ -80,7 +74,6 @@ BEGIN_MESSAGE_MAP(CProtocolAppDlg, CDialogEx)
 	ON_BN_CLICKED(IDC_CONNECT_BTN2, OnConnect2BtnClicked)
 	ON_BN_CLICKED(IDC_DISCONNECT_BTN2, OnDisconnect2BtnClicked)
 	ON_BN_CLICKED(IDC_SEND_CONFIG_BTN, OnSendConfigBtnClicked)
-	ON_BN_CLICKED(IDC_SYNC_TIME_BTN, OnSyncTimeBtnClicked)
 	ON_BN_CLICKED(IDC_CAPTURE_SINGLE_FRAME_BTN, OnCaptureSingleFrameBtnClicked)
 	ON_BN_CLICKED(IDC_CONNECT_TOUCH_SENSOR_BTN, OnConnectTouchSensorBtnClicked)
 	ON_BN_CLICKED(IDC_DISCONNECT_TOUCH_SENSOR_BTN, OnDisconnectTouchSensorBtnClicked)
@@ -270,7 +263,6 @@ void CProtocolAppDlg::OnStartTrialBtnClicked()
 
 	UpdateData(FromControlsToVariables);
 	sendConfig();
-	syncTime();
 	sendPrepareRecording();
 	sendStartRecording();
 }
@@ -339,10 +331,6 @@ void CProtocolAppDlg::OnSendConfigBtnClicked()
 {
 	UpdateData(FromControlsToVariables);
 	sendConfig();
-}
-
-void CProtocolAppDlg::OnSyncTimeBtnClicked()
-{
 }
 
 void CProtocolAppDlg::OnCaptureSingleFrameBtnClicked()
@@ -428,16 +416,6 @@ void CProtocolAppDlg::sendConfig()
 		m_cameraClient2.sendReferenceCamera(m_protocol.params.cs_refSerial);
 		m_cameraClient2.sendGain(m_protocol.params.cs_gain);
 		m_cameraClient2.sendExposure(m_protocol.params.cs_exposure);
-	}
-}
-
-void CProtocolAppDlg::syncTime()
-{
-	if (m_cameraClient1.isConnected()) {
-		m_cameraClient1.syncTime();
-	}
-	if (m_cameraClient2.isConnected()) {
-		m_cameraClient2.syncTime();
 	}
 }
 

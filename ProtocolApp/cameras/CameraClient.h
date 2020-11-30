@@ -61,8 +61,6 @@ public:
 	virtual void sendGain(const CString gain);
 	virtual void sendExposure(const CString exposure);
 
-	virtual void syncTime();
-
 	virtual void prepareRecording();
 	virtual void startRecording(int trialNumber);
 	virtual void captureSingleFrame();

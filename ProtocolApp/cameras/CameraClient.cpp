@@ -105,13 +105,6 @@ void CameraClient::sendExposure(const CString exposure)
 	}
 }
 
-void CameraClient::syncTime()
-{
-	appendClientLog(_T("Syncing time. "));
-	// TODO (with params)
-	appendClientLog(_T("Time synchronization not implemented.\n"));
-}
-
 void CameraClient::prepareRecording()
 {
 	appendClientLog(_T("Preparing recording. "));

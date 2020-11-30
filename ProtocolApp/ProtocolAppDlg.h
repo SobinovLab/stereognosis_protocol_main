@@ -84,7 +84,6 @@ protected:
 	CameraClient m_cameraClient1;
 	CameraClient m_cameraClient2;
 	void sendConfig();
-	void syncTime();
 	void sendPrepareRecording();
 
 	//////// touch sensors
@@ -134,7 +133,6 @@ protected:
 	afx_msg void OnConnect2BtnClicked();
 	afx_msg void OnDisconnect2BtnClicked();
 	afx_msg void OnSendConfigBtnClicked();
-	afx_msg void OnSyncTimeBtnClicked();
 	afx_msg void OnCaptureSingleFrameBtnClicked();
 
 	// TOUCH server
