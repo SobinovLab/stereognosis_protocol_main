@@ -92,11 +92,6 @@ protected:
 	void m_touchSensorSuccessMonitor();
 	std::atomic<bool> stopTouchSensorSuccessMonitor;
 
-	//////// Local devices
-	NIUsb6001card m_NIUsb6001card;
-
-	//////// Debug/testing controls
-
 	/////// Enable/disable fields
 	void enableProtocolCtrls(bool enable);
 	void enableTrialCtrls(bool enable);

@@ -103,6 +103,10 @@ BOOL CProtocolAppDlg::OnInitDialog()
 	SetIcon(m_hIcon, TRUE);			// Set big icon
 	SetIcon(m_hIcon, FALSE);		// Set small icon
 
+	// Send GUI pointers to the protocol
+	setFontGuiTrialsCounter();
+	m_protocol.set_photoresistor_monitors(&m_frontPhotoresistorCtrl, &m_rearPhotoresistorCtrl);
+
 	// set the visibility and defaults for GUI
 	if (m_protocol.params.tstEnCameras) ((CButton*)GetDlgItem(IDC_CAMERAS_CHK))->SetCheck(BST_CHECKED);
 	if (m_protocol.params.tstEnLightSensors) ((CButton*)GetDlgItem(IDC_LIGHT_SENSORS_CHK))->SetCheck(BST_CHECKED);
@@ -208,18 +212,7 @@ void CProtocolAppDlg::OnStartProtocolBtnClicked()
 	m_protocol.stopTrial.store(false);
 	m_protocol.retreatedMotors.store(false);
 
-	setFontGuiTrialsCounter();
-
-	if (m_protocol.params.isNiCardBeingUsed()) {
-		m_NIUsb6001card.config();
-		if (m_protocol.params.tstEnLightSensors) {
-			m_NIUsb6001card.setFrontPhotoresistorMonitor(&m_frontPhotoresistorCtrl);
-			m_NIUsb6001card.setRearPhotoresistorMonitor(&m_rearPhotoresistorCtrl);
-		}
-		m_NIUsb6001card.start();
-	}
-
-	protocolThread = new thread(&Protocol::run, &m_protocol, &m_NIUsb6001card, &m_currentTrialEdtCtrl);
+	protocolThread = new thread(&Protocol::run, &m_protocol, &m_currentTrialEdtCtrl);
 
 	enableTrialCtrls(true);
 }
@@ -233,11 +226,7 @@ void CProtocolAppDlg::OnStopProtocolBtnClicked()
 		retreatStopRecording();
 	}
 
-	if (m_protocol.params.isNiCardBeingUsed())
-		m_NIUsb6001card.stop();
 	stopProtocolThread();
-	if (m_protocol.params.tstEnLightSensors)
-		m_NIUsb6001card.resetPhotoresistorsGuiMonitor();
 
 	// trial controls fully off
 	enableTrialCtrls(true);
@@ -252,7 +241,7 @@ void CProtocolAppDlg::OnStopProtocolBtnClicked()
 void CProtocolAppDlg::OnFlushWaterBtnClicked()
 {
 	UpdateData(FromControlsToVariables);
-	m_NIUsb6001card.reward(m_protocol.params.rewardDuration);
+	m_protocol.reward();
 }
 
 void CProtocolAppDlg::OnStartTrialBtnClicked()
@@ -270,7 +259,7 @@ void CProtocolAppDlg::OnStartTrialBtnClicked()
 void CProtocolAppDlg::OnRetreatFlushWaterBtnClicked()
 {
 	UpdateData(FromControlsToVariables);
-	m_NIUsb6001card.reward(m_protocol.params.rewardDuration);
+	m_protocol.reward();
 
 	retreatStopRecording();
 
@@ -432,7 +421,6 @@ void CProtocolAppDlg::sendPrepareRecording()
 void CProtocolAppDlg::m_touchSensorSuccessMonitor()
 {
 	UpdateData(FromControlsToVariables);
-	long rewardDuration = m_protocol.params.rewardDuration;
 	double maxWaitTime = m_protocol.params.maxWaitTime;
 	double intertrialWaitTime = m_protocol.params.intertrialWaitTime;
 	auto startTime = chrono::steady_clock::now();
@@ -451,7 +439,7 @@ void CProtocolAppDlg::m_touchSensorSuccessMonitor()
 		if (result.load() > 0) {
 			// give reward
 			if (m_protocol.params.tstEnReward) {
-				m_NIUsb6001card.reward(rewardDuration);
+				m_protocol.reward();
 			}
 
 			// do the for trial break - this also stops this thread

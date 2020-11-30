@@ -19,6 +19,16 @@ ProtocolState Protocol::getCurrentState()
 	return protocolState.load();
 }
 
+void Protocol::reward()
+{
+	reward(params.rewardDuration);
+}
+
+void Protocol::reward(long duration)
+{
+	m_NIUsb6001card.reward(duration);
+}
+
 Protocol::Protocol()
 {
 	this->stopProtocol.store(false);
@@ -35,7 +45,7 @@ Protocol::~Protocol()
 	releaseDevices();
 }
 
-void Protocol::run(NIUsb6001card* m_NIUsb6001card, CEdit* currentTrialGUICtrl)
+void Protocol::run(CEdit* currentTrialGUICtrl)
 {
 	this->protocolState.store(ProtocolState::initializing);
 	// TODO?: Create directory for log storage
@@ -59,14 +69,14 @@ void Protocol::run(NIUsb6001card* m_NIUsb6001card, CEdit* currentTrialGUICtrl)
 		while (!this->startTrial.load() && !this->stopProtocol.load()) {}
 
 		this->protocolState.store(ProtocolState::trialInProgress);
+
 		// TODO: start recordings
+		m_NIUsb6001card.ephysSyncStart();
 
 		// TODO: start motors
 		this->startTrial.store(false);
 
-		m_NIUsb6001card->ephysSyncStart();
-
-		if (startForwardMovement(m_NIUsb6001card, motorHub))
+		if (startForwardMovement())
 		{
 			this->retreatedMotors.store(false);
 			Sounds::playStartTaskTone();
@@ -83,7 +93,9 @@ void Protocol::run(NIUsb6001card* m_NIUsb6001card, CEdit* currentTrialGUICtrl)
 				motorHub->home();
 			}
 			this->retreatedMotors.store(true);
-			m_NIUsb6001card->ephysSyncStop();
+
+			// TODO stop recording
+			m_NIUsb6001card.ephysSyncStop();
 		}
 
 
@@ -100,6 +112,13 @@ void Protocol::run(NIUsb6001card* m_NIUsb6001card, CEdit* currentTrialGUICtrl)
 
 	// release all devices
 	releaseDevices();
+}
+
+void Protocol::set_photoresistor_monitors(CStaticColor* front, CStaticColor* rear)
+{
+	// does not care if the card is there or whatever
+	m_NIUsb6001card.setFrontPhotoresistorMonitor(front);
+	m_NIUsb6001card.setRearPhotoresistorMonitor(rear);
 }
 
 bool Protocol::isElapsedTheMinUncoveredTime(time_point<std::chrono::steady_clock>& photoresistorsUncoveredTime)
@@ -124,6 +143,13 @@ void Protocol::logBadTrial(const long& nCurrentTrial)
 
 void Protocol::initDevices()
 {
+	// NI card: photoresistors, motor and reward
+	if (params.isNiCardBeingUsed()) {
+		m_NIUsb6001card.config();
+
+		m_NIUsb6001card.start();
+	}
+
 	// motor
 	if (params.tstEnMotors) {
 		if (motorHub) {
@@ -138,6 +164,14 @@ void Protocol::initDevices()
 
 void Protocol::releaseDevices()
 {
+	// NI card
+	if (params.isNiCardBeingUsed())
+		m_NIUsb6001card.stop();
+
+	// photoresistors
+	if (params.tstEnLightSensors)
+		m_NIUsb6001card.resetPhotoresistorsGuiMonitor();
+
 	// motor
 	if (params.tstEnMotors) {
 		if (motorHub) {  // check if nullptr
@@ -147,7 +181,7 @@ void Protocol::releaseDevices()
 	}
 }
 
-bool Protocol::isMotorMovementAborted(atomic<bool> * stopProtocol, NIUsb6001card* m_NIUsb6001card, TeknicMotorDevice* motorHub)
+bool Protocol::isMotorMovementAborted(atomic<bool> * stopProtocol)
 {
 	if (params.tstEnMotors)
 		motorHub->reset();
@@ -173,7 +207,7 @@ bool Protocol::isMotorMovementAborted(atomic<bool> * stopProtocol, NIUsb6001card
 /// <param name="m_NIUsb6001card"></param>
 /// <param name="motorHub"></param>
 /// <returns>True iff the motor movement started as planned or no motor initialized via testing</returns>
-bool Protocol::startForwardMovement(NIUsb6001card* m_NIUsb6001card, TeknicMotorDevice* motorHub)
+bool Protocol::startForwardMovement()
 {
 	if (params.tstEnMotors) {
 		motorHub->reset();
@@ -195,11 +229,6 @@ void Protocol::updateCurrentTrialOnTheGUI(const long & nTotTrialsPlayedUntilNow,
 	nTrialsConverted.Format(_T(PRECISION), nTotTrialsPlayedUntilNow);
 	currentTrialGUICtrl->SetWindowText(nTrialsConverted);
 	currentTrialNumber.store(nTotTrialsPlayedUntilNow);
-}
-
-void Protocol::startReward(NIUsb6001card * m_NIUsb6001card, long & proportionalDuration)
-{
-		m_NIUsb6001card->reward(proportionalDuration);
 }
 
 bool Protocol::isTimeout(time_point<std::chrono::steady_clock>& startToneTime)

@@ -7,7 +7,7 @@
 *        by managing the electronic devices involved in the protocol
 *
 *********************************************************************/
-//#pragma once
+#pragma once
 
 #include <windows.h>
 #include <chrono>
@@ -50,10 +50,16 @@ class Protocol
 
 		ProtocolState getCurrentState();
 
+		void reward();
+		void reward(long duration);
+
 		// main loop that is run in a thread when StartProtocol is clicked
-		virtual void run(NIUsb6001card* m_NIUsb6001card, CEdit* currentTrialGUICtrl);
+		virtual void run(CEdit* currentTrialGUICtrl);
 
 		std::atomic<long> currentTrialNumber;
+
+		// GUI stuff
+		void set_photoresistor_monitors(CStaticColor* front, CStaticColor* rear);
 
 	private:
 		atomic<ProtocolState> protocolState;
@@ -69,15 +75,20 @@ class Protocol
 		void initDevices();
 		void releaseDevices();
 
+		// photoresistor, motor, reward
+		NIUsb6001card m_NIUsb6001card;
+
+		// photoresistors
+		CStaticColor* m_frontPhotoresistorCtrl = nullptr;
+		CStaticColor* m_rearPhotoresistorCtrl = nullptr;
+
 		// reward
-		void startReward(NIUsb6001card * m_NIUsb6001card, long & proportionalDuration);
 		long proportionalRewardCalculation(long long elapsed);
 
 		// motor
-		NIUsb6001card m_NIUsb6001card;
 		TeknicMotorDevice* motorHub = nullptr;
-		bool isMotorMovementAborted(atomic<bool> * stopProtocol, NIUsb6001card* m_NIUsb6001card, TeknicMotorDevice* motorHub);
-		bool startForwardMovement(NIUsb6001card* m_NIUsb6001card, TeknicMotorDevice* motorHub);
+		bool isMotorMovementAborted(atomic<bool> * stopProtocol);
+		bool startForwardMovement();
 
 		//////// running protocol support
 		bool isTimeout(time_point<std::chrono::steady_clock>& startToneTime);
