@@ -12,7 +12,6 @@
 #include "Sounds.h"
 #include "ProtocolApp.h"
 #include "CStaticColor.h"
-#include "CameraClient.h"
 #include "TouchSensorClient.h"
 
 constexpr auto FONT_TYPE = "Courier New";
@@ -81,8 +80,6 @@ protected:
 	void retreatStopRecording();
 
 	//////// cameras
-	CameraClient m_cameraClient1;
-	CameraClient m_cameraClient2;
 	void sendConfig();
 	void sendPrepareRecording();
 

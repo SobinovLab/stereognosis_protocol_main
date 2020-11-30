@@ -13,11 +13,12 @@
 #include <chrono>
 #include <atomic>
 #include "Logger.h"
-#include "utilities\Sounds.h"
-#include "utilities\Times.h"
+#include "Sounds.h"
+#include "Times.h"
 #include "ProtocolParameters.h"
 #include "TeknicMotorDevice.h"
 #include "NIUsb6001card.h"
+#include "CameraClient.h"
 
 using namespace std;
 using namespace chrono;
@@ -42,24 +43,42 @@ class Protocol
 		// General parameters TODO: load ip etc from ini
 		ProtocolParameters params;
 
+		//////// GUI interaction
 		// Control of the protocol running
 		atomic<bool> stopProtocol;
 		atomic<bool> startTrial;
 		atomic<bool> stopTrial;
 		atomic<bool> retreatedMotors;
 
-		ProtocolState getCurrentState();
-
-		void reward();
-		void reward(long duration);
-
 		// main loop that is run in a thread when StartProtocol is clicked
 		virtual void run(CEdit* currentTrialGUICtrl);
 
 		std::atomic<long> currentTrialNumber;
+		ProtocolState getCurrentState();
 
-		// GUI stuff
+		// sets of gui variables
 		void set_photoresistor_monitors(CStaticColor* front, CStaticColor* rear);
+		void set_camera1_gui_controls(CEdit* serverStatusCtrl, CEdit* serverLogCtrl);
+		void set_camera2_gui_controls(CEdit* serverStatusCtrl, CEdit* serverLogCtrl);
+
+		//////// local devices
+		void reward();
+		void reward(long duration);
+
+		//////// connected devices
+		// cameras
+		void connect_camera_client1();
+		void connect_camera_client2();
+
+		void disconnect_camera_client1();
+		void disconnect_camera_client2();
+
+		void send_config_to_cameras();
+		void capture_single_frame();
+		void prepare_camera_recording();
+		void start_camera_recording();
+		void start_camera_recording(long trial_number);
+		void break_camera_recording();
 
 	private:
 		atomic<ProtocolState> protocolState;
@@ -71,7 +90,7 @@ class Protocol
 		void logGoodTrial(const long& nCurrentTrial, const long& timeElapsedFromStartTaskToneToLiftsMonkeyArm, const long& timeElapsedFromStartTaskToneToPlatesTouch);
 		void logBadTrial(const long& nCurrentTrial);
 
-		//////// devices
+		//////// local devices
 		void initDevices();
 		void releaseDevices();
 
@@ -90,10 +109,14 @@ class Protocol
 		bool isMotorMovementAborted(atomic<bool> * stopProtocol);
 		bool startForwardMovement();
 
+		//////// connected devices
+		// cameras
+		CameraClient m_cameraClient1;
+		CameraClient m_cameraClient2;
+
 		//////// running protocol support
 		bool isTimeout(time_point<std::chrono::steady_clock>& startToneTime);
 		void storeStartTime(time_point<std::chrono::steady_clock>& time);
-		bool Protocol::isElapsedTheMinUncoveredTime(time_point<std::chrono::steady_clock>& photoresistorsUncoveredTime);
-
+		bool isElapsedTheMinUncoveredTime(time_point<std::chrono::steady_clock>& photoresistorsUncoveredTime);
 
 };

@@ -29,6 +29,101 @@ void Protocol::reward(long duration)
 	m_NIUsb6001card.reward(duration);
 }
 
+void Protocol::connect_camera_client1()
+{
+	if (m_cameraClient1.isConnected()) {
+		// TODO warning
+	}
+	else {
+		m_cameraClient1.server_ip = params.cs_ip1;
+		m_cameraClient1.port = params.cs_port1;
+
+		m_cameraClient1.connect_f();
+	}
+}
+
+void Protocol::connect_camera_client2()
+{
+	if (m_cameraClient2.isConnected()) {
+		// TODO warning
+	}
+	else {
+		m_cameraClient2.server_ip = params.cs_ip2;
+		m_cameraClient2.port = params.cs_port2;
+
+		m_cameraClient2.connect_f();
+	}
+}
+
+void Protocol::disconnect_camera_client1()
+{
+	m_cameraClient1.disconnect_f();
+}
+
+void Protocol::disconnect_camera_client2()
+{
+	m_cameraClient2.disconnect_f();
+}
+
+void Protocol::send_config_to_cameras()
+{
+	if (m_cameraClient1.isConnected()) {
+		m_cameraClient1.sendFramerate(params.cs_framerate);
+		m_cameraClient1.sendRecordingPeriod(params.cs_recordingPeriod);
+		m_cameraClient1.sendReferenceCamera(params.cs_refSerial);
+		m_cameraClient1.sendGain(params.cs_gain);
+		m_cameraClient1.sendExposure(params.cs_exposure);
+	}
+	if (m_cameraClient2.isConnected()) {
+		m_cameraClient2.sendFramerate(params.cs_framerate);
+		m_cameraClient2.sendRecordingPeriod(params.cs_recordingPeriod);
+		m_cameraClient2.sendReferenceCamera(params.cs_refSerial);
+		m_cameraClient2.sendGain(params.cs_gain);
+		m_cameraClient2.sendExposure(params.cs_exposure);
+	}
+}
+
+void Protocol::capture_single_frame()
+{
+	if (m_cameraClient1.isConnected())
+		m_cameraClient1.captureSingleFrame();
+	if (m_cameraClient2.isConnected())
+		m_cameraClient2.captureSingleFrame();
+}
+
+void Protocol::prepare_camera_recording()
+{
+	if (m_cameraClient1.isConnected()) {
+		m_cameraClient1.prepareRecording();
+	}
+	if (m_cameraClient2.isConnected()) {
+		m_cameraClient2.prepareRecording();
+	}
+}
+
+void Protocol::start_camera_recording()
+{
+	start_camera_recording(currentTrialNumber.load());
+}
+
+void Protocol::start_camera_recording(long trial_number)
+{
+	if (m_cameraClient1.isConnected()) {
+		m_cameraClient1.startRecording(trial_number);
+	}
+	if (m_cameraClient2.isConnected()) {
+		m_cameraClient2.startRecording(trial_number);
+	}
+}
+
+void Protocol::break_camera_recording()
+{
+	if (m_cameraClient1.isConnected())
+		m_cameraClient1.breakRecording();
+	if (m_cameraClient2.isConnected())
+		m_cameraClient2.breakRecording();
+}
+
 Protocol::Protocol()
 {
 	this->stopProtocol.store(false);
@@ -119,6 +214,18 @@ void Protocol::set_photoresistor_monitors(CStaticColor* front, CStaticColor* rea
 	// does not care if the card is there or whatever
 	m_NIUsb6001card.setFrontPhotoresistorMonitor(front);
 	m_NIUsb6001card.setRearPhotoresistorMonitor(rear);
+}
+
+void Protocol::set_camera1_gui_controls(CEdit* serverStatusCtrl, CEdit* serverLogCtrl)
+{
+	m_cameraClient1.clientStatusGuiEdt = serverStatusCtrl;
+	m_cameraClient1.clientLogGuiEdt = serverLogCtrl;
+}
+
+void Protocol::set_camera2_gui_controls(CEdit* serverStatusCtrl, CEdit* serverLogCtrl)
+{
+	m_cameraClient2.clientStatusGuiEdt = serverStatusCtrl;
+	m_cameraClient2.clientLogGuiEdt = serverLogCtrl;
 }
 
 bool Protocol::isElapsedTheMinUncoveredTime(time_point<std::chrono::steady_clock>& photoresistorsUncoveredTime)

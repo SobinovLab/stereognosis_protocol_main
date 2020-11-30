@@ -106,6 +106,10 @@ BOOL CProtocolAppDlg::OnInitDialog()
 	// Send GUI pointers to the protocol
 	setFontGuiTrialsCounter();
 	m_protocol.set_photoresistor_monitors(&m_frontPhotoresistorCtrl, &m_rearPhotoresistorCtrl);
+	m_serverStatusCtrl1.SetWindowText("Off");
+	m_protocol.set_camera1_gui_controls(&m_serverStatusCtrl1, &m_serverLogCtrl1);
+	m_serverStatusCtrl2.SetWindowText("Off");
+	m_protocol.set_camera2_gui_controls(&m_serverStatusCtrl2, &m_serverLogCtrl2);
 
 	// set the visibility and defaults for GUI
 	if (m_protocol.params.tstEnCameras) ((CButton*)GetDlgItem(IDC_CAMERAS_CHK))->SetCheck(BST_CHECKED);
@@ -134,8 +138,6 @@ BOOL CProtocolAppDlg::OnInitDialog()
 	enableCameraServer2Ctrls(true);
 	GetDlgItem(IDC_FRAMERATE_EDT)->EnableWindow(m_protocol.params.tstEnCameras);
 	GetDlgItem(IDC_RECORDING_PERIOD_EDT)->EnableWindow(m_protocol.params.tstEnCameras);
-	m_serverStatusCtrl1.SetWindowText("Off");
-	m_serverStatusCtrl2.SetWindowText("Off");
 	GetDlgItem(IDC_SEND_CONFIG_BTN)->EnableWindow(m_protocol.params.tstEnCameras);
 	GetDlgItem(IDC_SYNC_TIME_BTN)->EnableWindow(m_protocol.params.tstEnCameras);
 
@@ -278,20 +280,15 @@ void CProtocolAppDlg::OnConnect1BtnClicked()
 {
 	UpdateData(FromControlsToVariables);
 
-	m_cameraClient1.server_ip = m_protocol.params.cs_ip1;
-	m_cameraClient1.port = m_protocol.params.cs_port1;
-	m_cameraClient1.clientStatusGuiEdt = &m_serverStatusCtrl1;
-	m_cameraClient1.clientLogGuiEdt = &m_serverLogCtrl1;
-
-	m_cameraClient1.connect_f();
+	// TODO (AS) return error if not connected and not change state?
+	m_protocol.connect_camera_client1();
 
 	enableCameraServer1Ctrls(false);
 }
 
 void CProtocolAppDlg::OnDisconnect1BtnClicked()
 {
-	m_cameraClient1.disconnect_f();
-
+	m_protocol.disconnect_camera_client1();
 	enableCameraServer1Ctrls(true);
 }
 
@@ -299,19 +296,14 @@ void CProtocolAppDlg::OnConnect2BtnClicked()
 {
 	UpdateData(FromControlsToVariables);
 
-	m_cameraClient2.server_ip = m_protocol.params.cs_ip2;
-	m_cameraClient2.port = m_protocol.params.cs_port2;
-	m_cameraClient2.clientStatusGuiEdt = &m_serverStatusCtrl2;
-	m_cameraClient2.clientLogGuiEdt = &m_serverLogCtrl2;
-
-	m_cameraClient2.connect_f();
+	m_protocol.connect_camera_client2();
 
 	enableCameraServer2Ctrls(false);
 }
 
 void CProtocolAppDlg::OnDisconnect2BtnClicked()
 {
-	m_cameraClient2.disconnect_f();
+	m_protocol.disconnect_camera_client2();
 
 	enableCameraServer2Ctrls(true);
 }
@@ -327,12 +319,7 @@ void CProtocolAppDlg::OnCaptureSingleFrameBtnClicked()
 	UpdateData(FromControlsToVariables);
 	sendConfig();
 
-	if (m_cameraClient1.isConnected()) {
-		m_cameraClient1.captureSingleFrame();
-	}
-	if (m_cameraClient2.isConnected()) {
-		m_cameraClient2.captureSingleFrame();
-	}
+	m_protocol.capture_single_frame();
 }
 
 void CProtocolAppDlg::OnConnectTouchSensorBtnClicked()
@@ -379,10 +366,7 @@ void CProtocolAppDlg::retreatStopRecording()
 	while (!m_protocol.retreatedMotors.load()) {}
 
 	// and only then stop recording
-	if (m_cameraClient1.isConnected())
-		m_cameraClient1.breakRecording();
-	if (m_cameraClient2.isConnected())
-		m_cameraClient2.breakRecording();
+	m_protocol.break_camera_recording();
 
 	if (m_touchSensorClient.isConnected()) {
 		atomic<int> result;
@@ -392,30 +376,12 @@ void CProtocolAppDlg::retreatStopRecording()
 
 void CProtocolAppDlg::sendConfig()
 {
-	if (m_cameraClient1.isConnected()) {
-		m_cameraClient1.sendFramerate(m_protocol.params.cs_framerate);
-		m_cameraClient1.sendRecordingPeriod(m_protocol.params.cs_recordingPeriod);
-		m_cameraClient1.sendReferenceCamera(m_protocol.params.cs_refSerial);
-		m_cameraClient1.sendGain(m_protocol.params.cs_gain);
-		m_cameraClient1.sendExposure(m_protocol.params.cs_exposure);
-	}
-	if (m_cameraClient2.isConnected()) {
-		m_cameraClient2.sendFramerate(m_protocol.params.cs_framerate);
-		m_cameraClient2.sendRecordingPeriod(m_protocol.params.cs_recordingPeriod);
-		m_cameraClient2.sendReferenceCamera(m_protocol.params.cs_refSerial);
-		m_cameraClient2.sendGain(m_protocol.params.cs_gain);
-		m_cameraClient2.sendExposure(m_protocol.params.cs_exposure);
-	}
+	m_protocol.send_config_to_cameras();
 }
 
 void CProtocolAppDlg::sendPrepareRecording()
 {
-	if (m_cameraClient1.isConnected()) {
-		m_cameraClient1.prepareRecording();
-	}
-	if (m_cameraClient2.isConnected()) {
-		m_cameraClient2.prepareRecording();
-	}
+	m_protocol.prepare_camera_recording();
 }
 
 void CProtocolAppDlg::m_touchSensorSuccessMonitor()
@@ -483,12 +449,7 @@ void CProtocolAppDlg::sendStartRecording()
 {
 	long currentTrialNumber = m_protocol.currentTrialNumber.load();
 
-	if (m_cameraClient1.isConnected()) {
-		m_cameraClient1.startRecording(currentTrialNumber);
-	}
-	if (m_cameraClient2.isConnected()) {
-		m_cameraClient2.startRecording(currentTrialNumber);
-	}
+	m_protocol.start_camera_recording();
 	if (m_touchSensorClient.isConnected()) {
 		m_touchSensorClient.startRecording(currentTrialNumber);
 
