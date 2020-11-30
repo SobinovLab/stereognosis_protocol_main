@@ -45,7 +45,6 @@ class ProtocolParameters
 		// testing and debugging flags
 		bool tstEnMotors;
 		bool tstEnReward;
-		bool tstEnCameras;
 		bool tstEnLightSensors;
 		bool tstEnTouchSensors;
 		virtual void init();

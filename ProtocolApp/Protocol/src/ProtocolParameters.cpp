@@ -68,9 +68,6 @@ void ProtocolParameters::init()
 	tstEnReward = true;
 	tstEnLightSensors = true;
 
-	tstEnCameras = true;
-	//tstEnCameras = false;
-
 	tstEnTouchSensors = true;
 }
 

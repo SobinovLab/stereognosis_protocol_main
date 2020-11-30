@@ -81,7 +81,6 @@ protected:
 
 	//////// cameras
 	void sendConfig();
-	void sendPrepareRecording();
 
 	//////// touch sensors
 	TouchSensorClient m_touchSensorClient;

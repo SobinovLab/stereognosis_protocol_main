@@ -112,7 +112,6 @@ BOOL CProtocolAppDlg::OnInitDialog()
 	m_protocol.set_camera2_gui_controls(&m_serverStatusCtrl2, &m_serverLogCtrl2);
 
 	// set the visibility and defaults for GUI
-	if (m_protocol.params.tstEnCameras) ((CButton*)GetDlgItem(IDC_CAMERAS_CHK))->SetCheck(BST_CHECKED);
 	if (m_protocol.params.tstEnLightSensors) ((CButton*)GetDlgItem(IDC_LIGHT_SENSORS_CHK))->SetCheck(BST_CHECKED);
 	if (m_protocol.params.tstEnMotors) ((CButton*)GetDlgItem(IDC_MOTORS_CHK))->SetCheck(BST_CHECKED);
 	if (m_protocol.params.tstEnReward) ((CButton*)GetDlgItem(IDC_REWARD_CHK))->SetCheck(BST_CHECKED);
@@ -136,10 +135,6 @@ BOOL CProtocolAppDlg::OnInitDialog()
 	// cameras
 	enableCameraServer1Ctrls(true);
 	enableCameraServer2Ctrls(true);
-	GetDlgItem(IDC_FRAMERATE_EDT)->EnableWindow(m_protocol.params.tstEnCameras);
-	GetDlgItem(IDC_RECORDING_PERIOD_EDT)->EnableWindow(m_protocol.params.tstEnCameras);
-	GetDlgItem(IDC_SEND_CONFIG_BTN)->EnableWindow(m_protocol.params.tstEnCameras);
-	GetDlgItem(IDC_SYNC_TIME_BTN)->EnableWindow(m_protocol.params.tstEnCameras);
 
 	// touch sensor
 	enableTouchServerCtrls(true);
@@ -249,12 +244,10 @@ void CProtocolAppDlg::OnFlushWaterBtnClicked()
 void CProtocolAppDlg::OnStartTrialBtnClicked()
 {
 	enableTrialCtrls(false);
+	UpdateData(FromControlsToVariables);
 
 	m_protocol.startTrial.store(true);
 
-	UpdateData(FromControlsToVariables);
-	sendConfig();
-	sendPrepareRecording();
 	sendStartRecording();
 }
 
@@ -317,7 +310,6 @@ void CProtocolAppDlg::OnSendConfigBtnClicked()
 void CProtocolAppDlg::OnCaptureSingleFrameBtnClicked()
 {
 	UpdateData(FromControlsToVariables);
-	sendConfig();
 
 	m_protocol.capture_single_frame();
 }
@@ -366,7 +358,6 @@ void CProtocolAppDlg::retreatStopRecording()
 	while (!m_protocol.retreatedMotors.load()) {}
 
 	// and only then stop recording
-	m_protocol.break_camera_recording();
 
 	if (m_touchSensorClient.isConnected()) {
 		atomic<int> result;
@@ -377,11 +368,6 @@ void CProtocolAppDlg::retreatStopRecording()
 void CProtocolAppDlg::sendConfig()
 {
 	m_protocol.send_config_to_cameras();
-}
-
-void CProtocolAppDlg::sendPrepareRecording()
-{
-	m_protocol.prepare_camera_recording();
 }
 
 void CProtocolAppDlg::m_touchSensorSuccessMonitor()
@@ -449,7 +435,6 @@ void CProtocolAppDlg::sendStartRecording()
 {
 	long currentTrialNumber = m_protocol.currentTrialNumber.load();
 
-	m_protocol.start_camera_recording();
 	if (m_touchSensorClient.isConnected()) {
 		m_touchSensorClient.startRecording(currentTrialNumber);
 
@@ -490,20 +475,20 @@ void CProtocolAppDlg::enableRewardCtrls(bool enable)
 
 void CProtocolAppDlg::enableCameraServer1Ctrls(bool enable)
 {
-	GetDlgItem(IDC_IP_EDT1)->EnableWindow(enable && m_protocol.params.tstEnCameras);
-	GetDlgItem(IDC_PORT_EDT1)->EnableWindow(enable && m_protocol.params.tstEnCameras);
-	GetDlgItem(IDC_CONNECT_BTN1)->EnableWindow(enable && m_protocol.params.tstEnCameras);
+	GetDlgItem(IDC_IP_EDT1)->EnableWindow(enable);
+	GetDlgItem(IDC_PORT_EDT1)->EnableWindow(enable);
+	GetDlgItem(IDC_CONNECT_BTN1)->EnableWindow(enable);
 
-	GetDlgItem(IDC_DISCONNECT_BTN1)->EnableWindow(!enable && m_protocol.params.tstEnCameras);
+	GetDlgItem(IDC_DISCONNECT_BTN1)->EnableWindow(!enable);
 }
 
 void CProtocolAppDlg::enableCameraServer2Ctrls(bool enable)
 {
-	GetDlgItem(IDC_IP_EDT2)->EnableWindow(enable && m_protocol.params.tstEnCameras);
-	GetDlgItem(IDC_PORT_EDT2)->EnableWindow(enable && m_protocol.params.tstEnCameras);
-	GetDlgItem(IDC_CONNECT_BTN2)->EnableWindow(enable && m_protocol.params.tstEnCameras);
+	GetDlgItem(IDC_IP_EDT2)->EnableWindow(enable);
+	GetDlgItem(IDC_PORT_EDT2)->EnableWindow(enable);
+	GetDlgItem(IDC_CONNECT_BTN2)->EnableWindow(enable);
 
-	GetDlgItem(IDC_DISCONNECT_BTN2)->EnableWindow(!enable && m_protocol.params.tstEnCameras);
+	GetDlgItem(IDC_DISCONNECT_BTN2)->EnableWindow(!enable);
 }
 
 void CProtocolAppDlg::enableTouchServerCtrls(bool enable)

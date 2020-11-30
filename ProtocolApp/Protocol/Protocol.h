@@ -82,7 +82,7 @@ class Protocol
 		atomic<ProtocolState> protocolState;
 
 		//////// GUI
-		void updateCurrentTrialOnTheGUI(const long & nTotTrialsPlayedUntilNow, CEdit * currentTrialGUICtrl);
+		void updateCurrentTrialOnTheGUI(CEdit * currentTrialGUICtrl);
 
 		// logging
 		void logGoodTrial(const long& nCurrentTrial, const long& timeElapsedFromStartTaskToneToLiftsMonkeyArm, const long& timeElapsedFromStartTaskToneToPlatesTouch);

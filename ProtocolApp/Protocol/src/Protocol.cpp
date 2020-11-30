@@ -79,6 +79,7 @@ void Protocol::send_config_to_cameras()
 
 void Protocol::capture_single_frame()
 {
+	send_config_to_cameras();
 	if (m_cameraClient1.isConnected())
 		m_cameraClient1.captureSingleFrame();
 	if (m_cameraClient2.isConnected())
@@ -145,12 +146,12 @@ void Protocol::run(CEdit* currentTrialGUICtrl)
 	// Initialize all devices
 	initDevices();
 
-	// TODO class member variable?
-	long nTotTrialsPlayedUntilNow = 0;
+	// class member variable
+	currentTrialNumber = 0;
 	// Run the protocol loop
 	while (!this->stopProtocol.load())
 	{
-		updateCurrentTrialOnTheGUI(nTotTrialsPlayedUntilNow, currentTrialGUICtrl);
+		updateCurrentTrialOnTheGUI(currentTrialGUICtrl);
 		// TODO: load the parameters of the next trial
 
 		this->protocolState.store(ProtocolState::trialReady);
@@ -159,10 +160,15 @@ void Protocol::run(CEdit* currentTrialGUICtrl)
 
 		this->protocolState.store(ProtocolState::trialInProgress);
 
+		// prepare recordings
+		send_config_to_cameras();
+		prepare_camera_recording();
+
 		// TODO: start recordings
+		start_camera_recording();
 		m_NIUsb6001card.ephysSyncStart();
 
-		// TODO: start motors
+		// TODO: change start motors
 		this->startTrial.store(false);
 
 		if (startForwardMovement())
@@ -184,6 +190,7 @@ void Protocol::run(CEdit* currentTrialGUICtrl)
 			this->retreatedMotors.store(true);
 
 			// TODO stop recording
+			break_camera_recording();
 			m_NIUsb6001card.ephysSyncStop();
 		}
 
@@ -191,16 +198,19 @@ void Protocol::run(CEdit* currentTrialGUICtrl)
 		this->protocolState.store(ProtocolState::trialFinalizing);
 
 		// TODO Conditions for success or fail at the trial
-		++nTotTrialsPlayedUntilNow;
+		currentTrialNumber++;
 
 		// TODO wait for the signal from recording devices that the data has been saved
 
 		// TODO display the progress of saving on the GUI
 
 	}
+	this->protocolState.store(ProtocolState::shuttingDown);
 
 	// release all devices
 	releaseDevices();
+
+	this->protocolState.store(ProtocolState::shutdown);
 }
 
 void Protocol::set_photoresistor_monitors(CStaticColor* front, CStaticColor* rear)
@@ -324,12 +334,11 @@ bool Protocol::startForwardMovement()
 		return true;
 }
 
-void Protocol::updateCurrentTrialOnTheGUI(const long & nTotTrialsPlayedUntilNow, CEdit * currentTrialGUICtrl)
+void Protocol::updateCurrentTrialOnTheGUI(CEdit * currentTrialGUICtrl)
 {
 	CStringA nTrialsConverted;
-	nTrialsConverted.Format(_T(PRECISION), nTotTrialsPlayedUntilNow);
+	nTrialsConverted.Format(_T(PRECISION), currentTrialNumber);
 	currentTrialGUICtrl->SetWindowText(nTrialsConverted);
-	currentTrialNumber.store(nTotTrialsPlayedUntilNow);
 }
 
 bool Protocol::isTimeout(time_point<std::chrono::steady_clock>& startToneTime)
