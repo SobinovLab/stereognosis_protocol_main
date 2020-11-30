@@ -57,27 +57,22 @@ CameraCommunicatorS::Stub::Stub(const std::shared_ptr< ::grpc::ChannelInterface>
 }
 
 void CameraCommunicatorS::Stub::experimental_async::SetFramerate(::grpc::ClientContext* context, const ::SetFramerateRequest* request, ::SimpleResponse* response, std::function<void(::grpc::Status)> f) {
-  ::grpc_impl::internal::CallbackUnaryCall(stub_->channel_.get(), stub_->rpcmethod_SetFramerate_, context, request, response, std::move(f));
-}
-
-void CameraCommunicatorS::Stub::experimental_async::SetFramerate(::grpc::ClientContext* context, const ::grpc::ByteBuffer* request, ::SimpleResponse* response, std::function<void(::grpc::Status)> f) {
-  ::grpc_impl::internal::CallbackUnaryCall(stub_->channel_.get(), stub_->rpcmethod_SetFramerate_, context, request, response, std::move(f));
+  ::grpc::internal::CallbackUnaryCall(stub_->channel_.get(), stub_->rpcmethod_SetFramerate_, context, request, response, std::move(f));
 }
 
 void CameraCommunicatorS::Stub::experimental_async::SetFramerate(::grpc::ClientContext* context, const ::SetFramerateRequest* request, ::SimpleResponse* response, ::grpc::experimental::ClientUnaryReactor* reactor) {
-  ::grpc_impl::internal::ClientCallbackUnaryFactory::Create(stub_->channel_.get(), stub_->rpcmethod_SetFramerate_, context, request, response, reactor);
-}
-
-void CameraCommunicatorS::Stub::experimental_async::SetFramerate(::grpc::ClientContext* context, const ::grpc::ByteBuffer* request, ::SimpleResponse* response, ::grpc::experimental::ClientUnaryReactor* reactor) {
-  ::grpc_impl::internal::ClientCallbackUnaryFactory::Create(stub_->channel_.get(), stub_->rpcmethod_SetFramerate_, context, request, response, reactor);
-}
-
-::grpc::ClientAsyncResponseReader< ::SimpleResponse>* CameraCommunicatorS::Stub::AsyncSetFramerateRaw(::grpc::ClientContext* context, const ::SetFramerateRequest& request, ::grpc::CompletionQueue* cq) {
-  return ::grpc_impl::internal::ClientAsyncResponseReaderFactory< ::SimpleResponse>::Create(channel_.get(), cq, rpcmethod_SetFramerate_, context, request, true);
+  ::grpc::internal::ClientCallbackUnaryFactory::Create(stub_->channel_.get(), stub_->rpcmethod_SetFramerate_, context, request, response, reactor);
 }
 
 ::grpc::ClientAsyncResponseReader< ::SimpleResponse>* CameraCommunicatorS::Stub::PrepareAsyncSetFramerateRaw(::grpc::ClientContext* context, const ::SetFramerateRequest& request, ::grpc::CompletionQueue* cq) {
-  return ::grpc_impl::internal::ClientAsyncResponseReaderFactory< ::SimpleResponse>::Create(channel_.get(), cq, rpcmethod_SetFramerate_, context, request, false);
+  return ::grpc::internal::ClientAsyncResponseReaderFactory< ::SimpleResponse>::Create(channel_.get(), cq, rpcmethod_SetFramerate_, context, request, false);
+}
+
+::grpc::ClientAsyncResponseReader< ::SimpleResponse>* CameraCommunicatorS::Stub::AsyncSetFramerateRaw(::grpc::ClientContext* context, const ::SetFramerateRequest& request, ::grpc::CompletionQueue* cq) {
+  auto* result =
+    this->PrepareAsyncSetFramerateRaw(context, request, cq);
+  result->StartCall();
+  return result;
 }
 
 ::grpc::Status CameraCommunicatorS::Stub::SetRecordingPeriod(::grpc::ClientContext* context, const ::SetRecordingPeriodRequest& request, ::SimpleResponse* response) {
@@ -85,27 +80,22 @@ void CameraCommunicatorS::Stub::experimental_async::SetFramerate(::grpc::ClientC
 }
 
 void CameraCommunicatorS::Stub::experimental_async::SetRecordingPeriod(::grpc::ClientContext* context, const ::SetRecordingPeriodRequest* request, ::SimpleResponse* response, std::function<void(::grpc::Status)> f) {
-  ::grpc_impl::internal::CallbackUnaryCall(stub_->channel_.get(), stub_->rpcmethod_SetRecordingPeriod_, context, request, response, std::move(f));
-}
-
-void CameraCommunicatorS::Stub::experimental_async::SetRecordingPeriod(::grpc::ClientContext* context, const ::grpc::ByteBuffer* request, ::SimpleResponse* response, std::function<void(::grpc::Status)> f) {
-  ::grpc_impl::internal::CallbackUnaryCall(stub_->channel_.get(), stub_->rpcmethod_SetRecordingPeriod_, context, request, response, std::move(f));
+  ::grpc::internal::CallbackUnaryCall(stub_->channel_.get(), stub_->rpcmethod_SetRecordingPeriod_, context, request, response, std::move(f));
 }
 
 void CameraCommunicatorS::Stub::experimental_async::SetRecordingPeriod(::grpc::ClientContext* context, const ::SetRecordingPeriodRequest* request, ::SimpleResponse* response, ::grpc::experimental::ClientUnaryReactor* reactor) {
-  ::grpc_impl::internal::ClientCallbackUnaryFactory::Create(stub_->channel_.get(), stub_->rpcmethod_SetRecordingPeriod_, context, request, response, reactor);
-}
-
-void CameraCommunicatorS::Stub::experimental_async::SetRecordingPeriod(::grpc::ClientContext* context, const ::grpc::ByteBuffer* request, ::SimpleResponse* response, ::grpc::experimental::ClientUnaryReactor* reactor) {
-  ::grpc_impl::internal::ClientCallbackUnaryFactory::Create(stub_->channel_.get(), stub_->rpcmethod_SetRecordingPeriod_, context, request, response, reactor);
-}
-
-::grpc::ClientAsyncResponseReader< ::SimpleResponse>* CameraCommunicatorS::Stub::AsyncSetRecordingPeriodRaw(::grpc::ClientContext* context, const ::SetRecordingPeriodRequest& request, ::grpc::CompletionQueue* cq) {
-  return ::grpc_impl::internal::ClientAsyncResponseReaderFactory< ::SimpleResponse>::Create(channel_.get(), cq, rpcmethod_SetRecordingPeriod_, context, request, true);
+  ::grpc::internal::ClientCallbackUnaryFactory::Create(stub_->channel_.get(), stub_->rpcmethod_SetRecordingPeriod_, context, request, response, reactor);
 }
 
 ::grpc::ClientAsyncResponseReader< ::SimpleResponse>* CameraCommunicatorS::Stub::PrepareAsyncSetRecordingPeriodRaw(::grpc::ClientContext* context, const ::SetRecordingPeriodRequest& request, ::grpc::CompletionQueue* cq) {
-  return ::grpc_impl::internal::ClientAsyncResponseReaderFactory< ::SimpleResponse>::Create(channel_.get(), cq, rpcmethod_SetRecordingPeriod_, context, request, false);
+  return ::grpc::internal::ClientAsyncResponseReaderFactory< ::SimpleResponse>::Create(channel_.get(), cq, rpcmethod_SetRecordingPeriod_, context, request, false);
+}
+
+::grpc::ClientAsyncResponseReader< ::SimpleResponse>* CameraCommunicatorS::Stub::AsyncSetRecordingPeriodRaw(::grpc::ClientContext* context, const ::SetRecordingPeriodRequest& request, ::grpc::CompletionQueue* cq) {
+  auto* result =
+    this->PrepareAsyncSetRecordingPeriodRaw(context, request, cq);
+  result->StartCall();
+  return result;
 }
 
 ::grpc::Status CameraCommunicatorS::Stub::SetReferenceCamera(::grpc::ClientContext* context, const ::SetReferenceCameraRequest& request, ::SimpleResponse* response) {
@@ -113,27 +103,22 @@ void CameraCommunicatorS::Stub::experimental_async::SetRecordingPeriod(::grpc::C
 }
 
 void CameraCommunicatorS::Stub::experimental_async::SetReferenceCamera(::grpc::ClientContext* context, const ::SetReferenceCameraRequest* request, ::SimpleResponse* response, std::function<void(::grpc::Status)> f) {
-  ::grpc_impl::internal::CallbackUnaryCall(stub_->channel_.get(), stub_->rpcmethod_SetReferenceCamera_, context, request, response, std::move(f));
-}
-
-void CameraCommunicatorS::Stub::experimental_async::SetReferenceCamera(::grpc::ClientContext* context, const ::grpc::ByteBuffer* request, ::SimpleResponse* response, std::function<void(::grpc::Status)> f) {
-  ::grpc_impl::internal::CallbackUnaryCall(stub_->channel_.get(), stub_->rpcmethod_SetReferenceCamera_, context, request, response, std::move(f));
+  ::grpc::internal::CallbackUnaryCall(stub_->channel_.get(), stub_->rpcmethod_SetReferenceCamera_, context, request, response, std::move(f));
 }
 
 void CameraCommunicatorS::Stub::experimental_async::SetReferenceCamera(::grpc::ClientContext* context, const ::SetReferenceCameraRequest* request, ::SimpleResponse* response, ::grpc::experimental::ClientUnaryReactor* reactor) {
-  ::grpc_impl::internal::ClientCallbackUnaryFactory::Create(stub_->channel_.get(), stub_->rpcmethod_SetReferenceCamera_, context, request, response, reactor);
-}
-
-void CameraCommunicatorS::Stub::experimental_async::SetReferenceCamera(::grpc::ClientContext* context, const ::grpc::ByteBuffer* request, ::SimpleResponse* response, ::grpc::experimental::ClientUnaryReactor* reactor) {
-  ::grpc_impl::internal::ClientCallbackUnaryFactory::Create(stub_->channel_.get(), stub_->rpcmethod_SetReferenceCamera_, context, request, response, reactor);
-}
-
-::grpc::ClientAsyncResponseReader< ::SimpleResponse>* CameraCommunicatorS::Stub::AsyncSetReferenceCameraRaw(::grpc::ClientContext* context, const ::SetReferenceCameraRequest& request, ::grpc::CompletionQueue* cq) {
-  return ::grpc_impl::internal::ClientAsyncResponseReaderFactory< ::SimpleResponse>::Create(channel_.get(), cq, rpcmethod_SetReferenceCamera_, context, request, true);
+  ::grpc::internal::ClientCallbackUnaryFactory::Create(stub_->channel_.get(), stub_->rpcmethod_SetReferenceCamera_, context, request, response, reactor);
 }
 
 ::grpc::ClientAsyncResponseReader< ::SimpleResponse>* CameraCommunicatorS::Stub::PrepareAsyncSetReferenceCameraRaw(::grpc::ClientContext* context, const ::SetReferenceCameraRequest& request, ::grpc::CompletionQueue* cq) {
-  return ::grpc_impl::internal::ClientAsyncResponseReaderFactory< ::SimpleResponse>::Create(channel_.get(), cq, rpcmethod_SetReferenceCamera_, context, request, false);
+  return ::grpc::internal::ClientAsyncResponseReaderFactory< ::SimpleResponse>::Create(channel_.get(), cq, rpcmethod_SetReferenceCamera_, context, request, false);
+}
+
+::grpc::ClientAsyncResponseReader< ::SimpleResponse>* CameraCommunicatorS::Stub::AsyncSetReferenceCameraRaw(::grpc::ClientContext* context, const ::SetReferenceCameraRequest& request, ::grpc::CompletionQueue* cq) {
+  auto* result =
+    this->PrepareAsyncSetReferenceCameraRaw(context, request, cq);
+  result->StartCall();
+  return result;
 }
 
 ::grpc::Status CameraCommunicatorS::Stub::PrepareRecording(::grpc::ClientContext* context, const ::SimpleRequest& request, ::SimpleResponse* response) {
@@ -141,27 +126,22 @@ void CameraCommunicatorS::Stub::experimental_async::SetReferenceCamera(::grpc::C
 }
 
 void CameraCommunicatorS::Stub::experimental_async::PrepareRecording(::grpc::ClientContext* context, const ::SimpleRequest* request, ::SimpleResponse* response, std::function<void(::grpc::Status)> f) {
-  ::grpc_impl::internal::CallbackUnaryCall(stub_->channel_.get(), stub_->rpcmethod_PrepareRecording_, context, request, response, std::move(f));
-}
-
-void CameraCommunicatorS::Stub::experimental_async::PrepareRecording(::grpc::ClientContext* context, const ::grpc::ByteBuffer* request, ::SimpleResponse* response, std::function<void(::grpc::Status)> f) {
-  ::grpc_impl::internal::CallbackUnaryCall(stub_->channel_.get(), stub_->rpcmethod_PrepareRecording_, context, request, response, std::move(f));
+  ::grpc::internal::CallbackUnaryCall(stub_->channel_.get(), stub_->rpcmethod_PrepareRecording_, context, request, response, std::move(f));
 }
 
 void CameraCommunicatorS::Stub::experimental_async::PrepareRecording(::grpc::ClientContext* context, const ::SimpleRequest* request, ::SimpleResponse* response, ::grpc::experimental::ClientUnaryReactor* reactor) {
-  ::grpc_impl::internal::ClientCallbackUnaryFactory::Create(stub_->channel_.get(), stub_->rpcmethod_PrepareRecording_, context, request, response, reactor);
-}
-
-void CameraCommunicatorS::Stub::experimental_async::PrepareRecording(::grpc::ClientContext* context, const ::grpc::ByteBuffer* request, ::SimpleResponse* response, ::grpc::experimental::ClientUnaryReactor* reactor) {
-  ::grpc_impl::internal::ClientCallbackUnaryFactory::Create(stub_->channel_.get(), stub_->rpcmethod_PrepareRecording_, context, request, response, reactor);
-}
-
-::grpc::ClientAsyncResponseReader< ::SimpleResponse>* CameraCommunicatorS::Stub::AsyncPrepareRecordingRaw(::grpc::ClientContext* context, const ::SimpleRequest& request, ::grpc::CompletionQueue* cq) {
-  return ::grpc_impl::internal::ClientAsyncResponseReaderFactory< ::SimpleResponse>::Create(channel_.get(), cq, rpcmethod_PrepareRecording_, context, request, true);
+  ::grpc::internal::ClientCallbackUnaryFactory::Create(stub_->channel_.get(), stub_->rpcmethod_PrepareRecording_, context, request, response, reactor);
 }
 
 ::grpc::ClientAsyncResponseReader< ::SimpleResponse>* CameraCommunicatorS::Stub::PrepareAsyncPrepareRecordingRaw(::grpc::ClientContext* context, const ::SimpleRequest& request, ::grpc::CompletionQueue* cq) {
-  return ::grpc_impl::internal::ClientAsyncResponseReaderFactory< ::SimpleResponse>::Create(channel_.get(), cq, rpcmethod_PrepareRecording_, context, request, false);
+  return ::grpc::internal::ClientAsyncResponseReaderFactory< ::SimpleResponse>::Create(channel_.get(), cq, rpcmethod_PrepareRecording_, context, request, false);
+}
+
+::grpc::ClientAsyncResponseReader< ::SimpleResponse>* CameraCommunicatorS::Stub::AsyncPrepareRecordingRaw(::grpc::ClientContext* context, const ::SimpleRequest& request, ::grpc::CompletionQueue* cq) {
+  auto* result =
+    this->PrepareAsyncPrepareRecordingRaw(context, request, cq);
+  result->StartCall();
+  return result;
 }
 
 ::grpc::Status CameraCommunicatorS::Stub::StartRecording(::grpc::ClientContext* context, const ::SimpleRequest& request, ::SimpleResponse* response) {
@@ -169,27 +149,22 @@ void CameraCommunicatorS::Stub::experimental_async::PrepareRecording(::grpc::Cli
 }
 
 void CameraCommunicatorS::Stub::experimental_async::StartRecording(::grpc::ClientContext* context, const ::SimpleRequest* request, ::SimpleResponse* response, std::function<void(::grpc::Status)> f) {
-  ::grpc_impl::internal::CallbackUnaryCall(stub_->channel_.get(), stub_->rpcmethod_StartRecording_, context, request, response, std::move(f));
-}
-
-void CameraCommunicatorS::Stub::experimental_async::StartRecording(::grpc::ClientContext* context, const ::grpc::ByteBuffer* request, ::SimpleResponse* response, std::function<void(::grpc::Status)> f) {
-  ::grpc_impl::internal::CallbackUnaryCall(stub_->channel_.get(), stub_->rpcmethod_StartRecording_, context, request, response, std::move(f));
+  ::grpc::internal::CallbackUnaryCall(stub_->channel_.get(), stub_->rpcmethod_StartRecording_, context, request, response, std::move(f));
 }
 
 void CameraCommunicatorS::Stub::experimental_async::StartRecording(::grpc::ClientContext* context, const ::SimpleRequest* request, ::SimpleResponse* response, ::grpc::experimental::ClientUnaryReactor* reactor) {
-  ::grpc_impl::internal::ClientCallbackUnaryFactory::Create(stub_->channel_.get(), stub_->rpcmethod_StartRecording_, context, request, response, reactor);
-}
-
-void CameraCommunicatorS::Stub::experimental_async::StartRecording(::grpc::ClientContext* context, const ::grpc::ByteBuffer* request, ::SimpleResponse* response, ::grpc::experimental::ClientUnaryReactor* reactor) {
-  ::grpc_impl::internal::ClientCallbackUnaryFactory::Create(stub_->channel_.get(), stub_->rpcmethod_StartRecording_, context, request, response, reactor);
-}
-
-::grpc::ClientAsyncResponseReader< ::SimpleResponse>* CameraCommunicatorS::Stub::AsyncStartRecordingRaw(::grpc::ClientContext* context, const ::SimpleRequest& request, ::grpc::CompletionQueue* cq) {
-  return ::grpc_impl::internal::ClientAsyncResponseReaderFactory< ::SimpleResponse>::Create(channel_.get(), cq, rpcmethod_StartRecording_, context, request, true);
+  ::grpc::internal::ClientCallbackUnaryFactory::Create(stub_->channel_.get(), stub_->rpcmethod_StartRecording_, context, request, response, reactor);
 }
 
 ::grpc::ClientAsyncResponseReader< ::SimpleResponse>* CameraCommunicatorS::Stub::PrepareAsyncStartRecordingRaw(::grpc::ClientContext* context, const ::SimpleRequest& request, ::grpc::CompletionQueue* cq) {
-  return ::grpc_impl::internal::ClientAsyncResponseReaderFactory< ::SimpleResponse>::Create(channel_.get(), cq, rpcmethod_StartRecording_, context, request, false);
+  return ::grpc::internal::ClientAsyncResponseReaderFactory< ::SimpleResponse>::Create(channel_.get(), cq, rpcmethod_StartRecording_, context, request, false);
+}
+
+::grpc::ClientAsyncResponseReader< ::SimpleResponse>* CameraCommunicatorS::Stub::AsyncStartRecordingRaw(::grpc::ClientContext* context, const ::SimpleRequest& request, ::grpc::CompletionQueue* cq) {
+  auto* result =
+    this->PrepareAsyncStartRecordingRaw(context, request, cq);
+  result->StartCall();
+  return result;
 }
 
 ::grpc::Status CameraCommunicatorS::Stub::CaptureSingleImage(::grpc::ClientContext* context, const ::SimpleRequest& request, ::SimpleResponse* response) {
@@ -197,27 +172,22 @@ void CameraCommunicatorS::Stub::experimental_async::StartRecording(::grpc::Clien
 }
 
 void CameraCommunicatorS::Stub::experimental_async::CaptureSingleImage(::grpc::ClientContext* context, const ::SimpleRequest* request, ::SimpleResponse* response, std::function<void(::grpc::Status)> f) {
-  ::grpc_impl::internal::CallbackUnaryCall(stub_->channel_.get(), stub_->rpcmethod_CaptureSingleImage_, context, request, response, std::move(f));
-}
-
-void CameraCommunicatorS::Stub::experimental_async::CaptureSingleImage(::grpc::ClientContext* context, const ::grpc::ByteBuffer* request, ::SimpleResponse* response, std::function<void(::grpc::Status)> f) {
-  ::grpc_impl::internal::CallbackUnaryCall(stub_->channel_.get(), stub_->rpcmethod_CaptureSingleImage_, context, request, response, std::move(f));
+  ::grpc::internal::CallbackUnaryCall(stub_->channel_.get(), stub_->rpcmethod_CaptureSingleImage_, context, request, response, std::move(f));
 }
 
 void CameraCommunicatorS::Stub::experimental_async::CaptureSingleImage(::grpc::ClientContext* context, const ::SimpleRequest* request, ::SimpleResponse* response, ::grpc::experimental::ClientUnaryReactor* reactor) {
-  ::grpc_impl::internal::ClientCallbackUnaryFactory::Create(stub_->channel_.get(), stub_->rpcmethod_CaptureSingleImage_, context, request, response, reactor);
-}
-
-void CameraCommunicatorS::Stub::experimental_async::CaptureSingleImage(::grpc::ClientContext* context, const ::grpc::ByteBuffer* request, ::SimpleResponse* response, ::grpc::experimental::ClientUnaryReactor* reactor) {
-  ::grpc_impl::internal::ClientCallbackUnaryFactory::Create(stub_->channel_.get(), stub_->rpcmethod_CaptureSingleImage_, context, request, response, reactor);
-}
-
-::grpc::ClientAsyncResponseReader< ::SimpleResponse>* CameraCommunicatorS::Stub::AsyncCaptureSingleImageRaw(::grpc::ClientContext* context, const ::SimpleRequest& request, ::grpc::CompletionQueue* cq) {
-  return ::grpc_impl::internal::ClientAsyncResponseReaderFactory< ::SimpleResponse>::Create(channel_.get(), cq, rpcmethod_CaptureSingleImage_, context, request, true);
+  ::grpc::internal::ClientCallbackUnaryFactory::Create(stub_->channel_.get(), stub_->rpcmethod_CaptureSingleImage_, context, request, response, reactor);
 }
 
 ::grpc::ClientAsyncResponseReader< ::SimpleResponse>* CameraCommunicatorS::Stub::PrepareAsyncCaptureSingleImageRaw(::grpc::ClientContext* context, const ::SimpleRequest& request, ::grpc::CompletionQueue* cq) {
-  return ::grpc_impl::internal::ClientAsyncResponseReaderFactory< ::SimpleResponse>::Create(channel_.get(), cq, rpcmethod_CaptureSingleImage_, context, request, false);
+  return ::grpc::internal::ClientAsyncResponseReaderFactory< ::SimpleResponse>::Create(channel_.get(), cq, rpcmethod_CaptureSingleImage_, context, request, false);
+}
+
+::grpc::ClientAsyncResponseReader< ::SimpleResponse>* CameraCommunicatorS::Stub::AsyncCaptureSingleImageRaw(::grpc::ClientContext* context, const ::SimpleRequest& request, ::grpc::CompletionQueue* cq) {
+  auto* result =
+    this->PrepareAsyncCaptureSingleImageRaw(context, request, cq);
+  result->StartCall();
+  return result;
 }
 
 ::grpc::Status CameraCommunicatorS::Stub::SetDirectory(::grpc::ClientContext* context, const ::SetDirectoryRequest& request, ::SimpleResponse* response) {
@@ -225,27 +195,22 @@ void CameraCommunicatorS::Stub::experimental_async::CaptureSingleImage(::grpc::C
 }
 
 void CameraCommunicatorS::Stub::experimental_async::SetDirectory(::grpc::ClientContext* context, const ::SetDirectoryRequest* request, ::SimpleResponse* response, std::function<void(::grpc::Status)> f) {
-  ::grpc_impl::internal::CallbackUnaryCall(stub_->channel_.get(), stub_->rpcmethod_SetDirectory_, context, request, response, std::move(f));
-}
-
-void CameraCommunicatorS::Stub::experimental_async::SetDirectory(::grpc::ClientContext* context, const ::grpc::ByteBuffer* request, ::SimpleResponse* response, std::function<void(::grpc::Status)> f) {
-  ::grpc_impl::internal::CallbackUnaryCall(stub_->channel_.get(), stub_->rpcmethod_SetDirectory_, context, request, response, std::move(f));
+  ::grpc::internal::CallbackUnaryCall(stub_->channel_.get(), stub_->rpcmethod_SetDirectory_, context, request, response, std::move(f));
 }
 
 void CameraCommunicatorS::Stub::experimental_async::SetDirectory(::grpc::ClientContext* context, const ::SetDirectoryRequest* request, ::SimpleResponse* response, ::grpc::experimental::ClientUnaryReactor* reactor) {
-  ::grpc_impl::internal::ClientCallbackUnaryFactory::Create(stub_->channel_.get(), stub_->rpcmethod_SetDirectory_, context, request, response, reactor);
-}
-
-void CameraCommunicatorS::Stub::experimental_async::SetDirectory(::grpc::ClientContext* context, const ::grpc::ByteBuffer* request, ::SimpleResponse* response, ::grpc::experimental::ClientUnaryReactor* reactor) {
-  ::grpc_impl::internal::ClientCallbackUnaryFactory::Create(stub_->channel_.get(), stub_->rpcmethod_SetDirectory_, context, request, response, reactor);
-}
-
-::grpc::ClientAsyncResponseReader< ::SimpleResponse>* CameraCommunicatorS::Stub::AsyncSetDirectoryRaw(::grpc::ClientContext* context, const ::SetDirectoryRequest& request, ::grpc::CompletionQueue* cq) {
-  return ::grpc_impl::internal::ClientAsyncResponseReaderFactory< ::SimpleResponse>::Create(channel_.get(), cq, rpcmethod_SetDirectory_, context, request, true);
+  ::grpc::internal::ClientCallbackUnaryFactory::Create(stub_->channel_.get(), stub_->rpcmethod_SetDirectory_, context, request, response, reactor);
 }
 
 ::grpc::ClientAsyncResponseReader< ::SimpleResponse>* CameraCommunicatorS::Stub::PrepareAsyncSetDirectoryRaw(::grpc::ClientContext* context, const ::SetDirectoryRequest& request, ::grpc::CompletionQueue* cq) {
-  return ::grpc_impl::internal::ClientAsyncResponseReaderFactory< ::SimpleResponse>::Create(channel_.get(), cq, rpcmethod_SetDirectory_, context, request, false);
+  return ::grpc::internal::ClientAsyncResponseReaderFactory< ::SimpleResponse>::Create(channel_.get(), cq, rpcmethod_SetDirectory_, context, request, false);
+}
+
+::grpc::ClientAsyncResponseReader< ::SimpleResponse>* CameraCommunicatorS::Stub::AsyncSetDirectoryRaw(::grpc::ClientContext* context, const ::SetDirectoryRequest& request, ::grpc::CompletionQueue* cq) {
+  auto* result =
+    this->PrepareAsyncSetDirectoryRaw(context, request, cq);
+  result->StartCall();
+  return result;
 }
 
 ::grpc::Status CameraCommunicatorS::Stub::SetGain(::grpc::ClientContext* context, const ::SetGainRequest& request, ::SimpleResponse* response) {
@@ -253,27 +218,22 @@ void CameraCommunicatorS::Stub::experimental_async::SetDirectory(::grpc::ClientC
 }
 
 void CameraCommunicatorS::Stub::experimental_async::SetGain(::grpc::ClientContext* context, const ::SetGainRequest* request, ::SimpleResponse* response, std::function<void(::grpc::Status)> f) {
-  ::grpc_impl::internal::CallbackUnaryCall(stub_->channel_.get(), stub_->rpcmethod_SetGain_, context, request, response, std::move(f));
-}
-
-void CameraCommunicatorS::Stub::experimental_async::SetGain(::grpc::ClientContext* context, const ::grpc::ByteBuffer* request, ::SimpleResponse* response, std::function<void(::grpc::Status)> f) {
-  ::grpc_impl::internal::CallbackUnaryCall(stub_->channel_.get(), stub_->rpcmethod_SetGain_, context, request, response, std::move(f));
+  ::grpc::internal::CallbackUnaryCall(stub_->channel_.get(), stub_->rpcmethod_SetGain_, context, request, response, std::move(f));
 }
 
 void CameraCommunicatorS::Stub::experimental_async::SetGain(::grpc::ClientContext* context, const ::SetGainRequest* request, ::SimpleResponse* response, ::grpc::experimental::ClientUnaryReactor* reactor) {
-  ::grpc_impl::internal::ClientCallbackUnaryFactory::Create(stub_->channel_.get(), stub_->rpcmethod_SetGain_, context, request, response, reactor);
-}
-
-void CameraCommunicatorS::Stub::experimental_async::SetGain(::grpc::ClientContext* context, const ::grpc::ByteBuffer* request, ::SimpleResponse* response, ::grpc::experimental::ClientUnaryReactor* reactor) {
-  ::grpc_impl::internal::ClientCallbackUnaryFactory::Create(stub_->channel_.get(), stub_->rpcmethod_SetGain_, context, request, response, reactor);
-}
-
-::grpc::ClientAsyncResponseReader< ::SimpleResponse>* CameraCommunicatorS::Stub::AsyncSetGainRaw(::grpc::ClientContext* context, const ::SetGainRequest& request, ::grpc::CompletionQueue* cq) {
-  return ::grpc_impl::internal::ClientAsyncResponseReaderFactory< ::SimpleResponse>::Create(channel_.get(), cq, rpcmethod_SetGain_, context, request, true);
+  ::grpc::internal::ClientCallbackUnaryFactory::Create(stub_->channel_.get(), stub_->rpcmethod_SetGain_, context, request, response, reactor);
 }
 
 ::grpc::ClientAsyncResponseReader< ::SimpleResponse>* CameraCommunicatorS::Stub::PrepareAsyncSetGainRaw(::grpc::ClientContext* context, const ::SetGainRequest& request, ::grpc::CompletionQueue* cq) {
-  return ::grpc_impl::internal::ClientAsyncResponseReaderFactory< ::SimpleResponse>::Create(channel_.get(), cq, rpcmethod_SetGain_, context, request, false);
+  return ::grpc::internal::ClientAsyncResponseReaderFactory< ::SimpleResponse>::Create(channel_.get(), cq, rpcmethod_SetGain_, context, request, false);
+}
+
+::grpc::ClientAsyncResponseReader< ::SimpleResponse>* CameraCommunicatorS::Stub::AsyncSetGainRaw(::grpc::ClientContext* context, const ::SetGainRequest& request, ::grpc::CompletionQueue* cq) {
+  auto* result =
+    this->PrepareAsyncSetGainRaw(context, request, cq);
+  result->StartCall();
+  return result;
 }
 
 ::grpc::Status CameraCommunicatorS::Stub::SetExposure(::grpc::ClientContext* context, const ::SetExposureRequest& request, ::SimpleResponse* response) {
@@ -281,27 +241,22 @@ void CameraCommunicatorS::Stub::experimental_async::SetGain(::grpc::ClientContex
 }
 
 void CameraCommunicatorS::Stub::experimental_async::SetExposure(::grpc::ClientContext* context, const ::SetExposureRequest* request, ::SimpleResponse* response, std::function<void(::grpc::Status)> f) {
-  ::grpc_impl::internal::CallbackUnaryCall(stub_->channel_.get(), stub_->rpcmethod_SetExposure_, context, request, response, std::move(f));
-}
-
-void CameraCommunicatorS::Stub::experimental_async::SetExposure(::grpc::ClientContext* context, const ::grpc::ByteBuffer* request, ::SimpleResponse* response, std::function<void(::grpc::Status)> f) {
-  ::grpc_impl::internal::CallbackUnaryCall(stub_->channel_.get(), stub_->rpcmethod_SetExposure_, context, request, response, std::move(f));
+  ::grpc::internal::CallbackUnaryCall(stub_->channel_.get(), stub_->rpcmethod_SetExposure_, context, request, response, std::move(f));
 }
 
 void CameraCommunicatorS::Stub::experimental_async::SetExposure(::grpc::ClientContext* context, const ::SetExposureRequest* request, ::SimpleResponse* response, ::grpc::experimental::ClientUnaryReactor* reactor) {
-  ::grpc_impl::internal::ClientCallbackUnaryFactory::Create(stub_->channel_.get(), stub_->rpcmethod_SetExposure_, context, request, response, reactor);
-}
-
-void CameraCommunicatorS::Stub::experimental_async::SetExposure(::grpc::ClientContext* context, const ::grpc::ByteBuffer* request, ::SimpleResponse* response, ::grpc::experimental::ClientUnaryReactor* reactor) {
-  ::grpc_impl::internal::ClientCallbackUnaryFactory::Create(stub_->channel_.get(), stub_->rpcmethod_SetExposure_, context, request, response, reactor);
-}
-
-::grpc::ClientAsyncResponseReader< ::SimpleResponse>* CameraCommunicatorS::Stub::AsyncSetExposureRaw(::grpc::ClientContext* context, const ::SetExposureRequest& request, ::grpc::CompletionQueue* cq) {
-  return ::grpc_impl::internal::ClientAsyncResponseReaderFactory< ::SimpleResponse>::Create(channel_.get(), cq, rpcmethod_SetExposure_, context, request, true);
+  ::grpc::internal::ClientCallbackUnaryFactory::Create(stub_->channel_.get(), stub_->rpcmethod_SetExposure_, context, request, response, reactor);
 }
 
 ::grpc::ClientAsyncResponseReader< ::SimpleResponse>* CameraCommunicatorS::Stub::PrepareAsyncSetExposureRaw(::grpc::ClientContext* context, const ::SetExposureRequest& request, ::grpc::CompletionQueue* cq) {
-  return ::grpc_impl::internal::ClientAsyncResponseReaderFactory< ::SimpleResponse>::Create(channel_.get(), cq, rpcmethod_SetExposure_, context, request, false);
+  return ::grpc::internal::ClientAsyncResponseReaderFactory< ::SimpleResponse>::Create(channel_.get(), cq, rpcmethod_SetExposure_, context, request, false);
+}
+
+::grpc::ClientAsyncResponseReader< ::SimpleResponse>* CameraCommunicatorS::Stub::AsyncSetExposureRaw(::grpc::ClientContext* context, const ::SetExposureRequest& request, ::grpc::CompletionQueue* cq) {
+  auto* result =
+    this->PrepareAsyncSetExposureRaw(context, request, cq);
+  result->StartCall();
+  return result;
 }
 
 ::grpc::Status CameraCommunicatorS::Stub::BreakRecording(::grpc::ClientContext* context, const ::SimpleRequest& request, ::SimpleResponse* response) {
@@ -309,27 +264,22 @@ void CameraCommunicatorS::Stub::experimental_async::SetExposure(::grpc::ClientCo
 }
 
 void CameraCommunicatorS::Stub::experimental_async::BreakRecording(::grpc::ClientContext* context, const ::SimpleRequest* request, ::SimpleResponse* response, std::function<void(::grpc::Status)> f) {
-  ::grpc_impl::internal::CallbackUnaryCall(stub_->channel_.get(), stub_->rpcmethod_BreakRecording_, context, request, response, std::move(f));
-}
-
-void CameraCommunicatorS::Stub::experimental_async::BreakRecording(::grpc::ClientContext* context, const ::grpc::ByteBuffer* request, ::SimpleResponse* response, std::function<void(::grpc::Status)> f) {
-  ::grpc_impl::internal::CallbackUnaryCall(stub_->channel_.get(), stub_->rpcmethod_BreakRecording_, context, request, response, std::move(f));
+  ::grpc::internal::CallbackUnaryCall(stub_->channel_.get(), stub_->rpcmethod_BreakRecording_, context, request, response, std::move(f));
 }
 
 void CameraCommunicatorS::Stub::experimental_async::BreakRecording(::grpc::ClientContext* context, const ::SimpleRequest* request, ::SimpleResponse* response, ::grpc::experimental::ClientUnaryReactor* reactor) {
-  ::grpc_impl::internal::ClientCallbackUnaryFactory::Create(stub_->channel_.get(), stub_->rpcmethod_BreakRecording_, context, request, response, reactor);
-}
-
-void CameraCommunicatorS::Stub::experimental_async::BreakRecording(::grpc::ClientContext* context, const ::grpc::ByteBuffer* request, ::SimpleResponse* response, ::grpc::experimental::ClientUnaryReactor* reactor) {
-  ::grpc_impl::internal::ClientCallbackUnaryFactory::Create(stub_->channel_.get(), stub_->rpcmethod_BreakRecording_, context, request, response, reactor);
-}
-
-::grpc::ClientAsyncResponseReader< ::SimpleResponse>* CameraCommunicatorS::Stub::AsyncBreakRecordingRaw(::grpc::ClientContext* context, const ::SimpleRequest& request, ::grpc::CompletionQueue* cq) {
-  return ::grpc_impl::internal::ClientAsyncResponseReaderFactory< ::SimpleResponse>::Create(channel_.get(), cq, rpcmethod_BreakRecording_, context, request, true);
+  ::grpc::internal::ClientCallbackUnaryFactory::Create(stub_->channel_.get(), stub_->rpcmethod_BreakRecording_, context, request, response, reactor);
 }
 
 ::grpc::ClientAsyncResponseReader< ::SimpleResponse>* CameraCommunicatorS::Stub::PrepareAsyncBreakRecordingRaw(::grpc::ClientContext* context, const ::SimpleRequest& request, ::grpc::CompletionQueue* cq) {
-  return ::grpc_impl::internal::ClientAsyncResponseReaderFactory< ::SimpleResponse>::Create(channel_.get(), cq, rpcmethod_BreakRecording_, context, request, false);
+  return ::grpc::internal::ClientAsyncResponseReaderFactory< ::SimpleResponse>::Create(channel_.get(), cq, rpcmethod_BreakRecording_, context, request, false);
+}
+
+::grpc::ClientAsyncResponseReader< ::SimpleResponse>* CameraCommunicatorS::Stub::AsyncBreakRecordingRaw(::grpc::ClientContext* context, const ::SimpleRequest& request, ::grpc::CompletionQueue* cq) {
+  auto* result =
+    this->PrepareAsyncBreakRecordingRaw(context, request, cq);
+  result->StartCall();
+  return result;
 }
 
 CameraCommunicatorS::Service::Service() {
@@ -338,7 +288,7 @@ CameraCommunicatorS::Service::Service() {
       ::grpc::internal::RpcMethod::NORMAL_RPC,
       new ::grpc::internal::RpcMethodHandler< CameraCommunicatorS::Service, ::SetFramerateRequest, ::SimpleResponse>(
           [](CameraCommunicatorS::Service* service,
-             ::grpc_impl::ServerContext* ctx,
+             ::grpc::ServerContext* ctx,
              const ::SetFramerateRequest* req,
              ::SimpleResponse* resp) {
                return service->SetFramerate(ctx, req, resp);
@@ -348,7 +298,7 @@ CameraCommunicatorS::Service::Service() {
       ::grpc::internal::RpcMethod::NORMAL_RPC,
       new ::grpc::internal::RpcMethodHandler< CameraCommunicatorS::Service, ::SetRecordingPeriodRequest, ::SimpleResponse>(
           [](CameraCommunicatorS::Service* service,
-             ::grpc_impl::ServerContext* ctx,
+             ::grpc::ServerContext* ctx,
              const ::SetRecordingPeriodRequest* req,
              ::SimpleResponse* resp) {
                return service->SetRecordingPeriod(ctx, req, resp);
@@ -358,7 +308,7 @@ CameraCommunicatorS::Service::Service() {
       ::grpc::internal::RpcMethod::NORMAL_RPC,
       new ::grpc::internal::RpcMethodHandler< CameraCommunicatorS::Service, ::SetReferenceCameraRequest, ::SimpleResponse>(
           [](CameraCommunicatorS::Service* service,
-             ::grpc_impl::ServerContext* ctx,
+             ::grpc::ServerContext* ctx,
              const ::SetReferenceCameraRequest* req,
              ::SimpleResponse* resp) {
                return service->SetReferenceCamera(ctx, req, resp);
@@ -368,7 +318,7 @@ CameraCommunicatorS::Service::Service() {
       ::grpc::internal::RpcMethod::NORMAL_RPC,
       new ::grpc::internal::RpcMethodHandler< CameraCommunicatorS::Service, ::SimpleRequest, ::SimpleResponse>(
           [](CameraCommunicatorS::Service* service,
-             ::grpc_impl::ServerContext* ctx,
+             ::grpc::ServerContext* ctx,
              const ::SimpleRequest* req,
              ::SimpleResponse* resp) {
                return service->PrepareRecording(ctx, req, resp);
@@ -378,7 +328,7 @@ CameraCommunicatorS::Service::Service() {
       ::grpc::internal::RpcMethod::NORMAL_RPC,
       new ::grpc::internal::RpcMethodHandler< CameraCommunicatorS::Service, ::SimpleRequest, ::SimpleResponse>(
           [](CameraCommunicatorS::Service* service,
-             ::grpc_impl::ServerContext* ctx,
+             ::grpc::ServerContext* ctx,
              const ::SimpleRequest* req,
              ::SimpleResponse* resp) {
                return service->StartRecording(ctx, req, resp);
@@ -388,7 +338,7 @@ CameraCommunicatorS::Service::Service() {
       ::grpc::internal::RpcMethod::NORMAL_RPC,
       new ::grpc::internal::RpcMethodHandler< CameraCommunicatorS::Service, ::SimpleRequest, ::SimpleResponse>(
           [](CameraCommunicatorS::Service* service,
-             ::grpc_impl::ServerContext* ctx,
+             ::grpc::ServerContext* ctx,
              const ::SimpleRequest* req,
              ::SimpleResponse* resp) {
                return service->CaptureSingleImage(ctx, req, resp);
@@ -398,7 +348,7 @@ CameraCommunicatorS::Service::Service() {
       ::grpc::internal::RpcMethod::NORMAL_RPC,
       new ::grpc::internal::RpcMethodHandler< CameraCommunicatorS::Service, ::SetDirectoryRequest, ::SimpleResponse>(
           [](CameraCommunicatorS::Service* service,
-             ::grpc_impl::ServerContext* ctx,
+             ::grpc::ServerContext* ctx,
              const ::SetDirectoryRequest* req,
              ::SimpleResponse* resp) {
                return service->SetDirectory(ctx, req, resp);
@@ -408,7 +358,7 @@ CameraCommunicatorS::Service::Service() {
       ::grpc::internal::RpcMethod::NORMAL_RPC,
       new ::grpc::internal::RpcMethodHandler< CameraCommunicatorS::Service, ::SetGainRequest, ::SimpleResponse>(
           [](CameraCommunicatorS::Service* service,
-             ::grpc_impl::ServerContext* ctx,
+             ::grpc::ServerContext* ctx,
              const ::SetGainRequest* req,
              ::SimpleResponse* resp) {
                return service->SetGain(ctx, req, resp);
@@ -418,7 +368,7 @@ CameraCommunicatorS::Service::Service() {
       ::grpc::internal::RpcMethod::NORMAL_RPC,
       new ::grpc::internal::RpcMethodHandler< CameraCommunicatorS::Service, ::SetExposureRequest, ::SimpleResponse>(
           [](CameraCommunicatorS::Service* service,
-             ::grpc_impl::ServerContext* ctx,
+             ::grpc::ServerContext* ctx,
              const ::SetExposureRequest* req,
              ::SimpleResponse* resp) {
                return service->SetExposure(ctx, req, resp);
@@ -428,7 +378,7 @@ CameraCommunicatorS::Service::Service() {
       ::grpc::internal::RpcMethod::NORMAL_RPC,
       new ::grpc::internal::RpcMethodHandler< CameraCommunicatorS::Service, ::SimpleRequest, ::SimpleResponse>(
           [](CameraCommunicatorS::Service* service,
-             ::grpc_impl::ServerContext* ctx,
+             ::grpc::ServerContext* ctx,
              const ::SimpleRequest* req,
              ::SimpleResponse* resp) {
                return service->BreakRecording(ctx, req, resp);

@@ -15,6 +15,8 @@
 #include "CameraClient.h"
 #include "TouchSensorClient.h"
 
+constexpr auto FONT_TYPE = "Courier New";
+
 #ifndef NDEBUG
 	#define new DEBUG_NEW
 #endif
@@ -51,10 +53,7 @@ protected:
 	CEdit m_speedCtrl;
 	CEdit m_positionCtrl;
 	CEdit m_currentTrialEdtCtrl;
-
-	//// end trial buttons
-	//CMFCButton m_retreatButton;
-	//CMFCButton m_retreatFlushWaterButton;
+	void setFontGuiTrialsCounter();
 
 	// light sensors
 	CStaticColor m_frontPhotoresistorCtrl;

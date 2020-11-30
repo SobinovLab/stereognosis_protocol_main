@@ -3,7 +3,6 @@
 constexpr auto DATA_FOLDER = "./data";
 constexpr auto TRIAL_NUM_STR = "Trial n.";
 constexpr auto TRIAL_ABORT_STR = " Aborted";
-constexpr auto FONT_TYPE = "Courier New";
 constexpr auto PRECISION = "%03d";
 
 constexpr auto FREQUENCY_START_TASK_TONE = 500;
@@ -41,7 +40,6 @@ void Protocol::run(NIUsb6001card* m_NIUsb6001card, CEdit* currentTrialGUICtrl)
 	this->protocolState.store(ProtocolState::initializing);
 	// TODO?: Create directory for log storage
 	CreateDirectory(DATA_FOLDER, NULL);
-	setFontGuiTrialsCounter(currentTrialGUICtrl);
 
 	// TODO: Load all trials from session config file
 
@@ -108,13 +106,6 @@ bool Protocol::isElapsedTheMinUncoveredTime(time_point<std::chrono::steady_clock
 {
 	if (Times::getElapsedMilliSecsSince(photoresistorsUncoveredTime) > MIN_UNCOVERED_TIME) return true;
 	return false;
-}
-
-void Protocol::setFontGuiTrialsCounter(CEdit * currentTrialGUICtrl)
-{
-	CFont* cEditControlFont = new CFont();
-	cEditControlFont->CreateFont(30, 0, 0, 0, FW_HEAVY, true, false, 0, ANSI_CHARSET, OUT_DEFAULT_PRECIS, CLIP_DEFAULT_PRECIS, DEFAULT_QUALITY, FIXED_PITCH | FF_MODERN, _T(FONT_TYPE));
-	currentTrialGUICtrl->SetFont(cEditControlFont);
 }
 
 void Protocol::logGoodTrial(const long& nCurrentTrial, const long& microsecsFromStartTaskToneToLiftingMonkeyArm, const long& microsecsFromMonkeyArmRaisedToPlatesTouching)

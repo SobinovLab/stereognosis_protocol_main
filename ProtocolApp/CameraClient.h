@@ -8,8 +8,10 @@
 #include <grpcpp/create_channel.h>
 #include <grpcpp/security/credentials.h>
 
+#pragma warning(push, 3) 
 #include "cameras_messages.grpc.pb.h"
 #include "cameras_messages.pb.h"
+#pragma warning(pop)
 
 using grpc::Channel;
 using grpc::ClientContext;

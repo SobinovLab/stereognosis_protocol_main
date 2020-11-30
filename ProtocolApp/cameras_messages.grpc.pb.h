@@ -112,124 +112,64 @@ class CameraCommunicatorS final {
      public:
       virtual ~experimental_async_interface() {}
       virtual void SetFramerate(::grpc::ClientContext* context, const ::SetFramerateRequest* request, ::SimpleResponse* response, std::function<void(::grpc::Status)>) = 0;
-      virtual void SetFramerate(::grpc::ClientContext* context, const ::grpc::ByteBuffer* request, ::SimpleResponse* response, std::function<void(::grpc::Status)>) = 0;
       #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
       virtual void SetFramerate(::grpc::ClientContext* context, const ::SetFramerateRequest* request, ::SimpleResponse* response, ::grpc::ClientUnaryReactor* reactor) = 0;
       #else
       virtual void SetFramerate(::grpc::ClientContext* context, const ::SetFramerateRequest* request, ::SimpleResponse* response, ::grpc::experimental::ClientUnaryReactor* reactor) = 0;
       #endif
-      #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
-      virtual void SetFramerate(::grpc::ClientContext* context, const ::grpc::ByteBuffer* request, ::SimpleResponse* response, ::grpc::ClientUnaryReactor* reactor) = 0;
-      #else
-      virtual void SetFramerate(::grpc::ClientContext* context, const ::grpc::ByteBuffer* request, ::SimpleResponse* response, ::grpc::experimental::ClientUnaryReactor* reactor) = 0;
-      #endif
       virtual void SetRecordingPeriod(::grpc::ClientContext* context, const ::SetRecordingPeriodRequest* request, ::SimpleResponse* response, std::function<void(::grpc::Status)>) = 0;
-      virtual void SetRecordingPeriod(::grpc::ClientContext* context, const ::grpc::ByteBuffer* request, ::SimpleResponse* response, std::function<void(::grpc::Status)>) = 0;
       #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
       virtual void SetRecordingPeriod(::grpc::ClientContext* context, const ::SetRecordingPeriodRequest* request, ::SimpleResponse* response, ::grpc::ClientUnaryReactor* reactor) = 0;
       #else
       virtual void SetRecordingPeriod(::grpc::ClientContext* context, const ::SetRecordingPeriodRequest* request, ::SimpleResponse* response, ::grpc::experimental::ClientUnaryReactor* reactor) = 0;
       #endif
-      #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
-      virtual void SetRecordingPeriod(::grpc::ClientContext* context, const ::grpc::ByteBuffer* request, ::SimpleResponse* response, ::grpc::ClientUnaryReactor* reactor) = 0;
-      #else
-      virtual void SetRecordingPeriod(::grpc::ClientContext* context, const ::grpc::ByteBuffer* request, ::SimpleResponse* response, ::grpc::experimental::ClientUnaryReactor* reactor) = 0;
-      #endif
       virtual void SetReferenceCamera(::grpc::ClientContext* context, const ::SetReferenceCameraRequest* request, ::SimpleResponse* response, std::function<void(::grpc::Status)>) = 0;
-      virtual void SetReferenceCamera(::grpc::ClientContext* context, const ::grpc::ByteBuffer* request, ::SimpleResponse* response, std::function<void(::grpc::Status)>) = 0;
       #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
       virtual void SetReferenceCamera(::grpc::ClientContext* context, const ::SetReferenceCameraRequest* request, ::SimpleResponse* response, ::grpc::ClientUnaryReactor* reactor) = 0;
       #else
       virtual void SetReferenceCamera(::grpc::ClientContext* context, const ::SetReferenceCameraRequest* request, ::SimpleResponse* response, ::grpc::experimental::ClientUnaryReactor* reactor) = 0;
       #endif
-      #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
-      virtual void SetReferenceCamera(::grpc::ClientContext* context, const ::grpc::ByteBuffer* request, ::SimpleResponse* response, ::grpc::ClientUnaryReactor* reactor) = 0;
-      #else
-      virtual void SetReferenceCamera(::grpc::ClientContext* context, const ::grpc::ByteBuffer* request, ::SimpleResponse* response, ::grpc::experimental::ClientUnaryReactor* reactor) = 0;
-      #endif
       virtual void PrepareRecording(::grpc::ClientContext* context, const ::SimpleRequest* request, ::SimpleResponse* response, std::function<void(::grpc::Status)>) = 0;
-      virtual void PrepareRecording(::grpc::ClientContext* context, const ::grpc::ByteBuffer* request, ::SimpleResponse* response, std::function<void(::grpc::Status)>) = 0;
       #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
       virtual void PrepareRecording(::grpc::ClientContext* context, const ::SimpleRequest* request, ::SimpleResponse* response, ::grpc::ClientUnaryReactor* reactor) = 0;
       #else
       virtual void PrepareRecording(::grpc::ClientContext* context, const ::SimpleRequest* request, ::SimpleResponse* response, ::grpc::experimental::ClientUnaryReactor* reactor) = 0;
       #endif
-      #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
-      virtual void PrepareRecording(::grpc::ClientContext* context, const ::grpc::ByteBuffer* request, ::SimpleResponse* response, ::grpc::ClientUnaryReactor* reactor) = 0;
-      #else
-      virtual void PrepareRecording(::grpc::ClientContext* context, const ::grpc::ByteBuffer* request, ::SimpleResponse* response, ::grpc::experimental::ClientUnaryReactor* reactor) = 0;
-      #endif
       virtual void StartRecording(::grpc::ClientContext* context, const ::SimpleRequest* request, ::SimpleResponse* response, std::function<void(::grpc::Status)>) = 0;
-      virtual void StartRecording(::grpc::ClientContext* context, const ::grpc::ByteBuffer* request, ::SimpleResponse* response, std::function<void(::grpc::Status)>) = 0;
       #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
       virtual void StartRecording(::grpc::ClientContext* context, const ::SimpleRequest* request, ::SimpleResponse* response, ::grpc::ClientUnaryReactor* reactor) = 0;
       #else
       virtual void StartRecording(::grpc::ClientContext* context, const ::SimpleRequest* request, ::SimpleResponse* response, ::grpc::experimental::ClientUnaryReactor* reactor) = 0;
       #endif
-      #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
-      virtual void StartRecording(::grpc::ClientContext* context, const ::grpc::ByteBuffer* request, ::SimpleResponse* response, ::grpc::ClientUnaryReactor* reactor) = 0;
-      #else
-      virtual void StartRecording(::grpc::ClientContext* context, const ::grpc::ByteBuffer* request, ::SimpleResponse* response, ::grpc::experimental::ClientUnaryReactor* reactor) = 0;
-      #endif
       virtual void CaptureSingleImage(::grpc::ClientContext* context, const ::SimpleRequest* request, ::SimpleResponse* response, std::function<void(::grpc::Status)>) = 0;
-      virtual void CaptureSingleImage(::grpc::ClientContext* context, const ::grpc::ByteBuffer* request, ::SimpleResponse* response, std::function<void(::grpc::Status)>) = 0;
       #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
       virtual void CaptureSingleImage(::grpc::ClientContext* context, const ::SimpleRequest* request, ::SimpleResponse* response, ::grpc::ClientUnaryReactor* reactor) = 0;
       #else
       virtual void CaptureSingleImage(::grpc::ClientContext* context, const ::SimpleRequest* request, ::SimpleResponse* response, ::grpc::experimental::ClientUnaryReactor* reactor) = 0;
       #endif
-      #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
-      virtual void CaptureSingleImage(::grpc::ClientContext* context, const ::grpc::ByteBuffer* request, ::SimpleResponse* response, ::grpc::ClientUnaryReactor* reactor) = 0;
-      #else
-      virtual void CaptureSingleImage(::grpc::ClientContext* context, const ::grpc::ByteBuffer* request, ::SimpleResponse* response, ::grpc::experimental::ClientUnaryReactor* reactor) = 0;
-      #endif
       virtual void SetDirectory(::grpc::ClientContext* context, const ::SetDirectoryRequest* request, ::SimpleResponse* response, std::function<void(::grpc::Status)>) = 0;
-      virtual void SetDirectory(::grpc::ClientContext* context, const ::grpc::ByteBuffer* request, ::SimpleResponse* response, std::function<void(::grpc::Status)>) = 0;
       #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
       virtual void SetDirectory(::grpc::ClientContext* context, const ::SetDirectoryRequest* request, ::SimpleResponse* response, ::grpc::ClientUnaryReactor* reactor) = 0;
       #else
       virtual void SetDirectory(::grpc::ClientContext* context, const ::SetDirectoryRequest* request, ::SimpleResponse* response, ::grpc::experimental::ClientUnaryReactor* reactor) = 0;
       #endif
-      #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
-      virtual void SetDirectory(::grpc::ClientContext* context, const ::grpc::ByteBuffer* request, ::SimpleResponse* response, ::grpc::ClientUnaryReactor* reactor) = 0;
-      #else
-      virtual void SetDirectory(::grpc::ClientContext* context, const ::grpc::ByteBuffer* request, ::SimpleResponse* response, ::grpc::experimental::ClientUnaryReactor* reactor) = 0;
-      #endif
       virtual void SetGain(::grpc::ClientContext* context, const ::SetGainRequest* request, ::SimpleResponse* response, std::function<void(::grpc::Status)>) = 0;
-      virtual void SetGain(::grpc::ClientContext* context, const ::grpc::ByteBuffer* request, ::SimpleResponse* response, std::function<void(::grpc::Status)>) = 0;
       #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
       virtual void SetGain(::grpc::ClientContext* context, const ::SetGainRequest* request, ::SimpleResponse* response, ::grpc::ClientUnaryReactor* reactor) = 0;
       #else
       virtual void SetGain(::grpc::ClientContext* context, const ::SetGainRequest* request, ::SimpleResponse* response, ::grpc::experimental::ClientUnaryReactor* reactor) = 0;
       #endif
-      #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
-      virtual void SetGain(::grpc::ClientContext* context, const ::grpc::ByteBuffer* request, ::SimpleResponse* response, ::grpc::ClientUnaryReactor* reactor) = 0;
-      #else
-      virtual void SetGain(::grpc::ClientContext* context, const ::grpc::ByteBuffer* request, ::SimpleResponse* response, ::grpc::experimental::ClientUnaryReactor* reactor) = 0;
-      #endif
       virtual void SetExposure(::grpc::ClientContext* context, const ::SetExposureRequest* request, ::SimpleResponse* response, std::function<void(::grpc::Status)>) = 0;
-      virtual void SetExposure(::grpc::ClientContext* context, const ::grpc::ByteBuffer* request, ::SimpleResponse* response, std::function<void(::grpc::Status)>) = 0;
       #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
       virtual void SetExposure(::grpc::ClientContext* context, const ::SetExposureRequest* request, ::SimpleResponse* response, ::grpc::ClientUnaryReactor* reactor) = 0;
       #else
       virtual void SetExposure(::grpc::ClientContext* context, const ::SetExposureRequest* request, ::SimpleResponse* response, ::grpc::experimental::ClientUnaryReactor* reactor) = 0;
       #endif
-      #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
-      virtual void SetExposure(::grpc::ClientContext* context, const ::grpc::ByteBuffer* request, ::SimpleResponse* response, ::grpc::ClientUnaryReactor* reactor) = 0;
-      #else
-      virtual void SetExposure(::grpc::ClientContext* context, const ::grpc::ByteBuffer* request, ::SimpleResponse* response, ::grpc::experimental::ClientUnaryReactor* reactor) = 0;
-      #endif
       virtual void BreakRecording(::grpc::ClientContext* context, const ::SimpleRequest* request, ::SimpleResponse* response, std::function<void(::grpc::Status)>) = 0;
-      virtual void BreakRecording(::grpc::ClientContext* context, const ::grpc::ByteBuffer* request, ::SimpleResponse* response, std::function<void(::grpc::Status)>) = 0;
       #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
       virtual void BreakRecording(::grpc::ClientContext* context, const ::SimpleRequest* request, ::SimpleResponse* response, ::grpc::ClientUnaryReactor* reactor) = 0;
       #else
       virtual void BreakRecording(::grpc::ClientContext* context, const ::SimpleRequest* request, ::SimpleResponse* response, ::grpc::experimental::ClientUnaryReactor* reactor) = 0;
-      #endif
-      #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
-      virtual void BreakRecording(::grpc::ClientContext* context, const ::grpc::ByteBuffer* request, ::SimpleResponse* response, ::grpc::ClientUnaryReactor* reactor) = 0;
-      #else
-      virtual void BreakRecording(::grpc::ClientContext* context, const ::grpc::ByteBuffer* request, ::SimpleResponse* response, ::grpc::experimental::ClientUnaryReactor* reactor) = 0;
       #endif
     };
     #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
@@ -338,124 +278,64 @@ class CameraCommunicatorS final {
       public StubInterface::experimental_async_interface {
      public:
       void SetFramerate(::grpc::ClientContext* context, const ::SetFramerateRequest* request, ::SimpleResponse* response, std::function<void(::grpc::Status)>) override;
-      void SetFramerate(::grpc::ClientContext* context, const ::grpc::ByteBuffer* request, ::SimpleResponse* response, std::function<void(::grpc::Status)>) override;
       #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
       void SetFramerate(::grpc::ClientContext* context, const ::SetFramerateRequest* request, ::SimpleResponse* response, ::grpc::ClientUnaryReactor* reactor) override;
       #else
       void SetFramerate(::grpc::ClientContext* context, const ::SetFramerateRequest* request, ::SimpleResponse* response, ::grpc::experimental::ClientUnaryReactor* reactor) override;
       #endif
-      #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
-      void SetFramerate(::grpc::ClientContext* context, const ::grpc::ByteBuffer* request, ::SimpleResponse* response, ::grpc::ClientUnaryReactor* reactor) override;
-      #else
-      void SetFramerate(::grpc::ClientContext* context, const ::grpc::ByteBuffer* request, ::SimpleResponse* response, ::grpc::experimental::ClientUnaryReactor* reactor) override;
-      #endif
       void SetRecordingPeriod(::grpc::ClientContext* context, const ::SetRecordingPeriodRequest* request, ::SimpleResponse* response, std::function<void(::grpc::Status)>) override;
-      void SetRecordingPeriod(::grpc::ClientContext* context, const ::grpc::ByteBuffer* request, ::SimpleResponse* response, std::function<void(::grpc::Status)>) override;
       #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
       void SetRecordingPeriod(::grpc::ClientContext* context, const ::SetRecordingPeriodRequest* request, ::SimpleResponse* response, ::grpc::ClientUnaryReactor* reactor) override;
       #else
       void SetRecordingPeriod(::grpc::ClientContext* context, const ::SetRecordingPeriodRequest* request, ::SimpleResponse* response, ::grpc::experimental::ClientUnaryReactor* reactor) override;
       #endif
-      #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
-      void SetRecordingPeriod(::grpc::ClientContext* context, const ::grpc::ByteBuffer* request, ::SimpleResponse* response, ::grpc::ClientUnaryReactor* reactor) override;
-      #else
-      void SetRecordingPeriod(::grpc::ClientContext* context, const ::grpc::ByteBuffer* request, ::SimpleResponse* response, ::grpc::experimental::ClientUnaryReactor* reactor) override;
-      #endif
       void SetReferenceCamera(::grpc::ClientContext* context, const ::SetReferenceCameraRequest* request, ::SimpleResponse* response, std::function<void(::grpc::Status)>) override;
-      void SetReferenceCamera(::grpc::ClientContext* context, const ::grpc::ByteBuffer* request, ::SimpleResponse* response, std::function<void(::grpc::Status)>) override;
       #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
       void SetReferenceCamera(::grpc::ClientContext* context, const ::SetReferenceCameraRequest* request, ::SimpleResponse* response, ::grpc::ClientUnaryReactor* reactor) override;
       #else
       void SetReferenceCamera(::grpc::ClientContext* context, const ::SetReferenceCameraRequest* request, ::SimpleResponse* response, ::grpc::experimental::ClientUnaryReactor* reactor) override;
       #endif
-      #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
-      void SetReferenceCamera(::grpc::ClientContext* context, const ::grpc::ByteBuffer* request, ::SimpleResponse* response, ::grpc::ClientUnaryReactor* reactor) override;
-      #else
-      void SetReferenceCamera(::grpc::ClientContext* context, const ::grpc::ByteBuffer* request, ::SimpleResponse* response, ::grpc::experimental::ClientUnaryReactor* reactor) override;
-      #endif
       void PrepareRecording(::grpc::ClientContext* context, const ::SimpleRequest* request, ::SimpleResponse* response, std::function<void(::grpc::Status)>) override;
-      void PrepareRecording(::grpc::ClientContext* context, const ::grpc::ByteBuffer* request, ::SimpleResponse* response, std::function<void(::grpc::Status)>) override;
       #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
       void PrepareRecording(::grpc::ClientContext* context, const ::SimpleRequest* request, ::SimpleResponse* response, ::grpc::ClientUnaryReactor* reactor) override;
       #else
       void PrepareRecording(::grpc::ClientContext* context, const ::SimpleRequest* request, ::SimpleResponse* response, ::grpc::experimental::ClientUnaryReactor* reactor) override;
       #endif
-      #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
-      void PrepareRecording(::grpc::ClientContext* context, const ::grpc::ByteBuffer* request, ::SimpleResponse* response, ::grpc::ClientUnaryReactor* reactor) override;
-      #else
-      void PrepareRecording(::grpc::ClientContext* context, const ::grpc::ByteBuffer* request, ::SimpleResponse* response, ::grpc::experimental::ClientUnaryReactor* reactor) override;
-      #endif
       void StartRecording(::grpc::ClientContext* context, const ::SimpleRequest* request, ::SimpleResponse* response, std::function<void(::grpc::Status)>) override;
-      void StartRecording(::grpc::ClientContext* context, const ::grpc::ByteBuffer* request, ::SimpleResponse* response, std::function<void(::grpc::Status)>) override;
       #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
       void StartRecording(::grpc::ClientContext* context, const ::SimpleRequest* request, ::SimpleResponse* response, ::grpc::ClientUnaryReactor* reactor) override;
       #else
       void StartRecording(::grpc::ClientContext* context, const ::SimpleRequest* request, ::SimpleResponse* response, ::grpc::experimental::ClientUnaryReactor* reactor) override;
       #endif
-      #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
-      void StartRecording(::grpc::ClientContext* context, const ::grpc::ByteBuffer* request, ::SimpleResponse* response, ::grpc::ClientUnaryReactor* reactor) override;
-      #else
-      void StartRecording(::grpc::ClientContext* context, const ::grpc::ByteBuffer* request, ::SimpleResponse* response, ::grpc::experimental::ClientUnaryReactor* reactor) override;
-      #endif
       void CaptureSingleImage(::grpc::ClientContext* context, const ::SimpleRequest* request, ::SimpleResponse* response, std::function<void(::grpc::Status)>) override;
-      void CaptureSingleImage(::grpc::ClientContext* context, const ::grpc::ByteBuffer* request, ::SimpleResponse* response, std::function<void(::grpc::Status)>) override;
       #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
       void CaptureSingleImage(::grpc::ClientContext* context, const ::SimpleRequest* request, ::SimpleResponse* response, ::grpc::ClientUnaryReactor* reactor) override;
       #else
       void CaptureSingleImage(::grpc::ClientContext* context, const ::SimpleRequest* request, ::SimpleResponse* response, ::grpc::experimental::ClientUnaryReactor* reactor) override;
       #endif
-      #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
-      void CaptureSingleImage(::grpc::ClientContext* context, const ::grpc::ByteBuffer* request, ::SimpleResponse* response, ::grpc::ClientUnaryReactor* reactor) override;
-      #else
-      void CaptureSingleImage(::grpc::ClientContext* context, const ::grpc::ByteBuffer* request, ::SimpleResponse* response, ::grpc::experimental::ClientUnaryReactor* reactor) override;
-      #endif
       void SetDirectory(::grpc::ClientContext* context, const ::SetDirectoryRequest* request, ::SimpleResponse* response, std::function<void(::grpc::Status)>) override;
-      void SetDirectory(::grpc::ClientContext* context, const ::grpc::ByteBuffer* request, ::SimpleResponse* response, std::function<void(::grpc::Status)>) override;
       #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
       void SetDirectory(::grpc::ClientContext* context, const ::SetDirectoryRequest* request, ::SimpleResponse* response, ::grpc::ClientUnaryReactor* reactor) override;
       #else
       void SetDirectory(::grpc::ClientContext* context, const ::SetDirectoryRequest* request, ::SimpleResponse* response, ::grpc::experimental::ClientUnaryReactor* reactor) override;
       #endif
-      #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
-      void SetDirectory(::grpc::ClientContext* context, const ::grpc::ByteBuffer* request, ::SimpleResponse* response, ::grpc::ClientUnaryReactor* reactor) override;
-      #else
-      void SetDirectory(::grpc::ClientContext* context, const ::grpc::ByteBuffer* request, ::SimpleResponse* response, ::grpc::experimental::ClientUnaryReactor* reactor) override;
-      #endif
       void SetGain(::grpc::ClientContext* context, const ::SetGainRequest* request, ::SimpleResponse* response, std::function<void(::grpc::Status)>) override;
-      void SetGain(::grpc::ClientContext* context, const ::grpc::ByteBuffer* request, ::SimpleResponse* response, std::function<void(::grpc::Status)>) override;
       #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
       void SetGain(::grpc::ClientContext* context, const ::SetGainRequest* request, ::SimpleResponse* response, ::grpc::ClientUnaryReactor* reactor) override;
       #else
       void SetGain(::grpc::ClientContext* context, const ::SetGainRequest* request, ::SimpleResponse* response, ::grpc::experimental::ClientUnaryReactor* reactor) override;
       #endif
-      #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
-      void SetGain(::grpc::ClientContext* context, const ::grpc::ByteBuffer* request, ::SimpleResponse* response, ::grpc::ClientUnaryReactor* reactor) override;
-      #else
-      void SetGain(::grpc::ClientContext* context, const ::grpc::ByteBuffer* request, ::SimpleResponse* response, ::grpc::experimental::ClientUnaryReactor* reactor) override;
-      #endif
       void SetExposure(::grpc::ClientContext* context, const ::SetExposureRequest* request, ::SimpleResponse* response, std::function<void(::grpc::Status)>) override;
-      void SetExposure(::grpc::ClientContext* context, const ::grpc::ByteBuffer* request, ::SimpleResponse* response, std::function<void(::grpc::Status)>) override;
       #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
       void SetExposure(::grpc::ClientContext* context, const ::SetExposureRequest* request, ::SimpleResponse* response, ::grpc::ClientUnaryReactor* reactor) override;
       #else
       void SetExposure(::grpc::ClientContext* context, const ::SetExposureRequest* request, ::SimpleResponse* response, ::grpc::experimental::ClientUnaryReactor* reactor) override;
       #endif
-      #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
-      void SetExposure(::grpc::ClientContext* context, const ::grpc::ByteBuffer* request, ::SimpleResponse* response, ::grpc::ClientUnaryReactor* reactor) override;
-      #else
-      void SetExposure(::grpc::ClientContext* context, const ::grpc::ByteBuffer* request, ::SimpleResponse* response, ::grpc::experimental::ClientUnaryReactor* reactor) override;
-      #endif
       void BreakRecording(::grpc::ClientContext* context, const ::SimpleRequest* request, ::SimpleResponse* response, std::function<void(::grpc::Status)>) override;
-      void BreakRecording(::grpc::ClientContext* context, const ::grpc::ByteBuffer* request, ::SimpleResponse* response, std::function<void(::grpc::Status)>) override;
       #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
       void BreakRecording(::grpc::ClientContext* context, const ::SimpleRequest* request, ::SimpleResponse* response, ::grpc::ClientUnaryReactor* reactor) override;
       #else
       void BreakRecording(::grpc::ClientContext* context, const ::SimpleRequest* request, ::SimpleResponse* response, ::grpc::experimental::ClientUnaryReactor* reactor) override;
-      #endif
-      #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
-      void BreakRecording(::grpc::ClientContext* context, const ::grpc::ByteBuffer* request, ::SimpleResponse* response, ::grpc::ClientUnaryReactor* reactor) override;
-      #else
-      void BreakRecording(::grpc::ClientContext* context, const ::grpc::ByteBuffer* request, ::SimpleResponse* response, ::grpc::experimental::ClientUnaryReactor* reactor) override;
       #endif
      private:
       friend class Stub;
@@ -729,7 +609,7 @@ class CameraCommunicatorS final {
       ::grpc::Service::experimental().
     #endif
         MarkMethodCallback(0,
-          new ::grpc_impl::internal::CallbackUnaryHandler< ::SetFramerateRequest, ::SimpleResponse>(
+          new ::grpc::internal::CallbackUnaryHandler< ::SetFramerateRequest, ::SimpleResponse>(
             [this](
     #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
                    ::grpc::CallbackServerContext*
@@ -744,7 +624,7 @@ class CameraCommunicatorS final {
     #else
       ::grpc::internal::MethodHandler* const handler = ::grpc::Service::experimental().GetHandler(0);
     #endif
-      static_cast<::grpc_impl::internal::CallbackUnaryHandler< ::SetFramerateRequest, ::SimpleResponse>*>(handler)
+      static_cast<::grpc::internal::CallbackUnaryHandler< ::SetFramerateRequest, ::SimpleResponse>*>(handler)
               ->SetMessageAllocator(allocator);
     }
     ~ExperimentalWithCallbackMethod_SetFramerate() override {
@@ -776,7 +656,7 @@ class CameraCommunicatorS final {
       ::grpc::Service::experimental().
     #endif
         MarkMethodCallback(1,
-          new ::grpc_impl::internal::CallbackUnaryHandler< ::SetRecordingPeriodRequest, ::SimpleResponse>(
+          new ::grpc::internal::CallbackUnaryHandler< ::SetRecordingPeriodRequest, ::SimpleResponse>(
             [this](
     #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
                    ::grpc::CallbackServerContext*
@@ -791,7 +671,7 @@ class CameraCommunicatorS final {
     #else
       ::grpc::internal::MethodHandler* const handler = ::grpc::Service::experimental().GetHandler(1);
     #endif
-      static_cast<::grpc_impl::internal::CallbackUnaryHandler< ::SetRecordingPeriodRequest, ::SimpleResponse>*>(handler)
+      static_cast<::grpc::internal::CallbackUnaryHandler< ::SetRecordingPeriodRequest, ::SimpleResponse>*>(handler)
               ->SetMessageAllocator(allocator);
     }
     ~ExperimentalWithCallbackMethod_SetRecordingPeriod() override {
@@ -823,7 +703,7 @@ class CameraCommunicatorS final {
       ::grpc::Service::experimental().
     #endif
         MarkMethodCallback(2,
-          new ::grpc_impl::internal::CallbackUnaryHandler< ::SetReferenceCameraRequest, ::SimpleResponse>(
+          new ::grpc::internal::CallbackUnaryHandler< ::SetReferenceCameraRequest, ::SimpleResponse>(
             [this](
     #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
                    ::grpc::CallbackServerContext*
@@ -838,7 +718,7 @@ class CameraCommunicatorS final {
     #else
       ::grpc::internal::MethodHandler* const handler = ::grpc::Service::experimental().GetHandler(2);
     #endif
-      static_cast<::grpc_impl::internal::CallbackUnaryHandler< ::SetReferenceCameraRequest, ::SimpleResponse>*>(handler)
+      static_cast<::grpc::internal::CallbackUnaryHandler< ::SetReferenceCameraRequest, ::SimpleResponse>*>(handler)
               ->SetMessageAllocator(allocator);
     }
     ~ExperimentalWithCallbackMethod_SetReferenceCamera() override {
@@ -870,7 +750,7 @@ class CameraCommunicatorS final {
       ::grpc::Service::experimental().
     #endif
         MarkMethodCallback(3,
-          new ::grpc_impl::internal::CallbackUnaryHandler< ::SimpleRequest, ::SimpleResponse>(
+          new ::grpc::internal::CallbackUnaryHandler< ::SimpleRequest, ::SimpleResponse>(
             [this](
     #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
                    ::grpc::CallbackServerContext*
@@ -885,7 +765,7 @@ class CameraCommunicatorS final {
     #else
       ::grpc::internal::MethodHandler* const handler = ::grpc::Service::experimental().GetHandler(3);
     #endif
-      static_cast<::grpc_impl::internal::CallbackUnaryHandler< ::SimpleRequest, ::SimpleResponse>*>(handler)
+      static_cast<::grpc::internal::CallbackUnaryHandler< ::SimpleRequest, ::SimpleResponse>*>(handler)
               ->SetMessageAllocator(allocator);
     }
     ~ExperimentalWithCallbackMethod_PrepareRecording() override {
@@ -917,7 +797,7 @@ class CameraCommunicatorS final {
       ::grpc::Service::experimental().
     #endif
         MarkMethodCallback(4,
-          new ::grpc_impl::internal::CallbackUnaryHandler< ::SimpleRequest, ::SimpleResponse>(
+          new ::grpc::internal::CallbackUnaryHandler< ::SimpleRequest, ::SimpleResponse>(
             [this](
     #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
                    ::grpc::CallbackServerContext*
@@ -932,7 +812,7 @@ class CameraCommunicatorS final {
     #else
       ::grpc::internal::MethodHandler* const handler = ::grpc::Service::experimental().GetHandler(4);
     #endif
-      static_cast<::grpc_impl::internal::CallbackUnaryHandler< ::SimpleRequest, ::SimpleResponse>*>(handler)
+      static_cast<::grpc::internal::CallbackUnaryHandler< ::SimpleRequest, ::SimpleResponse>*>(handler)
               ->SetMessageAllocator(allocator);
     }
     ~ExperimentalWithCallbackMethod_StartRecording() override {
@@ -964,7 +844,7 @@ class CameraCommunicatorS final {
       ::grpc::Service::experimental().
     #endif
         MarkMethodCallback(5,
-          new ::grpc_impl::internal::CallbackUnaryHandler< ::SimpleRequest, ::SimpleResponse>(
+          new ::grpc::internal::CallbackUnaryHandler< ::SimpleRequest, ::SimpleResponse>(
             [this](
     #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
                    ::grpc::CallbackServerContext*
@@ -979,7 +859,7 @@ class CameraCommunicatorS final {
     #else
       ::grpc::internal::MethodHandler* const handler = ::grpc::Service::experimental().GetHandler(5);
     #endif
-      static_cast<::grpc_impl::internal::CallbackUnaryHandler< ::SimpleRequest, ::SimpleResponse>*>(handler)
+      static_cast<::grpc::internal::CallbackUnaryHandler< ::SimpleRequest, ::SimpleResponse>*>(handler)
               ->SetMessageAllocator(allocator);
     }
     ~ExperimentalWithCallbackMethod_CaptureSingleImage() override {
@@ -1011,7 +891,7 @@ class CameraCommunicatorS final {
       ::grpc::Service::experimental().
     #endif
         MarkMethodCallback(6,
-          new ::grpc_impl::internal::CallbackUnaryHandler< ::SetDirectoryRequest, ::SimpleResponse>(
+          new ::grpc::internal::CallbackUnaryHandler< ::SetDirectoryRequest, ::SimpleResponse>(
             [this](
     #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
                    ::grpc::CallbackServerContext*
@@ -1026,7 +906,7 @@ class CameraCommunicatorS final {
     #else
       ::grpc::internal::MethodHandler* const handler = ::grpc::Service::experimental().GetHandler(6);
     #endif
-      static_cast<::grpc_impl::internal::CallbackUnaryHandler< ::SetDirectoryRequest, ::SimpleResponse>*>(handler)
+      static_cast<::grpc::internal::CallbackUnaryHandler< ::SetDirectoryRequest, ::SimpleResponse>*>(handler)
               ->SetMessageAllocator(allocator);
     }
     ~ExperimentalWithCallbackMethod_SetDirectory() override {
@@ -1058,7 +938,7 @@ class CameraCommunicatorS final {
       ::grpc::Service::experimental().
     #endif
         MarkMethodCallback(7,
-          new ::grpc_impl::internal::CallbackUnaryHandler< ::SetGainRequest, ::SimpleResponse>(
+          new ::grpc::internal::CallbackUnaryHandler< ::SetGainRequest, ::SimpleResponse>(
             [this](
     #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
                    ::grpc::CallbackServerContext*
@@ -1073,7 +953,7 @@ class CameraCommunicatorS final {
     #else
       ::grpc::internal::MethodHandler* const handler = ::grpc::Service::experimental().GetHandler(7);
     #endif
-      static_cast<::grpc_impl::internal::CallbackUnaryHandler< ::SetGainRequest, ::SimpleResponse>*>(handler)
+      static_cast<::grpc::internal::CallbackUnaryHandler< ::SetGainRequest, ::SimpleResponse>*>(handler)
               ->SetMessageAllocator(allocator);
     }
     ~ExperimentalWithCallbackMethod_SetGain() override {
@@ -1105,7 +985,7 @@ class CameraCommunicatorS final {
       ::grpc::Service::experimental().
     #endif
         MarkMethodCallback(8,
-          new ::grpc_impl::internal::CallbackUnaryHandler< ::SetExposureRequest, ::SimpleResponse>(
+          new ::grpc::internal::CallbackUnaryHandler< ::SetExposureRequest, ::SimpleResponse>(
             [this](
     #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
                    ::grpc::CallbackServerContext*
@@ -1120,7 +1000,7 @@ class CameraCommunicatorS final {
     #else
       ::grpc::internal::MethodHandler* const handler = ::grpc::Service::experimental().GetHandler(8);
     #endif
-      static_cast<::grpc_impl::internal::CallbackUnaryHandler< ::SetExposureRequest, ::SimpleResponse>*>(handler)
+      static_cast<::grpc::internal::CallbackUnaryHandler< ::SetExposureRequest, ::SimpleResponse>*>(handler)
               ->SetMessageAllocator(allocator);
     }
     ~ExperimentalWithCallbackMethod_SetExposure() override {
@@ -1152,7 +1032,7 @@ class CameraCommunicatorS final {
       ::grpc::Service::experimental().
     #endif
         MarkMethodCallback(9,
-          new ::grpc_impl::internal::CallbackUnaryHandler< ::SimpleRequest, ::SimpleResponse>(
+          new ::grpc::internal::CallbackUnaryHandler< ::SimpleRequest, ::SimpleResponse>(
             [this](
     #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
                    ::grpc::CallbackServerContext*
@@ -1167,7 +1047,7 @@ class CameraCommunicatorS final {
     #else
       ::grpc::internal::MethodHandler* const handler = ::grpc::Service::experimental().GetHandler(9);
     #endif
-      static_cast<::grpc_impl::internal::CallbackUnaryHandler< ::SimpleRequest, ::SimpleResponse>*>(handler)
+      static_cast<::grpc::internal::CallbackUnaryHandler< ::SimpleRequest, ::SimpleResponse>*>(handler)
               ->SetMessageAllocator(allocator);
     }
     ~ExperimentalWithCallbackMethod_BreakRecording() override {
@@ -1574,7 +1454,7 @@ class CameraCommunicatorS final {
       ::grpc::Service::experimental().
     #endif
         MarkMethodRawCallback(0,
-          new ::grpc_impl::internal::CallbackUnaryHandler< ::grpc::ByteBuffer, ::grpc::ByteBuffer>(
+          new ::grpc::internal::CallbackUnaryHandler< ::grpc::ByteBuffer, ::grpc::ByteBuffer>(
             [this](
     #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
                    ::grpc::CallbackServerContext*
@@ -1612,7 +1492,7 @@ class CameraCommunicatorS final {
       ::grpc::Service::experimental().
     #endif
         MarkMethodRawCallback(1,
-          new ::grpc_impl::internal::CallbackUnaryHandler< ::grpc::ByteBuffer, ::grpc::ByteBuffer>(
+          new ::grpc::internal::CallbackUnaryHandler< ::grpc::ByteBuffer, ::grpc::ByteBuffer>(
             [this](
     #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
                    ::grpc::CallbackServerContext*
@@ -1650,7 +1530,7 @@ class CameraCommunicatorS final {
       ::grpc::Service::experimental().
     #endif
         MarkMethodRawCallback(2,
-          new ::grpc_impl::internal::CallbackUnaryHandler< ::grpc::ByteBuffer, ::grpc::ByteBuffer>(
+          new ::grpc::internal::CallbackUnaryHandler< ::grpc::ByteBuffer, ::grpc::ByteBuffer>(
             [this](
     #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
                    ::grpc::CallbackServerContext*
@@ -1688,7 +1568,7 @@ class CameraCommunicatorS final {
       ::grpc::Service::experimental().
     #endif
         MarkMethodRawCallback(3,
-          new ::grpc_impl::internal::CallbackUnaryHandler< ::grpc::ByteBuffer, ::grpc::ByteBuffer>(
+          new ::grpc::internal::CallbackUnaryHandler< ::grpc::ByteBuffer, ::grpc::ByteBuffer>(
             [this](
     #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
                    ::grpc::CallbackServerContext*
@@ -1726,7 +1606,7 @@ class CameraCommunicatorS final {
       ::grpc::Service::experimental().
     #endif
         MarkMethodRawCallback(4,
-          new ::grpc_impl::internal::CallbackUnaryHandler< ::grpc::ByteBuffer, ::grpc::ByteBuffer>(
+          new ::grpc::internal::CallbackUnaryHandler< ::grpc::ByteBuffer, ::grpc::ByteBuffer>(
             [this](
     #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
                    ::grpc::CallbackServerContext*
@@ -1764,7 +1644,7 @@ class CameraCommunicatorS final {
       ::grpc::Service::experimental().
     #endif
         MarkMethodRawCallback(5,
-          new ::grpc_impl::internal::CallbackUnaryHandler< ::grpc::ByteBuffer, ::grpc::ByteBuffer>(
+          new ::grpc::internal::CallbackUnaryHandler< ::grpc::ByteBuffer, ::grpc::ByteBuffer>(
             [this](
     #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
                    ::grpc::CallbackServerContext*
@@ -1802,7 +1682,7 @@ class CameraCommunicatorS final {
       ::grpc::Service::experimental().
     #endif
         MarkMethodRawCallback(6,
-          new ::grpc_impl::internal::CallbackUnaryHandler< ::grpc::ByteBuffer, ::grpc::ByteBuffer>(
+          new ::grpc::internal::CallbackUnaryHandler< ::grpc::ByteBuffer, ::grpc::ByteBuffer>(
             [this](
     #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
                    ::grpc::CallbackServerContext*
@@ -1840,7 +1720,7 @@ class CameraCommunicatorS final {
       ::grpc::Service::experimental().
     #endif
         MarkMethodRawCallback(7,
-          new ::grpc_impl::internal::CallbackUnaryHandler< ::grpc::ByteBuffer, ::grpc::ByteBuffer>(
+          new ::grpc::internal::CallbackUnaryHandler< ::grpc::ByteBuffer, ::grpc::ByteBuffer>(
             [this](
     #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
                    ::grpc::CallbackServerContext*
@@ -1878,7 +1758,7 @@ class CameraCommunicatorS final {
       ::grpc::Service::experimental().
     #endif
         MarkMethodRawCallback(8,
-          new ::grpc_impl::internal::CallbackUnaryHandler< ::grpc::ByteBuffer, ::grpc::ByteBuffer>(
+          new ::grpc::internal::CallbackUnaryHandler< ::grpc::ByteBuffer, ::grpc::ByteBuffer>(
             [this](
     #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
                    ::grpc::CallbackServerContext*
@@ -1916,7 +1796,7 @@ class CameraCommunicatorS final {
       ::grpc::Service::experimental().
     #endif
         MarkMethodRawCallback(9,
-          new ::grpc_impl::internal::CallbackUnaryHandler< ::grpc::ByteBuffer, ::grpc::ByteBuffer>(
+          new ::grpc::internal::CallbackUnaryHandler< ::grpc::ByteBuffer, ::grpc::ByteBuffer>(
             [this](
     #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
                    ::grpc::CallbackServerContext*
@@ -1951,8 +1831,8 @@ class CameraCommunicatorS final {
       ::grpc::Service::MarkMethodStreamed(0,
         new ::grpc::internal::StreamedUnaryHandler<
           ::SetFramerateRequest, ::SimpleResponse>(
-            [this](::grpc_impl::ServerContext* context,
-                   ::grpc_impl::ServerUnaryStreamer<
+            [this](::grpc::ServerContext* context,
+                   ::grpc::ServerUnaryStreamer<
                      ::SetFramerateRequest, ::SimpleResponse>* streamer) {
                        return this->StreamedSetFramerate(context,
                          streamer);
@@ -1978,8 +1858,8 @@ class CameraCommunicatorS final {
       ::grpc::Service::MarkMethodStreamed(1,
         new ::grpc::internal::StreamedUnaryHandler<
           ::SetRecordingPeriodRequest, ::SimpleResponse>(
-            [this](::grpc_impl::ServerContext* context,
-                   ::grpc_impl::ServerUnaryStreamer<
+            [this](::grpc::ServerContext* context,
+                   ::grpc::ServerUnaryStreamer<
                      ::SetRecordingPeriodRequest, ::SimpleResponse>* streamer) {
                        return this->StreamedSetRecordingPeriod(context,
                          streamer);
@@ -2005,8 +1885,8 @@ class CameraCommunicatorS final {
       ::grpc::Service::MarkMethodStreamed(2,
         new ::grpc::internal::StreamedUnaryHandler<
           ::SetReferenceCameraRequest, ::SimpleResponse>(
-            [this](::grpc_impl::ServerContext* context,
-                   ::grpc_impl::ServerUnaryStreamer<
+            [this](::grpc::ServerContext* context,
+                   ::grpc::ServerUnaryStreamer<
                      ::SetReferenceCameraRequest, ::SimpleResponse>* streamer) {
                        return this->StreamedSetReferenceCamera(context,
                          streamer);
@@ -2032,8 +1912,8 @@ class CameraCommunicatorS final {
       ::grpc::Service::MarkMethodStreamed(3,
         new ::grpc::internal::StreamedUnaryHandler<
           ::SimpleRequest, ::SimpleResponse>(
-            [this](::grpc_impl::ServerContext* context,
-                   ::grpc_impl::ServerUnaryStreamer<
+            [this](::grpc::ServerContext* context,
+                   ::grpc::ServerUnaryStreamer<
                      ::SimpleRequest, ::SimpleResponse>* streamer) {
                        return this->StreamedPrepareRecording(context,
                          streamer);
@@ -2059,8 +1939,8 @@ class CameraCommunicatorS final {
       ::grpc::Service::MarkMethodStreamed(4,
         new ::grpc::internal::StreamedUnaryHandler<
           ::SimpleRequest, ::SimpleResponse>(
-            [this](::grpc_impl::ServerContext* context,
-                   ::grpc_impl::ServerUnaryStreamer<
+            [this](::grpc::ServerContext* context,
+                   ::grpc::ServerUnaryStreamer<
                      ::SimpleRequest, ::SimpleResponse>* streamer) {
                        return this->StreamedStartRecording(context,
                          streamer);
@@ -2086,8 +1966,8 @@ class CameraCommunicatorS final {
       ::grpc::Service::MarkMethodStreamed(5,
         new ::grpc::internal::StreamedUnaryHandler<
           ::SimpleRequest, ::SimpleResponse>(
-            [this](::grpc_impl::ServerContext* context,
-                   ::grpc_impl::ServerUnaryStreamer<
+            [this](::grpc::ServerContext* context,
+                   ::grpc::ServerUnaryStreamer<
                      ::SimpleRequest, ::SimpleResponse>* streamer) {
                        return this->StreamedCaptureSingleImage(context,
                          streamer);
@@ -2113,8 +1993,8 @@ class CameraCommunicatorS final {
       ::grpc::Service::MarkMethodStreamed(6,
         new ::grpc::internal::StreamedUnaryHandler<
           ::SetDirectoryRequest, ::SimpleResponse>(
-            [this](::grpc_impl::ServerContext* context,
-                   ::grpc_impl::ServerUnaryStreamer<
+            [this](::grpc::ServerContext* context,
+                   ::grpc::ServerUnaryStreamer<
                      ::SetDirectoryRequest, ::SimpleResponse>* streamer) {
                        return this->StreamedSetDirectory(context,
                          streamer);
@@ -2140,8 +2020,8 @@ class CameraCommunicatorS final {
       ::grpc::Service::MarkMethodStreamed(7,
         new ::grpc::internal::StreamedUnaryHandler<
           ::SetGainRequest, ::SimpleResponse>(
-            [this](::grpc_impl::ServerContext* context,
-                   ::grpc_impl::ServerUnaryStreamer<
+            [this](::grpc::ServerContext* context,
+                   ::grpc::ServerUnaryStreamer<
                      ::SetGainRequest, ::SimpleResponse>* streamer) {
                        return this->StreamedSetGain(context,
                          streamer);
@@ -2167,8 +2047,8 @@ class CameraCommunicatorS final {
       ::grpc::Service::MarkMethodStreamed(8,
         new ::grpc::internal::StreamedUnaryHandler<
           ::SetExposureRequest, ::SimpleResponse>(
-            [this](::grpc_impl::ServerContext* context,
-                   ::grpc_impl::ServerUnaryStreamer<
+            [this](::grpc::ServerContext* context,
+                   ::grpc::ServerUnaryStreamer<
                      ::SetExposureRequest, ::SimpleResponse>* streamer) {
                        return this->StreamedSetExposure(context,
                          streamer);
@@ -2194,8 +2074,8 @@ class CameraCommunicatorS final {
       ::grpc::Service::MarkMethodStreamed(9,
         new ::grpc::internal::StreamedUnaryHandler<
           ::SimpleRequest, ::SimpleResponse>(
-            [this](::grpc_impl::ServerContext* context,
-                   ::grpc_impl::ServerUnaryStreamer<
+            [this](::grpc::ServerContext* context,
+                   ::grpc::ServerUnaryStreamer<
                      ::SimpleRequest, ::SimpleResponse>* streamer) {
                        return this->StreamedBreakRecording(context,
                          streamer);

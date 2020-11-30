@@ -8,7 +8,7 @@ constexpr auto DISABLED = false;
 
 // CProtocolAppDlg dialog
 
-CProtocolAppDlg::CProtocolAppDlg(CWnd* pParent /*=nullptr*/) : CDialogEx(IDD_PROTOCOLAPP_DIALOG, pParent), m_stopProtocol(false)
+CProtocolAppDlg::CProtocolAppDlg(CWnd* pParent /*=nullptr*/) : CDialogEx(IDD_PROTOCOLAPP_DIALOG, pParent)
 {
 	m_hIcon = AfxGetApp()->LoadIcon(IDR_MAINFRAME);
 }
@@ -192,6 +192,13 @@ void CProtocolAppDlg::OnOK()
 	UpdateData(FromControlsToVariables);
 }
 
+void CProtocolAppDlg::setFontGuiTrialsCounter()
+{
+	CFont* cEditControlFont = new CFont();
+	cEditControlFont->CreateFont(30, 0, 0, 0, FW_HEAVY, true, false, 0, ANSI_CHARSET, OUT_DEFAULT_PRECIS, CLIP_DEFAULT_PRECIS, DEFAULT_QUALITY, FIXED_PITCH | FF_MODERN, _T(FONT_TYPE));
+	m_currentTrialEdtCtrl.SetFont(cEditControlFont);
+}
+
 // The system calls this function to obtain the cursor to display while the user drags
 //  the minimized window.
 HCURSOR CProtocolAppDlg::OnQueryDragIcon()
@@ -207,6 +214,8 @@ void CProtocolAppDlg::OnStartProtocolBtnClicked()
 	m_protocol.startTrial.store(false);
 	m_protocol.stopTrial.store(false);
 	m_protocol.retreatedMotors.store(false);
+
+	setFontGuiTrialsCounter();
 
 	if (m_protocol.params.isNiCardBeingUsed()) {
 		m_NIUsb6001card.config();
@@ -257,7 +266,7 @@ void CProtocolAppDlg::OnStartTrialBtnClicked()
 {
 	enableTrialCtrls(false);
 
-	m_startTrial.store(true);
+	m_protocol.startTrial.store(true);
 
 	UpdateData(FromControlsToVariables);
 	sendConfig();
@@ -373,7 +382,7 @@ void CProtocolAppDlg::OnDisconnectTouchSensorBtnClicked()
 void CProtocolAppDlg::stopProtocolThread()
 {
 	if (protocolThread) {
-		m_stopProtocol.store(true);
+		m_protocol.stopProtocol.store(true);
 		protocolThread->join();
 		delete protocolThread; protocolThread = nullptr;
 	}
@@ -387,10 +396,10 @@ void CProtocolAppDlg::retreatStopRecording()
 	enableTrialCtrls(true);
 
 	// retreat
-	m_stopTrial.store(true);
+	m_protocol.stopTrial.store(true);
 
 	// wait until the motors fully retracted
-	while (!m_retreatedMotors.load()) {}
+	while (!m_protocol.retreatedMotors.load()) {}
 
 	// and only then stop recording
 	if (m_cameraClient1.isConnected())

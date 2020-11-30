@@ -60,7 +60,6 @@ class Protocol
 
 		//////// GUI
 		void updateCurrentTrialOnTheGUI(const long & nTotTrialsPlayedUntilNow, CEdit * currentTrialGUICtrl);
-		void setFontGuiTrialsCounter(CEdit* currentTrialGUICtrl);
 
 		// logging
 		void logGoodTrial(const long& nCurrentTrial, const long& timeElapsedFromStartTaskToneToLiftsMonkeyArm, const long& timeElapsedFromStartTaskToneToPlatesTouch);
