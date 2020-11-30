@@ -20,8 +20,6 @@
 #include "NIUsb6001card.h"
 #include "CameraClient.h"
 
-using namespace std;
-using namespace chrono;
 
 enum class ProtocolState
 {

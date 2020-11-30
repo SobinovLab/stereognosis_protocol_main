@@ -5,14 +5,8 @@ constexpr auto TRIAL_NUM_STR = "Trial n.";
 constexpr auto TRIAL_ABORT_STR = " Aborted";
 constexpr auto PRECISION = "%03d";
 
-constexpr auto FREQUENCY_START_TASK_TONE = 500;
-constexpr auto FREQUENCY_ERROR_TONE = 250;
-constexpr auto DURATION_TONE = 1000; //msecs
-constexpr auto ABORT = 0;
 constexpr auto MIN_UNCOVERED_TIME = 200; //msecs
-constexpr auto TOUCHPAD_START_THREAD_DELAY = 1000; //msecs
 
-#define DATE_TIME_FORMAT "%Y_%m_%d_%H_%M_%S"
 
 ProtocolState Protocol::getCurrentState()
 {
