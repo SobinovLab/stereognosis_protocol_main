@@ -30,15 +30,15 @@ long Times::getElapsedMilliSecsSince(steady_clock::time_point& startTime)
 
 long Times::microToMillisecs(const long& microsecs)
 {
-    return (long)(microsecs / 1e3);
+    return (long)round(microsecs / 1e3);
 }
 
 long Times::milliToMicrosecs(const long& millisecs)
 {
-    return millisecs * 1e3;
+    return millisecs * 1000;
 }
 
 long Times::secToMicrosecs(const double& secs)
 {
-    return (long)(secs * 1e6);
+    return (long)(secs * 1000000);
 }

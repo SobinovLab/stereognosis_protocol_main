@@ -13,8 +13,8 @@
 #include <chrono>
 #include <atomic>
 #include "Logger.h"
-#include "Sounds.h"
-#include "Times.h"
+#include "utilities\Sounds.h"
+#include "utilities\Times.h"
 #include "ProtocolParameters.h"
 #include "TeknicMotorDevice.h"
 #include "NIUsb6001card.h"

@@ -2,16 +2,16 @@
 
 #include <atomic>
 
+#pragma warning( push, 0 )
 #include <grpc/grpc.h>
 #include <grpcpp/channel.h>
 #include <grpcpp/client_context.h>
 #include <grpcpp/create_channel.h>
 #include <grpcpp/security/credentials.h>
 
-#pragma warning(push, 3) 
 #include "cameras_messages.grpc.pb.h"
 #include "cameras_messages.pb.h"
-#pragma warning(pop)
+#pragma warning( pop )
 
 using grpc::Channel;
 using grpc::ClientContext;

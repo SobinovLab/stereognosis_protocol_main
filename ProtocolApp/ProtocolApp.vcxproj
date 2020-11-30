@@ -67,7 +67,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;HMI_API_DYNAMIC;_WINDOWS;_USE_MATH_DEFINES;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>.\;.\libMicrochip3DTouchpad\include;.\libTeknicMotor\include;.\Protocol\;$(NIDAQ_HOME)\NI-DAQ\DAQmx ANSI C Dev\include;$(MCHP_HMI_API_PATH)\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>.\;.\Protocol;.\utilities;.\cameras;.\pressure_sensors;.\libMicrochip3DTouchpad\include;.\libTeknicMotor\include;$(NIDAQ_HOME)\NI-DAQ\DAQmx ANSI C Dev\include;$(MCHP_HMI_API_PATH)\include</AdditionalIncludeDirectories>
       <ForcedIncludeFiles>stdafx.h</ForcedIncludeFiles>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <WholeProgramOptimization>false</WholeProgramOptimization>
@@ -115,7 +115,7 @@ copy /B /V /Y "$(ProjectDir)libTeknicMotor\lib_x64d\*.dll" "$(OutDir)" &gt; NUL
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;NDEBUG;HMI_API_DYNAMIC;_WINDOWS;_USE_MATH_DEFINES;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>.\;.\libMicrochip3DTouchpad\include;.\libTeknicMotor\include;.\Protocol\;$(NIDAQ_HOME)\NI-DAQ\DAQmx ANSI C Dev\include;$(MCHP_HMI_API_PATH)\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>.\;.\Protocol;.\utilities;.\cameras;.\pressure_sensors;.\libMicrochip3DTouchpad\include;.\libTeknicMotor\include;$(NIDAQ_HOME)\NI-DAQ\DAQmx ANSI C Dev\include;$(MCHP_HMI_API_PATH)\include</AdditionalIncludeDirectories>
       <ForcedIncludeFiles>stdafx.h</ForcedIncludeFiles>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <WholeProgramOptimization>false</WholeProgramOptimization>
@@ -155,47 +155,47 @@ copy /B /V /Y "$(ProjectDir)libTeknicMotor\lib_x64\*.dll" "$(OutDir)" &gt; NUL
     </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="CameraClient.h" />
-    <ClInclude Include="cameras_messages.grpc.pb.h" />
-    <ClInclude Include="cameras_messages.pb.h" />
+    <ClInclude Include="cameras\CameraClient.h" />
+    <ClInclude Include="cameras\cameras_messages.grpc.pb.h" />
+    <ClInclude Include="cameras\cameras_messages.pb.h" />
     <ClInclude Include="ProtocolApp.h" />
     <ClInclude Include="ProtocolAppDlg.h" />
     <ClInclude Include="Protocol\CStaticColor.h" />
-    <ClInclude Include="Protocol\Logger.h" />
+    <ClInclude Include="utilities\Logger.h" />
     <ClInclude Include="Protocol\NIUsb6001card.h" />
     <ClInclude Include="Protocol\Protocol.h" />
     <ClInclude Include="Protocol\ProtocolParameters.h" />
     <ClInclude Include="Protocol\TeknicMotorDevice.h" />
     <ClInclude Include="Resource.h" />
-    <ClInclude Include="Sounds.h" />
+    <ClInclude Include="utilities\Sounds.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
-    <ClInclude Include="tekscan_server.grpc.pb.h" />
-    <ClInclude Include="tekscan_server.pb.h" />
-    <ClInclude Include="Times.h" />
-    <ClInclude Include="TouchSensorClient.h" />
+    <ClInclude Include="pressure_sensors\tekscan_server.grpc.pb.h" />
+    <ClInclude Include="pressure_sensors\tekscan_server.pb.h" />
+    <ClInclude Include="utilities\Times.h" />
+    <ClInclude Include="pressure_sensors\TouchSensorClient.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="CameraClient.cpp" />
-    <ClCompile Include="cameras_messages.grpc.pb.cc" />
-    <ClCompile Include="cameras_messages.pb.cc" />
+    <ClCompile Include="cameras\CameraClient.cpp" />
+    <ClCompile Include="cameras\cameras_messages.grpc.pb.cc" />
+    <ClCompile Include="cameras\cameras_messages.pb.cc" />
     <ClCompile Include="ProtocolApp.cpp" />
     <ClCompile Include="ProtocolAppDlg.cpp" />
     <ClCompile Include="Protocol\src\CStaticColor.cpp" />
-    <ClCompile Include="Protocol\src\Logger.cpp" />
+    <ClCompile Include="utilities\Logger.cpp" />
     <ClCompile Include="Protocol\src\NIUsb6001card.cpp" />
     <ClCompile Include="Protocol\src\Protocol.cpp" />
     <ClCompile Include="Protocol\src\ProtocolParameters.cpp" />
     <ClCompile Include="Protocol\src\TeknicMotorDevice.cpp" />
-    <ClCompile Include="Sounds.cpp" />
+    <ClCompile Include="utilities\Sounds.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="tekscan_server.grpc.pb.cc" />
-    <ClCompile Include="tekscan_server.pb.cc" />
-    <ClCompile Include="Times.cpp" />
-    <ClCompile Include="TouchSensorClient.cpp" />
+    <ClCompile Include="pressure_sensors\tekscan_server.grpc.pb.cc" />
+    <ClCompile Include="pressure_sensors\tekscan_server.pb.cc" />
+    <ClCompile Include="utilities\Times.cpp" />
+    <ClCompile Include="pressure_sensors\TouchSensorClient.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="ProtocolApp.rc" />
