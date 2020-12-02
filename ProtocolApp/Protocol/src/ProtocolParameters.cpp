@@ -30,7 +30,7 @@ ProtocolParameters::ProtocolParameters(const ProtocolParameters & protocolParams
 	this->tstEnMotors = protocolParams.tstEnMotors;
 	this->tstEnReward = protocolParams.tstEnReward;
 	this->tstEnLightSensors = protocolParams.tstEnLightSensors;
-	this->tstEnTouchSensors = protocolParams.tstEnTouchSensors;
+	this->tstEnEphys = protocolParams.tstEnEphys;
 }
 
 ProtocolParameters::~ProtocolParameters()
@@ -63,14 +63,14 @@ void ProtocolParameters::init()
 	//tstEnMotors = false;
 	//tstEnReward = false;
 	//tstEnLightSensors = false;
+	//tstEnEphys = false;
 	tstEnMotors = true;
 	tstEnReward = true;
 	tstEnLightSensors = true;
-
-	tstEnTouchSensors = true;
+	tstEnEphys = true;
 }
 
 bool ProtocolParameters::isNiCardBeingUsed()
 {
-	return tstEnLightSensors || tstEnMotors || tstEnReward;
+	return tstEnLightSensors || tstEnMotors || tstEnReward || tstEnEphys;
 }

@@ -61,8 +61,6 @@ BEGIN_MESSAGE_MAP(CProtocolAppDlg, CDialogEx)
 	ON_WM_SYSCOMMAND()
 	ON_WM_PAINT()
 	ON_WM_QUERYDRAGICON()
-	ON_BN_CLICKED(IDC_LOAD_CONFIG_BTN, OnLoadProtBtnClicked)
-	ON_BN_CLICKED(IDC_SAVE_CONFIG_BTN, OnSaveProtBtnClicked)
 	ON_BN_CLICKED(IDC_FLUSH_WATER_BTN, OnFlushWaterBtnClicked)
 	ON_BN_CLICKED(IDC_STOP_PROTOCOL_BTN, OnStopProtocolBtnClicked)
 	ON_BN_CLICKED(IDC_START_PROTOCOL_BTN, OnStartProtocolBtnClicked)
@@ -110,24 +108,22 @@ BOOL CProtocolAppDlg::OnInitDialog()
 	m_protocol.set_camera1_gui_controls(&m_serverStatusCtrl1, &m_serverLogCtrl1);
 	m_serverStatusCtrl2.SetWindowText("Off");
 	m_protocol.set_camera2_gui_controls(&m_serverStatusCtrl2, &m_serverLogCtrl2);
+	m_protocol.set_pressure_sensors_gui_controls(&m_touchServerLogCtrl);
+	m_protocol.set_current_trial_gui_control(&m_currentTrialEdtCtrl);
 
 	// set the visibility and defaults for GUI
 	if (m_protocol.params.tstEnLightSensors) ((CButton*)GetDlgItem(IDC_LIGHT_SENSORS_CHK))->SetCheck(BST_CHECKED);
 	if (m_protocol.params.tstEnMotors) ((CButton*)GetDlgItem(IDC_MOTORS_CHK))->SetCheck(BST_CHECKED);
 	if (m_protocol.params.tstEnReward) ((CButton*)GetDlgItem(IDC_REWARD_CHK))->SetCheck(BST_CHECKED);
-	if (m_protocol.params.tstEnTouchSensors) ((CButton*)GetDlgItem(IDC_TOUCH_SENSORS_CHK))->SetCheck(BST_CHECKED);
+	if (m_protocol.params.tstEnEphys) ((CButton*)GetDlgItem(IDC_EPHYS_CHK))->SetCheck(BST_CHECKED);
 
+	// loop by default
 	m_trialLoopChk.SetCheck(true);
 
 	/////// Control what is enabled and initialized based on debug/testing interface
 	enableProtocolCtrls(true);
 	enableTrialCtrls(true);
 	GetDlgItem(IDC_START_TRIAL_BTN)->EnableWindow(false);
-
-	// motors
-	// light sensors
-	// touch sensors
-	// All motors, light, touch go through NI card automatically
 
 	// reward
 	enableRewardCtrls(true);
@@ -181,6 +177,9 @@ void CProtocolAppDlg::OnPaint()
 	}
 }
 
+/// <summary>
+/// If not set, on pressing Enter the program exits
+/// </summary>
 void CProtocolAppDlg::OnOK()
 {
 	UpdateData(FromControlsToVariables);
@@ -203,36 +202,24 @@ HCURSOR CProtocolAppDlg::OnQueryDragIcon()
 void CProtocolAppDlg::OnStartProtocolBtnClicked()
 {
 	UpdateData(FromControlsToVariables);
-	enableProtocolCtrls(DISABLED);
-	m_protocol.stopProtocol.store(false);
-	m_protocol.startTrial.store(false);
-	m_protocol.stopTrial.store(false);
-	m_protocol.retreatedMotors.store(false);
+	enableProtocolCtrls(false);
 
-	protocolThread = new thread(&Protocol::run, &m_protocol, &m_currentTrialEdtCtrl);
+	protocolThread = new thread(&Protocol::run, &m_protocol);
 
 	enableTrialCtrls(true);
 }
 
 void CProtocolAppDlg::OnStopProtocolBtnClicked()
 {
-	// if trials are running, uncheck loop and stop trial
-	bool initState = m_trialLoopChk.GetCheck();
-	m_trialLoopChk.SetCheck(false);
-	if (!stopTouchSensorSuccessMonitor.load()) {
-		retreatStopRecording();
-	}
-
+	// this will wait until protocol handles the trial end
 	stopProtocolThread();
 
 	// trial controls fully off
 	enableTrialCtrls(true);
 	GetDlgItem(IDC_START_TRIAL_BTN)->EnableWindow(false);
-	// protocol controls and edits are on
-	enableProtocolCtrls(ENABLED);
 
-	// restore the check button
-	m_trialLoopChk.SetCheck(initState);
+	// protocol controls and edits are on
+	enableProtocolCtrls(true);
 }
 
 void CProtocolAppDlg::OnFlushWaterBtnClicked()
@@ -244,29 +231,22 @@ void CProtocolAppDlg::OnFlushWaterBtnClicked()
 void CProtocolAppDlg::OnStartTrialBtnClicked()
 {
 	enableTrialCtrls(false);
-	UpdateData(FromControlsToVariables);
+
+	UpdateData(FromControlsToVariables);  // in case the loop was changed
 
 	m_protocol.startTrial.store(true);
-
-	sendStartRecording();
 }
 
 void CProtocolAppDlg::OnRetreatFlushWaterBtnClicked()
 {
-	UpdateData(FromControlsToVariables);
-	m_protocol.reward();
+	m_protocol.deservesReward = true;
 
-	retreatStopRecording();
-
+	stopTrial();
 }
 
 void CProtocolAppDlg::OnRetreatBtnClicked()
 {
-	if (m_protocol.params.tstEnReward) {
-		Sounds::playErrorTone();
-	}
-
-	retreatStopRecording();
+	stopTrial();
 }
 
 void CProtocolAppDlg::OnConnect1BtnClicked()
@@ -289,6 +269,7 @@ void CProtocolAppDlg::OnConnect2BtnClicked()
 {
 	UpdateData(FromControlsToVariables);
 
+	// TODO (AS) return error if not connected and not change state?
 	m_protocol.connect_camera_client2();
 
 	enableCameraServer2Ctrls(false);
@@ -318,19 +299,15 @@ void CProtocolAppDlg::OnConnectTouchSensorBtnClicked()
 {
 	UpdateData(FromControlsToVariables);
 
-	m_touchSensorClient.server_ip = m_protocol.params.tss_ip;
-	m_touchSensorClient.port = m_protocol.params.tss_port;
-	m_touchSensorClient.clientLogGuiEdt = &m_touchServerLogCtrl;
-
-	m_touchSensorClient.connect_f();
+	// TODO (AS) return error if not connected and not change state?
+	m_protocol.connect_pressure_sensors();
 
 	enableTouchServerCtrls(false);
-
 }
 
 void CProtocolAppDlg::OnDisconnectTouchSensorBtnClicked()
 {
-	m_touchSensorClient.disconnect_f();
+	m_protocol.disconnect_pressure_sensors();
 
 	enableTouchServerCtrls(true);
 }
@@ -342,102 +319,16 @@ void CProtocolAppDlg::stopProtocolThread()
 		protocolThread->join();
 		delete protocolThread; protocolThread = nullptr;
 	}
-
 }
 
-void CProtocolAppDlg::retreatStopRecording()
+void CProtocolAppDlg::stopTrial()
 {
-	stopTouchSensorSuccessMonitor.store(true);
-
 	enableTrialCtrls(true);
 
-	// retreat
+	// TODO: set LOOP checkbox and linked variable to false
+
+	// stop trial
 	m_protocol.stopTrial.store(true);
-
-	// wait until the motors fully retracted
-	while (!m_protocol.retreatedMotors.load()) {}
-
-	// and only then stop recording
-
-	if (m_touchSensorClient.isConnected()) {
-		atomic<int> result;
-		m_touchSensorClient.breakRecording(&result);
-	}
-}
-
-void CProtocolAppDlg::m_touchSensorSuccessMonitor()
-{
-	UpdateData(FromControlsToVariables);
-	double maxWaitTime = m_protocol.params.maxWaitTime;
-	double intertrialWaitTime = m_protocol.params.intertrialWaitTime;
-	auto startTime = chrono::steady_clock::now();
-	std::atomic<int> result;
-	long timePassed;
-
-
-	while (!stopTouchSensorSuccessMonitor.load()) {
-		Sleep(50);  // ms loop, so not too often
-		if (stopTouchSensorSuccessMonitor.load())
-			break;
-
-		// ask for success
-		m_touchSensorClient.checkSuccess(&result);
-
-		if (result.load() > 0) {
-			// give reward
-			if (m_protocol.params.tstEnReward) {
-				m_protocol.reward();
-			}
-
-			// do the for trial break - this also stops this thread
-			retreatStopRecording();
-
-			if (m_trialLoopChk.GetCheck()) {
-				Sleep(intertrialWaitTime * 1000);
-			}
-
-			// start the next trial
-			if (m_trialLoopChk.GetCheck()) {
-				OnStartTrialBtnClicked();
-			}
-			break;
-		}
-		else {
-			// check if out of time and then stop, punish and retreat
-			timePassed = Times::getElapsedMilliSecsSince(startTime);
-			if (timePassed >= maxWaitTime * 1e3) {
-				Sounds::playErrorTone();
-
-				// do the for trial break - this also stops this thread
-				retreatStopRecording();
-
-				if (m_trialLoopChk.GetCheck()) {
-					Sleep(intertrialWaitTime * 1000);
-				}
-
-				// start the next trial
-				if (m_trialLoopChk.GetCheck()) {
-					OnStartTrialBtnClicked();
-				}
-				break;
-			}
-		}
-
-	}
-}
-
-void CProtocolAppDlg::sendStartRecording()
-{
-	long currentTrialNumber = m_protocol.currentTrialNumber.load();
-
-	if (m_touchSensorClient.isConnected()) {
-		m_touchSensorClient.startRecording(currentTrialNumber);
-
-		// TODO delete old thread if exists
-		stopTouchSensorSuccessMonitor.store(false);
-		m_touchSensorSuccessMonitorThread = new thread(&CProtocolAppDlg::m_touchSensorSuccessMonitor, this);
-	}
-
 }
 
 void CProtocolAppDlg::enableProtocolCtrls(bool enable)
@@ -488,63 +379,9 @@ void CProtocolAppDlg::enableCameraServer2Ctrls(bool enable)
 
 void CProtocolAppDlg::enableTouchServerCtrls(bool enable)
 {
-	GetDlgItem(IDC_TOUCH_SENSOR_IP_EDT)->EnableWindow(enable && m_protocol.params.tstEnTouchSensors);
-	GetDlgItem(IDC_TOUCH_SENSOR_PORT_EDT)->EnableWindow(enable && m_protocol.params.tstEnTouchSensors);
-	GetDlgItem(IDC_CONNECT_TOUCH_SENSOR_BTN)->EnableWindow(enable && m_protocol.params.tstEnTouchSensors);
+	GetDlgItem(IDC_TOUCH_SENSOR_IP_EDT)->EnableWindow(enable);
+	GetDlgItem(IDC_TOUCH_SENSOR_PORT_EDT)->EnableWindow(enable);
+	GetDlgItem(IDC_CONNECT_TOUCH_SENSOR_BTN)->EnableWindow(enable);
 
-	GetDlgItem(IDC_DISCONNECT_TOUCH_SENSOR_BTN)->EnableWindow(!enable && m_protocol.params.tstEnTouchSensors);
+	GetDlgItem(IDC_DISCONNECT_TOUCH_SENSOR_BTN)->EnableWindow(!enable);
 }
-
-
-/*
-* maxWaitTime = 5000;
-* rewardDuration = 1000;
-* nTrialsDesidered = 150;
-* acceleration = 2; // proportional level 1-10 (1 - 4000 RPM/S)
-* speed = 2;        // proportional level 1-10 (1 - 700 RPM)
-* position = 120;     // 1 to 240 mm -> proportional cycles ((-1) to (-105000) CNTs)
-* holdingTimeTouchSensor = 500; // msec
-* intertrialTime = 2500; //msec
-*/
-
-void CProtocolAppDlg::OnSaveProtBtnClicked()
-{
-	UpdateData(FromControlsToVariables); // updates the frequency of interest
-	const TCHAR szFilter[] = _T("Protocol Files (*.pro)|*.pro||");
-	CFileDialog dlg(FALSE, _T("Saving a Protocol Config File"), NULL, OFN_HIDEREADONLY | OFN_OVERWRITEPROMPT, szFilter, this);
-	if (dlg.DoModal() == IDOK)
-	{
-		CString sFilePath = dlg.GetPathName();
-		std::ofstream os(sFilePath);
-		os << m_protocol.params.maxWaitTime << " ";
-		os << m_protocol.params.rewardDuration << " ";
-		os << m_protocol.params.acceleration << " ";
-		os << m_protocol.params.speed << " ";
-		os << m_protocol.params.position << endl;
-	}
-}
-
-void CProtocolAppDlg::OnLoadProtBtnClicked()
-{
-	const TCHAR szFilter[] = _T("Protocol Files (*.pro)|*.pro||");
-	CFileDialog dlg(TRUE, _T("Opening a Protocol Config File"), NULL, NULL, szFilter, this);
-	if (dlg.DoModal() == IDOK)
-	{
-		CString sFilePath = dlg.GetPathName();
-		std::ifstream is(sFilePath);
-		std::istream_iterator<double> start(is), end;
-		std::vector<double> params(start, end);
-		if (params.size() != 8)
-		{
-			AfxMessageBox("Error loading protocol params.Wrong parameters number!");
-			return;
-		}
-		m_protocol.params.maxWaitTime = (long)params[0];
-		m_protocol.params.rewardDuration = (long)params[1];
-		m_protocol.params.acceleration = (long)params[2];
-		m_protocol.params.speed = (long)params[3];
-		m_protocol.params.position = (long)params[4];
-		UpdateData(FromVariablesToControls);
-	}
-}
-

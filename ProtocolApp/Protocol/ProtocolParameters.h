@@ -41,12 +41,12 @@ class ProtocolParameters
 		CString tss_ip;
 		long tss_port;
 
-
 		// testing and debugging flags
 		bool tstEnMotors;
 		bool tstEnReward;
 		bool tstEnLightSensors;
-		bool tstEnTouchSensors;
+		bool tstEnEphys;
+
 		virtual void init();
 
 		virtual bool isNiCardBeingUsed();

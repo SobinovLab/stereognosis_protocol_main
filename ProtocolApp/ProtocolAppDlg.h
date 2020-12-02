@@ -9,10 +9,8 @@
 #include <thread>
 #include <future>
 #include "Protocol.h"
-#include "Sounds.h"
 #include "ProtocolApp.h"
 #include "CStaticColor.h"
-#include "TouchSensorClient.h"
 
 constexpr auto FONT_TYPE = "Courier New";
 
@@ -74,16 +72,7 @@ protected:
 	std::thread* protocolThread;
 	Protocol m_protocol;
 	void stopProtocolThread();
-
-	//////// both control
-	void sendStartRecording();
-	void retreatStopRecording();
-
-	//////// touch sensors
-	TouchSensorClient m_touchSensorClient;
-	std::thread* m_touchSensorSuccessMonitorThread;
-	void m_touchSensorSuccessMonitor();
-	std::atomic<bool> stopTouchSensorSuccessMonitor;
+	void stopTrial();
 
 	/////// Enable/disable fields
 	void enableProtocolCtrls(bool enable);
@@ -98,10 +87,6 @@ protected:
 	afx_msg void OnSysCommand(UINT nID, LPARAM lParam);
 	afx_msg void OnPaint();
 	afx_msg HCURSOR OnQueryDragIcon();
-
-	// load save
-	afx_msg void OnSaveProtBtnClicked();
-	afx_msg void OnLoadProtBtnClicked();
 
 	// protocol
 	afx_msg void OnStartProtocolBtnClicked();

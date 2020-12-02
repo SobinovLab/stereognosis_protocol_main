@@ -119,12 +119,46 @@ void Protocol::break_camera_recording()
 		m_cameraClient2.breakRecording();
 }
 
+void Protocol::connect_pressure_sensors()
+{
+	m_touchSensorClient.server_ip = params.tss_ip;
+	m_touchSensorClient.port = params.tss_port;
+
+	m_touchSensorClient.connect_f();
+}
+
+void Protocol::disconnect_pressure_sensors()
+{
+	m_touchSensorClient.disconnect_f();
+}
+
+void Protocol::start_pressure_sensor_recording()
+{
+	start_pressure_sensor_recording(currentTrialNumber);
+}
+
+void Protocol::start_pressure_sensor_recording(long trial_number)
+{
+	if (m_touchSensorClient.isConnected()) {
+		m_touchSensorClient.startRecording(trial_number);
+	}
+}
+
+int Protocol::break_pressure_sensor_recording()
+{
+	if (m_touchSensorClient.isConnected()) {
+		atomic<int> result;
+		m_touchSensorClient.breakRecording(&result);
+		return result.load();
+	}
+	return -1;
+}
+
 Protocol::Protocol()
 {
 	this->stopProtocol.store(false);
 	this->startTrial.store(false);
 	this->stopTrial.store(false);
-	this->retreatedMotors.store(false);
 
 	this->protocolState.store(ProtocolState::shutdown);
 }
@@ -135,8 +169,9 @@ Protocol::~Protocol()
 	releaseDevices();
 }
 
-void Protocol::run(CEdit* currentTrialGUICtrl)
+void Protocol::run()
 {
+	this->stopProtocol.store(false);
 	this->protocolState.store(ProtocolState::initializing);
 	// TODO?: Create directory for log storage
 	CreateDirectory(DATA_FOLDER, NULL);
@@ -148,62 +183,102 @@ void Protocol::run(CEdit* currentTrialGUICtrl)
 
 	// class member variable
 	currentTrialNumber = 0;
+	steady_clock::time_point intertrialWaitStartTime = Times::getCurrentTime();  // set at the end of the previous iteration
+	steady_clock::time_point trialStartTime;  // set when the object is in position
+
 	// Run the protocol loop
 	while (!this->stopProtocol.load())
 	{
-		updateCurrentTrialOnTheGUI(currentTrialGUICtrl);
+		// ---------------- Preparing trial
+		updateCurrentTrialOnTheGui();
+
 		// TODO: load the parameters of the next trial
 
+		// set state and state control variables
 		this->protocolState.store(ProtocolState::trialReady);
-		// TODO: conditions for waiting for the start of the next trial
-		while (!this->startTrial.load() && !this->stopProtocol.load()) {}
+		this->startTrial.store(false);
 
+		// waiting for the start of the next trial
+		while (!this->startTrial.load() && !this->stopProtocol.load() && 
+			!Times::isTimeout(intertrialWaitStartTime, params.intertrialWaitTime)) {
+			// waiting for:
+			//	Start trial button to be pressed
+			//  stop of protocol 
+			//  if looping is selected, timeout of intertrial time. TODO: enable looping behavior toggle
+		}
+
+		if (stopProtocol)
+			break;
+
+		// ---------------- Running trial
+		// set state and state control variables
 		this->protocolState.store(ProtocolState::trialInProgress);
+		this->stopTrial.store(false);
 
 		// prepare recordings
 		send_config_to_cameras();
-		prepare_camera_recording();
+		prepare_camera_recording();  // does not do anything atm
 
-		// TODO: start recordings
+		// start recordings
 		start_camera_recording();
-		m_NIUsb6001card.ephysSyncStart();
+		start_pressure_sensor_recording();
+		start_ephys_recording();
 
-		// TODO: change start motors
-		this->startTrial.store(false);
+		// spawn the process that monitors the async stopping conditions
+		m_asyncTrialSuccessMonitorThread = new thread(&Protocol::m_asyncTrialConditionMonitor, this);
 
-		if (startForwardMovement())
+		// TODO: change start motors functions
+		if (!startForwardMovement())
 		{
-			this->retreatedMotors.store(false);
-			Sounds::playStartTaskTone();
-
-			auto toneStartTime = chrono::steady_clock::now();
-
-			// wait for stop trial signal NO TIMEOUT - timeout in the touch sensor monitor
-			while (!this->stopProtocol.load() && !this->stopTrial.load()) {}
-			//while (!stopProtocol->load() && !stopTrial->load() && !isTimeout(toneStartTime)) {}
-
-			this->stopTrial.store(false);
-			if (params.tstEnMotors) {
-				motorHub->reset();
-				motorHub->home();
-			}
-			this->retreatedMotors.store(true);
-
-			// TODO stop recording
-			break_camera_recording();
-			m_NIUsb6001card.ephysSyncStop();
+			// TODO: error with motors
+			break;
 		}
 
+		Sounds::playStartTaskTone();
+		trialStartTime = Times::getCurrentTime();
 
+		// wait for stop trial signal from interface or monitor thread, or timeout
+		while (!this->stopProtocol.load() && !this->stopTrial.load() && 
+			!Times::isTimeout(trialStartTime, params.maxWaitTime)) {}
+
+		// ---------------- Finishing trial
 		this->protocolState.store(ProtocolState::trialFinalizing);
 
-		// TODO Conditions for success or fail at the trial
-		currentTrialNumber++;
+		// stop monitor thread if it was running
+		m_stopAsyncTrialConditionMonitor = true;
 
-		// TODO wait for the signal from recording devices that the data has been saved
+		// TODO: calculate if the grab happened too early - see comment in the monitor function
+		if (m_earnedReward) {
+			
+		}
+
+		// Give the reward or not
+		if (m_earnedReward || deservesReward) {
+			reward();
+		}
+		else {
+			Sounds::playErrorTone();
+		}
+
+		// retreat motors TODO: check if correct way
+		if (params.tstEnMotors) {
+			motorHub->reset();
+			motorHub->home();
+		}
+
+		// stop recording
+		break_camera_recording();
+		break_pressure_sensor_recording();
+		break_ephys_recording();
+
+		// countdown for next trial
+		intertrialWaitStartTime = Times::getCurrentTime();
+
+		// TODO wait for the signal from recording devices that the data has been saved - is Ready
 
 		// TODO display the progress of saving on the GUI
 
+		currentTrialNumber++;
 	}
 	this->protocolState.store(ProtocolState::shuttingDown);
 
@@ -232,10 +307,14 @@ void Protocol::set_camera2_gui_controls(CEdit* serverStatusCtrl, CEdit* serverLo
 	m_cameraClient2.clientLogGuiEdt = serverLogCtrl;
 }
 
-bool Protocol::isElapsedTheMinUncoveredTime(time_point<std::chrono::steady_clock>& photoresistorsUncoveredTime)
+void Protocol::set_pressure_sensors_gui_controls(CEdit* serverLogCtrl)
 {
-	if (Times::getElapsedMilliSecsSince(photoresistorsUncoveredTime) > MIN_UNCOVERED_TIME) return true;
-	return false;
+	m_touchSensorClient.clientLogGuiEdt = serverLogCtrl;
+}
+
+void Protocol::set_current_trial_gui_control(CEdit* currentTrialGuiCtrl)
+{
+	m_currentTrialGuiCtrl = currentTrialGuiCtrl;
 }
 
 void Protocol::logGoodTrial(const long& nCurrentTrial, const long& microsecsFromStartTaskToneToLiftingMonkeyArm, const long& microsecsFromMonkeyArmRaisedToPlatesTouching)
@@ -264,7 +343,7 @@ void Protocol::initDevices()
 	// motor
 	if (params.tstEnMotors) {
 		if (motorHub) {
-			// WARNING: motor hub already initialized
+			// TODO WARNING: motor hub already initialized
 		}
 		else {
 			motorHub = new TeknicMotorDevice();
@@ -334,27 +413,50 @@ bool Protocol::startForwardMovement()
 		return true;
 }
 
-void Protocol::updateCurrentTrialOnTheGUI(CEdit * currentTrialGUICtrl)
+void Protocol::start_ephys_recording()
 {
-	CStringA nTrialsConverted;
-	nTrialsConverted.Format(_T(PRECISION), currentTrialNumber.load());
-	currentTrialGUICtrl->SetWindowText(nTrialsConverted);
+	// wrap in case the ephys is not connected
+	if (params.tstEnEphys)
+		m_NIUsb6001card.ephysSyncStart();  
 }
 
-bool Protocol::isTimeout(time_point<std::chrono::steady_clock>& startToneTime)
+void Protocol::break_ephys_recording()
 {
-	long timeElapsedFromStartTaskTone = Times::getElapsedMicroSecsBetween(startToneTime, chrono::steady_clock::now());
-	if (timeElapsedFromStartTaskTone > Times::secToMicrosecs(params.maxWaitTime)) return true;
-	return false;
+	// wrap in case the ephys is not connected
+	if (params.tstEnEphys)
+		m_NIUsb6001card.ephysSyncStop();
 }
 
-long Protocol::proportionalRewardCalculation(long long elapsed)
+void Protocol::updateCurrentTrialOnTheGui()
 {
-	double proportionalFactor = 1 - (double)elapsed / params.maxWaitTime;
-	return (long)abs(params.rewardDuration * proportionalFactor);
+	if (m_currentTrialGuiCtrl) {
+		CStringA nTrialsConverted;
+		nTrialsConverted.Format(_T(PRECISION), currentTrialNumber.load());
+		m_currentTrialGuiCtrl->SetWindowText(nTrialsConverted);
+	}
 }
 
-void Protocol::storeStartTime(time_point<std::chrono::steady_clock>& time)
+/// <summary>
+/// Asks Pressure Sensor if the reward has been earned, ends when sets m_earnedReward to true
+/// TODO: Pressure sensor constantly returns whether the grab is occuring along with the success of the trial,
+/// and if so happens before the grasp do not give reward
+/// </summary>
+void Protocol::m_asyncTrialConditionMonitor()
 {
-	time = chrono::steady_clock::now();
+	m_earnedReward = false;
+	m_stopAsyncTrialConditionMonitor = false;
+
+	std::atomic<int> result;
+	while (!m_stopAsyncTrialConditionMonitor) {
+		// ask touch sensor if success
+		if (m_touchSensorClient.isConnected()) {
+			m_touchSensorClient.checkSuccess(&result);
+
+			if (result > 0) {
+				m_earnedReward = true;
+				m_stopAsyncTrialConditionMonitor = true;
+			}
+		}
+
+	}
 }

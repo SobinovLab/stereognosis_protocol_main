@@ -19,6 +19,7 @@
 #include "TeknicMotorDevice.h"
 #include "NIUsb6001card.h"
 #include "CameraClient.h"
+#include "TouchSensorClient.h"
 
 
 enum class ProtocolState
@@ -46,10 +47,10 @@ class Protocol
 		atomic<bool> stopProtocol;
 		atomic<bool> startTrial;
 		atomic<bool> stopTrial;
-		atomic<bool> retreatedMotors;
+		atomic<bool> deservesReward;
 
 		// main loop that is run in a thread when StartProtocol is clicked
-		virtual void run(CEdit* currentTrialGUICtrl);
+		virtual void run();
 
 		std::atomic<long> currentTrialNumber;
 		ProtocolState getCurrentState();
@@ -58,6 +59,8 @@ class Protocol
 		void set_photoresistor_monitors(CStaticColor* front, CStaticColor* rear);
 		void set_camera1_gui_controls(CEdit* serverStatusCtrl, CEdit* serverLogCtrl);
 		void set_camera2_gui_controls(CEdit* serverStatusCtrl, CEdit* serverLogCtrl);
+		void set_pressure_sensors_gui_controls(CEdit* serverLogCtrl);
+		void set_current_trial_gui_control(CEdit* currentTrialGuiCtrl);
 
 		//////// local devices
 		void reward();
@@ -73,22 +76,23 @@ class Protocol
 
 		void send_config_to_cameras();
 		void capture_single_frame();
-		void prepare_camera_recording();
-		void start_camera_recording();
-		void start_camera_recording(long trial_number);
-		void break_camera_recording();
+
+		// pressure sensors
+		void connect_pressure_sensors();
+		void disconnect_pressure_sensors();
 
 	private:
 		atomic<ProtocolState> protocolState;
 
 		//////// GUI
-		void updateCurrentTrialOnTheGUI(CEdit * currentTrialGUICtrl);
+		CEdit* m_currentTrialGuiCtrl;
+		void updateCurrentTrialOnTheGui();
 
-		// logging
+		// logging TODO: update
 		void logGoodTrial(const long& nCurrentTrial, const long& timeElapsedFromStartTaskToneToLiftsMonkeyArm, const long& timeElapsedFromStartTaskToneToPlatesTouch);
 		void logBadTrial(const long& nCurrentTrial);
 
-		//////// local devices
+		//////// local devices  TODO: get information if the devices/card are connected from the card
 		void initDevices();
 		void releaseDevices();
 
@@ -99,22 +103,35 @@ class Protocol
 		CStaticColor* m_frontPhotoresistorCtrl = nullptr;
 		CStaticColor* m_rearPhotoresistorCtrl = nullptr;
 
-		// reward
-		long proportionalRewardCalculation(long long elapsed);
-
 		// motor
 		TeknicMotorDevice* motorHub = nullptr;
 		bool isMotorMovementAborted(atomic<bool> * stopProtocol);
 		bool startForwardMovement();
 
+		// ephys
+		void start_ephys_recording();
+		void break_ephys_recording();
+
 		//////// connected devices
 		// cameras
 		CameraClient m_cameraClient1;
 		CameraClient m_cameraClient2;
+		void prepare_camera_recording();
+		void start_camera_recording();
+		void start_camera_recording(long trial_number);
+		void break_camera_recording();
+
+		// pressure sensors
+		TouchSensorClient m_touchSensorClient;
+
+		void start_pressure_sensor_recording();
+		void start_pressure_sensor_recording(long trial_number);
+		int break_pressure_sensor_recording();
 
 		//////// running protocol support
-		bool isTimeout(time_point<std::chrono::steady_clock>& startToneTime);
-		void storeStartTime(time_point<std::chrono::steady_clock>& time);
-		bool isElapsedTheMinUncoveredTime(time_point<std::chrono::steady_clock>& photoresistorsUncoveredTime);
+		atomic<bool> m_earnedReward;
+		atomic<bool> m_stopAsyncTrialConditionMonitor;
+		std::thread* m_asyncTrialSuccessMonitorThread;
+		void m_asyncTrialConditionMonitor();
 
 };
