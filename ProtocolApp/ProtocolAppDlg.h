@@ -79,9 +79,6 @@ protected:
 	void sendStartRecording();
 	void retreatStopRecording();
 
-	//////// cameras
-	void sendConfig();
-
 	//////// touch sensors
 	TouchSensorClient m_touchSensorClient;
 	std::thread* m_touchSensorSuccessMonitorThread;

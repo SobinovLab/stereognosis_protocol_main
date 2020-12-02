@@ -337,7 +337,7 @@ bool Protocol::startForwardMovement()
 void Protocol::updateCurrentTrialOnTheGUI(CEdit * currentTrialGUICtrl)
 {
 	CStringA nTrialsConverted;
-	nTrialsConverted.Format(_T(PRECISION), currentTrialNumber);
+	nTrialsConverted.Format(_T(PRECISION), currentTrialNumber.load());
 	currentTrialGUICtrl->SetWindowText(nTrialsConverted);
 }
 

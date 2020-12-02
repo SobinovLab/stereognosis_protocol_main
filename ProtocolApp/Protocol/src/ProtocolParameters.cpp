@@ -29,7 +29,6 @@ ProtocolParameters::ProtocolParameters(const ProtocolParameters & protocolParams
 
 	this->tstEnMotors = protocolParams.tstEnMotors;
 	this->tstEnReward = protocolParams.tstEnReward;
-	this->tstEnCameras = protocolParams.tstEnCameras;
 	this->tstEnLightSensors = protocolParams.tstEnLightSensors;
 	this->tstEnTouchSensors = protocolParams.tstEnTouchSensors;
 }

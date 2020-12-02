@@ -304,7 +304,7 @@ void CProtocolAppDlg::OnDisconnect2BtnClicked()
 void CProtocolAppDlg::OnSendConfigBtnClicked()
 {
 	UpdateData(FromControlsToVariables);
-	sendConfig();
+	m_protocol.send_config_to_cameras();
 }
 
 void CProtocolAppDlg::OnCaptureSingleFrameBtnClicked()
@@ -363,11 +363,6 @@ void CProtocolAppDlg::retreatStopRecording()
 		atomic<int> result;
 		m_touchSensorClient.breakRecording(&result);
 	}
-}
-
-void CProtocolAppDlg::sendConfig()
-{
-	m_protocol.send_config_to_cameras();
 }
 
 void CProtocolAppDlg::m_touchSensorSuccessMonitor()
