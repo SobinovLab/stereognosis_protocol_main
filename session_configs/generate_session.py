@@ -8,6 +8,7 @@ import re
 import argparse
 import functools
 from copy import deepcopy
+from datetime import datetime
 
 import numpy
 
@@ -236,10 +237,9 @@ if __name__ == '__main__':
         session_filename = args.session_config_filename
         session_filename = re.sub('_config', '', session_filename)
         if session_filename.endswith('.xml'):
-            session_filename = session_filename[:-3]
-            session_filename += 'csv'
-        else:
-            session_filename += '.csv'
+            session_filename = session_filename[:-4]
+        timestamp = datetime.now().strftime('%Y.%m.%d_%H.%M.%S')
+        session_filename += '_' + timestamp + '.csv'
     else:
         session_filename = args.session_filename
 

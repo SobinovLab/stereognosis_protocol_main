@@ -205,6 +205,7 @@ void Protocol::run()
 			//	Start trial button to be pressed
 			//  stop of protocol 
 			//  if looping is selected, timeout of intertrial time. TODO: enable looping behavior toggle
+			//  TODO: wait for the monkey to release the grasp on the object
 		}
 
 		if (stopProtocol)
@@ -224,15 +225,16 @@ void Protocol::run()
 		start_pressure_sensor_recording();
 		start_ephys_recording();
 
-		// spawn the process that monitors the async stopping conditions
-		m_asyncTrialSuccessMonitorThread = new thread(&Protocol::m_asyncTrialConditionMonitor, this);
-
+		// TODO: while the motors go forward, check if the monkey grabbed, then immediately BOOP and return
 		// TODO: change start motors functions
 		if (!startForwardMovement())
 		{
-			// TODO: error with motors
+			// TODO: check error with motors
 			break;
 		}
+
+		// spawn the process that monitors the async stopping conditions
+		m_asyncTrialSuccessMonitorThread = new thread(&Protocol::m_asyncTrialConditionMonitor, this);
 
 		Sounds::playStartTaskTone();
 		trialStartTime = Times::getCurrentTime();
@@ -263,7 +265,7 @@ void Protocol::run()
 		// retreat motors TODO: check if correct way
 		if (params.tstEnMotors) {
 			motorHub->reset();
-			motorHub->home();
+			motorHub->home();  // TODO only at the start?
 		}
 
 		// stop recording
