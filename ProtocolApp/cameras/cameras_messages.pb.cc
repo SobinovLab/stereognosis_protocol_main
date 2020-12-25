@@ -249,7 +249,7 @@ const char descriptor_table_protodef_cameras_5fmessages_2eproto[] PROTOBUF_SECTI
   "irectory\030\001 \001(\t\"1\n\016SetGainRequest\022\014\n\004gain"
   "\030\001 \001(\001\022\021\n\tgain_type\030\002 \001(\005\"=\n\022SetExposure"
   "Request\022\020\n\010exposure\030\001 \001(\001\022\025\n\rexposure_ty"
-  "pe\030\002 \001(\0052\321\004\n\023CameraCommunicatorS\0227\n\014SetF"
+  "pe\030\002 \001(\0052\210\005\n\023CameraCommunicatorS\0227\n\014SetF"
   "ramerate\022\024.SetFramerateRequest\032\017.SimpleR"
   "esponse\"\000\022C\n\022SetRecordingPeriod\022\032.SetRec"
   "ordingPeriodRequest\032\017.SimpleResponse\"\000\022C"
@@ -264,7 +264,8 @@ const char descriptor_table_protodef_cameras_5fmessages_2eproto[] PROTOBUF_SECTI
   "SimpleResponse\"\000\0225\n\013SetExposure\022\023.SetExp"
   "osureRequest\032\017.SimpleResponse\"\000\0223\n\016Break"
   "Recording\022\016.SimpleRequest\032\017.SimpleRespon"
-  "se\"\000b\006proto3"
+  "se\"\000\0225\n\020AreYouDoneSaving\022\016.SimpleRequest"
+  "\032\017.SimpleResponse\"\000b\006proto3"
   ;
 static const ::PROTOBUF_NAMESPACE_ID::internal::DescriptorTable*const descriptor_table_cameras_5fmessages_2eproto_deps[1] = {
 };
@@ -280,7 +281,7 @@ static ::PROTOBUF_NAMESPACE_ID::internal::SCCInfoBase*const descriptor_table_cam
 };
 static ::PROTOBUF_NAMESPACE_ID::internal::once_flag descriptor_table_cameras_5fmessages_2eproto_once;
 const ::PROTOBUF_NAMESPACE_ID::internal::DescriptorTable descriptor_table_cameras_5fmessages_2eproto = {
-  false, false, descriptor_table_protodef_cameras_5fmessages_2eproto, "cameras_messages.proto", 1012,
+  false, false, descriptor_table_protodef_cameras_5fmessages_2eproto, "cameras_messages.proto", 1067,
   &descriptor_table_cameras_5fmessages_2eproto_once, descriptor_table_cameras_5fmessages_2eproto_sccs, descriptor_table_cameras_5fmessages_2eproto_deps, 8, 0,
   schemas, file_default_instances, TableStruct_cameras_5fmessages_2eproto::offsets,
   file_level_metadata_cameras_5fmessages_2eproto, 8, file_level_enum_descriptors_cameras_5fmessages_2eproto, file_level_service_descriptors_cameras_5fmessages_2eproto,

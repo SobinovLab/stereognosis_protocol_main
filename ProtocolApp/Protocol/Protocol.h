@@ -48,6 +48,7 @@ class Protocol
 		atomic<bool> startTrial;
 		atomic<bool> stopTrial;
 		atomic<bool> deservesReward;
+		atomic<bool> loopAutomatically;  // TODO make gui interface to this switch
 
 		// main loop that is run in a thread when StartProtocol is clicked
 		virtual void run();
@@ -61,6 +62,7 @@ class Protocol
 		void set_camera2_gui_controls(CEdit* serverStatusCtrl, CEdit* serverLogCtrl);
 		void set_pressure_sensors_gui_controls(CEdit* serverLogCtrl);
 		void set_current_trial_gui_control(CEdit* currentTrialGuiCtrl);
+		void set_trial_buttons(CButton* startTrialBtn, CButton* retreatBtn, CButton* retreatFlushBtn);
 
 		//////// local devices
 		void reward();
@@ -87,6 +89,13 @@ class Protocol
 		//////// GUI
 		CEdit* m_currentTrialGuiCtrl;
 		void updateCurrentTrialOnTheGui();
+
+		CButton* startTrialBtn;
+		CButton* retreatBtn;
+		CButton* retreatFlushBtn;
+		void trialFieldsToggle(bool enable);
+		void trialFieldsEnableStart(bool enable);
+		void trialFieldsEnableRetreat(bool enable);
 
 		// logging TODO: update
 		void logGoodTrial(const long& nCurrentTrial, const long& timeElapsedFromStartTaskToneToLiftsMonkeyArm, const long& timeElapsedFromStartTaskToneToPlatesTouch);

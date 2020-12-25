@@ -17,6 +17,10 @@ void CProtocolAppDlg::DoDataExchange(CDataExchange* pDX)
 {
 	CDialogEx::DoDataExchange(pDX);
 
+	DDX_Control(pDX, IDC_START_TRIAL_BTN, m_startTrialBtn);
+	DDX_Control(pDX, IDC_RETREAT_BTN, m_retreatBtn);
+	DDX_Control(pDX, IDC_RETREAT_FLUSH_WATER_BTN, m_retreatFlushBtn);
+
 	DDX_Control(pDX, IDC_REWARD_TIME_EDT, m_rewardDurationEdtCtrl);
 
 	DDX_Control(pDX, IDC_ACCELERATION_EDT, m_accelerationCtrl);
@@ -33,8 +37,6 @@ void CProtocolAppDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_SERVER_LOG_EDT3, m_serverLogCtrl2);
 
 	DDX_Control(pDX, IDC_TOUCH_SENSOR_SERVER_LOG_EDT, m_touchServerLogCtrl);
-
-	DDX_Control(pDX, IDC_LOOP_TRIALS_CHK, m_trialLoopChk);
 
 	DDX_Text(pDX, IDC_REWARD_TIME_EDT, m_protocol.params.rewardDuration);
 	DDX_Text(pDX, IDC_ACCELERATION_EDT, m_protocol.params.acceleration);
@@ -110,6 +112,7 @@ BOOL CProtocolAppDlg::OnInitDialog()
 	m_protocol.set_camera2_gui_controls(&m_serverStatusCtrl2, &m_serverLogCtrl2);
 	m_protocol.set_pressure_sensors_gui_controls(&m_touchServerLogCtrl);
 	m_protocol.set_current_trial_gui_control(&m_currentTrialEdtCtrl);
+	m_protocol.set_trial_buttons(&m_startTrialBtn, &m_retreatBtn, &m_retreatFlushBtn);
 
 	// set the visibility and defaults for GUI
 	if (m_protocol.params.tstEnLightSensors) ((CButton*)GetDlgItem(IDC_LIGHT_SENSORS_CHK))->SetCheck(BST_CHECKED);
@@ -117,13 +120,11 @@ BOOL CProtocolAppDlg::OnInitDialog()
 	if (m_protocol.params.tstEnReward) ((CButton*)GetDlgItem(IDC_REWARD_CHK))->SetCheck(BST_CHECKED);
 	if (m_protocol.params.tstEnEphys) ((CButton*)GetDlgItem(IDC_EPHYS_CHK))->SetCheck(BST_CHECKED);
 
-	// loop by default
-	m_trialLoopChk.SetCheck(true);
-
 	/////// Control what is enabled and initialized based on debug/testing interface
 	enableProtocolCtrls(true);
-	enableTrialCtrls(true);
-	GetDlgItem(IDC_START_TRIAL_BTN)->EnableWindow(false);
+	m_startTrialBtn.EnableWindow(false);
+	m_retreatBtn.EnableWindow(false);
+	m_retreatFlushBtn.EnableWindow(false);
 
 	// reward
 	enableRewardCtrls(true);
@@ -205,18 +206,12 @@ void CProtocolAppDlg::OnStartProtocolBtnClicked()
 	enableProtocolCtrls(false);
 
 	protocolThread = new thread(&Protocol::run, &m_protocol);
-
-	enableTrialCtrls(true);
 }
 
 void CProtocolAppDlg::OnStopProtocolBtnClicked()
 {
 	// this will wait until protocol handles the trial end
 	stopProtocolThread();
-
-	// trial controls fully off
-	enableTrialCtrls(true);
-	GetDlgItem(IDC_START_TRIAL_BTN)->EnableWindow(false);
 
 	// protocol controls and edits are on
 	enableProtocolCtrls(true);
@@ -230,10 +225,6 @@ void CProtocolAppDlg::OnFlushWaterBtnClicked()
 
 void CProtocolAppDlg::OnStartTrialBtnClicked()
 {
-	enableTrialCtrls(false);
-
-	UpdateData(FromControlsToVariables);  // in case the loop was changed
-
 	m_protocol.startTrial.store(true);
 }
 
@@ -323,10 +314,6 @@ void CProtocolAppDlg::stopProtocolThread()
 
 void CProtocolAppDlg::stopTrial()
 {
-	enableTrialCtrls(true);
-
-	// TODO: set LOOP checkbox and linked variable to false
-
 	// stop trial
 	m_protocol.stopTrial.store(true);
 }
@@ -344,13 +331,6 @@ void CProtocolAppDlg::enableProtocolCtrls(bool enable)
 	GetDlgItem(IDC_POSITION_EDT)->EnableWindow(enable);
 	GetDlgItem(IDC_MAX_WAIT_EDT_BOX)->EnableWindow(enable);
 	GetDlgItem(IDC_INTERTRIAL_WAIT_EDT)->EnableWindow(enable);
-}
-
-void CProtocolAppDlg::enableTrialCtrls(bool enable)
-{
-	GetDlgItem(IDC_START_TRIAL_BTN)->EnableWindow(enable);
-	GetDlgItem(IDC_RETREAT_FLUSH_WATER_BTN)->EnableWindow(!enable && m_protocol.params.tstEnReward);
-	GetDlgItem(IDC_RETREAT_BTN)->EnableWindow(!enable);
 }
 
 void CProtocolAppDlg::enableRewardCtrls(bool enable)

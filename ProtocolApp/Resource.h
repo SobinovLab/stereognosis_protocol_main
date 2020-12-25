@@ -68,7 +68,6 @@
 #define IDC_CAPTURE_SINGLE_FRAME_BTN    1069
 #define IDC_CAPTURE_N_IMAGES_BTN        1070
 #define IDC_EDIT1                       1071
-#define IDC_LOOP_TRIALS_CHK             1072
 #define IDC_INTERTRIAL_WAIT_EDT         1073
 #define IDC_CHECK1                      1074
 #define IDC_EPHYS_CHK                   1074

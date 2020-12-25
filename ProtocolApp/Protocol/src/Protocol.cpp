@@ -160,6 +160,9 @@ Protocol::Protocol()
 	this->startTrial.store(false);
 	this->stopTrial.store(false);
 
+	this->deservesReward.store(false);
+	this->loopAutomatically.store(true);
+
 	this->protocolState.store(ProtocolState::shutdown);
 }
 
@@ -198,15 +201,22 @@ void Protocol::run()
 		this->protocolState.store(ProtocolState::trialReady);
 		this->startTrial.store(false);
 
+		trialFieldsEnableStart(true);
+
 		// waiting for the start of the next trial
 		while (!this->startTrial.load() && !this->stopProtocol.load() && 
-			!Times::isTimeout(intertrialWaitStartTime, params.intertrialWaitTime)) {
+			(loopAutomatically.load() && !Times::isTimeout(intertrialWaitStartTime, params.intertrialWaitTime))) {
 			// waiting for:
 			//	Start trial button to be pressed
 			//  stop of protocol 
 			//  if looping is selected, timeout of intertrial time. TODO: enable looping behavior toggle
 			//  TODO: wait for the monkey to release the grasp on the object
 		}
+
+		loopAutomatically = true;
+
+		// Can't click on StartTrial anymore
+		trialFieldsEnableStart(false);
 
 		if (stopProtocol)
 			break;
@@ -225,6 +235,9 @@ void Protocol::run()
 		start_pressure_sensor_recording();
 		start_ephys_recording();
 
+		// Can interrupt the trial
+		trialFieldsEnableRetreat(true);
+
 		// TODO: while the motors go forward, check if the monkey grabbed, then immediately BOOP and return
 		// TODO: change start motors functions
 		if (!startForwardMovement())
@@ -242,6 +255,13 @@ void Protocol::run()
 		// wait for stop trial signal from interface or monitor thread, or timeout
 		while (!this->stopProtocol.load() && !this->stopTrial.load() && 
 			!Times::isTimeout(trialStartTime, params.maxWaitTime)) {}
+
+		// if stop trial button was pressed, turn off the loop
+		if (this->stopTrial.load())
+			loopAutomatically = false;
+
+		// Cannot interrupt the trial
+		trialFieldsEnableRetreat(false);
 
 		// ---------------- Finishing trial
 		this->protocolState.store(ProtocolState::trialFinalizing);
@@ -262,10 +282,9 @@ void Protocol::run()
 			Sounds::playErrorTone();
 		}
 
-		// retreat motors TODO: check if correct way
+		// retreat motors
 		if (params.tstEnMotors) {
 			motorHub->reset();
-			motorHub->home();  // TODO only at the start?
 		}
 
 		// stop recording
@@ -283,6 +302,14 @@ void Protocol::run()
 		currentTrialNumber++;
 	}
 	this->protocolState.store(ProtocolState::shuttingDown);
+
+	trialFieldsEnableStart(false);
+	trialFieldsEnableRetreat(false);
+
+	// retreat motors
+	if (params.tstEnMotors) {
+		motorHub->reset();
+	}
 
 	// release all devices
 	releaseDevices();
@@ -319,6 +346,30 @@ void Protocol::set_current_trial_gui_control(CEdit* currentTrialGuiCtrl)
 	m_currentTrialGuiCtrl = currentTrialGuiCtrl;
 }
 
+void Protocol::set_trial_buttons(CButton* startTrialBtn, CButton* retreatBtn, CButton* retreatFlushBtn)
+{
+	this->startTrialBtn = startTrialBtn;
+	this->retreatBtn = retreatBtn;
+	this->retreatFlushBtn = retreatFlushBtn;
+}
+
+void Protocol::trialFieldsToggle(bool enable)
+{
+	trialFieldsEnableStart(enable);
+	trialFieldsEnableRetreat(!enable);
+}
+
+void Protocol::trialFieldsEnableStart(bool enable)
+{
+	startTrialBtn->EnableWindow(enable);
+}
+
+void Protocol::trialFieldsEnableRetreat(bool enable)
+{
+	retreatBtn->EnableWindow(enable);
+	retreatFlushBtn->EnableWindow(enable && params.tstEnReward);
+}
+
 void Protocol::logGoodTrial(const long& nCurrentTrial, const long& microsecsFromStartTaskToneToLiftingMonkeyArm, const long& microsecsFromMonkeyArmRaisedToPlatesTouching)
 {
 	string msg = TRIAL_NUM_STR + to_string(nCurrentTrial);
@@ -350,6 +401,9 @@ void Protocol::initDevices()
 		else {
 			motorHub = new TeknicMotorDevice();
 			motorHub->init();
+
+			motorHub->reset();
+			motorHub->home();
 		}
 	}
 }

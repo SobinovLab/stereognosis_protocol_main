@@ -31,6 +31,7 @@ static const char* CameraCommunicatorS_method_names[] = {
   "/CameraCommunicatorS/SetGain",
   "/CameraCommunicatorS/SetExposure",
   "/CameraCommunicatorS/BreakRecording",
+  "/CameraCommunicatorS/AreYouDoneSaving",
 };
 
 std::unique_ptr< CameraCommunicatorS::Stub> CameraCommunicatorS::NewStub(const std::shared_ptr< ::grpc::ChannelInterface>& channel, const ::grpc::StubOptions& options) {
@@ -50,6 +51,7 @@ CameraCommunicatorS::Stub::Stub(const std::shared_ptr< ::grpc::ChannelInterface>
   , rpcmethod_SetGain_(CameraCommunicatorS_method_names[7], ::grpc::internal::RpcMethod::NORMAL_RPC, channel)
   , rpcmethod_SetExposure_(CameraCommunicatorS_method_names[8], ::grpc::internal::RpcMethod::NORMAL_RPC, channel)
   , rpcmethod_BreakRecording_(CameraCommunicatorS_method_names[9], ::grpc::internal::RpcMethod::NORMAL_RPC, channel)
+  , rpcmethod_AreYouDoneSaving_(CameraCommunicatorS_method_names[10], ::grpc::internal::RpcMethod::NORMAL_RPC, channel)
   {}
 
 ::grpc::Status CameraCommunicatorS::Stub::SetFramerate(::grpc::ClientContext* context, const ::SetFramerateRequest& request, ::SimpleResponse* response) {
@@ -282,6 +284,29 @@ void CameraCommunicatorS::Stub::experimental_async::BreakRecording(::grpc::Clien
   return result;
 }
 
+::grpc::Status CameraCommunicatorS::Stub::AreYouDoneSaving(::grpc::ClientContext* context, const ::SimpleRequest& request, ::SimpleResponse* response) {
+  return ::grpc::internal::BlockingUnaryCall(channel_.get(), rpcmethod_AreYouDoneSaving_, context, request, response);
+}
+
+void CameraCommunicatorS::Stub::experimental_async::AreYouDoneSaving(::grpc::ClientContext* context, const ::SimpleRequest* request, ::SimpleResponse* response, std::function<void(::grpc::Status)> f) {
+  ::grpc::internal::CallbackUnaryCall(stub_->channel_.get(), stub_->rpcmethod_AreYouDoneSaving_, context, request, response, std::move(f));
+}
+
+void CameraCommunicatorS::Stub::experimental_async::AreYouDoneSaving(::grpc::ClientContext* context, const ::SimpleRequest* request, ::SimpleResponse* response, ::grpc::experimental::ClientUnaryReactor* reactor) {
+  ::grpc::internal::ClientCallbackUnaryFactory::Create(stub_->channel_.get(), stub_->rpcmethod_AreYouDoneSaving_, context, request, response, reactor);
+}
+
+::grpc::ClientAsyncResponseReader< ::SimpleResponse>* CameraCommunicatorS::Stub::PrepareAsyncAreYouDoneSavingRaw(::grpc::ClientContext* context, const ::SimpleRequest& request, ::grpc::CompletionQueue* cq) {
+  return ::grpc::internal::ClientAsyncResponseReaderFactory< ::SimpleResponse>::Create(channel_.get(), cq, rpcmethod_AreYouDoneSaving_, context, request, false);
+}
+
+::grpc::ClientAsyncResponseReader< ::SimpleResponse>* CameraCommunicatorS::Stub::AsyncAreYouDoneSavingRaw(::grpc::ClientContext* context, const ::SimpleRequest& request, ::grpc::CompletionQueue* cq) {
+  auto* result =
+    this->PrepareAsyncAreYouDoneSavingRaw(context, request, cq);
+  result->StartCall();
+  return result;
+}
+
 CameraCommunicatorS::Service::Service() {
   AddMethod(new ::grpc::internal::RpcServiceMethod(
       CameraCommunicatorS_method_names[0],
@@ -383,6 +408,16 @@ CameraCommunicatorS::Service::Service() {
              ::SimpleResponse* resp) {
                return service->BreakRecording(ctx, req, resp);
              }, this)));
+  AddMethod(new ::grpc::internal::RpcServiceMethod(
+      CameraCommunicatorS_method_names[10],
+      ::grpc::internal::RpcMethod::NORMAL_RPC,
+      new ::grpc::internal::RpcMethodHandler< CameraCommunicatorS::Service, ::SimpleRequest, ::SimpleResponse>(
+          [](CameraCommunicatorS::Service* service,
+             ::grpc::ServerContext* ctx,
+             const ::SimpleRequest* req,
+             ::SimpleResponse* resp) {
+               return service->AreYouDoneSaving(ctx, req, resp);
+             }, this)));
 }
 
 CameraCommunicatorS::Service::~Service() {
@@ -452,6 +487,13 @@ CameraCommunicatorS::Service::~Service() {
 }
 
 ::grpc::Status CameraCommunicatorS::Service::BreakRecording(::grpc::ServerContext* context, const ::SimpleRequest* request, ::SimpleResponse* response) {
+  (void) context;
+  (void) request;
+  (void) response;
+  return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
+}
+
+::grpc::Status CameraCommunicatorS::Service::AreYouDoneSaving(::grpc::ServerContext* context, const ::SimpleRequest* request, ::SimpleResponse* response) {
   (void) context;
   (void) request;
   (void) response;

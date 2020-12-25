@@ -43,8 +43,14 @@ protected:
 	HICON m_hIcon;
 
 	//////// Field edits
+	// trial control buttons
+	CButton m_startTrialBtn;
+	CButton m_retreatBtn;
+	CButton m_retreatFlushBtn;
+
 	// reward
 	CEdit m_rewardDurationEdtCtrl;
+
 	// protocol parameters
 	CEdit m_accelerationCtrl;
 	CEdit m_speedCtrl;
@@ -65,9 +71,6 @@ protected:
 	// touch sensors
 	CEdit m_touchServerLogCtrl;
 
-	// trial loop
-	CButton m_trialLoopChk;
-
 	///////// running and controlling the protocol
 	std::thread* protocolThread;
 	Protocol m_protocol;
@@ -76,7 +79,6 @@ protected:
 
 	/////// Enable/disable fields
 	void enableProtocolCtrls(bool enable);
-	void enableTrialCtrls(bool enable);
 	void enableRewardCtrls(bool enable);
 	void enableCameraServer1Ctrls(bool enable);
 	void enableCameraServer2Ctrls(bool enable);
