@@ -114,7 +114,7 @@ BOOL CProtocolAppDlg::OnInitDialog()
 	m_protocol.set_current_trial_gui_control(&m_currentTrialEdtCtrl);
 	m_protocol.set_trial_buttons(&m_startTrialBtn, &m_retreatBtn, &m_retreatFlushBtn);
 
-	// set the visibility and defaults for GUI
+	// set the visibility of enabled devices on GUI
 	if (m_protocol.params.tstEnLightSensors) ((CButton*)GetDlgItem(IDC_LIGHT_SENSORS_CHK))->SetCheck(BST_CHECKED);
 	if (m_protocol.params.tstEnMotors) ((CButton*)GetDlgItem(IDC_MOTORS_CHK))->SetCheck(BST_CHECKED);
 	if (m_protocol.params.tstEnReward) ((CButton*)GetDlgItem(IDC_REWARD_CHK))->SetCheck(BST_CHECKED);

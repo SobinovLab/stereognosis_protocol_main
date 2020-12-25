@@ -2,7 +2,9 @@ Plan for the finish of fixing stereognosis:
 
 1. MAIN: Make protocol loop in a separate thread from GUI, transfer all device interfacesto Protocol class. DONE
 1.5 Make monitor in the GUI that updates the state based on the running loop of the trials. Or directly give access to the elements? DONE: gave direct acceess.
-1.6 Automatic looping logic enabled.
+1.6 Automatic looping logic enabled. DONE
+1.7 Testing flags only try to launch something and don't break.
+1.8 GUI control of the looping logic.
 2. CAMERAS: 
     0. Move recording functions from GUI thread, add monitor for state in the Protocol.
 	i. Add response on finishing saving files, 

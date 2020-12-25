@@ -20,7 +20,8 @@ void Protocol::reward()
 
 void Protocol::reward(long duration)
 {
-	m_NIUsb6001card.reward(duration);
+	if (params.tstEnReward)
+		m_NIUsb6001card.reward(duration);
 }
 
 void Protocol::connect_camera_client1()
@@ -164,6 +165,21 @@ Protocol::Protocol()
 	this->loopAutomatically.store(true);
 
 	this->protocolState.store(ProtocolState::shutdown);
+
+	// based on params, try to test if things can be enabled and then change the variables
+	// TODO: after motor integration
+	if (params.tstEnMotors) {
+		// TODO check if motors are connected and can be found
+	}
+	if (params.tstEnLightSensors) {
+		// TODO: not using sensors right now at all
+	}
+	if (params.tstEnEphys) {
+		// TODO: check if an NI impulse can be sent, if not set to false
+	}
+	if (params.tstEnReward) {
+		// 
+	}
 }
 
 Protocol::~Protocol()

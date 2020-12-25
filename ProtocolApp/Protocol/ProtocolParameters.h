@@ -42,9 +42,13 @@ class ProtocolParameters
 		long tss_port;
 
 		// testing and debugging flags
+		// will try to enable motors on program launch
 		bool tstEnMotors;
+		// will try to enable reward on program launch
 		bool tstEnReward;
+		// will try to enable light sensors on program launch
 		bool tstEnLightSensors;
+		// will try to enable ephys sync signals on program launch
 		bool tstEnEphys;
 
 		virtual void init();
