@@ -5,8 +5,39 @@ constexpr auto TRIAL_NUM_STR = "Trial n.";
 constexpr auto TRIAL_ABORT_STR = " Aborted";
 constexpr auto PRECISION = "%03d";
 
-constexpr auto MIN_UNCOVERED_TIME = 200; //msecs
 
+Protocol::Protocol()
+{
+	this->stopProtocol.store(false);
+	this->startTrial.store(false);
+	this->stopTrial.store(false);
+
+	this->deservesReward.store(false);
+	this->loopAutomatically.store(true);
+
+	this->protocolState.store(ProtocolState::shutdown);
+
+	// based on params, try to test if things can be enabled and then change the variables
+	// TODO: after motor integration
+	if (params.tstEnMotors) {
+		// TODO check if motors are connected and can be found
+	}
+	if (params.tstEnLightSensors) {
+		// TODO: not using sensors right now at all
+	}
+	if (params.tstEnEphys) {
+		// TODO: check if an NI impulse can be sent, if not set to false
+	}
+	if (params.tstEnReward) {
+		// 
+	}
+}
+
+Protocol::~Protocol()
+{
+	// if incorrect termination
+	releaseDevices();
+}
 
 ProtocolState Protocol::getCurrentState()
 {
@@ -145,6 +176,10 @@ void Protocol::start_pressure_sensor_recording(long trial_number)
 	}
 }
 
+/// <summary>
+/// Stops the recording of the pressure sensor
+/// </summary>
+/// <returns>Whether trial was successful. Not used in the current protocol - see monitor.</returns>
 int Protocol::break_pressure_sensor_recording()
 {
 	if (m_touchSensorClient.isConnected()) {
@@ -153,39 +188,6 @@ int Protocol::break_pressure_sensor_recording()
 		return result.load();
 	}
 	return -1;
-}
-
-Protocol::Protocol()
-{
-	this->stopProtocol.store(false);
-	this->startTrial.store(false);
-	this->stopTrial.store(false);
-
-	this->deservesReward.store(false);
-	this->loopAutomatically.store(true);
-
-	this->protocolState.store(ProtocolState::shutdown);
-
-	// based on params, try to test if things can be enabled and then change the variables
-	// TODO: after motor integration
-	if (params.tstEnMotors) {
-		// TODO check if motors are connected and can be found
-	}
-	if (params.tstEnLightSensors) {
-		// TODO: not using sensors right now at all
-	}
-	if (params.tstEnEphys) {
-		// TODO: check if an NI impulse can be sent, if not set to false
-	}
-	if (params.tstEnReward) {
-		// 
-	}
-}
-
-Protocol::~Protocol()
-{
-	// if incorrect termination
-	releaseDevices();
 }
 
 void Protocol::run()
@@ -199,6 +201,7 @@ void Protocol::run()
 
 	// Initialize all devices
 	initDevices();
+	prepare_camera_recording();  // TODO should init cameras does not do anything atm
 
 	// class member variable
 	currentTrialNumber = 0;
@@ -211,16 +214,19 @@ void Protocol::run()
 		// ---------------- Preparing trial
 		updateCurrentTrialOnTheGui();
 
-		// TODO: load the parameters of the next trial
+		// TODO: load and set the parameters of the next trial
 
-		// set state and state control variables
+		// TODO: if went through all trials, stop the protocol.
+
+		// TRIAL is ready to start
 		this->protocolState.store(ProtocolState::trialReady);
 		this->startTrial.store(false);
 
 		trialFieldsEnableStart(true);
 
 		// waiting for the start of the next trial
-		while (!this->startTrial.load() && !this->stopProtocol.load() && 
+		while (!this->startTrial.load() && 
+			!this->stopProtocol.load() && 
 			(loopAutomatically.load() && !Times::isTimeout(intertrialWaitStartTime, params.intertrialWaitTime))) {
 			// waiting for:
 			//	Start trial button to be pressed
@@ -229,6 +235,7 @@ void Protocol::run()
 			//  TODO: wait for the monkey to release the grasp on the object
 		}
 
+		// Default behavior is looping
 		loopAutomatically = true;
 
 		// Can't click on StartTrial anymore
@@ -238,20 +245,19 @@ void Protocol::run()
 			break;
 
 		// ---------------- Running trial
-		// set state and state control variables
+		// TRIAL in progress set state and state control variables
 		this->protocolState.store(ProtocolState::trialInProgress);
 		this->stopTrial.store(false);
 
 		// prepare recordings
 		send_config_to_cameras();
-		prepare_camera_recording();  // does not do anything atm
 
 		// start recordings
 		start_camera_recording();
 		start_pressure_sensor_recording();
 		start_ephys_recording();
 
-		// Can interrupt the trial
+		// Can click on stop trial
 		trialFieldsEnableRetreat(true);
 
 		// TODO: while the motors go forward, check if the monkey grabbed, then immediately BOOP and return
@@ -265,14 +271,16 @@ void Protocol::run()
 		// spawn the process that monitors the async stopping conditions
 		m_asyncTrialSuccessMonitorThread = new thread(&Protocol::m_asyncTrialConditionMonitor, this);
 
-		Sounds::playStartTaskTone();
 		trialStartTime = Times::getCurrentTime();
+		Sounds::playStartTaskTone();
 
-		// wait for stop trial signal from interface or monitor thread, or timeout
-		while (!this->stopProtocol.load() && !this->stopTrial.load() && 
+		// wait for stop trial signal from interface, success from the monitor thread, or timeout
+		while (!this->stopProtocol.load() && 
+			!this->stopTrial.load() && 
+			!this->m_earnedReward.load() &&
 			!Times::isTimeout(trialStartTime, params.maxWaitTime)) {}
 
-		// if stop trial button was pressed, turn off the loop
+		// if stop trial button was pressed, turn off the loop - it is reenable automatically in the beginning of trial
 		if (this->stopTrial.load())
 			loopAutomatically = false;
 
@@ -282,13 +290,8 @@ void Protocol::run()
 		// ---------------- Finishing trial
 		this->protocolState.store(ProtocolState::trialFinalizing);
 
-		// stop monitor thread if it was running
+		// stop monitor thread if it was not stopped by its own success
 		m_stopAsyncTrialConditionMonitor = true;
-
-		// TODO: calculate if the grab happened too early - see comment in the monitor function
-		if (m_earnedReward) {
-			
-		}
 
 		// Give the reward or not
 		if (m_earnedReward || deservesReward) {
@@ -443,16 +446,16 @@ void Protocol::releaseDevices()
 	}
 }
 
-bool Protocol::isMotorMovementAborted(atomic<bool> * stopProtocol)
+bool Protocol::isMotorMovementAborted()
 {
 	if (params.tstEnMotors)
 		motorHub->reset();
-	if (!stopProtocol->load() && params.tstEnMotors)
+	if (!stopProtocol.load() && params.tstEnMotors)
 		motorHub->home();
 	// on waiting for the monkey puts the arm on the armrest before to start the trial
 	//while (!stopProtocol->load() && ( !IS_REAR_PHOTORESISTOR_COVERED || !IS_FRONT_PHOTORESISTOR_COVERED)) {}
 
-	if (stopProtocol->load())
+	if (stopProtocol.load())
 		return true;
 	// return true -> go() aborted
 	if (params.tstEnMotors)
@@ -464,10 +467,6 @@ bool Protocol::isMotorMovementAborted(atomic<bool> * stopProtocol)
 /// <summary>
 ///
 /// </summary>
-/// <param name="stopProtocol"></param>
-/// <param name="stopTrial"></param>
-/// <param name="m_NIUsb6001card"></param>
-/// <param name="motorHub"></param>
 /// <returns>True iff the motor movement started as planned or no motor initialized via testing</returns>
 bool Protocol::startForwardMovement()
 {

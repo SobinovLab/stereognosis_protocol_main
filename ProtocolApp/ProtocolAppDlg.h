@@ -72,17 +72,17 @@ protected:
 	CEdit m_touchServerLogCtrl;
 
 	///////// running and controlling the protocol
-	std::thread* protocolThread;
+	std::thread* protocolThread;  // runs Protocol::run
 	Protocol m_protocol;
 	void stopProtocolThread();
 	void stopTrial();
 
 	/////// Enable/disable fields
-	void enableProtocolCtrls(bool enable);
+	void toggleProtocolCtrls(bool stopped);
 	void enableRewardCtrls(bool enable);
-	void enableCameraServer1Ctrls(bool enable);
-	void enableCameraServer2Ctrls(bool enable);
-	void enableTouchServerCtrls(bool enable);
+	void toggleCameraServer1Ctrls(bool disconnected);
+	void toggleCameraServer2Ctrls(bool disconnected);
+	void toggleTouchServerCtrls(bool disconnected);
 
 	/////// Generated message map functions
 	virtual BOOL OnInitDialog();
@@ -115,5 +115,4 @@ protected:
 	afx_msg void OnDisconnectTouchSensorBtnClicked();
 	
 	DECLARE_MESSAGE_MAP()
-public:
 };

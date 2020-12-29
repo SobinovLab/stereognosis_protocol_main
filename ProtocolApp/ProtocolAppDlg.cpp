@@ -104,7 +104,7 @@ BOOL CProtocolAppDlg::OnInitDialog()
 	SetIcon(m_hIcon, FALSE);		// Set small icon
 
 	// Send GUI pointers to the protocol
-	setFontGuiTrialsCounter();
+	setFontGuiTrialsCounter();  // legacy
 	m_protocol.set_photoresistor_monitors(&m_frontPhotoresistorCtrl, &m_rearPhotoresistorCtrl);
 	m_serverStatusCtrl1.SetWindowText("Off");
 	m_protocol.set_camera1_gui_controls(&m_serverStatusCtrl1, &m_serverLogCtrl1);
@@ -121,7 +121,7 @@ BOOL CProtocolAppDlg::OnInitDialog()
 	if (m_protocol.params.tstEnEphys) ((CButton*)GetDlgItem(IDC_EPHYS_CHK))->SetCheck(BST_CHECKED);
 
 	/////// Control what is enabled and initialized based on debug/testing interface
-	enableProtocolCtrls(true);
+	toggleProtocolCtrls(true);
 	m_startTrialBtn.EnableWindow(false);
 	m_retreatBtn.EnableWindow(false);
 	m_retreatFlushBtn.EnableWindow(false);
@@ -130,11 +130,11 @@ BOOL CProtocolAppDlg::OnInitDialog()
 	enableRewardCtrls(true);
 
 	// cameras
-	enableCameraServer1Ctrls(true);
-	enableCameraServer2Ctrls(true);
+	toggleCameraServer1Ctrls(true);
+	toggleCameraServer2Ctrls(true);
 
 	// touch sensor
-	enableTouchServerCtrls(true);
+	toggleTouchServerCtrls(true);
 
 	return TRUE;  // return TRUE  unless you set the focus to a control
 }
@@ -186,6 +186,9 @@ void CProtocolAppDlg::OnOK()
 	UpdateData(FromControlsToVariables);
 }
 
+/// <summary>
+/// Legacy. I guess makes it prettier?
+/// </summary>
 void CProtocolAppDlg::setFontGuiTrialsCounter()
 {
 	CFont* cEditControlFont = new CFont();
@@ -202,32 +205,48 @@ HCURSOR CProtocolAppDlg::OnQueryDragIcon()
 
 void CProtocolAppDlg::OnStartProtocolBtnClicked()
 {
-	UpdateData(FromControlsToVariables);
-	enableProtocolCtrls(false);
+	// don't want to get too many clicks
+	toggleProtocolCtrls(false);
+	GetDlgItem(IDC_STOP_PROTOCOL_BTN)->EnableWindow(false);
 
+	// in case any parameters were changed
+	UpdateData(FromControlsToVariables);
 	protocolThread = new thread(&Protocol::run, &m_protocol);
+
+	// enables stopping of the protocol
+	GetDlgItem(IDC_STOP_PROTOCOL_BTN)->EnableWindow(true);
 }
 
 void CProtocolAppDlg::OnStopProtocolBtnClicked()
 {
-	// this will wait until protocol handles the trial end
+	// don't want too many clicks
+	GetDlgItem(IDC_STOP_PROTOCOL_BTN)->EnableWindow(false);
+
+	// this will wait until protocol handles the trial end and finishes the run thread
 	stopProtocolThread();
 
 	// protocol controls and edits are on
-	enableProtocolCtrls(true);
+	toggleProtocolCtrls(true);
 }
 
+// TODO: possible async problem accessing the params from GUI thread and Protocol
 void CProtocolAppDlg::OnFlushWaterBtnClicked()
 {
 	UpdateData(FromControlsToVariables);
 	m_protocol.reward();
 }
 
+/// <summary>
+/// Async signal to Protocol thread
+/// </summary>
 void CProtocolAppDlg::OnStartTrialBtnClicked()
 {
 	m_protocol.startTrial.store(true);
 }
 
+/// <summary>
+/// Forces the reward regardless of performance. Async stop trial
+/// </summary>
 void CProtocolAppDlg::OnRetreatFlushWaterBtnClicked()
 {
 	m_protocol.deservesReward = true;
@@ -235,6 +254,9 @@ void CProtocolAppDlg::OnRetreatFlushWaterBtnClicked()
 	stopTrial();
 }
 
+/// <summary>
+/// Async stop trial
+/// </summary>
 void CProtocolAppDlg::OnRetreatBtnClicked()
 {
 	stopTrial();
@@ -244,16 +266,17 @@ void CProtocolAppDlg::OnConnect1BtnClicked()
 {
 	UpdateData(FromControlsToVariables);
 
+	// Just opens a channel
 	// TODO (AS) return error if not connected and not change state?
 	m_protocol.connect_camera_client1();
 
-	enableCameraServer1Ctrls(false);
+	toggleCameraServer1Ctrls(false);
 }
 
 void CProtocolAppDlg::OnDisconnect1BtnClicked()
 {
 	m_protocol.disconnect_camera_client1();
-	enableCameraServer1Ctrls(true);
+	toggleCameraServer1Ctrls(true);
 }
 
 void CProtocolAppDlg::OnConnect2BtnClicked()
@@ -263,14 +286,14 @@ void CProtocolAppDlg::OnConnect2BtnClicked()
 	// TODO (AS) return error if not connected and not change state?
 	m_protocol.connect_camera_client2();
 
-	enableCameraServer2Ctrls(false);
+	toggleCameraServer2Ctrls(false);
 }
 
 void CProtocolAppDlg::OnDisconnect2BtnClicked()
 {
 	m_protocol.disconnect_camera_client2();
 
-	enableCameraServer2Ctrls(true);
+	toggleCameraServer2Ctrls(true);
 }
 
 void CProtocolAppDlg::OnSendConfigBtnClicked()
@@ -279,6 +302,7 @@ void CProtocolAppDlg::OnSendConfigBtnClicked()
 	m_protocol.send_config_to_cameras();
 }
 
+// TODO: better single frame capture?
 void CProtocolAppDlg::OnCaptureSingleFrameBtnClicked()
 {
 	UpdateData(FromControlsToVariables);
@@ -293,16 +317,19 @@ void CProtocolAppDlg::OnConnectTouchSensorBtnClicked()
 	// TODO (AS) return error if not connected and not change state?
 	m_protocol.connect_pressure_sensors();
 
-	enableTouchServerCtrls(false);
+	toggleTouchServerCtrls(false);
 }
 
 void CProtocolAppDlg::OnDisconnectTouchSensorBtnClicked()
 {
 	m_protocol.disconnect_pressure_sensors();
 
-	enableTouchServerCtrls(true);
+	toggleTouchServerCtrls(true);
 }
 
+/// <summary>
+/// Locks the current thread until protocolThread with Protocol::run ends
+/// </summary>
 void CProtocolAppDlg::stopProtocolThread()
 {
 	if (protocolThread) {
@@ -318,19 +345,16 @@ void CProtocolAppDlg::stopTrial()
 	m_protocol.stopTrial.store(true);
 }
 
-void CProtocolAppDlg::enableProtocolCtrls(bool enable)
+void CProtocolAppDlg::toggleProtocolCtrls(bool stopped)
 {
-	GetDlgItem(IDC_START_PROTOCOL_BTN)->EnableWindow(enable);
-	GetDlgItem(IDC_STOP_PROTOCOL_BTN)->EnableWindow(!enable);
+	GetDlgItem(IDC_START_PROTOCOL_BTN)->EnableWindow(stopped);
+	GetDlgItem(IDC_STOP_PROTOCOL_BTN)->EnableWindow(!stopped);
 
-	GetDlgItem(IDC_LOAD_CONFIG_BTN)->EnableWindow(enable);
-	GetDlgItem(IDC_SAVE_CONFIG_BTN)->EnableWindow(enable);
-
-	GetDlgItem(IDC_ACCELERATION_EDT)->EnableWindow(enable);
-	GetDlgItem(IDC_SPEED_EDT)->EnableWindow(enable);
-	GetDlgItem(IDC_POSITION_EDT)->EnableWindow(enable);
-	GetDlgItem(IDC_MAX_WAIT_EDT_BOX)->EnableWindow(enable);
-	GetDlgItem(IDC_INTERTRIAL_WAIT_EDT)->EnableWindow(enable);
+	GetDlgItem(IDC_ACCELERATION_EDT)->EnableWindow(stopped);
+	GetDlgItem(IDC_SPEED_EDT)->EnableWindow(stopped);
+	GetDlgItem(IDC_POSITION_EDT)->EnableWindow(stopped);
+	GetDlgItem(IDC_MAX_WAIT_EDT_BOX)->EnableWindow(stopped);
+	GetDlgItem(IDC_INTERTRIAL_WAIT_EDT)->EnableWindow(stopped);
 }
 
 void CProtocolAppDlg::enableRewardCtrls(bool enable)
@@ -339,29 +363,29 @@ void CProtocolAppDlg::enableRewardCtrls(bool enable)
 	GetDlgItem(IDC_FLUSH_WATER_BTN)->EnableWindow(enable && m_protocol.params.tstEnReward);
 }
 
-void CProtocolAppDlg::enableCameraServer1Ctrls(bool enable)
+void CProtocolAppDlg::toggleCameraServer1Ctrls(bool disconnected)
 {
-	GetDlgItem(IDC_IP_EDT1)->EnableWindow(enable);
-	GetDlgItem(IDC_PORT_EDT1)->EnableWindow(enable);
-	GetDlgItem(IDC_CONNECT_BTN1)->EnableWindow(enable);
+	GetDlgItem(IDC_IP_EDT1)->EnableWindow(disconnected);
+	GetDlgItem(IDC_PORT_EDT1)->EnableWindow(disconnected);
+	GetDlgItem(IDC_CONNECT_BTN1)->EnableWindow(disconnected);
 
-	GetDlgItem(IDC_DISCONNECT_BTN1)->EnableWindow(!enable);
+	GetDlgItem(IDC_DISCONNECT_BTN1)->EnableWindow(!disconnected);
 }
 
-void CProtocolAppDlg::enableCameraServer2Ctrls(bool enable)
+void CProtocolAppDlg::toggleCameraServer2Ctrls(bool disconnected)
 {
-	GetDlgItem(IDC_IP_EDT2)->EnableWindow(enable);
-	GetDlgItem(IDC_PORT_EDT2)->EnableWindow(enable);
-	GetDlgItem(IDC_CONNECT_BTN2)->EnableWindow(enable);
+	GetDlgItem(IDC_IP_EDT2)->EnableWindow(disconnected);
+	GetDlgItem(IDC_PORT_EDT2)->EnableWindow(disconnected);
+	GetDlgItem(IDC_CONNECT_BTN2)->EnableWindow(disconnected);
 
-	GetDlgItem(IDC_DISCONNECT_BTN2)->EnableWindow(!enable);
+	GetDlgItem(IDC_DISCONNECT_BTN2)->EnableWindow(!disconnected);
 }
 
-void CProtocolAppDlg::enableTouchServerCtrls(bool enable)
+void CProtocolAppDlg::toggleTouchServerCtrls(bool disconnected)
 {
-	GetDlgItem(IDC_TOUCH_SENSOR_IP_EDT)->EnableWindow(enable);
-	GetDlgItem(IDC_TOUCH_SENSOR_PORT_EDT)->EnableWindow(enable);
-	GetDlgItem(IDC_CONNECT_TOUCH_SENSOR_BTN)->EnableWindow(enable);
+	GetDlgItem(IDC_TOUCH_SENSOR_IP_EDT)->EnableWindow(disconnected);
+	GetDlgItem(IDC_TOUCH_SENSOR_PORT_EDT)->EnableWindow(disconnected);
+	GetDlgItem(IDC_CONNECT_TOUCH_SENSOR_BTN)->EnableWindow(disconnected);
 
-	GetDlgItem(IDC_DISCONNECT_TOUCH_SENSOR_BTN)->EnableWindow(!enable);
+	GetDlgItem(IDC_DISCONNECT_TOUCH_SENSOR_BTN)->EnableWindow(!disconnected);
 }

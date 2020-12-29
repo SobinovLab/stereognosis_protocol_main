@@ -3,14 +3,13 @@ Plan for the finish of fixing stereognosis:
 1. MAIN: Make protocol loop in a separate thread from GUI, transfer all device interfacesto Protocol class. DONE
 1.5 Make monitor in the GUI that updates the state based on the running loop of the trials. Or directly give access to the elements? DONE: gave direct acceess.
 1.6 Automatic looping logic enabled. DONE
-1.7 Testing flags only try to launch something and don't break.
-1.8 GUI control of the looping logic.
 2. CAMERAS: 
     0. Move recording functions from GUI thread, add monitor for state in the Protocol.
 	i. Add response on finishing saving files, 
 	ii. add displayed error when could not set maximum framerate, 
 	iii. add button to check maximum framerate available (if connected as USB 2 or 3).
 	iv. selection of the default camera preset based on computer's IP?
+    v. Make prepare camera recording initialize the cameras if not initialized
 3. PRESSURE SENSOR:
 	i. Answer to the message 'is touching?' even one of the plates
 	ii. Remove calculation of success from the pressure sensor, it should be calculated in the main protocol, where the start of each trial can be easily accessed. Message should be whether crossed the threshold on the left one and the right one.
@@ -18,3 +17,10 @@ Plan for the finish of fixing stereognosis:
 	i. Load the session CSV (default to the latest from a folder - make a GUI field) into a series of vectors
 	ii. Go through them stopping the protocol when it runs out of trials
 	iii. Update GUI integration of the storage folder.
+    iv. GUI control of the looping logic.
+    v. Motor hub
+    vi. Testing flags only try to launch something and don't break.
+    vii. Finalize GUI enable-disable controls
+    viii. Logging of trials
+5. SERVERS:
+    i. Check if can catch connecting to nonexistant server
