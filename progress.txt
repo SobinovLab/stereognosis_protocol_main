@@ -4,12 +4,15 @@ Plan for the finish of fixing stereognosis:
 1.5 Make monitor in the GUI that updates the state based on the running loop of the trials. Or directly give access to the elements? DONE: gave direct acceess.
 1.6 Automatic looping logic enabled. DONE
 2. CAMERAS: 
-    0. Move recording functions from GUI thread, add monitor for state in the Protocol.
-	i. Add response on finishing saving files, 
-	ii. add displayed error when could not set maximum framerate, 
-	iii. add button to check maximum framerate available (if connected as USB 2 or 3).
-	iv. selection of the default camera preset based on computer's IP?
-    v. Make prepare camera recording initialize the cameras if not initialized
+    0. Move recording functions from GUI thread, add monitor for state in the Protocol. DONE
+    0.1 Make GUI objects controlled from Protocol. DONE
+    0.2 Move directory management to the Protocol. DONE
+    0.3 Move trial run to Protocol, as well as trial number. DONE
+	i. Add response on finishing saving files, DONE
+	ii. add displayed error when could not set maximum framerate, DONE
+	iii. add button to check maximum framerate available (if connected as USB 2 or 3). DONE
+	iv. selection of the default camera preset based on computer's IP? DONE
+    v. Make prepare camera recording initialize the cameras if not initialized. BAD IDEA - cameras need to be checked to be USB 3 anyway, maybe in the future
 3. PRESSURE SENSOR:
 	i. Answer to the message 'is touching?' even one of the plates
 	ii. Remove calculation of success from the pressure sensor, it should be calculated in the main protocol, where the start of each trial can be easily accessed. Message should be whether crossed the threshold on the left one and the right one.

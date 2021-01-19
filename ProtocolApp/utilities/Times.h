@@ -1,23 +1,32 @@
 #pragma once
 #include <chrono>
+#include <ctime>   // localtime
+#include <sstream> // stringstream
+#include <iomanip> // put_time
+#include <string>  // string
 
-using namespace std;
-using namespace chrono;
+#define DATE_TIME_FORMAT "%Y_%m_%d_%H_%M_%S"
+#define DATE_FORMAT "%Y_%m_%d"
 
 class Times
 {
 public:
-	static steady_clock::time_point getCurrentTime();
+	static std::chrono::steady_clock::time_point getCurrentTime();
+	static long long getCurrentTimeInMilliSecs();
 
-	static bool isTimeout(const steady_clock::time_point& startTime, const long& periodSecs);
+	static std::string getFormattedDateTime();
+	static std::string getFormattedDate();
+	static std::string getFormattedDateTime(std::chrono::system_clock::time_point timePoint, std::string format);
+
+	static bool isTimeout(const std::chrono::steady_clock::time_point& startTime, const long& periodSecs);
 
 	// between
-	static long getElapsedMicroSecsBetween(const steady_clock::time_point& startTime, const steady_clock::time_point& endTime);
-	static long getElapsedMilliSecsBetween(const steady_clock::time_point& startTime, const steady_clock::time_point& endTime);
+	static long getElapsedMicroSecsBetween(const std::chrono::steady_clock::time_point& startTime, const std::chrono::steady_clock::time_point& endTime);
+	static long getElapsedMilliSecsBetween(const std::chrono::steady_clock::time_point& startTime, const std::chrono::steady_clock::time_point& endTime);
 
 	// since
-	static long getElapsedMicroSecsSince(const steady_clock::time_point& startTime);
-	static long getElapsedMilliSecsSince(const steady_clock::time_point& startTime);
+	static long getElapsedMicroSecsSince(const std::chrono::steady_clock::time_point& startTime);
+	static long getElapsedMilliSecsSince(const std::chrono::steady_clock::time_point& startTime);
 
 	// transformations
 	static long microToMillisecs(const long& microsecs);

@@ -15,13 +15,13 @@
 #include <iostream>
 #include <cstdio>
 
-using namespace std;
+#include "Times.h"
 
 #define LOGGER Logger::getLogger()
 
 enum class LOG_TYPE : int { LOG_ERROR = 0, LOG_WARNING, LOG_INFO };
 
-extern mutex loggerMutex;
+extern std::mutex loggerMutex;
 
 /*********************************************/
 // Logging errors
@@ -31,12 +31,11 @@ void logError(const char * errorText);
 // Logging info
 /*********************************************/
 void logInfo(const char * infoText);
+/*********************************************/
+// Logging warning
+/*********************************************/
+void logWarning(const char* infoText);
 
-/*********************************************/
-// Format log strings
-/*********************************************/
-template<typename ... Args>
-string string_format(const std::string& format, Args ... args);
 
 class Logger {
 
@@ -60,14 +59,6 @@ class Logger {
 	*   Logs a end line 
 	*/
 	void endLine();
-	/**
-	*  Get current date/time with a formatted string
-	**/
-	static string currentDateTime(const char * formatStr);
-	/**
-	*  Get current date/time in milliseconds 2012-05-16 13:36:56:396
-	**/
-	static string currentDateTimeInMilliseconds();
 	protected:
 	/**
 	*    Destructor for the Logger class.
@@ -92,13 +83,7 @@ class Logger {
 	/**
 	*   Log file stream object.
 	**/
-	ofstream logFile;
-    /**
-	*   Warnings and errors statistics
-	**/
-	unsigned int m_numGoodTrials;
-    unsigned int m_numTrialsAborted;
-	unsigned int m_numTotalTrials;
+	std::ofstream logFile;
 }; // class end
 
 class LoggerDestroyer
@@ -109,5 +94,5 @@ class LoggerDestroyer
 	void setLogger(Logger *s);
 
 	private:
-		Logger * m_logger;
+		Logger * m_logger = nullptr;
 };

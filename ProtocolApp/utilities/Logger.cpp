@@ -1,12 +1,7 @@
 #include "Logger.h"
 
-/**
-* Date and time format strings
-*/
-#define DATE_TIME_FORMAT "%Y_%m_%d_%H_%M_%S"
-#define ONLY_TIME_FORMAT "%H:%M:%S"
-#define ONLY_DATE_FORMAT "%m/%d/%Y"
-#define TIME_IN_MILLISECONDS "%02d:%02d:%02d.%03d"
+using namespace std;
+
 /**
 *   The name of the log file is structured so: 'filename'_date_time.'extension'
 **/
@@ -28,15 +23,18 @@ Logger* Logger::getLogger(){
 	return m_instance;
 }
 
-Logger::Logger():m_numGoodTrials(0U), m_numTrialsAborted(0U), m_numTotalTrials(0U)
+Logger::Logger()
 {
 	string fName = LOG_FOLDER + LOG_FILE_NAME;
-	fName.append(currentDateTime(DATE_TIME_FORMAT));
+	CreateDirectory(LOG_FOLDER.c_str(), NULL);
+	fName.append(Times::getFormattedDateTime());
 	fName.append(LOG_EXTENSION);
+
 	logFile.open(fName.c_str(), ios::out | ios::app);
+
     // Write the first lines
     if (logFile.is_open()) {
-		logFile << "Log file created " << currentDateTime(ONLY_DATE_FORMAT).c_str() << std::endl << std::endl;
+		logFile << "Log file created " << Times::getFormattedDate() << std::endl << std::endl;
     } // if
 }
 
@@ -44,39 +42,8 @@ Logger::Logger():m_numGoodTrials(0U), m_numTrialsAborted(0U), m_numTotalTrials(0
 Logger::~Logger() {
 	if (logFile.is_open()) {
         logFile << std::endl << std::endl;
-        // Report number of errors and warnings
-        logFile << m_numGoodTrials << " good trials" << std::endl;
-        logFile << m_numTrialsAborted << " trials aborted" << std::endl;
-		logFile << m_numTotalTrials << " total trials played" << std::endl;
         logFile.close();
     } // if
-}
-
-// Get current date/time, format is Wed May 30 12:25:03 2017
-string Logger::currentDateTime(const char * formatStr) {
-	time_t     now = time(0);
-	struct tm  tstruct;
-	char       buf[80];
-	localtime_s(&tstruct, &now);
-	strftime(buf, sizeof(buf), formatStr, &tstruct);	
-	return buf;
-}
-
-string Logger::currentDateTimeInMilliseconds()
-{
-	SYSTEMTIME stime;
-	//structure to store system time (in usual time format)
-	FILETIME ltime;
-	//structure to store local time (local time in 64 bits)
-	FILETIME ftTimeStamp;
-	char TimeStamp[256];//to store TimeStamp information
-	GetSystemTimeAsFileTime(&ftTimeStamp); //Gets the current system time
-
-	FileTimeToLocalFileTime(&ftTimeStamp, &ltime);//convert in local time and store in ltime
-	FileTimeToSystemTime(&ltime, &stime);//convert in system time and store in stime
-
-	sprintf(TimeStamp, TIME_IN_MILLISECONDS, stime.wHour, stime.wMinute, stime.wSecond, stime.wMilliseconds);
-	return string(TimeStamp);
 }
 
 void Logger::endLine() {
@@ -85,25 +52,21 @@ void Logger::endLine() {
 
 // Overload << operator using log type
 Logger& operator<<(Logger &logger, const LOG_TYPE logType) {
-	logger.logFile << logger.currentDateTimeInMilliseconds().c_str();
-	//logger.logFile << logger.currentDateTime(ONLY_TIME_FORMAT).c_str();
+	logger.logFile << Times::getCurrentTimeInMilliSecs();
     switch (logType) {
 		case LOG_TYPE::LOG_ERROR:
-            logger.logFile << "[ABORTED]: ";
-            ++logger.m_numTrialsAborted;
+            logger.logFile << "[ERROR]: ";
             break;
 		case LOG_TYPE::LOG_WARNING:
             logger.logFile << "[WARNING]: ";
             break;
 		case LOG_TYPE::LOG_INFO:
-			logger.logFile << "[GOOD]: "; 
-			++logger.m_numGoodTrials;
+			logger.logFile << "[INFO]: "; 
 			break;
         default:
-            logger.logFile << "LOGGER error: LogType has not been recognized";
+            logger.logFile << "[UNKNOWNTYPE]: ";
             break;
     } // sw
-	++logger.m_numTotalTrials;
     return logger;
 }
 
@@ -120,7 +83,8 @@ LoggerDestroyer::LoggerDestroyer()
 
 LoggerDestroyer::~LoggerDestroyer()
 {
-	delete m_logger->m_instance;
+	if (m_logger)
+		delete m_logger->m_instance;
 }
 
 void LoggerDestroyer::setLogger(Logger *s)
@@ -144,11 +108,10 @@ void logInfo(const char * infoText) {
 	loggerMutex.unlock();
 }
 
-template<typename ... Args>
-string string_format(const std::string& format, Args ... args)
-{
-	size_t size = snprintf(nullptr, 0, format.c_str(), args ...) + 1; // Extra space for '\0'
-	unique_ptr<char[]> buf(new char[size]);
-	snprintf(buf.get(), size, format.c_str(), args ...);
-	return string(buf.get(), buf.get() + size - 1); // We don't want the '\0' inside
+void logWarning(const char* infoText) {
+	Logger* logger = LOGGER;
+	loggerMutex.lock();
+	*logger << LOG_TYPE::LOG_WARNING << infoText;
+	logger->endLine();
+	loggerMutex.unlock();
 }
