@@ -18,7 +18,7 @@ public:
 	static std::string getFormattedDate();
 	static std::string getFormattedDateTime(std::chrono::system_clock::time_point timePoint, std::string format);
 
-	static bool isTimeout(const std::chrono::steady_clock::time_point& startTime, const long& periodSecs);
+	static bool isTimeout(const std::chrono::steady_clock::time_point& startTime, const double& periodSecs);
 
 	// between
 	static long getElapsedMicroSecsBetween(const std::chrono::steady_clock::time_point& startTime, const std::chrono::steady_clock::time_point& endTime);

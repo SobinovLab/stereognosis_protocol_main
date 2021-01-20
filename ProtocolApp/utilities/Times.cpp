@@ -35,7 +35,7 @@ std::string Times::getFormattedDate()
     return getFormattedDateTime(system_clock::now(), DATE_FORMAT);
 }
 
-bool Times::isTimeout(const steady_clock::time_point& startTime, const long& periodSecs)
+bool Times::isTimeout(const steady_clock::time_point& startTime, const double& periodSecs)
 {
     long timeElapsed = getElapsedMicroSecsSince(startTime);
     if (timeElapsed > secToMicrosecs(periodSecs))

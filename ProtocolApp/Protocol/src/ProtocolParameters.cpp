@@ -1,5 +1,7 @@
 #include "ProtocolParameters.h"
 
+using namespace std;
+
 ProtocolParameters::ProtocolParameters()
 {
 	init();

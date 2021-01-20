@@ -1,5 +1,7 @@
 #include "Protocol.h"
 
+using namespace std;
+
 constexpr auto DATA_FOLDER = "./data";
 constexpr auto TRIAL_NUM_STR = "Trial n.";
 constexpr auto TRIAL_ABORT_STR = " Aborted";
@@ -205,8 +207,8 @@ void Protocol::run()
 
 	// class member variable
 	currentTrialNumber = 0;
-	steady_clock::time_point intertrialWaitStartTime = Times::getCurrentTime();  // set at the end of the previous iteration
-	steady_clock::time_point trialStartTime;  // set when the object is in position
+	auto intertrialWaitStartTime = Times::getCurrentTime();  // set at the end of the previous iteration
+	auto trialStartTime = Times::getCurrentTime();  // set when the object is in position
 
 	// Run the protocol loop
 	while (!this->stopProtocol.load())
@@ -231,7 +233,7 @@ void Protocol::run()
 			// waiting for:
 			//	Start trial button to be pressed
 			//  stop of protocol 
-			//  if looping is selected, timeout of intertrial time. TODO: enable looping behavior toggle
+			//  if looping is selected, timeout of intertrial time. TODO: enable looping behavior toggle from GUI
 			//  TODO: wait for the monkey to release the grasp on the object
 		}
 

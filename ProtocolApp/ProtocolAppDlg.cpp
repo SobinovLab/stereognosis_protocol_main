@@ -3,6 +3,8 @@
 
 #include "ProtocolAppDlg.h"
 
+using namespace std;
+
 constexpr auto ENABLED = true;
 constexpr auto DISABLED = false;
 

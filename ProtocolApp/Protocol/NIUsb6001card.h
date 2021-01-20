@@ -8,7 +8,7 @@
 #include <NIDAQmx.h>
 #include "Logger.h"
 
-extern atomic<bool> IS_REAR_PHOTORESISTOR_COVERED, IS_FRONT_PHOTORESISTOR_COVERED;
+extern std::atomic<bool> IS_REAR_PHOTORESISTOR_COVERED, IS_FRONT_PHOTORESISTOR_COVERED;
 
 class NIUsb6001card
 {

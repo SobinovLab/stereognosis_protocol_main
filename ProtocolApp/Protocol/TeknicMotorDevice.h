@@ -36,9 +36,6 @@
 #define NUMBERS_OF_ATTEMPTS   10
 #define PORT_NUM   0
 
-using namespace std;
-using namespace sFnd;
-
 #pragma comment(lib, "sFoundation20.lib")
 
 class TeknicMotorDevice 
@@ -63,9 +60,9 @@ class TeknicMotorDevice
 		*   Create the SysManager object. This object will coordinate actions among various ports
 		*   and within nodes. In this example we use this object to setup and open our port.
 		*/
-		SysManager * myMgr;	//Create System Manager myMgr
-		IPort *myPort;
-		INode * theNode;
+		sFnd::SysManager * myMgr;	//Create System Manager myMgr
+		sFnd::IPort *myPort;
+		sFnd::INode * theNode;
 		long convertPositionToCNTs(long valueInMillimeter);
 		long convertSpeedLevelToRPM(long level);
 		long convertAccLevelToRPMperSecs(long level);

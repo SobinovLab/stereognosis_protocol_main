@@ -1,6 +1,9 @@
 #include "TeknicMotorDevice.h"
 #include "NIUsb6001card.h"
 
+using namespace std;
+using namespace sFnd;
+
 TeknicMotorDevice::TeknicMotorDevice() : myMgr(SysManager::Instance()), myPort(nullptr), theNode(nullptr)
 {
 }

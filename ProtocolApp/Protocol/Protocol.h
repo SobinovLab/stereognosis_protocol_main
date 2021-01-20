@@ -44,11 +44,11 @@ class Protocol
 
 		//////// GUI interaction
 		// Control of the protocol running
-		atomic<bool> stopProtocol;
-		atomic<bool> startTrial;
-		atomic<bool> stopTrial;
-		atomic<bool> deservesReward;  // user-GUI defined reward for the monkey. Overrides the calculated one.
-		atomic<bool> loopAutomatically;  // TODO make gui interface to this switch - it is updated in the Protocol, too
+		std::atomic<bool> stopProtocol;
+		std::atomic<bool> startTrial;
+		std::atomic<bool> stopTrial;
+		std::atomic<bool> deservesReward;  // user-GUI defined reward for the monkey. Overrides the calculated one.
+		std::atomic<bool> loopAutomatically;  // TODO make gui interface to this switch - it is updated in the Protocol, too
 
 		// main loop that is run in a thread when StartProtocol is clicked
 		virtual void run();
@@ -86,7 +86,7 @@ class Protocol
 
 	private:
 		// Not used meaningfully right now, good for understanding and maybe future
-		atomic<ProtocolState> protocolState;
+		std::atomic<ProtocolState> protocolState;
 
 		//////// GUI
 		CEdit* m_currentTrialGuiCtrl;
@@ -141,8 +141,8 @@ class Protocol
 
 		//////// running protocol support
 		// calculated reward from monkey performance
-		atomic<bool> m_earnedReward;
-		atomic<bool> m_stopAsyncTrialConditionMonitor;
+		std::atomic<bool> m_earnedReward;
+		std::atomic<bool> m_stopAsyncTrialConditionMonitor;
 		std::thread* m_asyncTrialSuccessMonitorThread;
 		void m_asyncTrialConditionMonitor();  // Monitors asynchronous conditions for trial end - force sensor press
 
