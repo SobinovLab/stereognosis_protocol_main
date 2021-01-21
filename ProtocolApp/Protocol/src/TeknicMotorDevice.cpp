@@ -22,12 +22,47 @@ using namespace std;
 //--------------------------------------- NODE ---------------------------------------
 //------------------------------------------------------------------------------------
 
-/* Wrapper for interface
+/* 
+* Wrapper for interface
 */
-Node::Node(sFnd::INode& node) :
+Node::Node(sFnd::INode& node, string type) :
     m_node(node) {
 
     std::string m_name = m_node.Info.UserID.Value();
+
+    if (type == "forward_backward" || type == "default") {  // serial node 0
+        pos = new Convertor(0.1, 240, -105000); // input in mm
+        vel = new Convertor(1, 10, 700);  // arbitrary scaling factor to RPM
+        acc = new Convertor(1, 10, 4000);  // arbitrary scaling factor to RPM/s
+
+        retreat_position = 1;  // TODO check attilio's default value
+        default_vel = 2;
+        default_acc = 2;
+    }
+    else if (type == "tilt") {  // serial node 1
+        // TODO not implemented
+        pos = new Convertor(0.1, 240, -105000); // input in degrees
+        vel = new Convertor(1, 10, 700);  // arbitrary scaling factor to RPM
+        acc = new Convertor(1, 10, 4000);  // arbitrary scaling factor to RPM/s
+
+        retreat_position = 1;
+        default_vel = 2;
+        default_acc = 2;
+    }
+    else if (type == "aperture") {  // serial node 2
+        // TODO not implemented
+        pos = new Convertor(0.1, 240, -105000); // input in degrees
+        vel = new Convertor(1, 10, 700);  // arbitrary scaling factor to RPM
+        acc = new Convertor(1, 10, 4000);  // arbitrary scaling factor to RPM/s
+
+        retreat_position = 1;
+        default_vel = 2;
+        default_acc = 2;
+    }
+    else {
+        logError("Error during Node initialization: Unknown type.");
+        throw invalid_argument("Error during Node initialization: Unknown type.");
+    }
 
     // Following 3 are optional if I wish to load a config file:
     // thisNode.EnableReq(false); // Should disable Node before loading config
@@ -126,50 +161,6 @@ void Node::printDetails() {
     logInfo(buf.c_str());
 }
 
-
-
-
-//! These defines only work for the one axis. Need to define these PER AXIS
-#define CONVERSION_ERROR  -1
-
-// defines the length of the linear rail for first axis, 24cm
-#define MIN_POSITION  0.1  // in mm
-#define MAX_POSITION  240
-#define MAX_DISTANCE_CNTS -105000	// --->toward chair direction, assume 0 is home
-
-/* Convert from mm of travel to encoder counts. Must be established by measuring travel */
-long Node::convertPositionToCount(long posInMM) {
-    if ((posInMM < MIN_POSITION) || (posInMM > MAX_POSITION)) 
-        return CONVERSION_ERROR;
-    return posInMM * MAX_DISTANCE_CNTS / MAX_POSITION;
-}
-
-
-// Arbitrary 1-10 scaling factor.
-#define MIN_ACC_LEVEL   1
-#define MAX_ACC_LEVEL   10
-#define MAX_ACC_LIM_RPM	4000
-
-/* Convert 1-10 to servo's accel limit in RPM per sec */
-long Node::convertVelToRPM(long level) {
-    if ((level < MIN_ACC_LEVEL) || (level > MAX_ACC_LEVEL)) 
-        return CONVERSION_ERROR;
-    return level * MAX_ACC_LIM_RPM / MAX_ACC_LEVEL;
-}
-
-
-#define MIN_SPEED_LEVEL  1
-#define MAX_SPEED_LEVEL  10
-#define MAX_VEL_LIM_RPM	 700
-
-/* Convert 1-10 to servo's velocity limit in RPM per sec */
-long Node::convertAccToRPM(long level) {
-    if ((level < MIN_SPEED_LEVEL) || (level > MAX_SPEED_LEVEL)) 
-        return CONVERSION_ERROR;
-    return level * MAX_VEL_LIM_RPM / MAX_SPEED_LEVEL;
-}
-
-
 void Node::handleAlerts() {
     // Buffer for possible messages.
     char alertList[256];
@@ -195,13 +186,11 @@ void Node::handleAlerts() {
     }
 }
 
-
-
 /* Generic move function built off examples. */
 void Node::move(
-    const int& moveCounts = 1000,
-    const int& speed = MAX_VEL_LIM_RPM,
-    const int& accel = MAX_ACC_LIM_RPM
+    const int& moveCounts,
+    const int& speed,
+    const int& accel
 ) {
     // Need to do some pre-checks to make sure node is ready:
     handleAlerts();
@@ -254,16 +243,22 @@ void Node::move(
 
 
 /* High level move function built to convert from human units to machine. */
-bool Node::moveHigh(
-    const int& position,  // in mm
+void Node::moveHigh(
+    const int& position,  // unit depends on Convert members
     const int& velLevel,
     const int& accLevel
 ) {
-    move(
-        convertPositionToCount(position),
-        convertVelToRPM(velLevel),
-        convertAccToRPM(accLevel));
-    return true;
+    move(pos->convert(position), vel->convert(velLevel), acc->convert(accLevel));
+}
+
+void Node::moveHigh(const int& position)
+{
+    moveHigh(position, default_vel, default_acc);
+}
+
+void Node::retreat()
+{
+    moveHigh(retreat_position);
 }
 
 
@@ -328,14 +323,27 @@ MotorAPI::MotorAPI(void) {
 
             auto nodeCntOnPort = thisPort.NodeCount();
             m_nodeCount += nodeCntOnPort;
-            // TODO not sure if those to_strings will be very readable
+            // TODO check, not sure if those to_strings will be very readable
             buf = ("Port: " + to_string(thisPort.NetNumber()) + 
                 ", State: " + to_string(thisPort.OpenState()) + 
                 ", Node#" + to_string(nodeCntOnPort) + ".");
             logInfo(buf.c_str());
             // Iterate nodes on this port
             for (size_t nodeIndex = 0; nodeIndex < nodeCntOnPort; nodeIndex++) {
-                Node wrappedNode = Node(thisPort.Nodes(nodeIndex));
+                string nodeType;
+                switch (nodeIndex)
+                {
+                case 0:
+                    nodeType = "forward_backward";
+                case 1:
+                    nodeType = "tilt";
+                case 2:
+                    nodeType = "aperture";
+                default:
+                    nodeType = "default";
+                }
+
+                Node wrappedNode = Node(thisPort.Nodes(nodeIndex), nodeType);
 
                 m_nodes.push_back(std::reference_wrapper<Node>(wrappedNode));  //TODO: Push NodeWrapper here instead
             }
@@ -369,6 +377,7 @@ int MotorAPI::home()
     for (auto node : m_nodes) {
         node.get().home();
     }
+
     return 0;
 }
 
@@ -377,9 +386,10 @@ int MotorAPI::retreat()
     if (!wasInitializedCorrectly())
         return -1;
 
-    // TODO maybe other? Check Attilio's code
-    vector<int> retreat_positions = { 0, 0, 0 };
-    return move(retreat_positions);
+    for (auto e : m_nodes) {
+        e.get().retreat();
+    }
+    return 0;
 }
 
 int MotorAPI::move(std::vector<int> positions)
@@ -387,12 +397,12 @@ int MotorAPI::move(std::vector<int> positions)
     if (!wasInitializedCorrectly())
         return -1;
 
-    if (positions.size() != m_nodeCount)
+    if (positions.size() > m_nodeCount)
         return -1;
 
-    for (size_t i = 0; i < m_nodeCount; i++)
+    for (size_t i = 0; i < positions.size(); i++)
     {
-        // TODO make the speed and acc variable
+        // the speed and acc variable are default
         m_nodes[i].get().moveHigh(positions[i], 2, 2);
     }
     return 0;
@@ -403,3 +413,24 @@ bool MotorAPI::wasInitializedCorrectly()
     return initializedCorrectly;
 }
 
+Convertor::Convertor(const double _min_level, const double _max_level, const double _max_motor_val)
+{
+    min_level = _min_level;
+    max_level = _max_level;
+    max_motor_val = _max_motor_val;
+}
+
+Convertor::~Convertor()
+{
+}
+
+int Convertor::convert(const int val)
+{
+    if (val < min_level)
+        return (int) round(min_level * max_motor_val / max_level);
+
+    if (val > max_level)
+        return (int)round(max_motor_val);
+
+    return (int)round(val * max_motor_val / max_level);
+}
