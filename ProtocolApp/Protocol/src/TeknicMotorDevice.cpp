@@ -18,129 +18,14 @@
 using namespace sFnd;
 using namespace std;
 
-/**
- * Figure out how many SC4-HUBs are daisy chained ([0-2] per port), and how many
- * servo motors (nodes) are plugged into them. Register them to the SysManager.
- *
- * Ports are literal COM serial ports, COM6 by default on ours.
- *
- * Will enable and home all nodes.
- *
- * (can try to load config file for each motor.)
- */
-MotorAPI::MotorAPI(void) {
-    // The example just declares it default, says it's singleton
-    std::vector<std::string> comHubPorts;
-    string buf;
-
-    try {
-        m_manager = SysManager::Instance();
-        m_manager->FindComHubPorts(comHubPorts);
-        if (comHubPorts.empty()) {
-            logError("No SC Hubs found! Exiting.");  // TODO return instead of exit?
-            exit(1);
-        }
-        m_portCount = comHubPorts.size();
-        buf = "Found " + to_string(m_portCount) + " SC Hubs";
-        logInfo(buf.c_str());
-
-        for (size_t i = 0; i < m_portCount && i < NET_CONTROLLER_MAX; i++)
-            m_manager->ComHubPort(i, comHubPorts[i].c_str());
-
-        m_manager->PortsOpen(m_portCount);
-
-        // Drop all of our port references into my own array
-        for (size_t i = 0; i < m_portCount; i++)
-            m_ports.push_back(std::reference_wrapper<IPort>(m_manager->Ports(i)));
-
-        // Initialize nodes. Have to iterate ports, then nodes per port
-        //? I only expect one port currently, but this is for safety.
-
-        buf = "Iterating through " + to_string(m_portCount) + " nodes";
-        logInfo(buf.c_str());
-
-        for (size_t i = 0; i < m_portCount; i++) { // For each port:
-            buf = "Iterating nodes on port " + to_string(i) + ".";
-            logInfo(buf.c_str());
-            IPort& thisPort = m_ports[i].get();
-
-            // Turn off all motors when we initialize the interfaces.
-            thisPort.BrakeControl.BrakeSetting(0, BRAKE_ALLOW_MOTION);
-            thisPort.BrakeControl.BrakeSetting(1, BRAKE_ALLOW_MOTION);
-
-            auto nodeCntOnPort = thisPort.NodeCount();
-            m_nodeCount += nodeCntOnPort;
-            // TODO not sure if those to_strings will be very readable
-            buf = "Port: " + to_string(thisPort.NetNumber()) + ", State: " + to_string(thisPort.OpenState()) + ", Node#" + to_string(nodeCntOnPort) + ".";
-            logInfo(buf.c_str());
-            // Iterate nodes on this port
-            for (size_t nodeIndex = 0; nodeIndex < nodeCntOnPort; nodeIndex++) {
-                Node wrappedNode = Node(thisPort.Nodes(nodeIndex), this);
-
-                m_nodes.push_back(std::reference_wrapper<Node>(wrappedNode));  //TODO: Push NodeWrapper here instead
-            }
-        }
-
-    }
-    catch (mnErr& theErr) {
-        // (defined by the mnErr class)
-        buf = "MotorAPI() constructor | addr: " + to_string( theErr.TheAddr) + " | err: " + to_string(theErr.ErrorCode) + " | msg: " + theErr.ErrorMsg;
-        logError(buf.c_str());
-    }
-}
-
-MotorAPI::~MotorAPI(void) {
-    logInfo("Teknic Shutting down. Disabling nodes, and closing port");
-    for (size_t i = 0; i < m_nodeCount; i++) {
-        auto thisNode = m_nodes[i].get();
-        thisNode.disable();
-    }
-    m_manager->PortsClose();
-    logInfo("Teknic Shutdown!");
-}
-
-// The timeout used for homing and move operations (in ms)
-double MotorAPI::getTimeout() { 
-    return m_manager->TimeStampMsec() + HOMING_TIMEOUT; 
-}
-
-double MotorAPI::TimeStampMsec() { 
-    return m_manager->TimeStampMsec(); 
-}
-
-int MotorAPI::home()
-{
-    for (auto node : m_nodes) {
-        node.get().home();
-    }
-    return 0;
-}
-
-int MotorAPI::retreat()
-{
-    // TODO maybe other? Check Attilio's code
-    vector<int> retreat_positions = { 0, 0, 0 };
-    return move(retreat_positions);
-}
-
-int MotorAPI::move(std::vector<int> positions)
-{
-    if (positions.size() != m_nodeCount)
-        return -1;
-
-    for (size_t i = 0; i < m_nodeCount; i++)
-    {
-        // TODO make the speed and acc variable
-        m_nodes[i].get().moveHigh(positions[i], 2, 2);
-    }
-    return 0;
-}
-
+//------------------------------------------------------------------------------------
+//--------------------------------------- NODE ---------------------------------------
+//------------------------------------------------------------------------------------
 
 /* Wrapper for interface
 */
-Node::Node(sFnd::INode& node, MotorAPI* mapi) :
-    m_node(node), m_api(mapi) {
+Node::Node(sFnd::INode& node) :
+    m_node(node) {
 
     std::string m_name = m_node.Info.UserID.Value();
 
@@ -170,10 +55,10 @@ void Node::enable() {
     string buf;
 
     //define a timeout in case the node is unable to enable
-    double timeout = m_api->getTimeout();
+    auto startTimeoutTime = Times::getCurrentTime();
     //This will loop checking on the Real time values of the node's Ready status
     while (!m_node.Motion.IsReady()) {
-        if (m_api->TimeStampMsec() > timeout) {
+        if (Times::isTimeout(startTimeoutTime, (double)HOMING_TIMEOUT / 1000)) {
             buf = "Error: Timed out waiting for Node " + m_name + " to enable.";
             logError(buf.c_str());
             return;
@@ -203,9 +88,10 @@ void Node::home() {
         logInfo("Homing Node now...");
         m_node.Motion.Homing.Initiate();
 
-        double timeout = m_api->getTimeout();    //define a timeout in case the node is unable to enable
+        //define a timeout in case the node is unable to enable
+        auto startTimeoutTime = Times::getCurrentTime();
         while (!m_node.Motion.Homing.WasHomed()) {
-            if (m_api->TimeStampMsec() > timeout) {
+            if (Times::isTimeout(startTimeoutTime, (double)HOMING_TIMEOUT / 1000)) {
                 logError("Node did not complete homing:  ");
                 logError("\t -Ensure Homing settings have been defined through ClearView.");
                 logError("\t -Check for alerts/Shutdowns");
@@ -228,15 +114,15 @@ void Node::printDetails() {
 
     string buf;
 
-    buf =        "  NodeType: " + nType;
+    buf = "  NodeType: " + nType;
     logInfo(buf.c_str());
     buf = string("     Model: ") + m_node.Info.Model.Value();
     logInfo(buf.c_str());
-    buf =        "  Serial #: " + to_string(m_node.Info.SerialNumber.Value());
+    buf = "  Serial #: " + to_string(m_node.Info.SerialNumber.Value());
     logInfo(buf.c_str());
     buf = string("FW version: ") + m_node.Info.FirmwareVersion.Value();
     logInfo(buf.c_str());
-    buf =        "    userID: " + m_name;
+    buf = "    userID: " + m_name;
     logInfo(buf.c_str());
 }
 
@@ -253,7 +139,8 @@ void Node::printDetails() {
 
 /* Convert from mm of travel to encoder counts. Must be established by measuring travel */
 long Node::convertPositionToCount(long posInMM) {
-    if ((posInMM < MIN_POSITION) || (posInMM > MAX_POSITION)) return CONVERSION_ERROR;
+    if ((posInMM < MIN_POSITION) || (posInMM > MAX_POSITION)) 
+        return CONVERSION_ERROR;
     return posInMM * MAX_DISTANCE_CNTS / MAX_POSITION;
 }
 
@@ -265,7 +152,8 @@ long Node::convertPositionToCount(long posInMM) {
 
 /* Convert 1-10 to servo's accel limit in RPM per sec */
 long Node::convertVelToRPM(long level) {
-    if ((level < MIN_ACC_LEVEL) || (level > MAX_ACC_LEVEL)) return CONVERSION_ERROR;
+    if ((level < MIN_ACC_LEVEL) || (level > MAX_ACC_LEVEL)) 
+        return CONVERSION_ERROR;
     return level * MAX_ACC_LIM_RPM / MAX_ACC_LEVEL;
 }
 
@@ -276,7 +164,8 @@ long Node::convertVelToRPM(long level) {
 
 /* Convert 1-10 to servo's velocity limit in RPM per sec */
 long Node::convertAccToRPM(long level) {
-    if ((level < MIN_SPEED_LEVEL) || (level > MAX_SPEED_LEVEL)) return CONVERSION_ERROR;
+    if ((level < MIN_SPEED_LEVEL) || (level > MAX_SPEED_LEVEL)) 
+        return CONVERSION_ERROR;
     return level * MAX_VEL_LIM_RPM / MAX_SPEED_LEVEL;
 }
 
@@ -336,10 +225,10 @@ void Node::move(
         buf = "Estimated move duration (abs): " + to_string(moveTime) + "ms";
         logInfo(buf.c_str());
 
-        double timeout = m_api->getTimeout() + moveTime;
+        auto startTimeoutTime = Times::getCurrentTime();
         while (!m_node.Motion.MoveIsDone()) {
             // wait here for move
-            if (m_api->TimeStampMsec() > timeout) {
+            if (Times::isTimeout(startTimeoutTime, (double)HOMING_TIMEOUT / 1000)) {
                 logError("Timed out waiting for move to complete");
             }
         }
@@ -355,10 +244,10 @@ void Node::move(
         logError(buf.c_str());
         // Some test cases to see if I can do inline remediation based on code:
         if (theErr.ErrorCode == MN_ERR_TIMEOUT) {
-            logError("\tGot timeout."); 
+            logError("\tGot timeout.");
         }
         if (theErr.ErrorCode == MN_ERR_CMD_MV_BLOCKED) {
-            logError("\tMove blocked."); 
+            logError("\tMove blocked.");
         }
     }
 }
@@ -375,5 +264,142 @@ bool Node::moveHigh(
         convertVelToRPM(velLevel),
         convertAccToRPM(accLevel));
     return true;
+}
+
+
+
+//------------------------------------------------------------------------------------
+//--------------------------------------- MotorAPI -----------------------------------
+//------------------------------------------------------------------------------------
+
+/**
+ * Figure out how many SC4-HUBs are daisy chained ([0-2] per port), and how many
+ * servo motors (nodes) are plugged into them. Register them to the SysManager.
+ *
+ * Ports are literal COM serial ports, COM6 by default on ours.
+ *
+ * Will enable and home all nodes.
+ *
+ * (can try to load config file for each motor.)
+ */
+MotorAPI::MotorAPI(void) {
+    // The example just declares it default, says it's singleton
+    // AS: for a singleton, creator and destructor should be private, all access to the object is done through a static function, 
+    //     for example, see SysManager
+    std::vector<std::string> comHubPorts;
+    string buf;
+
+    //TODO very large try-catch, needs to be smaller to be useful
+    try {
+        m_manager = SysManager::Instance();
+        m_manager->FindComHubPorts(comHubPorts);
+        if (comHubPorts.empty()) {
+            logError("No SC Hubs found! Exiting.");  // TODO return instead of exit?
+            //exit(1); // AS: exit is a very bad practice
+            return;
+        }
+        m_portCount = comHubPorts.size();
+        buf = "Found " + to_string(m_portCount) + " SC Hubs";
+        logInfo(buf.c_str());
+
+        for (size_t i = 0; i < m_portCount && i < NET_CONTROLLER_MAX; i++)
+            m_manager->ComHubPort(i, comHubPorts[i].c_str());
+
+        m_manager->PortsOpen(m_portCount);
+
+        // Drop all of our port references into my own array
+        for (size_t i = 0; i < m_portCount; i++)
+            m_ports.push_back(std::reference_wrapper<IPort>(m_manager->Ports(i)));
+
+        // Initialize nodes. Have to iterate ports, then nodes per port
+        //? I only expect one port currently, but this is for safety.
+
+        buf = "Iterating through " + to_string(m_portCount) + " nodes";
+        logInfo(buf.c_str());
+
+        for (size_t i = 0; i < m_portCount; i++) { // For each port:
+            buf = "Iterating nodes on port " + to_string(i) + ".";
+            logInfo(buf.c_str());
+            IPort& thisPort = m_ports[i].get();
+
+            // Turn off all motors when we initialize the interfaces.
+            thisPort.BrakeControl.BrakeSetting(0, BRAKE_ALLOW_MOTION);
+            thisPort.BrakeControl.BrakeSetting(1, BRAKE_ALLOW_MOTION);
+
+            auto nodeCntOnPort = thisPort.NodeCount();
+            m_nodeCount += nodeCntOnPort;
+            // TODO not sure if those to_strings will be very readable
+            buf = ("Port: " + to_string(thisPort.NetNumber()) + 
+                ", State: " + to_string(thisPort.OpenState()) + 
+                ", Node#" + to_string(nodeCntOnPort) + ".");
+            logInfo(buf.c_str());
+            // Iterate nodes on this port
+            for (size_t nodeIndex = 0; nodeIndex < nodeCntOnPort; nodeIndex++) {
+                Node wrappedNode = Node(thisPort.Nodes(nodeIndex));
+
+                m_nodes.push_back(std::reference_wrapper<Node>(wrappedNode));  //TODO: Push NodeWrapper here instead
+            }
+        }
+
+        initializedCorrectly = true;
+    }
+    catch (mnErr& theErr) {
+        // (defined by the mnErr class)
+        buf = ("MotorAPI() constructor | addr: " + to_string( theErr.TheAddr) + 
+            " | err: " + to_string(theErr.ErrorCode) + " | msg: " + theErr.ErrorMsg);
+        logError(buf.c_str());
+    }
+}
+
+MotorAPI::~MotorAPI(void) {
+    logInfo("Teknic Shutting down. Disabling nodes, and closing port");
+    for (size_t i = 0; i < m_nodeCount; i++) {
+        auto thisNode = m_nodes[i].get();
+        thisNode.disable();
+    }
+    m_manager->PortsClose();
+    logInfo("Teknic Shutdown!");
+}
+
+int MotorAPI::home()
+{
+    if (!wasInitializedCorrectly())
+        return -1;
+
+    for (auto node : m_nodes) {
+        node.get().home();
+    }
+    return 0;
+}
+
+int MotorAPI::retreat()
+{
+    if (!wasInitializedCorrectly())
+        return -1;
+
+    // TODO maybe other? Check Attilio's code
+    vector<int> retreat_positions = { 0, 0, 0 };
+    return move(retreat_positions);
+}
+
+int MotorAPI::move(std::vector<int> positions)
+{
+    if (!wasInitializedCorrectly())
+        return -1;
+
+    if (positions.size() != m_nodeCount)
+        return -1;
+
+    for (size_t i = 0; i < m_nodeCount; i++)
+    {
+        // TODO make the speed and acc variable
+        m_nodes[i].get().moveHigh(positions[i], 2, 2);
+    }
+    return 0;
+}
+
+bool MotorAPI::wasInitializedCorrectly()
+{
+    return initializedCorrectly;
 }
 
