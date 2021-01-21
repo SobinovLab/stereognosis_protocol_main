@@ -268,8 +268,6 @@ void CProtocolAppDlg::OnConnect1BtnClicked()
 {
 	UpdateData(FromControlsToVariables);
 
-	// Just opens a channel
-	// TODO (AS) return error if not connected and not change state?
 	m_protocol.connect_camera_client1();
 
 	toggleCameraServer1Ctrls(false);
@@ -285,7 +283,6 @@ void CProtocolAppDlg::OnConnect2BtnClicked()
 {
 	UpdateData(FromControlsToVariables);
 
-	// TODO (AS) return error if not connected and not change state?
 	m_protocol.connect_camera_client2();
 
 	toggleCameraServer2Ctrls(false);
@@ -304,19 +301,24 @@ void CProtocolAppDlg::OnSendConfigBtnClicked()
 	m_protocol.send_config_to_cameras();
 }
 
-// TODO: better single frame capture?
 void CProtocolAppDlg::OnCaptureSingleFrameBtnClicked()
 {
 	UpdateData(FromControlsToVariables);
 
-	m_protocol.capture_single_frame();
+	int res = m_protocol.capture_single_frame();
+	if (res) {
+		string buf = "Error encountered. Code: " + to_string(res) + ". Consult the log and camera computer.";
+		AfxMessageBox(buf.c_str());
+	}
 }
 
 void CProtocolAppDlg::OnConnectTouchSensorBtnClicked()
 {
 	UpdateData(FromControlsToVariables);
 
-	// TODO (AS) return error if not connected and not change state?
+	// TODO return error if not connected and not change state?
+	// consider implications for the sensor server disappearing and reappearing, might be worse
+	// same in camera servers
 	m_protocol.connect_pressure_sensors();
 
 	toggleTouchServerCtrls(false);

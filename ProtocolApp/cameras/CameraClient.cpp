@@ -1,5 +1,12 @@
 #include "CameraClient.h"
 
+using grpc::Channel;
+using grpc::ClientContext;
+using grpc::ClientReader;
+using grpc::ClientReaderWriter;
+using grpc::ClientWriter;
+using grpc::Status;
+
 CameraClient::CameraClient()
 {
 	server_ip = "localhost";
@@ -111,7 +118,6 @@ void CameraClient::prepareRecording()
 	if (ccsc) {
 		if (ccsc->prepareRecording()) {
 			appendClientLog(_T("Success.\n"));
-			setClientStatusGui(_T("Armed"));
 		}
 		else
 			appendClientLog(_T("Failure.\n"));
@@ -121,35 +127,44 @@ void CameraClient::prepareRecording()
 	}
 }
 
-void CameraClient::startRecording(int trialNumber)
+bool CameraClient::startRecording(int trialNumber, int* success)
 {
 	appendClientLog(_T("Starting recording. "));
 	if (ccsc) {
-		if (ccsc->startRecording(trialNumber)) {
+		if (ccsc->startRecording(trialNumber, success)) {
 			appendClientLog(_T("Success.\n"));
-			setClientStatusGui(_T("Recording"));
+			return true;
 		}
-		else
+		else {
+			lastErrorCode = 2;
 			appendClientLog(_T("Failure.\n"));
+		}
 	}
 	else {
+		lastErrorCode = 1;
 		appendClientLog(_T("Not connected.\n "));
 	}
+	return false;
 }
 
-void CameraClient::captureSingleFrame()
+bool CameraClient::captureSingleFrame(int* success)
 {
 	appendClientLog(_T("Requesting capture single frame. "));
 	if (ccsc) {
-		if (ccsc->captureSingleFrame()) {
+		if (ccsc->captureSingleFrame(success)) {
 			appendClientLog(_T("Success.\n"));
+			return true;
 		}
-		else
+		else {
+			lastErrorCode = 2;
 			appendClientLog(_T("Failure.\n"));
+		}
 	}
 	else {
+		lastErrorCode = 1;
 		appendClientLog(_T("Not connected.\n "));
 	}
+	return false;
 }
 
 void CameraClient::breakRecording()
@@ -165,6 +180,26 @@ void CameraClient::breakRecording()
 	else {
 		appendClientLog(_T("Not connected.\n "));
 	}
+}
+
+bool CameraClient::areYouDoneSaving(int* success)
+{
+	appendClientLog(_T("Requesting to stop recording. "));
+	if (ccsc) {
+		if (ccsc->areYouDoneSaving(success)) {
+			appendClientLog(_T("Success.\n"));
+			return true;
+		}
+		else {
+			lastErrorCode = 2;
+			appendClientLog(_T("Failure.\n"));
+		}
+	}
+	else {
+		lastErrorCode = 1;
+		appendClientLog(_T("Not connected.\n "));
+	}
+	return false;
 }
 
 bool CameraClient::isConnected()
@@ -337,7 +372,7 @@ bool CameraCommunicatorSClient::prepareRecording()
 	return true;
 }
 
-bool CameraCommunicatorSClient::startRecording(int trialNumber)
+bool CameraCommunicatorSClient::startRecording(int trialNumber, int* success)
 {
 	SimpleRequest srq;
 	srq.set_code(trialNumber);
@@ -349,13 +384,14 @@ bool CameraCommunicatorSClient::startRecording(int trialNumber)
 		return false;
 	}
 
+	*success = sr.code();
 	lastCode = sr.code();
 	lastDescritpion = new CString(sr.description().c_str());
 
 	return true;
 }
 
-bool CameraCommunicatorSClient::captureSingleFrame()
+bool CameraCommunicatorSClient::captureSingleFrame(int* success)
 {
 	SimpleRequest srq;
 	srq.set_code(0);
@@ -367,6 +403,7 @@ bool CameraCommunicatorSClient::captureSingleFrame()
 		return false;
 	}
 
+	*success = sr.code();
 	lastCode = sr.code();
 	lastDescritpion = new CString(sr.description().c_str());
 
@@ -385,6 +422,25 @@ bool CameraCommunicatorSClient::breakRecording()
 		return false;
 	}
 
+	lastCode = sr.code();
+	lastDescritpion = new CString(sr.description().c_str());
+
+	return true;
+}
+
+bool CameraCommunicatorSClient::areYouDoneSaving(int* success)
+{
+	SimpleRequest srq;
+	srq.set_code(0);
+	SimpleResponse sr;
+	ClientContext context;
+
+	Status status = stub_->AreYouDoneSaving(&context, srq, &sr);
+	if (!status.ok()) {
+		return false;
+	}
+
+	*success = sr.code();
 	lastCode = sr.code();
 	lastDescritpion = new CString(sr.description().c_str());
 

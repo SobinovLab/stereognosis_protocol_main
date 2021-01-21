@@ -78,7 +78,7 @@ class Protocol
 		void disconnect_camera_client2();
 
 		void send_config_to_cameras();
-		void capture_single_frame();
+		int capture_single_frame();
 
 		// pressure sensors
 		void connect_pressure_sensors();
@@ -127,10 +127,12 @@ class Protocol
 		// cameras
 		CameraClient m_cameraClient1;
 		CameraClient m_cameraClient2;
-		void prepare_camera_recording();
-		void start_camera_recording();
-		void start_camera_recording(long trial_number);
+		void prepare_camera_recording();  // TODO future - cameras prepare capture
+		int start_camera_recording();
+		int start_camera_recording(long trial_number);
 		void break_camera_recording();
+		bool did_cameras_finish_saving();
+		int wait_for_cameras_finish_saving();
 
 		// pressure sensors
 		TouchSensorClient m_touchSensorClient;

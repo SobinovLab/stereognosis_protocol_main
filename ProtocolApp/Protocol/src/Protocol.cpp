@@ -111,13 +111,30 @@ void Protocol::send_config_to_cameras()
 	}
 }
 
-void Protocol::capture_single_frame()
+int Protocol::capture_single_frame()
 {
 	send_config_to_cameras();
+
+	int success = 0;
+	int answ = 0;
+	string buf;
+
 	if (m_cameraClient1.isConnected())
-		m_cameraClient1.captureSingleFrame();
+		if (!m_cameraClient1.captureSingleFrame(&success))
+			answ = 1;  // to not mistake with the errors from success
 	if (m_cameraClient2.isConnected())
-		m_cameraClient2.captureSingleFrame();
+		if (!m_cameraClient2.captureSingleFrame(&success))
+			answ = 1;
+	if (answ) {
+		buf = "Server error during capture single frame. Code " + to_string(answ);
+		logError(buf.c_str());
+	}
+	if (success) {
+		buf = "Error during capture single frame. Code " + to_string(success);
+		logError(buf.c_str());
+		answ = success;
+	}
+	return answ;
 }
 
 void Protocol::prepare_camera_recording()
@@ -130,19 +147,37 @@ void Protocol::prepare_camera_recording()
 	}
 }
 
-void Protocol::start_camera_recording()
+int Protocol::start_camera_recording()
 {
-	start_camera_recording(currentTrialNumber.load());
+	return start_camera_recording(currentTrialNumber.load());
 }
 
-void Protocol::start_camera_recording(long trial_number)
+int Protocol::start_camera_recording(long trial_number)
 {
+	// NB config is sent separately in the main loop
+
+	int success = 0;
+	int answ = 0;  // cameras not connected is not an error
+	string buf;
+
 	if (m_cameraClient1.isConnected()) {
-		m_cameraClient1.startRecording(trial_number);
+		if (!m_cameraClient1.startRecording(trial_number, &success))
+			answ = 1;  // to not mistake with the errors from success
 	}
 	if (m_cameraClient2.isConnected()) {
-		m_cameraClient2.startRecording(trial_number);
+		if (!m_cameraClient2.startRecording(trial_number, &success))
+			answ = 1;  // to not mistake with the errors from success
 	}
+	if (answ) {
+		buf = "Server error during start camera recording. Code " + to_string(answ);
+		logError(buf.c_str());
+	}
+	if (success) {
+		buf = "Error during start camera recording. Code " + to_string(success);
+		logError(buf.c_str());
+		answ = success;
+	}
+	return answ;
 }
 
 void Protocol::break_camera_recording()
@@ -151,6 +186,41 @@ void Protocol::break_camera_recording()
 		m_cameraClient1.breakRecording();
 	if (m_cameraClient2.isConnected())
 		m_cameraClient2.breakRecording();
+}
+
+bool Protocol::did_cameras_finish_saving()
+{
+	bool answ = true;
+	int res;
+	if (m_cameraClient1.isConnected()) {
+		m_cameraClient1.areYouDoneSaving(&res);
+		if (res == 0)
+			answ = false;
+	}
+	if (answ && m_cameraClient2.isConnected()) {
+		m_cameraClient2.areYouDoneSaving(&res);
+		if (res == 0)
+			answ = false;
+	}
+	return answ;
+}
+
+int Protocol::wait_for_cameras_finish_saving()
+{
+	auto waitStart = Times::getCurrentTime();
+	double timeout = 5*60; // seconds
+	
+	int flag = 0;
+	while (true) {
+		if (did_cameras_finish_saving()) {
+			break;
+		}
+		if (Times::isTimeout(waitStart, timeout)) {
+			flag = -1;
+			break;
+		}
+	}
+	return flag;
 }
 
 void Protocol::connect_pressure_sensors()
@@ -195,18 +265,19 @@ int Protocol::break_pressure_sensor_recording()
 void Protocol::run()
 {
 	this->stopProtocol.store(false);
-	this->protocolState.store(ProtocolState::initializing);
-	// TODO?: Create directory for log storage
-	CreateDirectory(DATA_FOLDER, NULL);
+	this->protocolState.store(ProtocolState::initializing);  // add a GUI text field
 
-	// TODO: Load all trials from session config file
+	// TODO: Load all trials from session config file (BL code)
 
 	// Initialize all devices
 	initDevices();
-	prepare_camera_recording();  // TODO should init cameras does not do anything atm
+
+	// on first start, looping should be disabled until the start trial button is pressed
+	loopAutomatically = true;
 
 	// class member variable
 	currentTrialNumber = 0;
+	int rets = 0;
 	auto intertrialWaitStartTime = Times::getCurrentTime();  // set at the end of the previous iteration
 	auto trialStartTime = Times::getCurrentTime();  // set when the object is in position
 
@@ -255,7 +326,7 @@ void Protocol::run()
 		send_config_to_cameras();
 
 		// start recordings
-		start_camera_recording();
+		rets = start_camera_recording();  // TODO process it?
 		start_pressure_sensor_recording();
 		start_ephys_recording();
 
@@ -316,9 +387,15 @@ void Protocol::run()
 		// countdown for next trial
 		intertrialWaitStartTime = Times::getCurrentTime();
 
-		// TODO wait for the signal from recording devices that the data has been saved - is Ready
+		// wait for the signal from recording devices that the data has been saved - is Ready
+		rets = wait_for_cameras_finish_saving();
+		if (rets < 0) {
+			AfxMessageBox("Cameras are taking too long to save the data. Stopping the protocol.");
+			break;
+		}
 
-		// TODO display the progress of saving on the GUI
+
+		// TODO display the state of the trial on the GUI
 
 		currentTrialNumber++;
 	}
@@ -520,11 +597,15 @@ void Protocol::m_asyncTrialConditionMonitor()
 	m_stopAsyncTrialConditionMonitor = false;
 
 	std::atomic<int> result;
+	atomic<double> leftForce;
+	atomic<double> rightForce;
 	while (!m_stopAsyncTrialConditionMonitor) {
-		// ask touch sensor if success
 		if (m_touchSensorClient.isConnected()) {
-			m_touchSensorClient.checkSuccess(&result);
+			// ask touch sensor if the plates are being grabbed
+			// TODO question
+			// deprecated: m_touchSensorClient.checkSuccess(&result);
 
+			// TODO implement the logic
 			if (result > 0) {
 				m_earnedReward = true;
 				m_stopAsyncTrialConditionMonitor = true;

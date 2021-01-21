@@ -14,14 +14,17 @@ Plan for the finish of fixing stereognosis:
 	iv. selection of the default camera preset based on computer's IP? DONE
     v. Make prepare camera recording initialize the cameras if not initialized. BAD IDEA - cameras need to be checked to be USB 3 anyway, maybe in the future
 3. PRESSURE SENSOR:
-	i. Answer to the message 'is touching?' even one of the plates
-	ii. Remove calculation of success from the pressure sensor, it should be calculated in the main protocol, where the start of each trial can be easily accessed. Message should be whether crossed the threshold on the left one and the right one.
+    i. Remove calculation of success from the pressure sensor - it will be calculated in the main protocol. The server should answer to a message requesting whether either sensor crossed the threshold, e.g. int crossedLeft and int crossedRight.
+    ii. Add a message to which the sensors reply if the trial has finished and all data has been saved.
+    iii. Ensure that when the "start trial" message arrives, but the previous one has not finished, it replies with failure, and does not start the new trial.
+    iv*. Cleaner architecture. Possible decreasing the number of parallel processes or Tasks that are running. This is not critical, but may be a better way to work with the code. If you feel like some other architecture would fit more, please tell me.
+
 4. MAIN: 
+    v. Motor hub
 	i. Load the session CSV (default to the latest from a folder - make a GUI field) into a series of vectors
 	ii. Go through them stopping the protocol when it runs out of trials
 	iii. Update GUI integration of the storage folder.
-    iv. GUI control of the looping logic.
-    v. Motor hub
+    iv. GUI control of the looping logic gate.
     vi. Testing flags only try to launch something and don't break.
     vii. Finalize GUI enable-disable controls
     viii. Logging of trials

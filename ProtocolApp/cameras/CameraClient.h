@@ -13,17 +13,10 @@
 #include "cameras_messages.pb.h"
 #pragma warning( pop )
 
-using grpc::Channel;
-using grpc::ClientContext;
-using grpc::ClientReader;
-using grpc::ClientReaderWriter;
-using grpc::ClientWriter;
-using grpc::Status;
-
 class CameraCommunicatorSClient 
 {
 public:
-	CameraCommunicatorSClient(std::shared_ptr<Channel> channel) : stub_(CameraCommunicatorS::NewStub(channel)) {
+	CameraCommunicatorSClient(std::shared_ptr<grpc::Channel> channel) : stub_(CameraCommunicatorS::NewStub(channel)) {
 	}
 
 	bool sendFramerate(const double framerate);
@@ -34,9 +27,10 @@ public:
 	bool sendExposure(const CString exposure);
 
 	bool prepareRecording();
-	bool startRecording(int trialNumber);
-	bool captureSingleFrame();
+	bool startRecording(int trialNumber, int* success);
+	bool captureSingleFrame(int* success);
 	bool breakRecording();
+	bool areYouDoneSaving(int *success);
 
 	INT32 lastCode = 0;
 	CString* lastDescritpion;
@@ -49,27 +43,31 @@ class CameraClient
 {
 public:
 	CameraClient();
-	virtual ~CameraClient();
+	~CameraClient();
 
-	virtual void connect_f();
-	virtual void disconnect_f();
+	void connect_f();
+	void disconnect_f();
 
-	virtual void sendFramerate(const double framerate);
-	virtual void sendRecordingPeriod(const double recordingPeriod);
-	virtual void sendReferenceCamera(const int serial);
-	virtual void sendDirectory(const CString directory);
-	virtual void sendGain(const CString gain);
-	virtual void sendExposure(const CString exposure);
+	void sendFramerate(const double framerate);
+	void sendRecordingPeriod(const double recordingPeriod);
+	void sendReferenceCamera(const int serial);
+	void sendDirectory(const CString directory);
+	void sendGain(const CString gain);
+	void sendExposure(const CString exposure);
 
-	virtual void prepareRecording();
-	virtual void startRecording(int trialNumber);
-	virtual void captureSingleFrame();
-	virtual void breakRecording();
+	void prepareRecording();
+	bool startRecording(int trialNumber, int* success);
+	bool captureSingleFrame(int* success);
+	void breakRecording();
+	bool areYouDoneSaving(int* success);  // return true on successful request
 
-	virtual bool isConnected();
+	bool isConnected();
 
 	CString server_ip;
 	long port;
+
+	// 1: not connected; 2: message failure
+	std::atomic<int> lastErrorCode = 0;
 
 	CEdit* clientStatusGuiEdt;
 	CEdit* clientLogGuiEdt;
