@@ -376,7 +376,8 @@ void Protocol::run()
 
 		// retreat motors
 		if (params.tstEnMotors) {
-			motorHub->reset();
+			// retreat back
+			motorHub->retreat();
 		}
 
 		// stop recording
@@ -406,7 +407,8 @@ void Protocol::run()
 
 	// retreat motors
 	if (params.tstEnMotors) {
-		motorHub->reset();
+		// TODO: retreat back
+		motorHub->retreat();
 	}
 
 	// release all devices
@@ -497,10 +499,9 @@ void Protocol::initDevices()
 			// TODO WARNING: motor hub already initialized
 		}
 		else {
-			motorHub = new TeknicMotorDevice();
-			motorHub->init();
+			motorHub = new MotorAPI();
 
-			motorHub->reset();
+			// TODO: home the motors once
 			motorHub->home();
 		}
 	}
@@ -525,22 +526,27 @@ void Protocol::releaseDevices()
 	}
 }
 
+// TODO rename and change. Is it used?
 bool Protocol::isMotorMovementAborted()
 {
-	if (params.tstEnMotors)
-		motorHub->reset();
-	if (!stopProtocol.load() && params.tstEnMotors)
-		motorHub->home();
+	if (params.tstEnMotors) {
+		// TODO: retreat back
+		motorHub->retreat();
+	}
+
 	// on waiting for the monkey puts the arm on the armrest before to start the trial
 	//while (!stopProtocol->load() && ( !IS_REAR_PHOTORESISTOR_COVERED || !IS_FRONT_PHOTORESISTOR_COVERED)) {}
 
 	if (stopProtocol.load())
 		return true;
 	// return true -> go() aborted
-	if (params.tstEnMotors)
-		return motorHub->go(&params.position, &params.speed, &params.acceleration);
-	else
-		return true;
+	if (params.tstEnMotors) {
+		// TODO change
+		vector<int> pos = { params.position , 1000, 1000 };
+		motorHub->move(pos);
+	}
+	
+	return true;
 }
 
 /// <summary>
@@ -550,17 +556,19 @@ bool Protocol::isMotorMovementAborted()
 bool Protocol::startForwardMovement()
 {
 	if (params.tstEnMotors) {
-		motorHub->reset();
-		motorHub->home();
+		// make an API RETREAT movement.
+		motorHub->retreat();
 	}
 
 	if (this->stopProtocol.load() || this->stopTrial.load())
 		return false;
 
-	if (params.tstEnMotors)
-		return !motorHub->go(&params.position, &params.speed, &params.acceleration);
-	else
-		return true;
+	if (params.tstEnMotors) {
+		// TODO
+		vector<int> pos = { params.position , 1000, 1000 };
+		motorHub->move(pos);
+	}
+	return true;
 }
 
 void Protocol::start_ephys_recording()

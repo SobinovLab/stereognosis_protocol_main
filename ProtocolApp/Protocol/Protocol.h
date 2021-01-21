@@ -115,7 +115,7 @@ class Protocol
 		CStaticColor* m_rearPhotoresistorCtrl = nullptr;
 
 		// motor
-		TeknicMotorDevice* motorHub = nullptr;
+		MotorAPI* motorHub = nullptr;
 		bool isMotorMovementAborted();
 		bool startForwardMovement();
 

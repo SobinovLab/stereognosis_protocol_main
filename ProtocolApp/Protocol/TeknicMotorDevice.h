@@ -1,69 +1,56 @@
-/*********************************************************************
-*
-* Description:
-*    This class manages a Teknic motor 
-* 
-*********************************************************************/
-#pragma once
-
-#include <Windows.h>
 #include <vector>
-#include <string>
+#include <sstream>
+#include <pubSysCls.h>
 #include "Logger.h"
-#include <stdlib.h>
-#include "pubSysCls.h"	
-
-#define CONVERSION_ERROR -1
-
-#define MAX_ACC_LEVEL 10
-#define MAX_SPEED_LEVEL 10
-#define MAX_POSITION 240	 
-
-#define MIN_ACC_LEVEL 1
-#define MIN_SPEED_LEVEL 1
-#define MIN_POSITION 0.1	 
-
-#define MAX_ACC_LIM_RPM_PER_SEC	4000
-#define MAX_VEL_LIM_RPM			700
-#define MAX_DISTANCE_CNTS		-105000	// --->toward chair direction 
-#define TIME_TILL_TIMEOUT		10000	//The timeout used for homing(ms)
-
-#define HORIZONTAL_MOTOR   0
-#define ROTATIONAL_MOTOR   1
-#define DISH_MOTOR         2
-
-#define NUMBERS_OF_MOTORS   3
-#define NUMBERS_OF_ATTEMPTS   10
-#define PORT_NUM   0
 
 #pragma comment(lib, "sFoundation20.lib")
 
-class TeknicMotorDevice 
-{
-	public:
-		TeknicMotorDevice();
-		~TeknicMotorDevice();
-		void init();
-		/* 
-		 * Acceleration: proportional level 1-10 (1 - 4000 RPM/S)
-		 * Speed:        proportional level 1-10 (1 - 700 RPM)
-		 * Position:     1 to 240 mm -> proportional cycles ((-1) to (-105000) CNTs)
-		 * Return a boolean value to notify if the action has been aborted (true) or not
-		*/
-		bool go(const long * positionInMillimeters, const long * speedLevel, const long * accelerationLevel);
-		void stop();
-		bool isMoving();
-		void home();
-		void reset();
-	private:
-		/*
-		*   Create the SysManager object. This object will coordinate actions among various ports
-		*   and within nodes. In this example we use this object to setup and open our port.
-		*/
-		sFnd::SysManager * myMgr;	//Create System Manager myMgr
-		sFnd::IPort *myPort;
-		sFnd::INode * theNode;
-		long convertPositionToCNTs(long valueInMillimeter);
-		long convertSpeedLevelToRPM(long level);
-		long convertAccLevelToRPMperSecs(long level);
-};		
+class Node;
+class MotorAPI {
+    friend class sFnd::SysManager;
+
+public:
+    sFnd::SysManager* m_manager;
+    size_t m_portCount = 0;
+    std::vector<std::reference_wrapper<sFnd::IPort>> m_ports;
+
+    size_t m_nodeCount = 0;
+    std::vector<std::reference_wrapper<Node>> m_nodes;
+
+    MotorAPI();
+    ~MotorAPI();
+    double getTimeout();
+    double TimeStampMsec();
+
+    // main control functions
+    int home();
+    int retreat();
+    int move(std::vector<int> positions);
+
+};
+
+// Was considering direct inheritance, but no?
+// class Node: public sFnd::INode
+
+class Node {
+private:
+    sFnd::INode& m_node;
+    MotorAPI* m_api;
+    Node() = delete;
+    std::string m_name;
+
+    long convertPositionToCount(long posInMM);
+    long convertVelToRPM(long level);
+    long convertAccToRPM(long level);
+
+public:
+    Node(sFnd::INode& node, MotorAPI* mapi);
+    ~Node(void);
+    void move(const int& moveCounts, const int& speed, const int& accel);
+    bool moveHigh(const int& position, const int& velLevel = 10, const int& accLevel = 10);
+    void enable();
+    void disable();
+    void handleAlerts();
+    void home();
+    void printDetails();
+};
