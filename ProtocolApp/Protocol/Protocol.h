@@ -116,8 +116,6 @@ class Protocol
 
 		// motor
 		MotorAPI* motorHub = nullptr;
-		bool isMotorMovementAborted();
-		bool startForwardMovement();
 
 		// ephys
 		void start_ephys_recording();
@@ -140,12 +138,15 @@ class Protocol
 		void start_pressure_sensor_recording();
 		void start_pressure_sensor_recording(long trial_number);
 		int break_pressure_sensor_recording();
+		void wait_until_monkey_release();
+		std::atomic<bool> stopWatch;
+		void watch_early_grab();
 
 		//////// running protocol support
 		// calculated reward from monkey performance
 		std::atomic<bool> m_earnedReward;
 		std::atomic<bool> m_stopAsyncTrialConditionMonitor;
-		std::thread* m_asyncTrialSuccessMonitorThread;
+		std::thread* m_asyncTrialSuccessMonitorThread = nullptr;
 		void m_asyncTrialConditionMonitor();  // Monitors asynchronous conditions for trial end - force sensor press
 
 };

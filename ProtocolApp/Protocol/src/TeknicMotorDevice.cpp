@@ -6,7 +6,7 @@
  * @author Danielle MacDonald
  * Contact: dmacd@uchicago.edu
  * 
- * Modified: Anton Sobinov
+ * Rewritten: Anton Sobinov
  */
 
 
@@ -54,12 +54,20 @@ int Convertor::convert(const double val)
 /* 
 * Wrapper for interface
 */
-Node::Node(sFnd::INode& node, string type) :
+Node::Node(sFnd::INode& node, const int index) :
     m_node(node) {
 
     std::string m_name = m_node.Info.UserID.Value();
 
-    if (type == "forward_backward" || type == "default") {  // serial node 0
+    // set units for velocity and acceleration
+    m_node.VelUnit(INode::RPM);
+    m_node.AccUnit(INode::RPM_PER_SEC);
+
+    // define the node conversion modules and default values based on 
+    switch (index)
+    {
+    case 0:
+        //nodeType = "forward_backward";
         pos = new Convertor(0.1, 240, -105000); // input in mm
         vel = new Convertor(1, 10, 700);  // arbitrary scaling factor to RPM
         acc = new Convertor(1, 10, 4000);  // arbitrary scaling factor to RPM/s
@@ -67,8 +75,8 @@ Node::Node(sFnd::INode& node, string type) :
         retreat_position = 1;  // TODO check attilio's default value
         default_vel = 2;
         default_acc = 2;
-    }
-    else if (type == "tilt") {  // serial node 1
+    case 1:
+        // nodeType = "tilt";
         // TODO not implemented
         pos = new Convertor(0.1, 240, -105000); // input in degrees
         vel = new Convertor(1, 10, 700);  // arbitrary scaling factor to RPM
@@ -77,8 +85,8 @@ Node::Node(sFnd::INode& node, string type) :
         retreat_position = 1;
         default_vel = 2;
         default_acc = 2;
-    }
-    else if (type == "aperture") {  // serial node 2
+    case 2:
+        // nodeType = "aperture";
         // TODO not implemented
         pos = new Convertor(0.1, 240, -105000); // input in degrees
         vel = new Convertor(1, 10, 700);  // arbitrary scaling factor to RPM
@@ -87,23 +95,23 @@ Node::Node(sFnd::INode& node, string type) :
         retreat_position = 1;
         default_vel = 2;
         default_acc = 2;
-    }
-    else {
+    default:
         logError("Error during Node initialization: Unknown type.");
         throw invalid_argument("Error during Node initialization: Unknown type.");
     }
 
     // Following 3 are optional if I wish to load a config file:
-    // thisNode.EnableReq(false); // Should disable Node before loading config
+    // disable(); // Should disable Node before loading config
     // m_manager->Delay(200);     //? sleep (ms?) to make sure disable is registered?
     // theNode.Setup.ConfigLoad("Config File path");
+    // thisNode.EnableReq(true); 
+
     printDetails();
-    enable();
-    //! home();
+    enable();  // waits until the node is enabled
 }
 
 Node::~Node(void) {
-    m_node.EnableReq(false);
+    disable();
 }
 
 
@@ -111,9 +119,8 @@ Node::~Node(void) {
 /* The following statements will attempt to enable the node. First, any
 shutdowns or NodeStops are cleared, finally the node is enabled */
 
-void Node::enable() {
-    m_node.Status.AlertsClear();
-    m_node.Motion.NodeStopClear();
+int Node::enable() {
+    clearAlertsNodeStops();
     m_node.EnableReq(true);
 
     string buf;
@@ -125,11 +132,12 @@ void Node::enable() {
         if (Times::isTimeout(startTimeoutTime, action_timeout)) {
             buf = "Error: Timed out waiting for Node " + m_name + " to enable.";
             logError(buf.c_str());
-            return;
+            return -1;
         }
     }
     buf = "Node enabled " + m_name + ".";
     logInfo(buf.c_str());
+    return 0;
 }
 
 
@@ -139,7 +147,7 @@ void Node::disable() {
 
 
 /* Find home position of the node. */
-void Node::home() {
+int Node::home() {
     string buf;
     if (m_node.Motion.Homing.HomingValid()) {
         if (m_node.Motion.Homing.WasHomed()) {
@@ -152,7 +160,7 @@ void Node::home() {
         logInfo("Homing Node now...");
         m_node.Motion.Homing.Initiate();
 
-        //define a timeout in case the node is unable to enable
+        // define a timeout in case the node is unable to home
         auto startTimeoutTime = Times::getCurrentTime();
         while (!m_node.Motion.Homing.WasHomed()) {
             if (Times::isTimeout(startTimeoutTime, action_timeout)) {
@@ -160,6 +168,7 @@ void Node::home() {
                 logError("\t -Ensure Homing settings have been defined through ClearView.");
                 logError("\t -Check for alerts/Shutdowns");
                 logError("\t - Ensure timeout is longer than the longest possible homing move.");
+                return -2;
             }
         }
         logInfo("Node completed homing.");
@@ -167,7 +176,9 @@ void Node::home() {
     else {
         buf = "Homing never setup through ClearView. Node " + m_name + " cannot be homed.";
         logInfo(buf.c_str());
+        return -1;
     }
+    return 0;
 }
 
 
@@ -188,6 +199,12 @@ void Node::printDetails() {
     logInfo(buf.c_str());
     buf = "    userID: " + m_name;
     logInfo(buf.c_str());
+}
+
+void Node::clearAlertsNodeStops()
+{
+    m_node.Status.AlertsClear();
+    m_node.Motion.NodeStopClear();
 }
 
 void Node::handleAlerts() {
@@ -215,58 +232,87 @@ void Node::handleAlerts() {
     }
 }
 
+bool Node::isMoveDone()
+{
+    return m_node.Motion.MoveIsDone();
+}
+
 /* Generic move function built off examples. */
-void Node::move(const int& moveCounts, const int& speed, const int& accel) {
-    // Need to do some pre-checks to make sure node is ready:
+void Node::m_move(const int& moveCounts, const int& speed, const int& accel) {
+    // gives a report
     handleAlerts();
+    // allows movement if a stop was used before
+    clearAlertsNodeStops();
 
     string buf;
     int relativeMoveCounts = (int)round(moveCounts - m_node.Motion.PosnMeasured.Value());
 
     // Then set the velocity/accel:
-    m_node.VelUnit(sFnd::INode::RPM);
     m_node.Motion.VelLimit = speed;
-
-    m_node.AccUnit(sFnd::INode::RPM_PER_SEC);
     m_node.Motion.AccLimit = accel;
 
     // Now move.
     buf = "Moving Node " + m_name + " moveCounts " + to_string(moveCounts);
     logInfo(buf.c_str());
+
+    // start the movement, runs asynchronously
     try {
-        // start the movement, runs asynchronously
         m_node.Motion.MovePosnStart(relativeMoveCounts);
-
-        // some log
-        auto moveTime = m_node.Motion.MovePosnDurationMsec(moveCounts, true);
-        buf = "Estimated move duration (abs): " + to_string(moveTime) + "ms";
-        logInfo(buf.c_str());
-
-        // lock the execution until the move is done or a timeout occured
-        auto startTimeoutTime = Times::getCurrentTime();
-        while (!m_node.Motion.MoveIsDone()) {
-            if (Times::isTimeout(startTimeoutTime, action_timeout)) {
-                logError("Timed out waiting for move to complete");
-                break;
-            }
-        }
-        buf = "Move complete on " + m_name;
-        logInfo(buf.c_str());
-        //! Clear the register only if it's successful?
-        // m_node.Motion.MoveWentDone();        // Clear "move done" register
     }
-    catch (sFnd::mnErr& theErr) {
-        buf = string("moveNode() [") + to_string(theErr.TheAddr) + "] " + theErr.ErrorMsg;
+    catch (mnErr& theErr) {
+        buf = string("move Node error [") + to_string(theErr.TheAddr) + "] " + theErr.ErrorMsg;
         logError(buf.c_str());
+        return;
+    }
 
-        // TODO improvement: change behavior based on the type of error?
-        if (theErr.ErrorCode == MN_ERR_TIMEOUT) {
-            //logError("\tGot timeout.");
-        }
-        if (theErr.ErrorCode == MN_ERR_CMD_MV_BLOCKED) {
-            //logError("\tMove blocked.");
+    // some log
+    auto moveTime = m_node.Motion.MovePosnDurationMsec(moveCounts, true);
+    buf = "Estimated move duration (abs): " + to_string(moveTime) + "ms";
+    logInfo(buf.c_str());
+
+    // lock the execution until the move is done or a timeout occured
+    auto startTimeoutTime = Times::getCurrentTime();
+    while (!isMoveDone()) {
+        if (Times::isTimeout(startTimeoutTime, action_timeout)) {
+            logError("Timed out waiting for move to complete");
+            stop();  // interrupts the movement and makes moveisdone true
         }
     }
+    buf = "Move complete on " + m_name;
+    logInfo(buf.c_str());
+    //! Clear the register only if it's successful?
+    // m_node.Motion.MoveWentDone();        // Clear "move done" register
+}
+
+int Node::m_initiateMove(const int& moveCounts, const int& speed, const int& accel)
+{
+    // gives a report
+    handleAlerts();
+    // allows movement if a stop was used before
+    clearAlertsNodeStops();
+
+    string buf;
+    int relativeMoveCounts = (int)round(moveCounts - m_node.Motion.PosnMeasured.Value());
+
+    // Then set the velocity/accel:
+    m_node.Motion.VelLimit = speed;
+    m_node.Motion.AccLimit = accel;
+
+    // Now move.
+    buf = "Moving Node " + m_name + " moveCounts " + to_string(moveCounts) + " relative " + to_string(relativeMoveCounts);
+    logInfo(buf.c_str());
+
+    // start the movement, runs asynchronously
+    int answ = 0;
+    try {
+        m_node.Motion.MovePosnStart(relativeMoveCounts);
+    }
+    catch (mnErr& theErr) {
+        buf = string("move Node error [") + to_string(theErr.TheAddr) + "] " + theErr.ErrorMsg;
+        logError(buf.c_str());
+        answ = -1;
+    }
+    return answ;
 }
 
 
@@ -276,23 +322,38 @@ void Node::move(const int& moveCounts, const int& speed, const int& accel) {
 /// <param name="position">unit depends on Convert member variables</param>
 /// <param name="velLevel"></param>
 /// <param name="accLevel"></param>
-void Node::moveHigh(const int& position, const int& velLevel, const int& accLevel) {
-    move(pos->convert(position), vel->convert(velLevel), acc->convert(accLevel));
+void Node::move(const int& position, const int& velLevel, const int& accLevel) {
+    m_move(pos->convert(position), vel->convert(velLevel), acc->convert(accLevel));
 }
 
-void Node::moveHigh(const int& position)
+void Node::move(const int& position)
 {
-    moveHigh(position, default_vel, default_acc);
+    move(position, default_vel, default_acc);
 }
 
 void Node::retreat()
 {
-    moveHigh(retreat_position);
+    move(retreat_position);
 }
 
 void Node::stop()
 {
     m_node.Motion.NodeStop(STOP_TYPE_ESTOP_ABRUPT);
+}
+
+int Node::initiateMove(const int& position, const int& velLevel, const int& accLevel)
+{
+    return m_initiateMove(pos->convert(position), vel->convert(velLevel), acc->convert(accLevel));
+}
+
+int Node::initiateMove(const int& position)
+{
+    return initiateMove(position, default_vel, default_acc);
+}
+
+int Node::initiateRetreat()
+{
+    return initiateMove(retreat_position, default_vel, default_acc);
 }
 
 
@@ -318,81 +379,84 @@ MotorAPI::MotorAPI(void) {
     std::vector<std::string> comHubPorts;
     string buf;
 
-    //TODO very large try-catch, needs to be smaller to be useful
+    // get instance and find ports
     try {
         m_manager = SysManager::Instance();
         m_manager->FindComHubPorts(comHubPorts);
-        if (comHubPorts.empty()) {
-            logError("No SC Hubs found! Exiting.");  // TODO return instead of exit?
-            //exit(1); // AS: exit is a very bad practice
-            return;
-        }
-
-        size_t portCount = comHubPorts.size();
-        buf = "Found " + to_string(portCount) + " SC Hubs";
-        logInfo(buf.c_str());
-
-        for (size_t i = 0; i < portCount && i < NET_CONTROLLER_MAX; i++)
-            m_manager->ComHubPort(i, comHubPorts[i].c_str());
-
-        m_manager->PortsOpen(portCount);
-
-        // Drop all of our port references into my own array
-        for (size_t i = 0; i < portCount; i++)
-            m_ports.push_back(std::reference_wrapper<IPort>(m_manager->Ports(i)));
-
-        // Initialize nodes. Have to iterate ports, then nodes per port
-        //? I only expect one port currently, but this is for safety.
-
-        buf = "Iterating through " + to_string(portCount) + " nodes";
-        logInfo(buf.c_str());
-
-        size_t nodeCount = 0;
-        for (size_t i = 0; i < portCount; i++) { // For each port:
-            buf = "Iterating nodes on port " + to_string(i) + ".";
-            logInfo(buf.c_str());
-            IPort& thisPort = m_ports[i].get();
-
-            // Turn off all motors when we initialize the interfaces.
-            thisPort.BrakeControl.BrakeSetting(0, BRAKE_ALLOW_MOTION);
-            thisPort.BrakeControl.BrakeSetting(1, BRAKE_ALLOW_MOTION);
-
-            auto nodeCntOnPort = thisPort.NodeCount();
-            nodeCount += nodeCntOnPort;
-            // TODO check, not sure if those to_strings will be very readable
-            buf = ("Port: " + to_string(thisPort.NetNumber()) + 
-                ", State: " + to_string(thisPort.OpenState()) + 
-                ", Node#" + to_string(nodeCntOnPort) + ".");
-            logInfo(buf.c_str());
-            // Iterate nodes on this port
-            for (size_t nodeIndex = 0; nodeIndex < nodeCntOnPort; nodeIndex++) {
-                string nodeType;
-                switch (nodeIndex)
-                {
-                case 0:
-                    nodeType = "forward_backward";
-                case 1:
-                    nodeType = "tilt";
-                case 2:
-                    nodeType = "aperture";
-                default:
-                    nodeType = "default";
-                }
-
-                Node wrappedNode = Node(thisPort.Nodes(nodeIndex), nodeType);
-
-                m_nodes.push_back(std::reference_wrapper<Node>(wrappedNode));  //TODO: Push NodeWrapper here instead
-            }
-        }
-
-        initializedCorrectly = true;
     }
     catch (mnErr& theErr) {
         // (defined by the mnErr class)
-        buf = ("MotorAPI() constructor | addr: " + to_string( theErr.TheAddr) + 
+        buf = ("MotorAPI() constructor Sys manager and FindComPorts | addr: " + to_string(theErr.TheAddr) +
             " | err: " + to_string(theErr.ErrorCode) + " | msg: " + theErr.ErrorMsg);
         logError(buf.c_str());
     }
+
+    // check if com ports are present
+    if (comHubPorts.empty()) {
+        logError("No SC Hubs found! Exiting.");  // TODO return instead of exit?
+        //exit(1); // AS: exit is a very bad practice
+        return;
+    }
+
+    // Log the number of ports found
+    size_t portCount = comHubPorts.size();
+    buf = "Found " + to_string(portCount) + " SC Hubs";
+    logInfo(buf.c_str());
+
+    // set a local serial number id to the named com port
+    for (size_t i = 0; i < portCount && i < NET_CONTROLLER_MAX; i++)
+        m_manager->ComHubPort(i, comHubPorts[i].c_str());
+
+    try {
+        m_manager->PortsOpen(portCount);
+    }
+    catch (mnErr& theErr) {
+        // (defined by the mnErr class)
+        buf = ("MotorAPI() constructor PortsOpen | addr: " + to_string(theErr.TheAddr) +
+            " | err: " + to_string(theErr.ErrorCode) + " | msg: " + theErr.ErrorMsg);
+        logError(buf.c_str());
+    }
+
+    // Drop all of our port references into private array
+    for (size_t i = 0; i < portCount; i++)
+        m_ports.push_back(std::reference_wrapper<IPort>(m_manager->Ports(i)));
+
+    // Initialize nodes. Have to iterate ports, then nodes per port
+    // I only expect one port currently, but this is for safety.
+
+    buf = "Iterating through " + to_string(portCount) + " nodes";
+    logInfo(buf.c_str());
+
+    for (size_t i = 0; i < portCount; i++) { // For each port:
+        buf = "Iterating nodes on port " + to_string(i) + ".";
+        logInfo(buf.c_str());
+        IPort& thisPort = m_ports[i].get();
+
+        // Turn off all motors when we initialize the interfaces.
+        // AS: not sure what ^ means in context
+
+        // Makes both breaks on the port allow motion
+        // TODO use breaks?
+        thisPort.BrakeControl.BrakeSetting(0, BRAKE_ALLOW_MOTION);
+        thisPort.BrakeControl.BrakeSetting(1, BRAKE_ALLOW_MOTION);
+
+        // log
+        // TODO check, not sure if those to_strings will be very readable
+        buf = ("Port: " + to_string(thisPort.NetNumber()) + 
+            ", State: " + to_string(thisPort.OpenState()) + 
+            ", Node#" + to_string(thisPort.NodeCount()) + ".");
+        logInfo(buf.c_str());
+
+        // Iterate nodes on this port
+        for (int nodeIndex = 0; nodeIndex < thisPort.NodeCount(); nodeIndex++) {
+
+            Node wrappedNode = Node(thisPort.Nodes(nodeIndex), nodeIndex);
+
+            m_nodes.push_back(std::reference_wrapper<Node>(wrappedNode));  //TODO: Push NodeWrapper here instead
+        }
+    }
+
+    initializedCorrectly = true;
 }
 
 MotorAPI::~MotorAPI(void) {
@@ -406,41 +470,120 @@ MotorAPI::~MotorAPI(void) {
 
 int MotorAPI::home()
 {
+    // Done in sequence, why not
     if (!wasInitializedCorrectly())
         return -1;
 
+    int answ = 0;
     for (auto node : m_nodes) {
-        node.get().home();
+        answ += node.get().home();
     }
 
-    return 0;
+    return answ;
 }
 
 int MotorAPI::retreat()
 {
+    // all movements are initialized in parallel, and finish watched together here.
     if (!wasInitializedCorrectly())
         return -1;
 
-    for (auto e : m_nodes) {
-        e.get().retreat();
+    int ret;
+    for (size_t i = 0; i < m_nodes.size(); i++)
+    {
+        // the speed and acc variable are default
+        ret = m_nodes[i].get().initiateRetreat();
+        if (ret) {
+            return -3;
+        }
     }
-    return 0;
+
+    auto startTime = Times::getCurrentTime();
+    int answ = 0;
+    bool allMovementDone;
+    while (true) {
+        // check if movements are done
+        allMovementDone = true;
+        mtx.lock();
+        for (auto e : m_nodes) {
+            allMovementDone *= e.get().isMoveDone();
+        }
+        mtx.unlock();
+        if (allMovementDone)
+            break;
+
+        // check timeout
+        if (Times::isTimeout(startTime, action_timeout)) {
+            answ = -4;
+            break;
+        }
+    }
+
+    if (!answ) {
+        logInfo("Retreat complete.");
+    }
+
+    return answ;
 }
 
-int MotorAPI::move(std::vector<int> positions)
+int MotorAPI::move(std::vector<int> positions, std::atomic<bool>* stopTrial, std::atomic<bool>* stopProtocol)
 {
+    // all movements are initialized in parallel, and finish watched together here.
     if (!wasInitializedCorrectly())
         return -1;
 
     if (positions.size() > m_nodes.size())
-        return -1;
+        return -2;
 
+    int ret;
     for (size_t i = 0; i < positions.size(); i++)
     {
         // the speed and acc variable are default
-        m_nodes[i].get().moveHigh(positions[i], 2, 2);
+        ret = m_nodes[i].get().initiateMove(positions[i]);
+        if (ret) {
+            return -3;
+        }
     }
-    return 0;
+
+    auto startTime = Times::getCurrentTime();
+    int answ = 0;
+    bool allMovementDone;
+    while (true) {
+        // check if trial or the whole protocol has been signalled to stop
+        if (stopTrial->load() || stopProtocol->load()) {
+            stop();  // this will mark all movements as done
+        }
+
+        // check if movements are done
+        allMovementDone = true;
+        mtx.lock();
+        for (auto e : m_nodes) {
+            allMovementDone *= e.get().isMoveDone();
+        }
+        mtx.unlock();
+        if (allMovementDone)
+            break;
+
+        // check timeout
+        if (Times::isTimeout(startTime, action_timeout)) {
+            answ = -4;
+            break;
+        }
+    }
+
+    if (!answ) {
+        logInfo("Move complete.");
+    }
+
+    return answ;
+}
+
+void MotorAPI::stop()
+{
+    mtx.lock();
+    for (auto e : m_nodes)
+        e.get().stop();
+    mtx.unlock();
 }
 
 bool MotorAPI::wasInitializedCorrectly()
@@ -450,6 +593,7 @@ bool MotorAPI::wasInitializedCorrectly()
 
 void MotorAPI::setActionTimeout(double timeSecs)
 {
+    action_timeout = timeSecs;
     for (auto e : m_nodes)
         e.get().action_timeout = timeSecs;
 }

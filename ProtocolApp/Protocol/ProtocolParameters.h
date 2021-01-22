@@ -24,6 +24,11 @@ class ProtocolParameters
 		long speed;				// proportional level 1-10 (1 - 700 RPM)
 		long position;			// in mm -> proportional CNT -> cycles ((-1) to (-105000) CNTs)
 
+		double minimalTouchForce;
+		double thresholdTotalForce;
+		double thresholdForceEachProportion;
+		double thresholdPeriod;  // seconds
+
 		// camera servers
 		CString cs_ip1;
 		long cs_port1;

@@ -38,34 +38,45 @@ private:
     int default_acc;
 
     // internal control functions
-    void move(const int& moveCounts, const int& speed, const int& accel);
+    void m_move(const int& moveCounts, const int& speed, const int& accel);
+    int m_initiateMove(const int& moveCounts, const int& speed, const int& accel);
 
 public:
-    Node(sFnd::INode& node, std::string type);
+    Node(sFnd::INode& node, const int index);
     ~Node(void);
 
+    //-------- main functions used outside
     // homes-calibrates the motors
-    void home();
-    // general move function
-    void moveHigh(const int& position, const int& velLevel, const int& accLevel);
+    int home();
+    // general move function --  efectively deprecated and not used, but OK example. see initateMove functions
+    void move(const int& position, const int& velLevel, const int& accLevel);
     // overload with default velocity and acceleration
-    void moveHigh(const int& position);
+    void move(const int& position);
     // retreat to the starting position - call moveHigh
     void retreat();
     // stops the current movement
     void stop();
 
+    // initiate async movement
+    int initiateMove(const int& position, const int& velLevel, const int& accLevel);
+    int initiateMove(const int& position);
+    int initiateRetreat();
+
+    //-------- status
     // run on creation and destruction
-    void enable();
+    int enable();
     void disable();
 
+    void clearAlertsNodeStops();
     void handleAlerts();
 
-    // accessory functions
+    bool isMoveDone();
+
+    //-------- accessory functions
     void printDetails();
 
-    // homing and moving
-    double action_timeout = 10;  // seconds
+    // seconds for homing and moving
+    double action_timeout = 10;
 
 };
 
@@ -79,6 +90,9 @@ private:
     std::vector<std::reference_wrapper<sFnd::IPort>> m_ports;
     std::vector<std::reference_wrapper<Node>> m_nodes;
 
+    double action_timeout = 10;
+
+    std::mutex mtx;
 public:
 
     MotorAPI();
@@ -87,7 +101,8 @@ public:
     // main control functions
     int home();
     int retreat();
-    int move(std::vector<int> positions);
+    int move(std::vector<int> positions, std::atomic<bool> *stopTrial, std::atomic<bool>* stopProtocol);
+    void stop();  // thread-safe with move and retreat
 
     bool wasInitializedCorrectly();
 

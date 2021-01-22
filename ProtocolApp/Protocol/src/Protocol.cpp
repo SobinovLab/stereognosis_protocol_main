@@ -262,10 +262,41 @@ int Protocol::break_pressure_sensor_recording()
 	return -1;
 }
 
+void Protocol::wait_until_monkey_release()
+{
+	atomic<double> leftForce = 0;
+	atomic<double> rightForce = 0;
+	while (true) {
+		// TODO ask pressure sensor for pressure
+
+		if (leftForce + rightForce < params.minimalTouchForce)
+			break;
+
+		// can start manually
+		if (startTrial)
+			break;
+	}
+}
+
+void Protocol::watch_early_grab()
+{
+	atomic<double> leftForce = 0;
+	atomic<double> rightForce = 0;
+	while (!stopWatch) {
+		// TODO ask pressure sensor for pressure
+
+		if (leftForce + rightForce > params.minimalTouchForce) {
+			stopTrial = true;
+			break;
+		}
+	}
+}
+
 void Protocol::run()
 {
 	this->stopProtocol.store(false);
 	this->protocolState.store(ProtocolState::initializing);  // add a GUI text field
+	// TODO display the state of the trial on the GUI
 
 	// TODO: Load all trials from session config file (BL code)
 
@@ -273,7 +304,7 @@ void Protocol::run()
 	initDevices();
 
 	// on first start, looping should be disabled until the start trial button is pressed
-	loopAutomatically = true;
+	loopAutomatically = false;
 
 	// class member variable
 	currentTrialNumber = 0;
@@ -297,30 +328,35 @@ void Protocol::run()
 
 		trialFieldsEnableStart(true);
 
+		// wait for the monkey to release the grasp on the object - can be forced by startTrial
+		wait_until_monkey_release();
+
 		// waiting for the start of the next trial
 		while (!this->startTrial.load() && 
 			!this->stopProtocol.load() && 
-			(loopAutomatically.load() && !Times::isTimeout(intertrialWaitStartTime, params.intertrialWaitTime))) {
+			!(loopAutomatically.load() && Times::isTimeout(intertrialWaitStartTime, params.intertrialWaitTime))) {
 			// waiting for:
 			//	Start trial button to be pressed
 			//  stop of protocol 
-			//  if looping is selected, timeout of intertrial time. TODO: enable looping behavior toggle from GUI
-			//  TODO: wait for the monkey to release the grasp on the object
+			//  if looping is selected, timeout of intertrial time
 		}
-
-		// Default behavior is looping
-		loopAutomatically = true;
-
-		// Can't click on StartTrial anymore
-		trialFieldsEnableStart(false);
 
 		if (stopProtocol)
 			break;
+
+		// Default behavior is looping - after the first trial
+		loopAutomatically = true;
+
+		// GUI Can't click on StartTrial anymore
+		trialFieldsEnableStart(false);
 
 		// ---------------- Running trial
 		// TRIAL in progress set state and state control variables
 		this->protocolState.store(ProtocolState::trialInProgress);
 		this->stopTrial.store(false);
+		// has not earned anything yet
+		m_earnedReward = false;
+		deservesReward = false;
 
 		// prepare recordings
 		send_config_to_cameras();
@@ -330,41 +366,59 @@ void Protocol::run()
 		start_pressure_sensor_recording();
 		start_ephys_recording();
 
-		// Can click on stop trial
+		// GUI Can click on stop trial
 		trialFieldsEnableRetreat(true);
 
-		// TODO: while the motors go forward, check if the monkey grabbed, then immediately BOOP and return
-		// TODO: change start motors functions
-		if (!startForwardMovement())
+		// start a thread that asks if monkey grabbed and stopTrial=1 if it did
+		stopWatch = false;
+		thread watchThread(&Protocol::watch_early_grab, this);
+
+		// motor movement - this thread will be locked, can be interrupted 
+		vector<int> positions = { (int)params.position, 0, 0 };
+		rets = motorHub->move(positions, &stopTrial, &stopProtocol);
+		if (rets)
 		{
 			// TODO: check error with motors
-			break;
 		}
 
-		// spawn the process that monitors the async stopping conditions
-		m_asyncTrialSuccessMonitorThread = new thread(&Protocol::m_asyncTrialConditionMonitor, this);
+		// stop the watch thread
+		stopWatch = true;
+		watchThread.join();
 
-		trialStartTime = Times::getCurrentTime();
-		Sounds::playStartTaskTone();
+		// if the motors made it successfully to the final position
+		if (!stopTrial && !stopProtocol && !rets) {
+			// spawn the process that monitors the async stopping conditions
+			m_asyncTrialSuccessMonitorThread = new thread(&Protocol::m_asyncTrialConditionMonitor, this);
 
-		// wait for stop trial signal from interface, success from the monitor thread, or timeout
-		while (!this->stopProtocol.load() && 
-			!this->stopTrial.load() && 
-			!this->m_earnedReward.load() &&
-			!Times::isTimeout(trialStartTime, params.maxWaitTime)) {}
+			trialStartTime = Times::getCurrentTime();
+			Sounds::playStartTaskTone();
 
-		// if stop trial button was pressed, turn off the loop - it is reenable automatically in the beginning of trial
-		if (this->stopTrial.load())
-			loopAutomatically = false;
+			// wait for stop trial signal from interface, success from the monitor thread, or timeout
+			while (!this->stopProtocol.load() &&
+				!this->stopTrial.load() &&
+				!this->m_earnedReward.load() &&
+				!Times::isTimeout(trialStartTime, params.maxWaitTime)) {
+			}
 
-		// Cannot interrupt the trial
+			// if stop trial button was pressed, turn off the loop - it is reenable automatically in the beginning of trial
+			if (this->stopTrial.load())
+				loopAutomatically = false;
+
+			// stop monitor thread if it was not stopped by its own success
+			m_stopAsyncTrialConditionMonitor = true;
+			// not necessary, but cleaner:
+			if (m_asyncTrialSuccessMonitorThread) {
+				m_asyncTrialSuccessMonitorThread->join();
+				delete m_asyncTrialSuccessMonitorThread;
+				m_asyncTrialSuccessMonitorThread = nullptr;
+			}
+		}
+
+		// GUI Cannot interrupt the rest of trial
 		trialFieldsEnableRetreat(false);
 
 		// ---------------- Finishing trial
 		this->protocolState.store(ProtocolState::trialFinalizing);
-
-		// stop monitor thread if it was not stopped by its own success
-		m_stopAsyncTrialConditionMonitor = true;
 
 		// Give the reward or not
 		if (m_earnedReward || deservesReward) {
@@ -395,9 +449,6 @@ void Protocol::run()
 			break;
 		}
 
-
-		// TODO display the state of the trial on the GUI
-
 		currentTrialNumber++;
 	}
 	this->protocolState.store(ProtocolState::shuttingDown);
@@ -407,7 +458,6 @@ void Protocol::run()
 
 	// retreat motors
 	if (params.tstEnMotors) {
-		// TODO: retreat back
 		motorHub->retreat();
 	}
 
@@ -461,7 +511,10 @@ void Protocol::trialFieldsToggle(bool enable)
 
 void Protocol::trialFieldsEnableStart(bool enable)
 {
+	// this randomly locks the thread on protocol end
+	logInfo("HERETFFFF1");
 	startTrialBtn->EnableWindow(enable);
+	logInfo("HERETFFFF2");
 }
 
 void Protocol::trialFieldsEnableRetreat(bool enable)
@@ -496,12 +549,12 @@ void Protocol::initDevices()
 	// motor
 	if (params.tstEnMotors) {
 		if (motorHub) {
-			// TODO WARNING: motor hub already initialized
+			logWarning("Motor Hub already initialized, cannot init again.");
 		}
 		else {
 			motorHub = new MotorAPI();
 
-			// TODO: home the motors once
+			// home the motors once
 			motorHub->home();
 		}
 	}
@@ -524,51 +577,6 @@ void Protocol::releaseDevices()
 			motorHub = nullptr;
 		}
 	}
-}
-
-// TODO rename and change. Is it used?
-bool Protocol::isMotorMovementAborted()
-{
-	if (params.tstEnMotors) {
-		// TODO: retreat back
-		motorHub->retreat();
-	}
-
-	// on waiting for the monkey puts the arm on the armrest before to start the trial
-	//while (!stopProtocol->load() && ( !IS_REAR_PHOTORESISTOR_COVERED || !IS_FRONT_PHOTORESISTOR_COVERED)) {}
-
-	if (stopProtocol.load())
-		return true;
-	// return true -> go() aborted
-	if (params.tstEnMotors) {
-		// TODO change
-		vector<int> pos = { params.position , 1000, 1000 };
-		motorHub->move(pos);
-	}
-	
-	return true;
-}
-
-/// <summary>
-///
-/// </summary>
-/// <returns>True iff the motor movement started as planned or no motor initialized via testing</returns>
-bool Protocol::startForwardMovement()
-{
-	if (params.tstEnMotors) {
-		// make an API RETREAT movement.
-		motorHub->retreat();
-	}
-
-	if (this->stopProtocol.load() || this->stopTrial.load())
-		return false;
-
-	if (params.tstEnMotors) {
-		// TODO
-		vector<int> pos = { params.position , 1000, 1000 };
-		motorHub->move(pos);
-	}
-	return true;
 }
 
 void Protocol::start_ephys_recording()
@@ -604,21 +612,42 @@ void Protocol::m_asyncTrialConditionMonitor()
 	m_earnedReward = false;
 	m_stopAsyncTrialConditionMonitor = false;
 
-	std::atomic<int> result;
-	atomic<double> leftForce;
-	atomic<double> rightForce;
+	atomic<int> result;
+	atomic<double> leftForce = 0;
+	atomic<double> rightForce = 0;
+	std::chrono::steady_clock::time_point* startTime = nullptr;
+
 	while (!m_stopAsyncTrialConditionMonitor) {
 		if (m_touchSensorClient.isConnected()) {
-			// ask touch sensor if the plates are being grabbed
-			// TODO question
+			// TODO ask touch sensor for the force on each plate
 			// deprecated: m_touchSensorClient.checkSuccess(&result);
 
-			// TODO implement the logic
+			// check if touching now and keep time of touch start
 			// minimum force level of 0.2 of desired and total excedes the desired
+			if (leftForce + rightForce > params.thresholdTotalForce &&
+				leftForce > params.thresholdTotalForce * params.thresholdForceEachProportion &&
+				rightForce > params.thresholdTotalForce * params.thresholdForceEachProportion) {
+				if (!startTime) // just started touching
+					startTime = new auto(Times::getCurrentTime());
+			}
+			else { // not touching
+				if (startTime)
+					startTime = nullptr;
+			}
+
+			// check if touching for long enough
+			if (startTime)
+				if (Times::getElapsedMicroSecsSince(*startTime) > Times::secToMicrosecs(params.thresholdPeriod))
+					result = 1;
+
+			// exit if result is successfull
 			if (result > 0) {
 				m_earnedReward = true;
 				m_stopAsyncTrialConditionMonitor = true;
 			}
+		}
+		else {  // no reason to run if no sensor connected
+			m_stopAsyncTrialConditionMonitor = true;
 		}
 
 	}

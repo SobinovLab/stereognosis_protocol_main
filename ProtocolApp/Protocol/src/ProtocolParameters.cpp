@@ -16,6 +16,11 @@ ProtocolParameters::ProtocolParameters(const ProtocolParameters & protocolParams
 	this->maxWaitTime = protocolParams.maxWaitTime;
 	this->intertrialWaitTime = protocolParams.intertrialWaitTime;
 
+	this->minimalTouchForce = protocolParams.minimalTouchForce;
+	this->thresholdTotalForce = protocolParams.thresholdTotalForce;
+	this->thresholdForceEachProportion = protocolParams.thresholdForceEachProportion;
+	this->thresholdPeriod = protocolParams.thresholdPeriod;
+
 	this->cs_ip1 = protocolParams.cs_ip1;
 	this->cs_port1 = protocolParams.cs_port1;
 	this->cs_ip2 = protocolParams.cs_ip2;
@@ -42,7 +47,12 @@ ProtocolParameters::~ProtocolParameters()
 void ProtocolParameters::init()
 {
 	maxWaitTime = 20;  // sec
-	intertrialWaitTime = 1; // sec
+	intertrialWaitTime = 2; // sec
+
+	minimalTouchForce = 1;  // TODO check value
+	thresholdTotalForce = 50;
+	thresholdForceEachProportion = 0.2;
+	thresholdPeriod = 2;  // seconds
 
 	rewardDuration = 1000;
 	acceleration = 2; // proportional level 1-10 (1 - 4000 RPM/S)
