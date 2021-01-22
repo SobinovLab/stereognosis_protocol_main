@@ -1,5 +1,5 @@
 #include <vector>
-#include <sstream>
+#include <string>
 #include <pubSysCls.h>
 #include "Times.h"
 #include "Logger.h"
@@ -18,6 +18,7 @@ public:
     ~Convertor();
 
     int convert(const int val);
+    int convert(const double val);
 };
 
 
@@ -51,6 +52,8 @@ public:
     void moveHigh(const int& position);
     // retreat to the starting position - call moveHigh
     void retreat();
+    // stops the current movement
+    void stop();
 
     // run on creation and destruction
     void enable();
@@ -61,6 +64,8 @@ public:
     // accessory functions
     void printDetails();
 
+    // homing and moving
+    double action_timeout = 10;  // seconds
 
 };
 
@@ -71,10 +76,7 @@ private:
 
     sFnd::SysManager* m_manager = nullptr;
     
-    size_t m_portCount = 0;
     std::vector<std::reference_wrapper<sFnd::IPort>> m_ports;
-
-    size_t m_nodeCount = 0;
     std::vector<std::reference_wrapper<Node>> m_nodes;
 
 public:
@@ -88,6 +90,8 @@ public:
     int move(std::vector<int> positions);
 
     bool wasInitializedCorrectly();
+
+    void setActionTimeout(double timeSecs);
 
 };
 

@@ -614,6 +614,7 @@ void Protocol::m_asyncTrialConditionMonitor()
 			// deprecated: m_touchSensorClient.checkSuccess(&result);
 
 			// TODO implement the logic
+			// minimum force level of 0.2 of desired and total excedes the desired
 			if (result > 0) {
 				m_earnedReward = true;
 				m_stopAsyncTrialConditionMonitor = true;

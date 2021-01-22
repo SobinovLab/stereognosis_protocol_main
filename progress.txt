@@ -29,4 +29,4 @@ Plan for the finish of fixing stereognosis:
     vii. Finalize GUI enable-disable controls
     viii. Logging of trials
 5. SERVERS:
-    i. Check if can catch connecting to nonexistant server
+    i. Check if can catch connecting to nonexistant server - BAD IDEA can cause problems during servers disapperaring and reappearing.

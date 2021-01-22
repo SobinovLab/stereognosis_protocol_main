@@ -12,11 +12,40 @@
 
 #include "TeknicMotorDevice.h"
 
-//The timeout used for homing and moving (ms)
-#define HOMING_TIMEOUT		    10000
-
 using namespace sFnd;
 using namespace std;
+
+
+//------------------------------------------------------------------------------------
+//--------------------------------------- CONVERTOR ----------------------------------
+//------------------------------------------------------------------------------------
+
+Convertor::Convertor(const double _min_level, const double _max_level, const double _max_motor_val)
+{
+    min_level = _min_level;
+    max_level = _max_level;
+    max_motor_val = _max_motor_val;
+}
+
+Convertor::~Convertor()
+{
+}
+
+int Convertor::convert(const int val)
+{
+    return convert((double) val);
+}
+
+int Convertor::convert(const double val)
+{
+    if (val < min_level)
+        return (int)round(min_level * max_motor_val / max_level);
+
+    if (val > max_level)
+        return (int)round(max_motor_val);
+
+    return (int)round(val * max_motor_val / max_level);
+}
 
 //------------------------------------------------------------------------------------
 //--------------------------------------- NODE ---------------------------------------
@@ -93,7 +122,7 @@ void Node::enable() {
     auto startTimeoutTime = Times::getCurrentTime();
     //This will loop checking on the Real time values of the node's Ready status
     while (!m_node.Motion.IsReady()) {
-        if (Times::isTimeout(startTimeoutTime, (double)HOMING_TIMEOUT / 1000)) {
+        if (Times::isTimeout(startTimeoutTime, action_timeout)) {
             buf = "Error: Timed out waiting for Node " + m_name + " to enable.";
             logError(buf.c_str());
             return;
@@ -126,7 +155,7 @@ void Node::home() {
         //define a timeout in case the node is unable to enable
         auto startTimeoutTime = Times::getCurrentTime();
         while (!m_node.Motion.Homing.WasHomed()) {
-            if (Times::isTimeout(startTimeoutTime, (double)HOMING_TIMEOUT / 1000)) {
+            if (Times::isTimeout(startTimeoutTime, action_timeout)) {
                 logError("Node did not complete homing:  ");
                 logError("\t -Ensure Homing settings have been defined through ClearView.");
                 logError("\t -Check for alerts/Shutdowns");
@@ -187,15 +216,12 @@ void Node::handleAlerts() {
 }
 
 /* Generic move function built off examples. */
-void Node::move(
-    const int& moveCounts,
-    const int& speed,
-    const int& accel
-) {
+void Node::move(const int& moveCounts, const int& speed, const int& accel) {
     // Need to do some pre-checks to make sure node is ready:
     handleAlerts();
 
     string buf;
+    int relativeMoveCounts = (int)round(moveCounts - m_node.Motion.PosnMeasured.Value());
 
     // Then set the velocity/accel:
     m_node.VelUnit(sFnd::INode::RPM);
@@ -208,17 +234,20 @@ void Node::move(
     buf = "Moving Node " + m_name + " moveCounts " + to_string(moveCounts);
     logInfo(buf.c_str());
     try {
-        m_node.Motion.MovePosnStart(moveCounts);
+        // start the movement, runs asynchronously
+        m_node.Motion.MovePosnStart(relativeMoveCounts);
 
+        // some log
         auto moveTime = m_node.Motion.MovePosnDurationMsec(moveCounts, true);
         buf = "Estimated move duration (abs): " + to_string(moveTime) + "ms";
         logInfo(buf.c_str());
 
+        // lock the execution until the move is done or a timeout occured
         auto startTimeoutTime = Times::getCurrentTime();
         while (!m_node.Motion.MoveIsDone()) {
-            // wait here for move
-            if (Times::isTimeout(startTimeoutTime, (double)HOMING_TIMEOUT / 1000)) {
+            if (Times::isTimeout(startTimeoutTime, action_timeout)) {
                 logError("Timed out waiting for move to complete");
+                break;
             }
         }
         buf = "Move complete on " + m_name;
@@ -227,27 +256,27 @@ void Node::move(
         // m_node.Motion.MoveWentDone();        // Clear "move done" register
     }
     catch (sFnd::mnErr& theErr) {
-        // (defined by the mnErr class)
-        // sFnd::_mnErr::ErrorMsg
-        buf = string("moveNode() [") + to_string(theErr.TheAddr) + "] " + to_string(theErr.ErrorCode) + "| " + theErr.ErrorMsg;
+        buf = string("moveNode() [") + to_string(theErr.TheAddr) + "] " + theErr.ErrorMsg;
         logError(buf.c_str());
-        // Some test cases to see if I can do inline remediation based on code:
+
+        // TODO improvement: change behavior based on the type of error?
         if (theErr.ErrorCode == MN_ERR_TIMEOUT) {
-            logError("\tGot timeout.");
+            //logError("\tGot timeout.");
         }
         if (theErr.ErrorCode == MN_ERR_CMD_MV_BLOCKED) {
-            logError("\tMove blocked.");
+            //logError("\tMove blocked.");
         }
     }
 }
 
 
-/* High level move function built to convert from human units to machine. */
-void Node::moveHigh(
-    const int& position,  // unit depends on Convert members
-    const int& velLevel,
-    const int& accLevel
-) {
+/// <summary>
+/// High level move function built to convert from human units to machine.
+/// </summary>
+/// <param name="position">unit depends on Convert member variables</param>
+/// <param name="velLevel"></param>
+/// <param name="accLevel"></param>
+void Node::moveHigh(const int& position, const int& velLevel, const int& accLevel) {
     move(pos->convert(position), vel->convert(velLevel), acc->convert(accLevel));
 }
 
@@ -259,6 +288,11 @@ void Node::moveHigh(const int& position)
 void Node::retreat()
 {
     moveHigh(retreat_position);
+}
+
+void Node::stop()
+{
+    m_node.Motion.NodeStop(STOP_TYPE_ESTOP_ABRUPT);
 }
 
 
@@ -293,26 +327,28 @@ MotorAPI::MotorAPI(void) {
             //exit(1); // AS: exit is a very bad practice
             return;
         }
-        m_portCount = comHubPorts.size();
-        buf = "Found " + to_string(m_portCount) + " SC Hubs";
+
+        size_t portCount = comHubPorts.size();
+        buf = "Found " + to_string(portCount) + " SC Hubs";
         logInfo(buf.c_str());
 
-        for (size_t i = 0; i < m_portCount && i < NET_CONTROLLER_MAX; i++)
+        for (size_t i = 0; i < portCount && i < NET_CONTROLLER_MAX; i++)
             m_manager->ComHubPort(i, comHubPorts[i].c_str());
 
-        m_manager->PortsOpen(m_portCount);
+        m_manager->PortsOpen(portCount);
 
         // Drop all of our port references into my own array
-        for (size_t i = 0; i < m_portCount; i++)
+        for (size_t i = 0; i < portCount; i++)
             m_ports.push_back(std::reference_wrapper<IPort>(m_manager->Ports(i)));
 
         // Initialize nodes. Have to iterate ports, then nodes per port
         //? I only expect one port currently, but this is for safety.
 
-        buf = "Iterating through " + to_string(m_portCount) + " nodes";
+        buf = "Iterating through " + to_string(portCount) + " nodes";
         logInfo(buf.c_str());
 
-        for (size_t i = 0; i < m_portCount; i++) { // For each port:
+        size_t nodeCount = 0;
+        for (size_t i = 0; i < portCount; i++) { // For each port:
             buf = "Iterating nodes on port " + to_string(i) + ".";
             logInfo(buf.c_str());
             IPort& thisPort = m_ports[i].get();
@@ -322,7 +358,7 @@ MotorAPI::MotorAPI(void) {
             thisPort.BrakeControl.BrakeSetting(1, BRAKE_ALLOW_MOTION);
 
             auto nodeCntOnPort = thisPort.NodeCount();
-            m_nodeCount += nodeCntOnPort;
+            nodeCount += nodeCntOnPort;
             // TODO check, not sure if those to_strings will be very readable
             buf = ("Port: " + to_string(thisPort.NetNumber()) + 
                 ", State: " + to_string(thisPort.OpenState()) + 
@@ -361,9 +397,8 @@ MotorAPI::MotorAPI(void) {
 
 MotorAPI::~MotorAPI(void) {
     logInfo("Teknic Shutting down. Disabling nodes, and closing port");
-    for (size_t i = 0; i < m_nodeCount; i++) {
-        auto thisNode = m_nodes[i].get();
-        thisNode.disable();
+    for (auto e : m_nodes) {
+        e.get().disable();
     }
     m_manager->PortsClose();
     logInfo("Teknic Shutdown!");
@@ -397,7 +432,7 @@ int MotorAPI::move(std::vector<int> positions)
     if (!wasInitializedCorrectly())
         return -1;
 
-    if (positions.size() > m_nodeCount)
+    if (positions.size() > m_nodes.size())
         return -1;
 
     for (size_t i = 0; i < positions.size(); i++)
@@ -413,24 +448,8 @@ bool MotorAPI::wasInitializedCorrectly()
     return initializedCorrectly;
 }
 
-Convertor::Convertor(const double _min_level, const double _max_level, const double _max_motor_val)
+void MotorAPI::setActionTimeout(double timeSecs)
 {
-    min_level = _min_level;
-    max_level = _max_level;
-    max_motor_val = _max_motor_val;
-}
-
-Convertor::~Convertor()
-{
-}
-
-int Convertor::convert(const int val)
-{
-    if (val < min_level)
-        return (int) round(min_level * max_motor_val / max_level);
-
-    if (val > max_level)
-        return (int)round(max_motor_val);
-
-    return (int)round(val * max_motor_val / max_level);
+    for (auto e : m_nodes)
+        e.get().action_timeout = timeSecs;
 }
