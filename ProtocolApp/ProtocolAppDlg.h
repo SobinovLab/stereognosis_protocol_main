@@ -52,8 +52,6 @@ protected:
 	CEdit m_rewardDurationEdtCtrl;
 
 	// protocol parameters
-	CEdit m_accelerationCtrl;
-	CEdit m_speedCtrl;
 	CEdit m_positionCtrl;
 	CEdit m_currentTrialEdtCtrl;
 	void setFontGuiTrialsCounter();

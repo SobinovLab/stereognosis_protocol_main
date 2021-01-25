@@ -39,6 +39,12 @@ class Protocol
 		Protocol();
 		virtual ~Protocol();
 
+		// GUI display
+		bool isMotorsOn();
+		bool isRewardOn();
+		bool isLightSensorsOn();
+		bool isEphysOn();
+
 		// General parameters TODO: load ip etc from ini
 		ProtocolParameters params;
 

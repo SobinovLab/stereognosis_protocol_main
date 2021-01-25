@@ -33,11 +33,6 @@ ProtocolParameters::ProtocolParameters(const ProtocolParameters & protocolParams
 
 	this->tss_ip = protocolParams.tss_ip;
 	this->tss_port = protocolParams.tss_port;
-
-	this->tstEnMotors = protocolParams.tstEnMotors;
-	this->tstEnReward = protocolParams.tstEnReward;
-	this->tstEnLightSensors = protocolParams.tstEnLightSensors;
-	this->tstEnEphys = protocolParams.tstEnEphys;
 }
 
 ProtocolParameters::~ProtocolParameters()
@@ -71,14 +66,4 @@ void ProtocolParameters::init()
 
 	tss_ip = "localhost";
 	tss_port = 54940;
-
-	tstEnMotors = true;
-	tstEnReward = true;
-	tstEnLightSensors = true;
-	tstEnEphys = true;
-}
-
-bool ProtocolParameters::isNiCardBeingUsed()
-{
-	return tstEnLightSensors || tstEnMotors || tstEnReward || tstEnEphys;
 }

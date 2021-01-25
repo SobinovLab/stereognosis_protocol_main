@@ -25,8 +25,6 @@ void CProtocolAppDlg::DoDataExchange(CDataExchange* pDX)
 
 	DDX_Control(pDX, IDC_REWARD_TIME_EDT, m_rewardDurationEdtCtrl);
 
-	DDX_Control(pDX, IDC_ACCELERATION_EDT, m_accelerationCtrl);
-	DDX_Control(pDX, IDC_SPEED_EDT, m_speedCtrl);
 	DDX_Control(pDX, IDC_POSITION_EDT, m_positionCtrl);
 	DDX_Control(pDX, IDC_CURRENT_TRIAL_EDT_BOX, m_currentTrialEdtCtrl);
 
@@ -41,8 +39,6 @@ void CProtocolAppDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_TOUCH_SENSOR_SERVER_LOG_EDT, m_touchServerLogCtrl);
 
 	DDX_Text(pDX, IDC_REWARD_TIME_EDT, m_protocol.params.rewardDuration);
-	DDX_Text(pDX, IDC_ACCELERATION_EDT, m_protocol.params.acceleration);
-	DDX_Text(pDX, IDC_SPEED_EDT, m_protocol.params.speed);
 	DDX_Text(pDX, IDC_POSITION_EDT, m_protocol.params.position);
 	DDX_Text(pDX, IDC_MAX_WAIT_EDT_BOX, m_protocol.params.maxWaitTime);
 	DDX_Text(pDX, IDC_INTERTRIAL_WAIT_EDT, m_protocol.params.intertrialWaitTime);
@@ -117,10 +113,10 @@ BOOL CProtocolAppDlg::OnInitDialog()
 	m_protocol.set_trial_buttons(&m_startTrialBtn, &m_retreatBtn, &m_retreatFlushBtn);
 
 	// set the visibility of enabled devices on GUI
-	if (m_protocol.params.tstEnLightSensors) ((CButton*)GetDlgItem(IDC_LIGHT_SENSORS_CHK))->SetCheck(BST_CHECKED);
-	if (m_protocol.params.tstEnMotors) ((CButton*)GetDlgItem(IDC_MOTORS_CHK))->SetCheck(BST_CHECKED);
-	if (m_protocol.params.tstEnReward) ((CButton*)GetDlgItem(IDC_REWARD_CHK))->SetCheck(BST_CHECKED);
-	if (m_protocol.params.tstEnEphys) ((CButton*)GetDlgItem(IDC_EPHYS_CHK))->SetCheck(BST_CHECKED);
+	if (m_protocol.isLightSensorsOn()) ((CButton*)GetDlgItem(IDC_LIGHT_SENSORS_CHK))->SetCheck(BST_CHECKED);
+	if (m_protocol.isMotorsOn()) ((CButton*)GetDlgItem(IDC_MOTORS_CHK))->SetCheck(BST_CHECKED);
+	if (m_protocol.isRewardOn()) ((CButton*)GetDlgItem(IDC_REWARD_CHK))->SetCheck(BST_CHECKED);
+	if (m_protocol.isEphysOn()) ((CButton*)GetDlgItem(IDC_EPHYS_CHK))->SetCheck(BST_CHECKED);
 
 	/////// Control what is enabled and initialized based on debug/testing interface
 	toggleProtocolCtrls(true);
@@ -354,8 +350,6 @@ void CProtocolAppDlg::toggleProtocolCtrls(bool stopped)
 	GetDlgItem(IDC_START_PROTOCOL_BTN)->EnableWindow(stopped);
 	GetDlgItem(IDC_STOP_PROTOCOL_BTN)->EnableWindow(!stopped);
 
-	GetDlgItem(IDC_ACCELERATION_EDT)->EnableWindow(stopped);
-	GetDlgItem(IDC_SPEED_EDT)->EnableWindow(stopped);
 	GetDlgItem(IDC_POSITION_EDT)->EnableWindow(stopped);
 	GetDlgItem(IDC_MAX_WAIT_EDT_BOX)->EnableWindow(stopped);
 	GetDlgItem(IDC_INTERTRIAL_WAIT_EDT)->EnableWindow(stopped);
@@ -363,8 +357,8 @@ void CProtocolAppDlg::toggleProtocolCtrls(bool stopped)
 
 void CProtocolAppDlg::enableRewardCtrls(bool enable)
 {
-	GetDlgItem(IDC_REWARD_TIME_EDT)->EnableWindow(enable && m_protocol.params.tstEnReward);
-	GetDlgItem(IDC_FLUSH_WATER_BTN)->EnableWindow(enable && m_protocol.params.tstEnReward);
+	GetDlgItem(IDC_REWARD_TIME_EDT)->EnableWindow(enable && m_protocol.isRewardOn());
+	GetDlgItem(IDC_FLUSH_WATER_BTN)->EnableWindow(enable && m_protocol.isRewardOn());
 }
 
 void CProtocolAppDlg::toggleCameraServer1Ctrls(bool disconnected)

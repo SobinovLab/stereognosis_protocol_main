@@ -96,7 +96,7 @@ Node::Node(sFnd::INode& node, const int index) :
         default_vel = 2;
         default_acc = 2;
     default:
-        logError("Error during Node initialization: Unknown type.");
+        logError("TeknicMotorDevice: Error during Node initialization: Unknown type.");
         throw invalid_argument("Error during Node initialization: Unknown type.");
     }
 
@@ -130,7 +130,7 @@ int Node::enable() {
     //This will loop checking on the Real time values of the node's Ready status
     while (!m_node.Motion.IsReady()) {
         if (Times::isTimeout(startTimeoutTime, action_timeout)) {
-            buf = "Error: Timed out waiting for Node " + m_name + " to enable.";
+            buf = "TeknicMotorDevice Error: Timed out waiting for Node " + m_name + " to enable.";
             logError(buf.c_str());
             return -1;
         }
@@ -174,8 +174,8 @@ int Node::home() {
         logInfo("Node completed homing.");
     }
     else {
-        buf = "Homing never setup through ClearView. Node " + m_name + " cannot be homed.";
-        logInfo(buf.c_str());
+        buf = "TeknicMotorDevice Error: Homing never setup through ClearView. Node " + m_name + " cannot be homed.";
+        logError(buf.c_str());
         return -1;
     }
     return 0;
@@ -376,6 +376,8 @@ MotorAPI::MotorAPI(void) {
     // The example just declares it default, says it's singleton
     // AS: for a singleton, creator and destructor should be private, all access to the object is done through a static function, 
     //     for example, see SysManager
+    initializedCorrectly = false;
+
     std::vector<std::string> comHubPorts;
     string buf;
 
@@ -386,14 +388,14 @@ MotorAPI::MotorAPI(void) {
     }
     catch (mnErr& theErr) {
         // (defined by the mnErr class)
-        buf = ("MotorAPI() constructor Sys manager and FindComPorts | addr: " + to_string(theErr.TheAddr) +
+        buf = (string("MotorAPI() constructor Sys manager and FindComPorts | addr: ") + to_string(theErr.TheAddr) +
             " | err: " + to_string(theErr.ErrorCode) + " | msg: " + theErr.ErrorMsg);
         logError(buf.c_str());
     }
 
     // check if com ports are present
     if (comHubPorts.empty()) {
-        logError("No SC Hubs found! Exiting.");  // TODO return instead of exit?
+        logError("TeknicMotorDevice Error: No SC Hubs found! Motors not enabled.");
         //exit(1); // AS: exit is a very bad practice
         return;
     }
@@ -456,6 +458,8 @@ MotorAPI::MotorAPI(void) {
         }
     }
 
+    // TODO load configuration file
+
     initializedCorrectly = true;
 }
 
@@ -464,7 +468,8 @@ MotorAPI::~MotorAPI(void) {
     for (auto e : m_nodes) {
         e.get().disable();
     }
-    m_manager->PortsClose();
+    if (wasInitializedCorrectly())
+        m_manager->PortsClose();
     logInfo("Teknic Shutdown!");
 }
 

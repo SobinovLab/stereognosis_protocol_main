@@ -2,9 +2,6 @@
 
 using namespace std;
 
-constexpr auto DATA_FOLDER = "./data";
-constexpr auto TRIAL_NUM_STR = "Trial n.";
-constexpr auto TRIAL_ABORT_STR = " Aborted";
 constexpr auto PRECISION = "%03d";
 
 
@@ -19,25 +16,12 @@ Protocol::Protocol()
 
 	this->protocolState.store(ProtocolState::shutdown);
 
-	// based on params, try to test if things can be enabled and then change the variables
-	// TODO: after motor integration
-	if (params.tstEnMotors) {
-		// TODO check if motors are connected and can be found
-	}
-	if (params.tstEnLightSensors) {
-		// TODO: not using sensors right now at all
-	}
-	if (params.tstEnEphys) {
-		// TODO: check if an NI impulse can be sent, if not set to false
-	}
-	if (params.tstEnReward) {
-		// 
-	}
+	// test if things can be enabled and then change the variables
+	initDevices();
 }
 
 Protocol::~Protocol()
 {
-	// if incorrect termination
 	releaseDevices();
 }
 
@@ -53,8 +37,7 @@ void Protocol::reward()
 
 void Protocol::reward(long duration)
 {
-	if (params.tstEnReward)
-		m_NIUsb6001card.reward(duration);
+	m_NIUsb6001card.reward(duration);
 }
 
 void Protocol::connect_camera_client1()
@@ -300,9 +283,6 @@ void Protocol::run()
 
 	// TODO: Load all trials from session config file (BL code)
 
-	// Initialize all devices
-	initDevices();
-
 	// on first start, looping should be disabled until the start trial button is pressed
 	loopAutomatically = false;
 
@@ -375,10 +355,12 @@ void Protocol::run()
 
 		// motor movement - this thread will be locked, can be interrupted 
 		vector<int> positions = { (int)params.position, 0, 0 };
+		rets = 0;
 		rets = motorHub->move(positions, &stopTrial, &stopProtocol);
 		if (rets)
 		{
 			// TODO: check error with motors
+			// rets == -1: not initialized motors. Reset to 0 if it is fine and want to test everything else
 		}
 
 		// stop the watch thread
@@ -429,10 +411,7 @@ void Protocol::run()
 		}
 
 		// retreat motors
-		if (params.tstEnMotors) {
-			// retreat back
-			motorHub->retreat();
-		}
+		motorHub->retreat();
 
 		// stop recording
 		break_camera_recording();
@@ -457,9 +436,7 @@ void Protocol::run()
 	trialFieldsEnableRetreat(false);
 
 	// retreat motors
-	if (params.tstEnMotors) {
-		motorHub->retreat();
-	}
+	motorHub->retreat();
 
 	// release all devices
 	releaseDevices();
@@ -520,77 +497,80 @@ void Protocol::trialFieldsEnableStart(bool enable)
 void Protocol::trialFieldsEnableRetreat(bool enable)
 {
 	retreatBtn->EnableWindow(enable);
-	retreatFlushBtn->EnableWindow(enable && params.tstEnReward);
+	retreatFlushBtn->EnableWindow(enable && isRewardOn());
 }
 
 void Protocol::logGoodTrial(const long& nCurrentTrial, const long& microsecsFromStartTaskToneToLiftingMonkeyArm, const long& microsecsFromMonkeyArmRaisedToPlatesTouching)
 {
-	string msg = TRIAL_NUM_STR + to_string(nCurrentTrial);
-	msg = msg + " monkey raised its arm in [microsecs]: " + to_string(microsecsFromStartTaskToneToLiftingMonkeyArm) + " -> monkey touched the plates in [microsecs]: " + to_string(microsecsFromMonkeyArmRaisedToPlatesTouching);
-	logInfo(msg.c_str());
+	//string msg = TRIAL_NUM_STR + to_string(nCurrentTrial);
+	//msg = msg + " monkey raised its arm in [microsecs]: " + to_string(microsecsFromStartTaskToneToLiftingMonkeyArm) + " -> monkey touched the plates in [microsecs]: " + to_string(microsecsFromMonkeyArmRaisedToPlatesTouching);
+	//logInfo(msg.c_str());
 }
 
 void Protocol::logBadTrial(const long& nCurrentTrial)
 {
-	string msg = TRIAL_NUM_STR + to_string(nCurrentTrial);
-	msg = msg + TRIAL_ABORT_STR;
-	logError(msg.c_str());
+	//string msg = TRIAL_NUM_STR + to_string(nCurrentTrial);
+	//msg = msg + TRIAL_ABORT_STR;
+	//logError(msg.c_str());
 }
 
 void Protocol::initDevices()
 {
-	// NI card: photoresistors, motor and reward
-	if (params.isNiCardBeingUsed()) {
-		m_NIUsb6001card.config();
-
-		m_NIUsb6001card.start();
-	}
+	// NI card: photoresistors, motor, reward and ephys
+	m_NIUsb6001card.config();
 
 	// motor
-	if (params.tstEnMotors) {
-		if (motorHub) {
-			logWarning("Motor Hub already initialized, cannot init again.");
-		}
-		else {
-			motorHub = new MotorAPI();
+	if (motorHub) {
+		logWarning("Motor Hub already initialized, cannot init again.");
+	}
+	else {
+		motorHub = new MotorAPI();
 
-			// home the motors once
-			motorHub->home();
-		}
+		// home the motors once
+		motorHub->home();
 	}
 }
 
 void Protocol::releaseDevices()
 {
 	// NI card
-	if (params.isNiCardBeingUsed())
-		m_NIUsb6001card.stop();
-
-	// photoresistors
-	if (params.tstEnLightSensors)
-		m_NIUsb6001card.resetPhotoresistorsGuiMonitor();
+	m_NIUsb6001card.stop();
 
 	// motor
-	if (params.tstEnMotors) {
-		if (motorHub) {  // check if nullptr
-			delete motorHub;
-			motorHub = nullptr;
-		}
+	if (motorHub) {  // check if nullptr
+		delete motorHub;
+		motorHub = nullptr;
 	}
+}
+
+bool Protocol::isMotorsOn()
+{
+	return motorHub->wasInitializedCorrectly();
+}
+
+bool Protocol::isRewardOn()
+{
+	return m_NIUsb6001card.wasInitializedCorrectly();
+}
+
+bool Protocol::isLightSensorsOn()
+{
+	return m_NIUsb6001card.wasInitializedCorrectly();
+}
+
+bool Protocol::isEphysOn()
+{
+	return m_NIUsb6001card.wasInitializedCorrectly();
 }
 
 void Protocol::start_ephys_recording()
 {
-	// wrap in case the ephys is not connected
-	if (params.tstEnEphys)
-		m_NIUsb6001card.ephysSyncStart();  
+	m_NIUsb6001card.ephysSyncStart();  
 }
 
 void Protocol::break_ephys_recording()
 {
-	// wrap in case the ephys is not connected
-	if (params.tstEnEphys)
-		m_NIUsb6001card.ephysSyncStop();
+	m_NIUsb6001card.ephysSyncStop();
 }
 
 void Protocol::updateCurrentTrialOnTheGui()
