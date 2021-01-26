@@ -527,7 +527,8 @@ void Protocol::initDevices()
 		motorHub = new MotorAPI();
 
 		// home the motors once
-		motorHub->home();
+		// TODO: home/calibrate on button press
+		//motorHub->home();
 	}
 }
 

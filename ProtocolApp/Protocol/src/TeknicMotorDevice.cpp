@@ -20,11 +20,13 @@ using namespace std;
 //--------------------------------------- CONVERTOR ----------------------------------
 //------------------------------------------------------------------------------------
 
-Convertor::Convertor(const double _min_level, const double _max_level, const double _max_motor_val)
+Convertor::Convertor(const int _min_out, const int _max_out, const double _in_offset, const double _in_to_out_factor, const double _sign)
 {
-    min_level = _min_level;
-    max_level = _max_level;
-    max_motor_val = _max_motor_val;
+    min_out = _min_out;
+    max_out = _max_out;
+    in_offset = _in_offset;
+    in_to_out_factor = _in_to_out_factor;
+    sign = _sign;
 }
 
 Convertor::~Convertor()
@@ -38,13 +40,15 @@ int Convertor::convert(const int val)
 
 int Convertor::convert(const double val)
 {
-    if (val < min_level)
-        return (int)round(min_level * max_motor_val / max_level);
+    int answ = (int)round((sign * val + in_offset) * in_to_out_factor);
 
-    if (val > max_level)
-        return (int)round(max_motor_val);
+    if (answ < min_out)
+        answ = min_out;
 
-    return (int)round(val * max_motor_val / max_level);
+    if (answ > max_out)
+        answ = max_out;
+
+    return answ;
 }
 
 //------------------------------------------------------------------------------------
@@ -57,54 +61,71 @@ int Convertor::convert(const double val)
 Node::Node(sFnd::INode& node, const int index) :
     m_node(node) {
 
-    std::string m_name = m_node.Info.UserID.Value();
-
+    disable();
     // set units for velocity and acceleration
     m_node.VelUnit(INode::RPM);
     m_node.AccUnit(INode::RPM_PER_SEC);
 
-    // define the node conversion modules and default values based on 
+    // define the node conversion modules and default values  
     switch (index)
     {
     case 0:
-        //nodeType = "forward_backward";
-        pos = new Convertor(0.1, 240, -105000); // input in mm
-        vel = new Convertor(1, 10, 700);  // arbitrary scaling factor to RPM
-        acc = new Convertor(1, 10, 4000);  // arbitrary scaling factor to RPM/s
+        m_node.Setup.ConfigLoad("./configuration/motor_translation_z.mtr");
+        // MOTOR CPM-SCHP-3441S-ELSB-1-7-D
+        // https://www.teknic.com/model-info/CPM-SCHP-3441S-ELSB/
 
-        retreat_position = 1;  // TODO check attilio's default value
-        default_vel = 2;
-        default_acc = 2;
+        pos = new Convertor(-90000, 10000, 0, -75000. / 150); // input in mm
+        // max is 840 RPM @ 75 VDC
+        vel = new Convertor(1, 840, 0, 840. / 10);  // arbitrary scaling factor to RPM
+        // st/s^2=10'546'000 ? <- possibly wrong calculation from Teknic
+        acc = new Convertor(1, 8400, 0, 8400. / 10);  // arbitrary scaling factor to RPM/s
+
+        retreat_position = 0;
+        default_vel = 5;
+        default_acc = 5;
+
+        break;
     case 1:
-        // nodeType = "tilt";
-        // TODO not implemented
-        pos = new Convertor(0.1, 240, -105000); // input in degrees
-        vel = new Convertor(1, 10, 700);  // arbitrary scaling factor to RPM
-        acc = new Convertor(1, 10, 4000);  // arbitrary scaling factor to RPM/s
+        m_node.Setup.ConfigLoad("./configuration/motor_tilt.mtr");
+        // MOTOR CPM-SCHP-3421S-ELSA-1-7-D
+        // https://www.teknic.com/model-info/CPM-SCHP-3421S-ELSA/
 
-        retreat_position = 1;
-        default_vel = 2;
-        default_acc = 2;
+        pos = new Convertor(-650, 650, 0, 500. / 45); // input in degrees
+        // max is 1410 RPM @ 75 VDC
+        vel = new Convertor(1, 1410, 0, 1410. / 10);  // arbitrary scaling factor to RPM
+        acc = new Convertor(1, 14100, 0, 14100. / 10);  // arbitrary scaling factor to RPM/s
+
+        retreat_position = 0;
+        default_vel = 5;
+        default_acc = 5;
+
+        break;
     case 2:
-        // nodeType = "aperture";
-        // TODO not implemented
-        pos = new Convertor(0.1, 240, -105000); // input in degrees
-        vel = new Convertor(1, 10, 700);  // arbitrary scaling factor to RPM
-        acc = new Convertor(1, 10, 4000);  // arbitrary scaling factor to RPM/s
+        m_node.Setup.ConfigLoad("./configuration/motor_aperture.mtr");
+        // MOTOR CPM-SCHP-2311S-ELSA-1-7-D
+        // https://www.teknic.com/model-info/CPM-SCHP-2311S-ELSA/
 
-        retreat_position = 1;
-        default_vel = 2;
-        default_acc = 2;
+        // Homed against the widest position - 35 mm width
+        pos = new Convertor(-500, 36000, 35, 35000. / 35, -1); // input in mm
+        // max is 4000 RPM @ 75 VDC
+        vel = new Convertor(1, 4000, 0, 4000. / 10);  // arbitrary scaling factor to RPM
+        acc = new Convertor(1, 40000, 0, 40000. / 10);  // arbitrary scaling factor to RPM/s
+
+        retreat_position = 0;
+        default_vel = 5;
+        default_acc = 5;
+
+        break;
     default:
-        logError("TeknicMotorDevice: Error during Node initialization: Unknown type.");
-        throw invalid_argument("Error during Node initialization: Unknown type.");
+        string buf = "TeknicMotorDevice: Error during Node initialization: Unknown index: ";
+        buf += to_string(index) + ".";
+        logError(buf.c_str());
+        throw invalid_argument("Error during Node initialization: Unknown name.");
+        break;
     }
 
-    // Following 3 are optional if I wish to load a config file:
-    // disable(); // Should disable Node before loading config
-    // m_manager->Delay(200);     //? sleep (ms?) to make sure disable is registered?
-    // theNode.Setup.ConfigLoad("Config File path");
-    // thisNode.EnableReq(true); 
+    // name loaded with settings
+    std::string m_name = m_node.Info.UserID.Value();
 
     printDetails();
     enable();  // waits until the node is enabled
@@ -184,8 +205,22 @@ int Node::home() {
 
 /* Diagnostics print. */
 void Node::printDetails() {
-    std::string nType = "CLEARPATH_SC";
-    if (m_node.Info.NodeType() == 3) nType = "CLEARPATH_SC_ADV";
+    std::string nType;
+    switch (m_node.Info.NodeType()) {
+    case IInfo::MERIDIAN_ISC:
+        nType = "MERIDIAN_ISC";
+        break;
+    case IInfo::CLEARPATH_SC:
+        nType = "CLEARPATH_SC";
+        break;
+    case IInfo::CLEARPATH_SC_ADV:
+        nType = "CLEARPATH_SC_ADV";
+        break;
+    case IInfo::UNKNOWN:
+    default:
+        nType = "UNKNOWN";
+        break;
+    }
 
     string buf;
 
@@ -221,14 +256,16 @@ void Node::handleAlerts() {
         if (m_node.Status.Alerts.Value().isInAlert()) {
             // get a copy of the alert register bits and a text description of all bits set
             m_node.Status.Alerts.Value().StateStr(alertList, 256);
-            buf = string("Alerts found on this node: ") + alertList;
+            buf = string("Alerts found on ") + m_name + " node: " + alertList;
             logWarning(buf.c_str());
         }
     }
 
     //Check to see if the node experienced torque saturation
     if (m_node.Status.HadTorqueSaturation()) {
-        logWarning("Node has experienced torque saturation since last checking");
+        buf = "Node ";
+        buf += m_name + "has experienced torque saturation since last checking";
+        logWarning(buf.c_str());
     }
 }
 
@@ -237,7 +274,12 @@ bool Node::isMoveDone()
     return m_node.Motion.MoveIsDone();
 }
 
-/* Generic move function built off examples. */
+/// <summary>
+/// Generic move function built off examples. NOT USED. Use parallel one from API
+/// </summary>
+/// <param name="moveCounts"></param>
+/// <param name="speed"></param>
+/// <param name="accel"></param>
 void Node::m_move(const int& moveCounts, const int& speed, const int& accel) {
     // gives a report
     handleAlerts();
@@ -292,6 +334,7 @@ int Node::m_initiateMove(const int& moveCounts, const int& speed, const int& acc
     clearAlertsNodeStops();
 
     string buf;
+    // calculate how much you need to move
     int relativeMoveCounts = (int)round(moveCounts - m_node.Motion.PosnMeasured.Value());
 
     // Then set the velocity/accel:
@@ -373,9 +416,6 @@ int Node::initiateRetreat()
  * (can try to load config file for each motor.)
  */
 MotorAPI::MotorAPI(void) {
-    // The example just declares it default, says it's singleton
-    // AS: for a singleton, creator and destructor should be private, all access to the object is done through a static function, 
-    //     for example, see SysManager
     initializedCorrectly = false;
 
     std::vector<std::string> comHubPorts;
@@ -454,11 +494,23 @@ MotorAPI::MotorAPI(void) {
 
             Node wrappedNode = Node(thisPort.Nodes(nodeIndex), nodeIndex);
 
-            m_nodes.push_back(std::reference_wrapper<Node>(wrappedNode));  //TODO: Push NodeWrapper here instead
+            // shield error throw
+            try
+            {
+                m_nodes.push_back(std::reference_wrapper<Node>(wrappedNode));
+            }
+            catch (const mnErr& theErr)
+            {
+                buf = ("Error during Node " + to_string(nodeIndex) +
+                    " initialization. Error message: " + theErr.ErrorMsg);
+                logError(buf.c_str());
+                return;
+            }
+            catch (const invalid_argument& ia) {
+                return;
+            }
         }
     }
-
-    // TODO load configuration file
 
     initializedCorrectly = true;
 }
@@ -509,11 +561,13 @@ int MotorAPI::retreat()
     while (true) {
         // check if movements are done
         allMovementDone = true;
+
         mtx.lock();
         for (auto e : m_nodes) {
             allMovementDone *= e.get().isMoveDone();
         }
         mtx.unlock();
+
         if (allMovementDone)
             break;
 
@@ -568,6 +622,14 @@ int MotorAPI::move(std::vector<int> positions, std::atomic<bool>* stopTrial, std
         mtx.unlock();
         if (allMovementDone)
             break;
+
+        // check if there are any alerts
+        mtx.lock();
+        for (auto e : m_nodes) {
+            e.get().handleAlerts();
+        }
+        mtx.unlock();
+        // TODO check if any are dangerous and handle them
 
         // check timeout
         if (Times::isTimeout(startTime, action_timeout)) {

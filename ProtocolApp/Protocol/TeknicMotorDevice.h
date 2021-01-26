@@ -9,12 +9,20 @@
 
 class Convertor {
 private:
-    double min_level;
-    double max_level;
-    double max_motor_val;
+    // Order of operations:
+    // change the direction of input vs output
+    double sign;
+    // added to the input
+    double in_offset;
+    // multiply
+    double in_to_out_factor;
+
+    // bound range
+    double min_out;
+    double max_out;
 
 public:
-    Convertor(const double _min_level, const double _max_level, const double _max_motor_val);
+    Convertor(const double _min_out, const double _max_out, const double _in_offset, const double _in_to_out_factor, const double sign=1);
     ~Convertor();
 
     int convert(const int val);
