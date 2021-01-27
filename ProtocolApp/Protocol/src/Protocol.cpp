@@ -451,15 +451,13 @@ void Protocol::set_photoresistor_monitors(CStaticColor* front, CStaticColor* rea
 	m_NIUsb6001card.setRearPhotoresistorMonitor(rear);
 }
 
-void Protocol::set_camera1_gui_controls(CEdit* serverStatusCtrl, CEdit* serverLogCtrl)
+void Protocol::set_camera1_gui_controls(CEdit* serverLogCtrl)
 {
-	m_cameraClient1.clientStatusGuiEdt = serverStatusCtrl;
 	m_cameraClient1.clientLogGuiEdt = serverLogCtrl;
 }
 
-void Protocol::set_camera2_gui_controls(CEdit* serverStatusCtrl, CEdit* serverLogCtrl)
+void Protocol::set_camera2_gui_controls(CEdit* serverLogCtrl)
 {
-	m_cameraClient2.clientStatusGuiEdt = serverStatusCtrl;
 	m_cameraClient2.clientLogGuiEdt = serverLogCtrl;
 }
 

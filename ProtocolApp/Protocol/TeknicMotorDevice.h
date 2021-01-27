@@ -18,11 +18,11 @@ private:
     double in_to_out_factor;
 
     // bound range
-    double min_out;
-    double max_out;
+    int min_out;
+    int max_out;
 
 public:
-    Convertor(const double _min_out, const double _max_out, const double _in_offset, const double _in_to_out_factor, const double sign=1);
+    Convertor(const int _min_out, const int _max_out, const double _in_offset, const double _in_to_out_factor, const double sign=1);
     ~Convertor();
 
     int convert(const int val);

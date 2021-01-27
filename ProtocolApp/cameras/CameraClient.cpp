@@ -25,7 +25,6 @@ void CameraClient::connect_f()
 	CString serverAddress;
 	serverAddress.Format(_T("%s:%d"), server_ip, port);
 
-	setClientStatusGui(_T("Connecting..."));
 	CStringA buf;
 	buf.Format(TEXT("Connecting to server at %s\n"), serverAddress);
 	appendClientLog(buf);
@@ -33,7 +32,6 @@ void CameraClient::connect_f()
 	ccsc = new CameraCommunicatorSClient(grpc::CreateChannel(std::string(serverAddress), 
 		grpc::InsecureChannelCredentials()));
 
-	setClientStatusGui(_T("Connected"));
 	appendClientLog(_T("Connected to server.\n"));
 }
 
@@ -41,7 +39,6 @@ void CameraClient::disconnect_f()
 {
 	delete ccsc;	ccsc = nullptr;
 
-	setClientStatusGui(_T("Disconnected"));
 	appendClientLog(_T("Disconnected from server.\n"));
 }
 
@@ -207,12 +204,6 @@ bool CameraClient::isConnected()
 	if (ccsc)
 		return true;
 	return false;
-}
-
-void CameraClient::setClientStatusGui(CString status)
-{
-	if (clientStatusGuiEdt)
-		clientStatusGuiEdt->SetWindowText(status);
 }
 
 void CameraClient::appendClientLog(CString text)

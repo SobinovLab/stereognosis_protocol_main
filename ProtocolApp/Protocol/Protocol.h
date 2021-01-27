@@ -65,8 +65,8 @@ class Protocol
 
 		// sets of gui variables
 		void set_photoresistor_monitors(CStaticColor* front, CStaticColor* rear);
-		void set_camera1_gui_controls(CEdit* serverStatusCtrl, CEdit* serverLogCtrl);
-		void set_camera2_gui_controls(CEdit* serverStatusCtrl, CEdit* serverLogCtrl);
+		void set_camera1_gui_controls(CEdit* serverLogCtrl);
+		void set_camera2_gui_controls(CEdit* serverLogCtrl);
 		void set_pressure_sensors_gui_controls(CEdit* serverLogCtrl);
 		void set_current_trial_gui_control(CEdit* currentTrialGuiCtrl);
 		void set_trial_buttons(CButton* startTrialBtn, CButton* retreatBtn, CButton* retreatFlushBtn);

@@ -25,21 +25,19 @@ void CProtocolAppDlg::DoDataExchange(CDataExchange* pDX)
 
 	DDX_Control(pDX, IDC_REWARD_TIME_EDT, m_rewardDurationEdtCtrl);
 
-	DDX_Control(pDX, IDC_POSITION_EDT, m_positionCtrl);
+	DDX_Control(pDX, IDC_POS_TRANSLATION_Z_EDT, m_positionCtrl);
 	DDX_Control(pDX, IDC_CURRENT_TRIAL_EDT_BOX, m_currentTrialEdtCtrl);
 
 	DDX_Control(pDX, IDC_PHOTORES_FRONT_LBL, m_frontPhotoresistorCtrl);
 	DDX_Control(pDX, IDC_PHOTORES_REAR_LBL, m_rearPhotoresistorCtrl);
 
-	DDX_Control(pDX, IDC_SERVER_STATUS_EDT1, m_serverStatusCtrl1);
 	DDX_Control(pDX, IDC_SERVER_LOG_EDT1, m_serverLogCtrl1);
-	DDX_Control(pDX, IDC_SERVER_STATUS_EDT2, m_serverStatusCtrl2);
 	DDX_Control(pDX, IDC_SERVER_LOG_EDT3, m_serverLogCtrl2);
 
 	DDX_Control(pDX, IDC_TOUCH_SENSOR_SERVER_LOG_EDT, m_touchServerLogCtrl);
 
 	DDX_Text(pDX, IDC_REWARD_TIME_EDT, m_protocol.params.rewardDuration);
-	DDX_Text(pDX, IDC_POSITION_EDT, m_protocol.params.position);
+	DDX_Text(pDX, IDC_POS_TRANSLATION_Z_EDT, m_protocol.params.position);
 	DDX_Text(pDX, IDC_MAX_WAIT_EDT_BOX, m_protocol.params.maxWaitTime);
 	DDX_Text(pDX, IDC_INTERTRIAL_WAIT_EDT, m_protocol.params.intertrialWaitTime);
 
@@ -104,10 +102,8 @@ BOOL CProtocolAppDlg::OnInitDialog()
 	// Send GUI pointers to the protocol
 	setFontGuiTrialsCounter();  // legacy
 	m_protocol.set_photoresistor_monitors(&m_frontPhotoresistorCtrl, &m_rearPhotoresistorCtrl);
-	m_serverStatusCtrl1.SetWindowText("Off");
-	m_protocol.set_camera1_gui_controls(&m_serverStatusCtrl1, &m_serverLogCtrl1);
-	m_serverStatusCtrl2.SetWindowText("Off");
-	m_protocol.set_camera2_gui_controls(&m_serverStatusCtrl2, &m_serverLogCtrl2);
+	m_protocol.set_camera1_gui_controls(&m_serverLogCtrl1);
+	m_protocol.set_camera2_gui_controls(&m_serverLogCtrl2);
 	m_protocol.set_pressure_sensors_gui_controls(&m_touchServerLogCtrl);
 	m_protocol.set_current_trial_gui_control(&m_currentTrialEdtCtrl);
 	m_protocol.set_trial_buttons(&m_startTrialBtn, &m_retreatBtn, &m_retreatFlushBtn);
@@ -350,7 +346,7 @@ void CProtocolAppDlg::toggleProtocolCtrls(bool stopped)
 	GetDlgItem(IDC_START_PROTOCOL_BTN)->EnableWindow(stopped);
 	GetDlgItem(IDC_STOP_PROTOCOL_BTN)->EnableWindow(!stopped);
 
-	GetDlgItem(IDC_POSITION_EDT)->EnableWindow(stopped);
+	GetDlgItem(IDC_POS_TRANSLATION_Z_EDT)->EnableWindow(stopped);
 	GetDlgItem(IDC_MAX_WAIT_EDT_BOX)->EnableWindow(stopped);
 	GetDlgItem(IDC_INTERTRIAL_WAIT_EDT)->EnableWindow(stopped);
 }

@@ -69,13 +69,11 @@ public:
 	// 1: not connected; 2: message failure
 	std::atomic<int> lastErrorCode = 0;
 
-	CEdit* clientStatusGuiEdt;
 	CEdit* clientLogGuiEdt;
 
 private:
 	CameraCommunicatorSClient* ccsc;
 
-	void setClientStatusGui(CString status);
 	void appendClientLog(CString text);
 };
 

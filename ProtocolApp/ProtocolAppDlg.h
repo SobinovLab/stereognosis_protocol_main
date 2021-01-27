@@ -61,9 +61,7 @@ protected:
 	CStaticColor m_rearPhotoresistorCtrl;
 
 	// camera
-	CEdit m_serverStatusCtrl1;
 	CEdit m_serverLogCtrl1;
-	CEdit m_serverStatusCtrl2;
 	CEdit m_serverLogCtrl2;
 
 	// touch sensors
