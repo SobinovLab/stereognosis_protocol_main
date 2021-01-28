@@ -35,11 +35,14 @@ enum class ProtocolState
 class Protocol
 {
 	public:
+		// is needed to trigger parameter refreshers
+		CWnd* mainWindow;
+
 		// creator-destructor
 		Protocol();
 		virtual ~Protocol();
 
-		// GUI display
+		// What initialized correctly
 		bool isMotorsOn();
 		bool isRewardOn();
 		bool isLightSensorsOn();
@@ -54,7 +57,7 @@ class Protocol
 		std::atomic<bool> startTrial;
 		std::atomic<bool> stopTrial;
 		std::atomic<bool> deservesReward;  // user-GUI defined reward for the monkey. Overrides the calculated one.
-		std::atomic<bool> loopAutomatically;  // TODO make gui interface to this switch - it is updated in the Protocol, too
+		std::atomic<bool> loopAutomatically;  // Protocol automatically loops. Pressing Retreat deliberately stops the looping
 
 		// main loop that is run in a thread when StartProtocol is clicked
 		virtual void run();
@@ -74,6 +77,9 @@ class Protocol
 		//////// local devices
 		void reward();
 		void reward(long duration);
+
+		bool were_motors_homed();
+		void home_motors();
 
 		//////// connected devices
 		// cameras

@@ -42,43 +42,52 @@ protected:
 
 	HICON m_hIcon;
 
-	//////// Field edits
-	// trial control buttons
-	CButton m_startTrialBtn;
-	CButton m_retreatBtn;
-	CButton m_retreatFlushBtn;
-
-	// reward
-	CEdit m_rewardDurationEdtCtrl;
-
-	// protocol parameters
-	CEdit m_positionCtrl;
-	CEdit m_currentTrialEdtCtrl;
-	void setFontGuiTrialsCounter();
-
-	// light sensors
-	CStaticColor m_frontPhotoresistorCtrl;
-	CStaticColor m_rearPhotoresistorCtrl;
-
-	// camera
-	CEdit m_serverLogCtrl1;
-	CEdit m_serverLogCtrl2;
-
-	// touch sensors
-	CEdit m_touchServerLogCtrl;
-
 	///////// running and controlling the protocol
 	std::thread* protocolThread;  // runs Protocol::run
 	Protocol m_protocol;
 	void stopProtocolThread();
 	void stopTrial();
 
-	/////// Enable/disable fields
+public:
+
+	//////////////// Fields
+	//////// Protocol
 	void toggleProtocolCtrls(bool stopped);
 	void enableRewardCtrls(bool enable);
+	
+	// buttons
+
+	// edits
+	void setFontGuiTrialsCounter();
+
+	// light sensors
+	CStaticColor m_frontPhotoresistorCtrl;
+	CStaticColor m_rearPhotoresistorCtrl;
+
+	//////// Trial
+	// buttons
+	CButton m_startTrialBtn;
+	CButton m_retreatBtn;
+	CButton m_retreatFlushBtn;
+
+	// edits -- mostly used via linked text
+	CEdit m_trialStatus;
+
+	//////// Pressure Sensors
+	void toggleTouchServerCtrls(bool disconnected);
+	
+	// edits
+	CEdit m_touchServerLogCtrl;
+
+	//////// Cameras
 	void toggleCameraServer1Ctrls(bool disconnected);
 	void toggleCameraServer2Ctrls(bool disconnected);
-	void toggleTouchServerCtrls(bool disconnected);
+	
+	// edits
+	CEdit m_serverLogCtrl1;
+	CEdit m_serverLogCtrl2;
+
+protected:
 
 	/////// Generated message map functions
 	virtual BOOL OnInitDialog();
@@ -89,6 +98,7 @@ protected:
 	// protocol
 	afx_msg void OnStartProtocolBtnClicked();
 	afx_msg void OnStopProtocolBtnClicked();
+	afx_msg void OnBnClickedHomeMotorsBtn();
 
 	// reward
 	afx_msg void OnFlushWaterBtnClicked();

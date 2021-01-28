@@ -6,44 +6,65 @@
 *
 *********************************************************************/
 #pragma once
-
+#include <string>
 
 class ProtocolParameters
 {
-	public:
-		ProtocolParameters();
-		ProtocolParameters(const ProtocolParameters & protocolParams);
-		virtual ~ProtocolParameters();
-		/**
-		*   Protocol Parameters
-		*/
-		double maxWaitTime;		//secs
-		double intertrialWaitTime; // secs
-		long rewardDuration;	//msecs
-		long acceleration;		// proportional level 1-10 (1 - 4000 RPM/S)
-		long speed;				// proportional level 1-10 (1 - 700 RPM)
-		long position;			// in mm -> proportional CNT -> cycles ((-1) to (-105000) CNTs)
+private:
+	// TODO where to look for a latest CSV with the description of the session
+	std::string default_session_file_directory = "./";
+	// TODO default output directory for trial log
+	std::string default_session_log_directory = "./data";
 
-		double minimalTouchForce;
-		double thresholdTotalForce;
-		double thresholdForceEachProportion;
-		double thresholdPeriod;  // seconds
+	CString try_finding_session_csv();
+	CString make_log_filename();
 
-		// camera servers
-		CString cs_ip1;
-		long cs_port1;
-		CString cs_ip2;
-		long cs_port2;
+public:
+	ProtocolParameters();
+	virtual ~ProtocolParameters();
 
-		// camera config
-		double cs_framerate;
-		int cs_recordingPeriod;
-		int cs_refSerial;
-		CString cs_gain;
-		CString cs_exposure;
+	virtual void init();
 
-		CString tss_ip;
-		long tss_port;
+	/**
+	*   Protocol Parameters
+	*/
 
-		virtual void init();
+	// protocol
+	double maxWaitTime;		//secs
+	double intertrialWaitTime; // secs
+	CString session_filename;
+	CString session_log_filename;
+	long rewardDuration;	//msecs
+
+	// trial
+	int trial_number;
+	int total_trials;
+	double pos_translation_z;			
+	double pos_tilt;
+	double pos_aperture;
+
+	// camera servers
+	CString cs_ip1;
+	long cs_port1;
+	CString cs_ip2;
+	long cs_port2;
+
+	// camera config
+	double cs_framerate;
+	int cs_recordingPeriod;
+	int cs_refSerial;
+	CString cs_gain;
+	CString cs_exposure;
+	int cs_capture_n_frames;
+
+	// pressure sensor server
+	CString tss_ip;
+	long tss_port;
+
+	// pressure sensor config
+	double thresholdTotalForce;
+	double thresholdPeriod;  // seconds
+	double thresholdForceEachProportion;
+	double minimalTouchForce;
+
 };

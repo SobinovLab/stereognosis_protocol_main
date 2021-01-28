@@ -19,60 +19,86 @@ void CProtocolAppDlg::DoDataExchange(CDataExchange* pDX)
 {
 	CDialogEx::DoDataExchange(pDX);
 
+	// CONTROL LINKS
+	// protocol
+	DDX_Control(pDX, IDC_PHOTORES_FRONT_LBL, m_frontPhotoresistorCtrl);
+	DDX_Control(pDX, IDC_PHOTORES_REAR_LBL, m_rearPhotoresistorCtrl);
+
+	// trial
 	DDX_Control(pDX, IDC_START_TRIAL_BTN, m_startTrialBtn);
 	DDX_Control(pDX, IDC_RETREAT_BTN, m_retreatBtn);
 	DDX_Control(pDX, IDC_RETREAT_FLUSH_WATER_BTN, m_retreatFlushBtn);
 
-	DDX_Control(pDX, IDC_REWARD_TIME_EDT, m_rewardDurationEdtCtrl);
+	DDX_Control(pDX, IDC_TRIAL_STATUS, m_trialStatus);
 
-	DDX_Control(pDX, IDC_POS_TRANSLATION_Z_EDT, m_positionCtrl);
-	DDX_Control(pDX, IDC_CURRENT_TRIAL_EDT_BOX, m_currentTrialEdtCtrl);
+	// pressure sensors
+	DDX_Control(pDX, IDC_TOUCH_SENSOR_SERVER_LOG_EDT, m_touchServerLogCtrl);
 
-	DDX_Control(pDX, IDC_PHOTORES_FRONT_LBL, m_frontPhotoresistorCtrl);
-	DDX_Control(pDX, IDC_PHOTORES_REAR_LBL, m_rearPhotoresistorCtrl);
-
+	// cameras
 	DDX_Control(pDX, IDC_SERVER_LOG_EDT1, m_serverLogCtrl1);
 	DDX_Control(pDX, IDC_SERVER_LOG_EDT3, m_serverLogCtrl2);
 
-	DDX_Control(pDX, IDC_TOUCH_SENSOR_SERVER_LOG_EDT, m_touchServerLogCtrl);
-
-	DDX_Text(pDX, IDC_REWARD_TIME_EDT, m_protocol.params.rewardDuration);
-	DDX_Text(pDX, IDC_POS_TRANSLATION_Z_EDT, m_protocol.params.position);
+	// VARIABLE LINKS
+	// protocol
 	DDX_Text(pDX, IDC_MAX_WAIT_EDT_BOX, m_protocol.params.maxWaitTime);
 	DDX_Text(pDX, IDC_INTERTRIAL_WAIT_EDT, m_protocol.params.intertrialWaitTime);
+	DDX_Text(pDX, IDC_SESSION_FILE_EDT, m_protocol.params.session_filename);
+	DDX_Text(pDX, IDC_SESSION_LOG_FILE_EDT, m_protocol.params.session_log_filename);
+	DDX_Text(pDX, IDC_REWARD_TIME_EDT, m_protocol.params.rewardDuration);
 
+	// trial
+	DDX_Text(pDX, IDC_TRIALS_NUM_EDT, m_protocol.params.trial_number);
+	DDX_Text(pDX, IDC_TOTAL_TRIALS_EDT, m_protocol.params.total_trials);
+
+	DDX_Text(pDX, IDC_POS_TRANSLATION_Z_EDT, m_protocol.params.pos_translation_z);
+	DDX_Text(pDX, IDC_POS_TILT_EDT, m_protocol.params.pos_tilt);
+	DDX_Text(pDX, IDC_POS_APERTURE_EDT, m_protocol.params.pos_aperture);
+
+	// pressure sensors
+	DDX_Text(pDX, IDC_TOUCH_SENSOR_IP_EDT, m_protocol.params.tss_ip);
+	DDX_Text(pDX, IDC_TOUCH_SENSOR_PORT_EDT, m_protocol.params.tss_port);
+
+	// success conditions
+	DDX_Text(pDX, IDC_PS_FORCE_THRESHOLD_EDT, m_protocol.params.thresholdTotalForce);
+	DDX_Text(pDX, IDC_PS_HOLD_PERIOD_EDT, m_protocol.params.thresholdPeriod);
+	DDX_Text(pDX, IDC_PS_MIN_PARTIAL_FORCE_EDT, m_protocol.params.thresholdForceEachProportion);
+	DDX_Text(pDX, IDC_PS_MINIMAL_TOUCH_FORCE_EDT, m_protocol.params.minimalTouchForce);
+
+	// cameras
 	DDX_Text(pDX, IDC_IP_EDT1, m_protocol.params.cs_ip1);
 	DDX_Text(pDX, IDC_PORT_EDT1, m_protocol.params.cs_port1);
 	DDX_Text(pDX, IDC_IP_EDT2, m_protocol.params.cs_ip2);
 	DDX_Text(pDX, IDC_PORT_EDT2, m_protocol.params.cs_port2);
+
+	// cameras_config
 	DDX_Text(pDX, IDC_FRAMERATE_EDT, m_protocol.params.cs_framerate);
 	DDX_Text(pDX, IDC_RECORDING_PERIOD_EDT, m_protocol.params.cs_recordingPeriod);
 	DDX_Text(pDX, IDC_REF_SERIAL_EDT, m_protocol.params.cs_refSerial);
 	DDX_Text(pDX, IDC_GAIN_EDT, m_protocol.params.cs_gain);
 	DDX_Text(pDX, IDC_EXPOSURE_EDT, m_protocol.params.cs_exposure);
+	DDX_Text(pDX, IDC_CAPTURE_N_IMAGES_EDT, m_protocol.params.cs_capture_n_frames);
 
-	DDX_Text(pDX, IDC_TOUCH_SENSOR_IP_EDT, m_protocol.params.tss_ip);
-	DDX_Text(pDX, IDC_TOUCH_SENSOR_PORT_EDT, m_protocol.params.tss_port);
 }
 
 BEGIN_MESSAGE_MAP(CProtocolAppDlg, CDialogEx)
 	ON_WM_SYSCOMMAND()
 	ON_WM_PAINT()
 	ON_WM_QUERYDRAGICON()
-	ON_BN_CLICKED(IDC_FLUSH_WATER_BTN, OnFlushWaterBtnClicked)
-	ON_BN_CLICKED(IDC_STOP_PROTOCOL_BTN, OnStopProtocolBtnClicked)
-	ON_BN_CLICKED(IDC_START_PROTOCOL_BTN, OnStartProtocolBtnClicked)
-	ON_BN_CLICKED(IDC_START_TRIAL_BTN, OnStartTrialBtnClicked)
-	ON_BN_CLICKED(IDC_RETREAT_FLUSH_WATER_BTN, OnRetreatFlushWaterBtnClicked)
-	ON_BN_CLICKED(IDC_RETREAT_BTN, OnRetreatBtnClicked)
-	ON_BN_CLICKED(IDC_CONNECT_BTN1, OnConnect1BtnClicked)
-	ON_BN_CLICKED(IDC_DISCONNECT_BTN1, OnDisconnect1BtnClicked)
-	ON_BN_CLICKED(IDC_CONNECT_BTN2, OnConnect2BtnClicked)
-	ON_BN_CLICKED(IDC_DISCONNECT_BTN2, OnDisconnect2BtnClicked)
-	ON_BN_CLICKED(IDC_SEND_CONFIG_BTN, OnSendConfigBtnClicked)
-	ON_BN_CLICKED(IDC_CAPTURE_SINGLE_FRAME_BTN, OnCaptureSingleFrameBtnClicked)
-	ON_BN_CLICKED(IDC_CONNECT_TOUCH_SENSOR_BTN, OnConnectTouchSensorBtnClicked)
-	ON_BN_CLICKED(IDC_DISCONNECT_TOUCH_SENSOR_BTN, OnDisconnectTouchSensorBtnClicked)
+	ON_BN_CLICKED(IDC_FLUSH_WATER_BTN, &OnFlushWaterBtnClicked)
+	ON_BN_CLICKED(IDC_STOP_PROTOCOL_BTN, &OnStopProtocolBtnClicked)
+	ON_BN_CLICKED(IDC_START_PROTOCOL_BTN, &OnStartProtocolBtnClicked)
+	ON_BN_CLICKED(IDC_START_TRIAL_BTN, &OnStartTrialBtnClicked)
+	ON_BN_CLICKED(IDC_RETREAT_FLUSH_WATER_BTN, &OnRetreatFlushWaterBtnClicked)
+	ON_BN_CLICKED(IDC_RETREAT_BTN, &OnRetreatBtnClicked)
+	ON_BN_CLICKED(IDC_CONNECT_BTN1, &OnConnect1BtnClicked)
+	ON_BN_CLICKED(IDC_DISCONNECT_BTN1, &OnDisconnect1BtnClicked)
+	ON_BN_CLICKED(IDC_CONNECT_BTN2, &OnConnect2BtnClicked)
+	ON_BN_CLICKED(IDC_DISCONNECT_BTN2, &OnDisconnect2BtnClicked)
+	ON_BN_CLICKED(IDC_SEND_CONFIG_BTN, &OnSendConfigBtnClicked)
+	ON_BN_CLICKED(IDC_CAPTURE_SINGLE_FRAME_BTN, &OnCaptureSingleFrameBtnClicked)
+	ON_BN_CLICKED(IDC_CONNECT_TOUCH_SENSOR_BTN, &OnConnectTouchSensorBtnClicked)
+	ON_BN_CLICKED(IDC_DISCONNECT_TOUCH_SENSOR_BTN, &OnDisconnectTouchSensorBtnClicked)
+	ON_BN_CLICKED(IDC_HOME_MOTORS_BTN, &OnBnClickedHomeMotorsBtn)
 END_MESSAGE_MAP()
 
 // CProtocolAppDlg message handlers
@@ -114,8 +140,12 @@ BOOL CProtocolAppDlg::OnInitDialog()
 	if (m_protocol.isRewardOn()) ((CButton*)GetDlgItem(IDC_REWARD_CHK))->SetCheck(BST_CHECKED);
 	if (m_protocol.isEphysOn()) ((CButton*)GetDlgItem(IDC_EPHYS_CHK))->SetCheck(BST_CHECKED);
 
-	/////// Control what is enabled and initialized based on debug/testing interface
+	/////// Control what is enabled and initialized
+	// protocol
 	toggleProtocolCtrls(true);
+	GetDlgItem(IDC_HOME_MOTORS_BTN)->EnableWindow(m_protocol.isMotorsOn());
+
+	// trial
 	m_startTrialBtn.EnableWindow(false);
 	m_retreatBtn.EnableWindow(false);
 	m_retreatFlushBtn.EnableWindow(false);
@@ -187,7 +217,8 @@ void CProtocolAppDlg::setFontGuiTrialsCounter()
 {
 	CFont* cEditControlFont = new CFont();
 	cEditControlFont->CreateFont(30, 0, 0, 0, FW_HEAVY, true, false, 0, ANSI_CHARSET, OUT_DEFAULT_PRECIS, CLIP_DEFAULT_PRECIS, DEFAULT_QUALITY, FIXED_PITCH | FF_MODERN, _T(FONT_TYPE));
-	m_currentTrialEdtCtrl.SetFont(cEditControlFont);
+	((CEdit*)GetDlgItem(IDC_CURRENT_TRIAL_EDT_BOX))->SetFont(cEditControlFont);
+	((CEdit*)GetDlgItem(IDC_TOTAL_TRIALS_EDT))->SetFont(cEditControlFont);
 }
 
 // The system calls this function to obtain the cursor to display while the user drags
@@ -202,6 +233,12 @@ void CProtocolAppDlg::OnStartProtocolBtnClicked()
 	// don't want to get too many clicks
 	toggleProtocolCtrls(false);
 	GetDlgItem(IDC_STOP_PROTOCOL_BTN)->EnableWindow(false);
+
+	// check if homed
+	if (m_protocol.isMotorsOn()) {
+		if (!m_protocol.were_motors_homed())
+			AfxMessageBox("Motors were not homed. Please home them prior to starting the trial.");
+	}
 
 	// in case any parameters were changed
 	UpdateData(FromControlsToVariables);
@@ -343,24 +380,33 @@ void CProtocolAppDlg::stopTrial()
 
 void CProtocolAppDlg::toggleProtocolCtrls(bool stopped)
 {
+	// buttons
 	GetDlgItem(IDC_START_PROTOCOL_BTN)->EnableWindow(stopped);
 	GetDlgItem(IDC_STOP_PROTOCOL_BTN)->EnableWindow(!stopped);
 
-	GetDlgItem(IDC_POS_TRANSLATION_Z_EDT)->EnableWindow(stopped);
-	GetDlgItem(IDC_MAX_WAIT_EDT_BOX)->EnableWindow(stopped);
-	GetDlgItem(IDC_INTERTRIAL_WAIT_EDT)->EnableWindow(stopped);
+	// edits that define a session
+	((CEdit*)GetDlgItem(IDC_MAX_WAIT_EDT_BOX))->SetReadOnly(!stopped);
+	((CEdit*)GetDlgItem(IDC_INTERTRIAL_WAIT_EDT))->SetReadOnly(!stopped);
+	((CEdit*)GetDlgItem(IDC_SESSION_FILE_EDT))->SetReadOnly(!stopped);
+	((CEdit*)GetDlgItem(IDC_SESSION_LOG_FILE_EDT))->SetReadOnly(!stopped);
+
+	// reward duration
+	((CEdit*)GetDlgItem(IDC_REWARD_TIME_EDT))->SetReadOnly(!(stopped && m_protocol.isRewardOn()));
 }
 
 void CProtocolAppDlg::enableRewardCtrls(bool enable)
 {
-	GetDlgItem(IDC_REWARD_TIME_EDT)->EnableWindow(enable && m_protocol.isRewardOn());
+	// button
 	GetDlgItem(IDC_FLUSH_WATER_BTN)->EnableWindow(enable && m_protocol.isRewardOn());
 }
 
 void CProtocolAppDlg::toggleCameraServer1Ctrls(bool disconnected)
 {
-	GetDlgItem(IDC_IP_EDT1)->EnableWindow(disconnected);
-	GetDlgItem(IDC_PORT_EDT1)->EnableWindow(disconnected);
+	// edits
+	((CEdit*)GetDlgItem(IDC_IP_EDT1))->SetReadOnly(!disconnected);
+	((CEdit*)GetDlgItem(IDC_PORT_EDT1))->SetReadOnly(!disconnected);
+
+	// buttons
 	GetDlgItem(IDC_CONNECT_BTN1)->EnableWindow(disconnected);
 
 	GetDlgItem(IDC_DISCONNECT_BTN1)->EnableWindow(!disconnected);
@@ -368,8 +414,11 @@ void CProtocolAppDlg::toggleCameraServer1Ctrls(bool disconnected)
 
 void CProtocolAppDlg::toggleCameraServer2Ctrls(bool disconnected)
 {
-	GetDlgItem(IDC_IP_EDT2)->EnableWindow(disconnected);
-	GetDlgItem(IDC_PORT_EDT2)->EnableWindow(disconnected);
+	// edits
+	((CEdit*)GetDlgItem(IDC_IP_EDT2))->SetReadOnly(!disconnected);
+	((CEdit*)GetDlgItem(IDC_PORT_EDT2))->SetReadOnly(!disconnected);
+
+	// buttons
 	GetDlgItem(IDC_CONNECT_BTN2)->EnableWindow(disconnected);
 
 	GetDlgItem(IDC_DISCONNECT_BTN2)->EnableWindow(!disconnected);
@@ -377,9 +426,25 @@ void CProtocolAppDlg::toggleCameraServer2Ctrls(bool disconnected)
 
 void CProtocolAppDlg::toggleTouchServerCtrls(bool disconnected)
 {
-	GetDlgItem(IDC_TOUCH_SENSOR_IP_EDT)->EnableWindow(disconnected);
-	GetDlgItem(IDC_TOUCH_SENSOR_PORT_EDT)->EnableWindow(disconnected);
+	// edits
+	((CEdit*)GetDlgItem(IDC_TOUCH_SENSOR_IP_EDT))->SetReadOnly(!disconnected);
+	((CEdit*)GetDlgItem(IDC_TOUCH_SENSOR_PORT_EDT))->SetReadOnly(!disconnected);
+
+	// buttons
 	GetDlgItem(IDC_CONNECT_TOUCH_SENSOR_BTN)->EnableWindow(disconnected);
 
 	GetDlgItem(IDC_DISCONNECT_TOUCH_SENSOR_BTN)->EnableWindow(!disconnected);
+}
+
+
+void CProtocolAppDlg::OnBnClickedHomeMotorsBtn()
+{
+	GetDlgItem(IDC_HOME_MOTORS_BTN)->EnableWindow(false);
+
+	auto state = m_protocol.getCurrentState();
+	if (state == ProtocolState::shutdown ||
+		state == ProtocolState::trialReady)
+		m_protocol.home_motors();
+
+	GetDlgItem(IDC_HOME_MOTORS_BTN)->EnableWindow(true);
 }

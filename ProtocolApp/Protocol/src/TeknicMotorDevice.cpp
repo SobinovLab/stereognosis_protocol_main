@@ -274,6 +274,19 @@ bool Node::isMoveDone()
     return m_node.Motion.MoveIsDone();
 }
 
+bool Node::wasHomed()
+{
+    if (m_node.Motion.Homing.HomingValid()) {
+        if (m_node.Motion.Homing.WasHomed())
+            return true;
+    }
+    else {
+        string buf = "TeknicMotorDevice Error: Homing never setup through ClearView. Should not be asking if Node " + m_name + " was homed.";
+        logWarning(buf.c_str());
+    }
+    return false;
+}
+
 /// <summary>
 /// Generic move function built off examples. NOT USED. Use parallel one from API
 /// </summary>
@@ -617,7 +630,7 @@ int MotorAPI::move(std::vector<int> positions, std::atomic<bool>* stopTrial, std
         allMovementDone = true;
         mtx.lock();
         for (auto e : m_nodes) {
-            allMovementDone *= e.get().isMoveDone();
+            allMovementDone *= e.get().isMoveDone();  // any false
         }
         mtx.unlock();
         if (allMovementDone)
@@ -656,6 +669,14 @@ void MotorAPI::stop()
 bool MotorAPI::wasInitializedCorrectly()
 {
     return initializedCorrectly;
+}
+
+bool MotorAPI::wereHomed()
+{
+    bool answ = true;
+    for (auto e : m_nodes)
+        answ *= e.get().wasHomed();  // any
+    return answ;
 }
 
 void MotorAPI::setActionTimeout(double timeSecs)

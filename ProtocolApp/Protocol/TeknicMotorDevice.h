@@ -80,6 +80,8 @@ public:
 
     bool isMoveDone();
 
+    bool wasHomed();
+
     //-------- accessory functions
     void printDetails();
 
@@ -113,6 +115,7 @@ public:
     void stop();  // thread-safe with move and retreat
 
     bool wasInitializedCorrectly();
+    bool wereHomed();
 
     void setActionTimeout(double timeSecs);
 

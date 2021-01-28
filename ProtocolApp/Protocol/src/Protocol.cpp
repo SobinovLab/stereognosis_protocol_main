@@ -40,6 +40,16 @@ void Protocol::reward(long duration)
 	m_NIUsb6001card.reward(duration);
 }
 
+bool Protocol::were_motors_homed()
+{
+	return motorHub->wereHomed();
+}
+
+void Protocol::home_motors()
+{
+	motorHub->home();
+}
+
 void Protocol::connect_camera_client1()
 {
 	if (m_cameraClient1.isConnected()) {
@@ -78,6 +88,8 @@ void Protocol::disconnect_camera_client2()
 
 void Protocol::send_config_to_cameras()
 {
+	// TODO make sure Cameras server ignores the messages if the capture is in progress
+	// TODO check that the wait period allows for very slow acquisition, e.g. 1 frame/sec
 	if (m_cameraClient1.isConnected()) {
 		m_cameraClient1.sendFramerate(params.cs_framerate);
 		m_cameraClient1.sendRecordingPeriod(params.cs_recordingPeriod);
