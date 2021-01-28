@@ -480,7 +480,7 @@ void Protocol::run()
 		// countdown for next trial
 		intertrialWaitStartTime = Times::getCurrentTime();
 
-		// TODO log the trial success and times
+		// TODO log the trial success, target positions and times
 
 		// wait for the signal from recording devices that the data has been saved - is Ready
 		rets = wait_for_cameras_finish_saving();

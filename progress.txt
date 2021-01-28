@@ -22,13 +22,13 @@ Plan for the finish of fixing stereognosis:
 4. MAIN: 
     v. Motor hub. DONE
     v.0 load config file. DONE
-    v.1 Add a button for Home
-	i. Load the session CSV (default to the latest from a folder - make a GUI field) into a series of vectors
-	ii. Go through them stopping the protocol when it runs out of trials
-	iii. Update GUI integration of the storage folder.
-    iv. GUI control of the looping logic gate.
-    vi. Testing flags only try to launch something and don't break.
-    vii. Finalize GUI enable-disable controls
+    v.1 Add a button for Home. DONE
+	i. Load the session CSV (default to the latest from a folder - make a GUI field) into a series of vectors. DONE
+	ii. Go through them stopping the protocol when it runs out of trials. DONE
+	iii. Update GUI integration of the storage folder. DONE
+    iv. GUI control of the looping logic gate. 
+    vi. Testing flags only try to launch something and don't break. DONE
+    vii. Finalize GUI enable-disable controls DONE
     viii. Logging of trials
 5. SERVERS:
     i. Check if can catch connecting to nonexistant server - BAD IDEA can cause problems during servers disapperaring and reappearing.
