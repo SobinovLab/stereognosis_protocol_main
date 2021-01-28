@@ -102,6 +102,12 @@
     <ClInclude Include="utilities\Logger.h">
       <Filter>Header Files\utilities</Filter>
     </ClInclude>
+    <ClInclude Include="utilities\Folders.h">
+      <Filter>Header Files\utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="utilities\CsvParser.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -154,6 +160,12 @@
     </ClCompile>
     <ClCompile Include="pressure_sensors\TouchSensorClient.cpp">
       <Filter>Source Files\pressure_sensors</Filter>
+    </ClCompile>
+    <ClCompile Include="utilities\Folders.cpp">
+      <Filter>Source Files\utilities</Filter>
+    </ClCompile>
+    <ClCompile Include="utilities\CsvParser.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

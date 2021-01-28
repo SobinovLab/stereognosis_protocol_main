@@ -15,6 +15,7 @@
 #include "Logger.h"
 #include "Sounds.h"
 #include "Times.h"
+#include "CsvParser.h"
 #include "ProtocolParameters.h"
 #include "TeknicMotorDevice.h"
 #include "NIUsb6001card.h"
@@ -62,22 +63,25 @@ class Protocol
 		// main loop that is run in a thread when StartProtocol is clicked
 		virtual void run();
 
-		std::atomic<long> currentTrialNumber;
-		// Not used meaningfully right now, good for understanding and maybe future
+		// current state of the protocol/trial
+		void setCurrentState(ProtocolState state);
 		ProtocolState getCurrentState();
+		void trialStateGuiUpdate();
 
 		// sets of gui variables
+		CEdit* m_trialStatus;
 		void set_photoresistor_monitors(CStaticColor* front, CStaticColor* rear);
 		void set_camera1_gui_controls(CEdit* serverLogCtrl);
 		void set_camera2_gui_controls(CEdit* serverLogCtrl);
 		void set_pressure_sensors_gui_controls(CEdit* serverLogCtrl);
-		void set_current_trial_gui_control(CEdit* currentTrialGuiCtrl);
 		void set_trial_buttons(CButton* startTrialBtn, CButton* retreatBtn, CButton* retreatFlushBtn);
 
 		//////// local devices
+		// reward
 		void reward();
 		void reward(long duration);
 
+		// motors
 		bool were_motors_homed();
 		void home_motors();
 
@@ -97,12 +101,12 @@ class Protocol
 		void disconnect_pressure_sensors();
 
 	private:
-		// Not used meaningfully right now, good for understanding and maybe future
+		// what the protocol is doing - trial state
 		std::atomic<ProtocolState> protocolState;
 
 		//////// GUI
-		CEdit* m_currentTrialGuiCtrl;
-		void updateCurrentTrialOnTheGui();
+		void push_variables_to_gui();
+		void pull_variables_from_gui();
 
 		CButton* startTrialBtn;
 		CButton* retreatBtn;
@@ -111,27 +115,26 @@ class Protocol
 		void trialFieldsEnableStart(bool enable);
 		void trialFieldsEnableRetreat(bool enable);
 
-		// logging TODO: update/remove
-		void logGoodTrial(const long& nCurrentTrial, const long& timeElapsedFromStartTaskToneToLiftsMonkeyArm, const long& timeElapsedFromStartTaskToneToPlatesTouch);
-		void logBadTrial(const long& nCurrentTrial);
+		// TODO logging and session params
+		void matchLoadedSessionTrialToParams(const std::vector<std::string>& line1, const std::vector<std::string>& line2, const std::vector<double>& vec);
 
 		//////// local devices  TODO: get information if the devices/card are connected from the card
 		void initDevices();
 		void releaseDevices();
 
-		// photoresistor, motor, reward
+		// photoresistor, reward
 		NIUsb6001card m_NIUsb6001card;
 
 		// photoresistors
 		CStaticColor* m_frontPhotoresistorCtrl = nullptr;
 		CStaticColor* m_rearPhotoresistorCtrl = nullptr;
 
-		// motor
-		MotorAPI* motorHub = nullptr;
-
 		// ephys
 		void start_ephys_recording();
 		void break_ephys_recording();
+
+		// motor
+		MotorAPI* motorHub = nullptr;
 
 		//////// connected devices
 		// cameras

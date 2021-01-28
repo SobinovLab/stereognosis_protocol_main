@@ -320,7 +320,8 @@ int32 CVICALLBACK EveryNCallback(TaskHandle taskHandle, int32 everyNsamplesEvent
 
 void updatePhotoresistorGuiMonitor(CStaticColor* gui_monitor, PhotoResistor photoResistor)
 {
-	if (gui_monitor != NULL) gui_monitor->SetBkColor(PHOTORESISTORS_STATUS[photoResistor] ? red : green);
+	if (gui_monitor != NULL) 
+		gui_monitor->SetBkColor(PHOTORESISTORS_STATUS[photoResistor] ? red : green);
 }
 
 void resetPhotoresistorGuiMonitor(CStaticColor* gui_monitor)

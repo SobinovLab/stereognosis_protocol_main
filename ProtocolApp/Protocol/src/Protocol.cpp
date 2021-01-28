@@ -25,6 +25,12 @@ Protocol::~Protocol()
 	releaseDevices();
 }
 
+void Protocol::setCurrentState(ProtocolState state)
+{
+	protocolState = state;
+	trialStateGuiUpdate();
+}
+
 ProtocolState Protocol::getCurrentState()
 {
 	return protocolState.load();
@@ -88,8 +94,6 @@ void Protocol::disconnect_camera_client2()
 
 void Protocol::send_config_to_cameras()
 {
-	// TODO make sure Cameras server ignores the messages if the capture is in progress
-	// TODO check that the wait period allows for very slow acquisition, e.g. 1 frame/sec
 	if (m_cameraClient1.isConnected()) {
 		m_cameraClient1.sendFramerate(params.cs_framerate);
 		m_cameraClient1.sendRecordingPeriod(params.cs_recordingPeriod);
@@ -144,7 +148,7 @@ void Protocol::prepare_camera_recording()
 
 int Protocol::start_camera_recording()
 {
-	return start_camera_recording(currentTrialNumber.load());
+	return start_camera_recording(params.trial_number);
 }
 
 int Protocol::start_camera_recording(long trial_number)
@@ -231,9 +235,21 @@ void Protocol::disconnect_pressure_sensors()
 	m_touchSensorClient.disconnect_f();
 }
 
+void Protocol::push_variables_to_gui()
+{
+	if (mainWindow)
+		mainWindow->UpdateData(FALSE);
+}
+
+void Protocol::pull_variables_from_gui()
+{
+	if (mainWindow)
+		mainWindow->UpdateData(TRUE);
+}
+
 void Protocol::start_pressure_sensor_recording()
 {
-	start_pressure_sensor_recording(currentTrialNumber);
+	start_pressure_sensor_recording(params.trial_number);
 }
 
 void Protocol::start_pressure_sensor_recording(long trial_number)
@@ -290,17 +306,31 @@ void Protocol::watch_early_grab()
 void Protocol::run()
 {
 	this->stopProtocol.store(false);
-	this->protocolState.store(ProtocolState::initializing);  // add a GUI text field
-	// TODO display the state of the trial on the GUI
-
-	// TODO: Load all trials from session config file (BL code)
-
+	setCurrentState(ProtocolState::initializing); // display the state of the trial on the GUI
+	int rets = 0;
+	
+	// Load all trials from session config file (BL code)
+	vector<string> session_line1;
+	vector<string> session_line2;
+	vector<vector<double>> session_values;
+	bool usingLoadedSession;
+	rets = CsvParser::parseCSV(string(params.session_filename), session_line1, session_line2, session_values);
+	if (rets) {  // could not load
+		usingLoadedSession = false;
+		params.total_trials = 0;
+	}
+	else {
+		usingLoadedSession = true;
+		params.total_trials = session_values.size();
+	}
 	// on first start, looping should be disabled until the start trial button is pressed
 	loopAutomatically = false;
 
+	// TODO open csv file for logging
+
 	// class member variable
-	currentTrialNumber = 0;
-	int rets = 0;
+	params.trial_number = 0;
+	int preset_trial_number;
 	auto intertrialWaitStartTime = Times::getCurrentTime();  // set at the end of the previous iteration
 	auto trialStartTime = Times::getCurrentTime();  // set when the object is in position
 
@@ -308,14 +338,21 @@ void Protocol::run()
 	while (!this->stopProtocol.load())
 	{
 		// ---------------- Preparing trial
-		updateCurrentTrialOnTheGui();
 
-		// TODO: load and set the parameters of the next trial
+		// if went through all trials, break the loop
+		if (params.total_trials > 0 && params.trial_number >= params.total_trials)
+			break;
 
-		// TODO: if went through all trials, stop the protocol.
+		// load and set the parameters of the next trial
+		preset_trial_number = params.trial_number;
+		if (usingLoadedSession) 
+			matchLoadedSessionTrialToParams(session_line1, session_line2, session_values[params.trial_number]);
+
+		// update the gui with set values and current trial #
+		push_variables_to_gui();
 
 		// TRIAL is ready to start
-		this->protocolState.store(ProtocolState::trialReady);
+		setCurrentState(ProtocolState::trialReady);
 		this->startTrial.store(false);
 
 		trialFieldsEnableStart(true);
@@ -342,9 +379,16 @@ void Protocol::run()
 		// GUI Can't click on StartTrial anymore
 		trialFieldsEnableStart(false);
 
+		// just in case any parameters changed, pull from GUI
+		pull_variables_from_gui();
+
+		// if the trial changed, load it instead
+		if (usingLoadedSession && preset_trial_number != params.trial_number && params.trial_number < params.total_trials)
+			matchLoadedSessionTrialToParams(session_line1, session_line2, session_values[params.trial_number]);
+
 		// ---------------- Running trial
 		// TRIAL in progress set state and state control variables
-		this->protocolState.store(ProtocolState::trialInProgress);
+		setCurrentState(ProtocolState::trialInProgress);
 		this->stopTrial.store(false);
 		// has not earned anything yet
 		m_earnedReward = false;
@@ -366,13 +410,15 @@ void Protocol::run()
 		thread watchThread(&Protocol::watch_early_grab, this);
 
 		// motor movement - this thread will be locked, can be interrupted 
-		vector<int> positions = { (int)params.position, 0, 0 };
+		vector<double> positions = { params.pos_translation_z, params.pos_tilt, params.pos_aperture };
 		rets = 0;
 		rets = motorHub->move(positions, &stopTrial, &stopProtocol);
 		if (rets)
 		{
 			// TODO: check error with motors
-			// rets == -1: not initialized motors. Reset to 0 if it is fine and want to test everything else
+
+			// rets == -1 means motors were not initialized. 
+			// Reset to 0 if it is fine and want to test everything else
 		}
 
 		// stop the watch thread
@@ -412,7 +458,7 @@ void Protocol::run()
 		trialFieldsEnableRetreat(false);
 
 		// ---------------- Finishing trial
-		this->protocolState.store(ProtocolState::trialFinalizing);
+		setCurrentState(ProtocolState::trialFinalizing);
 
 		// Give the reward or not
 		if (m_earnedReward || deservesReward) {
@@ -420,6 +466,7 @@ void Protocol::run()
 		}
 		else {
 			Sounds::playErrorTone();
+			// TODO do we repeat the trial or append it to the end or just drop?
 		}
 
 		// retreat motors
@@ -433,6 +480,8 @@ void Protocol::run()
 		// countdown for next trial
 		intertrialWaitStartTime = Times::getCurrentTime();
 
+		// TODO log the trial success and times
+
 		// wait for the signal from recording devices that the data has been saved - is Ready
 		rets = wait_for_cameras_finish_saving();
 		if (rets < 0) {
@@ -440,9 +489,9 @@ void Protocol::run()
 			break;
 		}
 
-		currentTrialNumber++;
+		params.trial_number++;
 	}
-	this->protocolState.store(ProtocolState::shuttingDown);
+	setCurrentState(ProtocolState::shuttingDown);
 
 	trialFieldsEnableStart(false);
 	trialFieldsEnableRetreat(false);
@@ -453,7 +502,7 @@ void Protocol::run()
 	// release all devices
 	releaseDevices();
 
-	this->protocolState.store(ProtocolState::shutdown);
+	setCurrentState(ProtocolState::shutdown);
 }
 
 void Protocol::set_photoresistor_monitors(CStaticColor* front, CStaticColor* rear)
@@ -478,11 +527,6 @@ void Protocol::set_pressure_sensors_gui_controls(CEdit* serverLogCtrl)
 	m_touchSensorClient.clientLogGuiEdt = serverLogCtrl;
 }
 
-void Protocol::set_current_trial_gui_control(CEdit* currentTrialGuiCtrl)
-{
-	m_currentTrialGuiCtrl = currentTrialGuiCtrl;
-}
-
 void Protocol::set_trial_buttons(CButton* startTrialBtn, CButton* retreatBtn, CButton* retreatFlushBtn)
 {
 	this->startTrialBtn = startTrialBtn;
@@ -498,10 +542,8 @@ void Protocol::trialFieldsToggle(bool enable)
 
 void Protocol::trialFieldsEnableStart(bool enable)
 {
-	// this randomly locks the thread on protocol end
-	logInfo("HERETFFFF1");
+	// TODO this randomly locks the thread on protocol end
 	startTrialBtn->EnableWindow(enable);
-	logInfo("HERETFFFF2");
 }
 
 void Protocol::trialFieldsEnableRetreat(bool enable)
@@ -510,18 +552,60 @@ void Protocol::trialFieldsEnableRetreat(bool enable)
 	retreatFlushBtn->EnableWindow(enable && isRewardOn());
 }
 
-void Protocol::logGoodTrial(const long& nCurrentTrial, const long& microsecsFromStartTaskToneToLiftingMonkeyArm, const long& microsecsFromMonkeyArmRaisedToPlatesTouching)
+void Protocol::matchLoadedSessionTrialToParams(const vector<string>& line1, const vector<string>& line2, const vector<double>& vec)
 {
-	//string msg = TRIAL_NUM_STR + to_string(nCurrentTrial);
-	//msg = msg + " monkey raised its arm in [microsecs]: " + to_string(microsecsFromStartTaskToneToLiftingMonkeyArm) + " -> monkey touched the plates in [microsecs]: " + to_string(microsecsFromMonkeyArmRaisedToPlatesTouching);
-	//logInfo(msg.c_str());
+	string axis;
+	string deriv;
+	for (size_t i = 0; i < line1.size(); i++)
+	{
+		axis = line1[i];
+		deriv = line2[i];
+		if (axis == "translation_z") {
+			if (deriv == "position") {
+				params.pos_translation_z = vec[i];
+			}
+		}
+
+		if (axis == "tilt") {
+			if (deriv == "position") {
+				params.pos_tilt = vec[i];
+			}
+		}
+
+		if (axis == "aperture") {
+			if (deriv == "position") {
+				params.pos_aperture = vec[i];
+			}
+		}
+	}
 }
 
-void Protocol::logBadTrial(const long& nCurrentTrial)
+void Protocol::trialStateGuiUpdate()
 {
-	//string msg = TRIAL_NUM_STR + to_string(nCurrentTrial);
-	//msg = msg + TRIAL_ABORT_STR;
-	//logError(msg.c_str());
+	switch (protocolState)
+	{
+	case ProtocolState::shutdown:
+		m_trialStatus->SetWindowTextA("SHUTDOWN");
+		break;
+	case ProtocolState::initializing:
+		m_trialStatus->SetWindowTextA("INITIALIZING");
+		break;
+	case ProtocolState::trialReady:
+		m_trialStatus->SetWindowTextA("READY");
+		break;
+	case ProtocolState::trialInProgress:
+		m_trialStatus->SetWindowTextA("IN PROGRESS");
+		break;
+	case ProtocolState::trialFinalizing:
+		m_trialStatus->SetWindowTextA("FINALIZING");
+		break;
+	case ProtocolState::shuttingDown:
+		m_trialStatus->SetWindowTextA("SHUTTING DOWN");
+		break;
+	default:
+		m_trialStatus->SetWindowTextA("UNKNOWN-ERROR");
+		break;
+	}
 }
 
 void Protocol::initDevices()
@@ -582,15 +666,6 @@ void Protocol::start_ephys_recording()
 void Protocol::break_ephys_recording()
 {
 	m_NIUsb6001card.ephysSyncStop();
-}
-
-void Protocol::updateCurrentTrialOnTheGui()
-{
-	if (m_currentTrialGuiCtrl) {
-		CStringA nTrialsConverted;
-		nTrialsConverted.Format(_T(PRECISION), currentTrialNumber.load());
-		m_currentTrialGuiCtrl->SetWindowText(nTrialsConverted);
-	}
 }
 
 /// <summary>

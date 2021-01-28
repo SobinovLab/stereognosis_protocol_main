@@ -2,6 +2,38 @@
 
 using namespace std;
 
+CString ProtocolParameters::try_finding_session_csv()
+{
+	string fname;
+
+	if (Folders::find_latest_csv(default_session_file_directory, fname)) {
+		return CString(fname.c_str());
+	}
+
+	if (Folders::find_latest_csv("./App/session_configs", fname)) {  // debugging
+		return CString(fname.c_str());
+	}
+
+	return "";
+}
+
+CString ProtocolParameters::make_log_filename()
+{
+	string file_basename;
+	if (session_filename.GetLength() == 0) {
+		file_basename = "session_" + Times::getFormattedDateTime() + ".csv";
+	}
+	else {
+		file_basename = experimental::filesystem::path(string(session_filename).c_str()).filename().string();
+		file_basename = "session_ " + Times::getFormattedDateTime() + "_from_" + 
+			file_basename.substr(0, file_basename.size() - 4) + ".csv";
+	}
+
+	file_basename = default_session_log_directory + file_basename;
+
+	return file_basename.c_str();
+}
+
 ProtocolParameters::ProtocolParameters()
 {
 	init();
@@ -16,8 +48,8 @@ void ProtocolParameters::init()
 	// protocol
 	maxWaitTime = 20;  // sec
 	intertrialWaitTime = 2; // sec
-	session_filename = "";  // TODO
-	session_log_filename = "";
+	session_filename = try_finding_session_csv();
+	session_log_filename = make_log_filename();
 	rewardDuration = 1000;
 
 	// trial

@@ -36,7 +36,7 @@ void CProtocolAppDlg::DoDataExchange(CDataExchange* pDX)
 
 	// cameras
 	DDX_Control(pDX, IDC_SERVER_LOG_EDT1, m_serverLogCtrl1);
-	DDX_Control(pDX, IDC_SERVER_LOG_EDT3, m_serverLogCtrl2);
+	DDX_Control(pDX, IDC_SERVER_LOG_EDT2, m_serverLogCtrl2);
 
 	// VARIABLE LINKS
 	// protocol
@@ -47,7 +47,7 @@ void CProtocolAppDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Text(pDX, IDC_REWARD_TIME_EDT, m_protocol.params.rewardDuration);
 
 	// trial
-	DDX_Text(pDX, IDC_TRIALS_NUM_EDT, m_protocol.params.trial_number);
+	DDX_Text(pDX, IDC_CURRENT_TRIAL_EDT, m_protocol.params.trial_number);
 	DDX_Text(pDX, IDC_TOTAL_TRIALS_EDT, m_protocol.params.total_trials);
 
 	DDX_Text(pDX, IDC_POS_TRANSLATION_Z_EDT, m_protocol.params.pos_translation_z);
@@ -127,12 +127,18 @@ BOOL CProtocolAppDlg::OnInitDialog()
 
 	// Send GUI pointers to the protocol
 	setFontGuiTrialsCounter();  // legacy
+	m_protocol.mainWindow = this;
+
 	m_protocol.set_photoresistor_monitors(&m_frontPhotoresistorCtrl, &m_rearPhotoresistorCtrl);
 	m_protocol.set_camera1_gui_controls(&m_serverLogCtrl1);
 	m_protocol.set_camera2_gui_controls(&m_serverLogCtrl2);
 	m_protocol.set_pressure_sensors_gui_controls(&m_touchServerLogCtrl);
-	m_protocol.set_current_trial_gui_control(&m_currentTrialEdtCtrl);
+
 	m_protocol.set_trial_buttons(&m_startTrialBtn, &m_retreatBtn, &m_retreatFlushBtn);
+	m_protocol.m_trialStatus = &m_trialStatus;
+	m_protocol.trialStateGuiUpdate();
+
+	((CButton*)GetDlgItem(IDC_LOOP_CHK))->SetCheck(BST_CHECKED);  // TODO make dynamic
 
 	// set the visibility of enabled devices on GUI
 	if (m_protocol.isLightSensorsOn()) ((CButton*)GetDlgItem(IDC_LIGHT_SENSORS_CHK))->SetCheck(BST_CHECKED);
@@ -217,7 +223,7 @@ void CProtocolAppDlg::setFontGuiTrialsCounter()
 {
 	CFont* cEditControlFont = new CFont();
 	cEditControlFont->CreateFont(30, 0, 0, 0, FW_HEAVY, true, false, 0, ANSI_CHARSET, OUT_DEFAULT_PRECIS, CLIP_DEFAULT_PRECIS, DEFAULT_QUALITY, FIXED_PITCH | FF_MODERN, _T(FONT_TYPE));
-	((CEdit*)GetDlgItem(IDC_CURRENT_TRIAL_EDT_BOX))->SetFont(cEditControlFont);
+	((CEdit*)GetDlgItem(IDC_CURRENT_TRIAL_EDT))->SetFont(cEditControlFont);
 	((CEdit*)GetDlgItem(IDC_TOTAL_TRIALS_EDT))->SetFont(cEditControlFont);
 }
 
@@ -305,6 +311,7 @@ void CProtocolAppDlg::OnConnect1BtnClicked()
 void CProtocolAppDlg::OnDisconnect1BtnClicked()
 {
 	m_protocol.disconnect_camera_client1();
+
 	toggleCameraServer1Ctrls(true);
 }
 
@@ -327,6 +334,7 @@ void CProtocolAppDlg::OnDisconnect2BtnClicked()
 void CProtocolAppDlg::OnSendConfigBtnClicked()
 {
 	UpdateData(FromControlsToVariables);
+
 	m_protocol.send_config_to_cameras();
 }
 
@@ -345,7 +353,7 @@ void CProtocolAppDlg::OnConnectTouchSensorBtnClicked()
 {
 	UpdateData(FromControlsToVariables);
 
-	// TODO return error if not connected and not change state?
+	// return error if not connected and not change state?
 	// consider implications for the sensor server disappearing and reappearing, might be worse
 	// same in camera servers
 	m_protocol.connect_pressure_sensors();
@@ -445,6 +453,8 @@ void CProtocolAppDlg::OnBnClickedHomeMotorsBtn()
 	if (state == ProtocolState::shutdown ||
 		state == ProtocolState::trialReady)
 		m_protocol.home_motors();
+	else
+		AfxMessageBox("Cannot home motors while the trials are running or initializing.");
 
 	GetDlgItem(IDC_HOME_MOTORS_BTN)->EnableWindow(true);
 }

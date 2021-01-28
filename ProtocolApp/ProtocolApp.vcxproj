@@ -144,8 +144,10 @@ copy /B /V /Y "$(ProjectDir)libTeknicMotor\lib_x64d\*.dll" "$(OutDir)" &gt; NUL
     <PostBuildEvent>
       <Command>mkdir  "$(OutDir)configuration\"
 mkdir  "$(OutDir)data\"
+mkdir  "$(OutDir)session_configs\"
 copy /B /V /Y "$(ProjectDir)configuration\*.*" "$(OutDir)configuration\" &gt; NUL
 copy /B /V /Y "$(ProjectDir)libTeknicMotor\lib_x64\*.dll" "$(OutDir)" &gt; NUL
+copy /B /V /Y "$(ProjectDir)..\session_configs\*" "$(OutDir)\session_configs\" &gt; NUL
 
 </Command>
     </PostBuildEvent>
@@ -161,6 +163,8 @@ copy /B /V /Y "$(ProjectDir)libTeknicMotor\lib_x64\*.dll" "$(OutDir)" &gt; NUL
     <ClInclude Include="ProtocolApp.h" />
     <ClInclude Include="ProtocolAppDlg.h" />
     <ClInclude Include="Protocol\CStaticColor.h" />
+    <ClInclude Include="utilities\CsvParser.h" />
+    <ClInclude Include="utilities\Folders.h" />
     <ClInclude Include="utilities\Logger.h" />
     <ClInclude Include="Protocol\NIUsb6001card.h" />
     <ClInclude Include="Protocol\Protocol.h" />
@@ -182,6 +186,8 @@ copy /B /V /Y "$(ProjectDir)libTeknicMotor\lib_x64\*.dll" "$(OutDir)" &gt; NUL
     <ClCompile Include="ProtocolApp.cpp" />
     <ClCompile Include="ProtocolAppDlg.cpp" />
     <ClCompile Include="Protocol\src\CStaticColor.cpp" />
+    <ClCompile Include="utilities\CsvParser.cpp" />
+    <ClCompile Include="utilities\Folders.cpp" />
     <ClCompile Include="utilities\Logger.cpp" />
     <ClCompile Include="Protocol\src\NIUsb6001card.cpp" />
     <ClCompile Include="Protocol\src\Protocol.cpp" />

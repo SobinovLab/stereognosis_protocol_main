@@ -378,11 +378,11 @@ int Node::m_initiateMove(const int& moveCounts, const int& speed, const int& acc
 /// <param name="position">unit depends on Convert member variables</param>
 /// <param name="velLevel"></param>
 /// <param name="accLevel"></param>
-void Node::move(const int& position, const int& velLevel, const int& accLevel) {
+void Node::move(const double& position, const int& velLevel, const int& accLevel) {
     m_move(pos->convert(position), vel->convert(velLevel), acc->convert(accLevel));
 }
 
-void Node::move(const int& position)
+void Node::move(const double& position)
 {
     move(position, default_vel, default_acc);
 }
@@ -397,12 +397,12 @@ void Node::stop()
     m_node.Motion.NodeStop(STOP_TYPE_ESTOP_ABRUPT);
 }
 
-int Node::initiateMove(const int& position, const int& velLevel, const int& accLevel)
+int Node::initiateMove(const double& position, const int& velLevel, const int& accLevel)
 {
     return m_initiateMove(pos->convert(position), vel->convert(velLevel), acc->convert(accLevel));
 }
 
-int Node::initiateMove(const int& position)
+int Node::initiateMove(const double& position)
 {
     return initiateMove(position, default_vel, default_acc);
 }
@@ -598,7 +598,7 @@ int MotorAPI::retreat()
     return answ;
 }
 
-int MotorAPI::move(std::vector<int> positions, std::atomic<bool>* stopTrial, std::atomic<bool>* stopProtocol)
+int MotorAPI::move(std::vector<double> positions, std::atomic<bool>* stopTrial, std::atomic<bool>* stopProtocol)
 {
     // all movements are initialized in parallel, and finish watched together here.
     if (!wasInitializedCorrectly())

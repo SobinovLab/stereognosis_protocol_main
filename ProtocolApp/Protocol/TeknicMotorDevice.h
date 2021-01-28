@@ -41,7 +41,7 @@ private:
     Convertor* vel;
     Convertor* acc;
 
-    int retreat_position;
+    double retreat_position;
     int default_vel;
     int default_acc;
 
@@ -57,17 +57,17 @@ public:
     // homes-calibrates the motors
     int home();
     // general move function --  efectively deprecated and not used, but OK example. see initateMove functions
-    void move(const int& position, const int& velLevel, const int& accLevel);
+    void move(const double& position, const int& velLevel, const int& accLevel);
     // overload with default velocity and acceleration
-    void move(const int& position);
+    void move(const double& position);
     // retreat to the starting position - call moveHigh
     void retreat();
     // stops the current movement
     void stop();
 
     // initiate async movement
-    int initiateMove(const int& position, const int& velLevel, const int& accLevel);
-    int initiateMove(const int& position);
+    int initiateMove(const double& position, const int& velLevel, const int& accLevel);
+    int initiateMove(const double& position);
     int initiateRetreat();
 
     //-------- status
@@ -111,7 +111,7 @@ public:
     // main control functions
     int home();
     int retreat();
-    int move(std::vector<int> positions, std::atomic<bool> *stopTrial, std::atomic<bool>* stopProtocol);
+    int move(std::vector<double> positions, std::atomic<bool> *stopTrial, std::atomic<bool>* stopProtocol);
     void stop();  // thread-safe with move and retreat
 
     bool wasInitializedCorrectly();

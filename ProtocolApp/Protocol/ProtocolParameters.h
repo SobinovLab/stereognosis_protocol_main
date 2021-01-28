@@ -8,13 +8,17 @@
 #pragma once
 #include <string>
 
+#include "Times.h"
+#include "Folders.h"
+
+
 class ProtocolParameters
 {
 private:
-	// TODO where to look for a latest CSV with the description of the session
-	std::string default_session_file_directory = "./";
-	// TODO default output directory for trial log
-	std::string default_session_log_directory = "./data";
+	// where to look for a latest CSV with the description of the session
+	std::string default_session_file_directory = "./session_configs/";
+	// default output directory for trial log
+	std::string default_session_log_directory = "./data/";
 
 	CString try_finding_session_csv();
 	CString make_log_filename();

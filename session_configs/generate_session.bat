@@ -1,1 +1,1 @@
-py -3 generate_session.py 1D_session_config.xml
+py -3 generate_session.py 3D_session_config.xml
