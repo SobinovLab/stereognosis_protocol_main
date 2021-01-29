@@ -28,6 +28,7 @@ void CProtocolAppDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_START_TRIAL_BTN, m_startTrialBtn);
 	DDX_Control(pDX, IDC_RETREAT_BTN, m_retreatBtn);
 	DDX_Control(pDX, IDC_RETREAT_FLUSH_WATER_BTN, m_retreatFlushBtn);
+	DDX_Control(pDX, IDC_LOOP_CHK, m_loopChk);
 
 	DDX_Control(pDX, IDC_TRIAL_STATUS, m_trialStatus);
 
@@ -99,6 +100,7 @@ BEGIN_MESSAGE_MAP(CProtocolAppDlg, CDialogEx)
 	ON_BN_CLICKED(IDC_CONNECT_TOUCH_SENSOR_BTN, &OnConnectTouchSensorBtnClicked)
 	ON_BN_CLICKED(IDC_DISCONNECT_TOUCH_SENSOR_BTN, &OnDisconnectTouchSensorBtnClicked)
 	ON_BN_CLICKED(IDC_HOME_MOTORS_BTN, &OnBnClickedHomeMotorsBtn)
+	ON_BN_CLICKED(IDC_LOOP_CHK, &CProtocolAppDlg::OnBnClickedLoopChk)
 END_MESSAGE_MAP()
 
 // CProtocolAppDlg message handlers
@@ -138,7 +140,8 @@ BOOL CProtocolAppDlg::OnInitDialog()
 	m_protocol.m_trialStatus = &m_trialStatus;
 	m_protocol.trialStateGuiUpdate();
 
-	((CButton*)GetDlgItem(IDC_LOOP_CHK))->SetCheck(BST_CHECKED);  // TODO make dynamic
+	((CButton*)GetDlgItem(IDC_LOOP_CHK))->SetCheck(BST_CHECKED);
+	m_protocol.loopChk = &m_loopChk;
 
 	// set the visibility of enabled devices on GUI
 	if (m_protocol.isLightSensorsOn()) ((CButton*)GetDlgItem(IDC_LIGHT_SENSORS_CHK))->SetCheck(BST_CHECKED);
@@ -236,22 +239,27 @@ HCURSOR CProtocolAppDlg::OnQueryDragIcon()
 
 void CProtocolAppDlg::OnStartProtocolBtnClicked()
 {
-	// don't want to get too many clicks
-	toggleProtocolCtrls(false);
-	GetDlgItem(IDC_STOP_PROTOCOL_BTN)->EnableWindow(false);
+	if (m_protocol.getCurrentState() == ProtocolState::shutdown) {
+		// don't want to get too many clicks
+		toggleProtocolCtrls(false);
+		GetDlgItem(IDC_STOP_PROTOCOL_BTN)->EnableWindow(false);
 
-	// check if homed
-	if (m_protocol.isMotorsOn()) {
-		if (!m_protocol.were_motors_homed())
-			AfxMessageBox("Motors were not homed. Please home them prior to starting the trial.");
+		// check if homed
+		if (m_protocol.isMotorsOn()) {
+			if (!m_protocol.were_motors_homed())
+				AfxMessageBox("Motors were not homed. Please home them prior to starting the trial.");
+		}
+
+		// in case any parameters were changed
+		UpdateData(FromControlsToVariables);
+		protocolThread = new thread(&Protocol::run, &m_protocol);
+
+		// enables stopping of the protocol
+		GetDlgItem(IDC_STOP_PROTOCOL_BTN)->EnableWindow(true);
 	}
-
-	// in case any parameters were changed
-	UpdateData(FromControlsToVariables);
-	protocolThread = new thread(&Protocol::run, &m_protocol);
-
-	// enables stopping of the protocol
-	GetDlgItem(IDC_STOP_PROTOCOL_BTN)->EnableWindow(true);
+	else {
+		AfxMessageBox("Protocol was not shutdown correctly or is in process of shutting down. Wait or restart.");
+	}
 }
 
 void CProtocolAppDlg::OnStopProtocolBtnClicked()
@@ -375,8 +383,10 @@ void CProtocolAppDlg::stopProtocolThread()
 {
 	if (protocolThread) {
 		m_protocol.stopProtocol.store(true);
-		protocolThread->join();
-		delete protocolThread; protocolThread = nullptr;
+		// joining the thread leads to race for the interface access which is locked in this thread.
+		// that's why start protocol checks for the protocol being shutdown
+		//protocolThread->join();
+		//delete protocolThread; protocolThread = nullptr;
 	}
 }
 
@@ -457,4 +467,13 @@ void CProtocolAppDlg::OnBnClickedHomeMotorsBtn()
 		AfxMessageBox("Cannot home motors while the trials are running or initializing.");
 
 	GetDlgItem(IDC_HOME_MOTORS_BTN)->EnableWindow(true);
+}
+
+
+void CProtocolAppDlg::OnBnClickedLoopChk()
+{
+	if (m_loopChk.GetCheck())
+		m_protocol.loopAutomatically = true;
+	else
+		m_protocol.loopAutomatically = false;
 }

@@ -69,6 +69,7 @@ public:
 	CButton m_startTrialBtn;
 	CButton m_retreatBtn;
 	CButton m_retreatFlushBtn;
+	CButton m_loopChk;
 
 	// edits -- mostly used via linked text
 	CEdit m_trialStatus;
@@ -121,4 +122,6 @@ protected:
 	afx_msg void OnDisconnectTouchSensorBtnClicked();
 	
 	DECLARE_MESSAGE_MAP()
+public:
+	afx_msg void OnBnClickedLoopChk();
 };

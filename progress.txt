@@ -26,9 +26,10 @@ Plan for the finish of fixing stereognosis:
 	i. Load the session CSV (default to the latest from a folder - make a GUI field) into a series of vectors. DONE
 	ii. Go through them stopping the protocol when it runs out of trials. DONE
 	iii. Update GUI integration of the storage folder. DONE
-    iv. GUI control of the looping logic gate. 
+    iv. GUI control of the looping logic gate. DONE
     vi. Testing flags only try to launch something and don't break. DONE
     vii. Finalize GUI enable-disable controls DONE
-    viii. Logging of trials
+    viii. Logging of trials. DONE
+    ix. Stop Protocol Needs debugging. DONE
 5. SERVERS:
     i. Check if can catch connecting to nonexistant server - BAD IDEA can cause problems during servers disapperaring and reappearing.

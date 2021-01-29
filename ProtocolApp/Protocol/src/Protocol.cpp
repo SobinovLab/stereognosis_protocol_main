@@ -23,6 +23,7 @@ Protocol::Protocol()
 Protocol::~Protocol()
 {
 	releaseDevices();
+	closeCsvLog();
 }
 
 void Protocol::setCurrentState(ProtocolState state)
@@ -313,6 +314,7 @@ void Protocol::run()
 	vector<string> session_line1;
 	vector<string> session_line2;
 	vector<vector<double>> session_values;
+	vector<bool> repeating_trial;
 	bool usingLoadedSession;
 	rets = CsvParser::parseCSV(string(params.session_filename), session_line1, session_line2, session_values);
 	if (rets) {  // could not load
@@ -322,11 +324,20 @@ void Protocol::run()
 	else {
 		usingLoadedSession = true;
 		params.total_trials = session_values.size();
+		for (size_t i = 0; i < params.total_trials; i++)
+			repeating_trial.push_back(false);
 	}
+
 	// on first start, looping should be disabled until the start trial button is pressed
+	autoLoopToggle(true);
 	loopAutomatically = false;
 
-	// TODO open csv file for logging
+	// open csv file for logging
+	openCsvLog();
+	long long trial_start_time;
+	long long object_in_position_time;
+	long long trial_end_time;
+	long long trial_finished_time;
 
 	// class member variable
 	params.trial_number = 0;
@@ -345,8 +356,10 @@ void Protocol::run()
 
 		// load and set the parameters of the next trial
 		preset_trial_number = params.trial_number;
-		if (usingLoadedSession) 
+		if (usingLoadedSession) {
 			matchLoadedSessionTrialToParams(session_line1, session_line2, session_values[params.trial_number]);
+			params.total_trials = session_values.size();  // in case a failed trial was pushed to the end
+		}
 
 		// update the gui with set values and current trial #
 		push_variables_to_gui();
@@ -374,7 +387,7 @@ void Protocol::run()
 			break;
 
 		// Default behavior is looping - after the first trial
-		loopAutomatically = true;
+		autoLoopToggle(true);
 
 		// GUI Can't click on StartTrial anymore
 		trialFieldsEnableStart(false);
@@ -383,8 +396,9 @@ void Protocol::run()
 		pull_variables_from_gui();
 
 		// if the trial changed, load it instead
-		if (usingLoadedSession && preset_trial_number != params.trial_number && params.trial_number < params.total_trials)
+		if (usingLoadedSession && preset_trial_number != params.trial_number && params.trial_number < params.total_trials) {
 			matchLoadedSessionTrialToParams(session_line1, session_line2, session_values[params.trial_number]);
+		}
 
 		// ---------------- Running trial
 		// TRIAL in progress set state and state control variables
@@ -393,6 +407,9 @@ void Protocol::run()
 		// has not earned anything yet
 		m_earnedReward = false;
 		deservesReward = false;
+
+		// log
+		trial_start_time = Times::getCurrentTimeInMilliSecs();
 
 		// prepare recordings
 		send_config_to_cameras();
@@ -425,6 +442,9 @@ void Protocol::run()
 		stopWatch = true;
 		watchThread.join();
 
+		// log
+		object_in_position_time = Times::getCurrentTimeInMilliSecs();
+
 		// if the motors made it successfully to the final position
 		if (!stopTrial && !stopProtocol && !rets) {
 			// spawn the process that monitors the async stopping conditions
@@ -442,7 +462,7 @@ void Protocol::run()
 
 			// if stop trial button was pressed, turn off the loop - it is reenable automatically in the beginning of trial
 			if (this->stopTrial.load())
-				loopAutomatically = false;
+				autoLoopToggle(false);  // want to stop only for one trial
 
 			// stop monitor thread if it was not stopped by its own success
 			m_stopAsyncTrialConditionMonitor = true;
@@ -460,13 +480,21 @@ void Protocol::run()
 		// ---------------- Finishing trial
 		setCurrentState(ProtocolState::trialFinalizing);
 
+		// log
+		trial_end_time = Times::getCurrentTimeInMilliSecs();
+
 		// Give the reward or not
 		if (m_earnedReward || deservesReward) {
 			reward();
 		}
 		else {
 			Sounds::playErrorTone();
-			// TODO do we repeat the trial or append it to the end or just drop?
+
+			// append the failed trial to the end
+			if (usingLoadedSession) {
+				session_values.push_back(session_values[params.trial_number]);
+				repeating_trial.push_back(true);
+			}
 		}
 
 		// retreat motors
@@ -480,7 +508,11 @@ void Protocol::run()
 		// countdown for next trial
 		intertrialWaitStartTime = Times::getCurrentTime();
 
-		// TODO log the trial success, target positions and times
+		// log the trial success, target positions and times
+		trial_finished_time = Times::getCurrentTimeInMilliSecs();
+		addLineToCsvLog(m_earnedReward || deservesReward, repeating_trial[params.trial_number], 
+			trial_start_time, object_in_position_time, trial_end_time, trial_finished_time);
+
 
 		// wait for the signal from recording devices that the data has been saved - is Ready
 		rets = wait_for_cameras_finish_saving();
@@ -499,8 +531,8 @@ void Protocol::run()
 	// retreat motors
 	motorHub->retreat();
 
-	// release all devices
-	releaseDevices();
+	// release all devices in the destructor
+	closeCsvLog();
 
 	setCurrentState(ProtocolState::shutdown);
 }
@@ -580,6 +612,96 @@ void Protocol::matchLoadedSessionTrialToParams(const vector<string>& line1, cons
 	}
 }
 
+void Protocol::openCsvLog()
+{
+	// check if open
+	if (trialLogCsv.is_open()) {
+		logError("Tried opening an open csv log file.");
+		return;
+	}
+
+	string filename = params.session_log_filename;
+	// check if file exists
+	while (experimental::filesystem::exists(filename)) {
+		// adjust it to have another name: filename(NUMBER).csv
+		experimental::filesystem::path filepath(filename);
+
+		string ext = filepath.extension().string();
+		string basename = filepath.filename().string();
+		// replace_extension does not remove the '.'
+		if (!ext.empty())
+			basename = basename.substr(0, basename.size() - ext.size());
+
+		// check if the name already has a number in the name
+		regex filenumber_regex("\\([0-9]+\\)$");
+		smatch filenumber_smatch;
+		int filenumber = 0;
+		if (regex_search(basename, filenumber_smatch, filenumber_regex)) {
+			basename = regex_replace(basename, filenumber_regex, "");
+			string filenumber_s = filenumber_smatch[0].str();
+			filenumber_s = filenumber_s.substr(1, filenumber_s.size() - 2); // remove parentheses
+			try
+			{
+				filenumber = stoi(filenumber_s);
+			}
+			catch (const std::exception&)
+			{
+				string buf = "Problems extracting file number from " + filename + ".";
+				logWarning(buf.c_str());
+			}
+		}
+		filenumber++;
+
+		basename = basename + "(" + to_string(filenumber) + ")" + ext;
+		filepath.replace_filename(basename);
+		filename = filepath.string();
+	}
+	params.session_log_filename = filename.c_str();
+
+	// open file
+	trialLogCsv.open(params.session_log_filename, ofstream::out);
+
+	// write the first line - header with all exported columns
+	trialLogCsv << "trial_num,";
+	trialLogCsv << "repeating_trial,";
+	trialLogCsv << "reward,";
+	trialLogCsv << "trial_start_time(ms),";
+	trialLogCsv << "object_in_position_time(ms),";
+	trialLogCsv << "trial_end_time(ms),";
+	trialLogCsv << "trial_finished_time(ms),";
+	trialLogCsv << "pos_translation_z(mm),";
+	trialLogCsv << "pos_tilt(deg),";
+	trialLogCsv << "pos_aperture(mm),";
+	trialLogCsv << endl;
+
+}
+
+void Protocol::addLineToCsvLog(const bool got_reward, const bool repeating, const long long trial_start_time, const long long object_in_position_time, const long long trial_end_time, const long long trial_finished_time)
+{
+	if (!trialLogCsv.is_open()) {
+		logError("Trying to write into a closed log.");
+		return;
+	}
+
+	trialLogCsv << params.trial_number << ",";		// "trial_num,";
+	trialLogCsv << (int)repeating << ",";			// "repeating_trial,";
+	trialLogCsv << (int)got_reward << ",";			// "reward,";
+	trialLogCsv << trial_start_time << ",";			// "trial_start_time(ms),";
+	trialLogCsv << object_in_position_time << ",";	// "object_in_position_time(ms),";
+	trialLogCsv << trial_end_time << ",";			// "trial_end_time(ms),";
+	trialLogCsv << trial_finished_time << ",";		// "trial_finished_time(ms),";
+	trialLogCsv << params.pos_translation_z << ",";	// "pos_translation_z(mm),";
+	trialLogCsv << params.pos_tilt << ",";			// "pos_tilt(deg),";
+	trialLogCsv << params.pos_aperture << ",";		// "pos_aperture(mm),";
+	trialLogCsv << endl;
+}
+
+void Protocol::closeCsvLog()
+{
+	if (trialLogCsv.is_open())
+		trialLogCsv.close();
+}
+
 void Protocol::trialStateGuiUpdate()
 {
 	switch (protocolState)
@@ -606,6 +728,12 @@ void Protocol::trialStateGuiUpdate()
 		m_trialStatus->SetWindowTextA("UNKNOWN-ERROR");
 		break;
 	}
+}
+
+void Protocol::autoLoopToggle(const bool enable)
+{
+	loopAutomatically = enable;
+	loopChk->SetCheck((int)enable);
 }
 
 void Protocol::initDevices()

@@ -12,6 +12,8 @@
 #include <windows.h>
 #include <chrono>
 #include <atomic>
+#include <fstream>
+
 #include "Logger.h"
 #include "Sounds.h"
 #include "Times.h"
@@ -68,8 +70,11 @@ class Protocol
 		ProtocolState getCurrentState();
 		void trialStateGuiUpdate();
 
+		void autoLoopToggle(const bool enable);
+
 		// sets of gui variables
 		CEdit* m_trialStatus;
+		CButton* loopChk;
 		void set_photoresistor_monitors(CStaticColor* front, CStaticColor* rear);
 		void set_camera1_gui_controls(CEdit* serverLogCtrl);
 		void set_camera2_gui_controls(CEdit* serverLogCtrl);
@@ -115,10 +120,15 @@ class Protocol
 		void trialFieldsEnableStart(bool enable);
 		void trialFieldsEnableRetreat(bool enable);
 
-		// TODO logging and session params
+		// logging and session params
 		void matchLoadedSessionTrialToParams(const std::vector<std::string>& line1, const std::vector<std::string>& line2, const std::vector<double>& vec);
+		std::ofstream trialLogCsv;
+		void openCsvLog();
+		void addLineToCsvLog(const bool got_reward, const bool repeating, const long long trial_start_time, const long long object_in_position_time,
+			const long long trial_end_time, const long long trial_finished_time);
+		void closeCsvLog();
 
-		//////// local devices  TODO: get information if the devices/card are connected from the card
+		//////// local devices 
 		void initDevices();
 		void releaseDevices();
 
