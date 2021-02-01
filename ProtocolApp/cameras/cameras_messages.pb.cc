@@ -54,7 +54,6 @@ static void InitDefaultsscc_info_SetDirectoryRequest_cameras_5fmessages_2eproto(
     new (ptr) ::SetDirectoryRequest();
     ::PROTOBUF_NAMESPACE_ID::internal::OnShutdownDestroyMessage(ptr);
   }
-  ::SetDirectoryRequest::InitAsDefaultInstance();
 }
 
 ::PROTOBUF_NAMESPACE_ID::internal::SCCInfo<0> scc_info_SetDirectoryRequest_cameras_5fmessages_2eproto =
@@ -68,7 +67,6 @@ static void InitDefaultsscc_info_SetExposureRequest_cameras_5fmessages_2eproto()
     new (ptr) ::SetExposureRequest();
     ::PROTOBUF_NAMESPACE_ID::internal::OnShutdownDestroyMessage(ptr);
   }
-  ::SetExposureRequest::InitAsDefaultInstance();
 }
 
 ::PROTOBUF_NAMESPACE_ID::internal::SCCInfo<0> scc_info_SetExposureRequest_cameras_5fmessages_2eproto =
@@ -82,7 +80,6 @@ static void InitDefaultsscc_info_SetFramerateRequest_cameras_5fmessages_2eproto(
     new (ptr) ::SetFramerateRequest();
     ::PROTOBUF_NAMESPACE_ID::internal::OnShutdownDestroyMessage(ptr);
   }
-  ::SetFramerateRequest::InitAsDefaultInstance();
 }
 
 ::PROTOBUF_NAMESPACE_ID::internal::SCCInfo<0> scc_info_SetFramerateRequest_cameras_5fmessages_2eproto =
@@ -96,7 +93,6 @@ static void InitDefaultsscc_info_SetGainRequest_cameras_5fmessages_2eproto() {
     new (ptr) ::SetGainRequest();
     ::PROTOBUF_NAMESPACE_ID::internal::OnShutdownDestroyMessage(ptr);
   }
-  ::SetGainRequest::InitAsDefaultInstance();
 }
 
 ::PROTOBUF_NAMESPACE_ID::internal::SCCInfo<0> scc_info_SetGainRequest_cameras_5fmessages_2eproto =
@@ -110,7 +106,6 @@ static void InitDefaultsscc_info_SetRecordingPeriodRequest_cameras_5fmessages_2e
     new (ptr) ::SetRecordingPeriodRequest();
     ::PROTOBUF_NAMESPACE_ID::internal::OnShutdownDestroyMessage(ptr);
   }
-  ::SetRecordingPeriodRequest::InitAsDefaultInstance();
 }
 
 ::PROTOBUF_NAMESPACE_ID::internal::SCCInfo<0> scc_info_SetRecordingPeriodRequest_cameras_5fmessages_2eproto =
@@ -124,7 +119,6 @@ static void InitDefaultsscc_info_SetReferenceCameraRequest_cameras_5fmessages_2e
     new (ptr) ::SetReferenceCameraRequest();
     ::PROTOBUF_NAMESPACE_ID::internal::OnShutdownDestroyMessage(ptr);
   }
-  ::SetReferenceCameraRequest::InitAsDefaultInstance();
 }
 
 ::PROTOBUF_NAMESPACE_ID::internal::SCCInfo<0> scc_info_SetReferenceCameraRequest_cameras_5fmessages_2eproto =
@@ -138,7 +132,6 @@ static void InitDefaultsscc_info_SimpleRequest_cameras_5fmessages_2eproto() {
     new (ptr) ::SimpleRequest();
     ::PROTOBUF_NAMESPACE_ID::internal::OnShutdownDestroyMessage(ptr);
   }
-  ::SimpleRequest::InitAsDefaultInstance();
 }
 
 ::PROTOBUF_NAMESPACE_ID::internal::SCCInfo<0> scc_info_SimpleRequest_cameras_5fmessages_2eproto =
@@ -152,7 +145,6 @@ static void InitDefaultsscc_info_SimpleResponse_cameras_5fmessages_2eproto() {
     new (ptr) ::SimpleResponse();
     ::PROTOBUF_NAMESPACE_ID::internal::OnShutdownDestroyMessage(ptr);
   }
-  ::SimpleResponse::InitAsDefaultInstance();
 }
 
 ::PROTOBUF_NAMESPACE_ID::internal::SCCInfo<0> scc_info_SimpleResponse_cameras_5fmessages_2eproto =
@@ -292,8 +284,6 @@ static bool dynamic_init_dummy_cameras_5fmessages_2eproto = (static_cast<void>(:
 
 // ===================================================================
 
-void SimpleRequest::InitAsDefaultInstance() {
-}
 class SimpleRequest::_Internal {
  public:
 };
@@ -352,7 +342,6 @@ void SimpleRequest::Clear() {
 
 const char* SimpleRequest::_InternalParse(const char* ptr, ::PROTOBUF_NAMESPACE_ID::internal::ParseContext* ctx) {
 #define CHK_(x) if (PROTOBUF_PREDICT_FALSE(!(x))) goto failure
-  ::PROTOBUF_NAMESPACE_ID::Arena* arena = GetArena(); (void)arena;
   while (!ctx->Done(&ptr)) {
     ::PROTOBUF_NAMESPACE_ID::uint32 tag;
     ptr = ::PROTOBUF_NAMESPACE_ID::internal::ReadTag(ptr, &tag);
@@ -489,8 +478,6 @@ void SimpleRequest::InternalSwap(SimpleRequest* other) {
 
 // ===================================================================
 
-void SimpleResponse::InitAsDefaultInstance() {
-}
 class SimpleResponse::_Internal {
  public:
 };
@@ -506,7 +493,7 @@ SimpleResponse::SimpleResponse(const SimpleResponse& from)
   _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
   description_.UnsafeSetDefault(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
   if (!from._internal_description().empty()) {
-    description_.Set(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), from._internal_description(),
+    description_.Set(::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, from._internal_description(), 
       GetArena());
   }
   code_ = from.code_;
@@ -551,14 +538,13 @@ void SimpleResponse::Clear() {
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
 
-  description_.ClearToEmpty(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), GetArena());
+  description_.ClearToEmpty();
   code_ = 0;
   _internal_metadata_.Clear<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>();
 }
 
 const char* SimpleResponse::_InternalParse(const char* ptr, ::PROTOBUF_NAMESPACE_ID::internal::ParseContext* ctx) {
 #define CHK_(x) if (PROTOBUF_PREDICT_FALSE(!(x))) goto failure
-  ::PROTOBUF_NAMESPACE_ID::Arena* arena = GetArena(); (void)arena;
   while (!ctx->Done(&ptr)) {
     ::PROTOBUF_NAMESPACE_ID::uint32 tag;
     ptr = ::PROTOBUF_NAMESPACE_ID::internal::ReadTag(ptr, &tag);
@@ -725,8 +711,6 @@ void SimpleResponse::InternalSwap(SimpleResponse* other) {
 
 // ===================================================================
 
-void SetFramerateRequest::InitAsDefaultInstance() {
-}
 class SetFramerateRequest::_Internal {
  public:
 };
@@ -742,7 +726,7 @@ SetFramerateRequest::SetFramerateRequest(const SetFramerateRequest& from)
   _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
   desc_.UnsafeSetDefault(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
   if (!from._internal_desc().empty()) {
-    desc_.Set(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), from._internal_desc(),
+    desc_.Set(::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, from._internal_desc(), 
       GetArena());
   }
   framerate_ = from.framerate_;
@@ -787,14 +771,13 @@ void SetFramerateRequest::Clear() {
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
 
-  desc_.ClearToEmpty(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), GetArena());
+  desc_.ClearToEmpty();
   framerate_ = 0;
   _internal_metadata_.Clear<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>();
 }
 
 const char* SetFramerateRequest::_InternalParse(const char* ptr, ::PROTOBUF_NAMESPACE_ID::internal::ParseContext* ctx) {
 #define CHK_(x) if (PROTOBUF_PREDICT_FALSE(!(x))) goto failure
-  ::PROTOBUF_NAMESPACE_ID::Arena* arena = GetArena(); (void)arena;
   while (!ctx->Done(&ptr)) {
     ::PROTOBUF_NAMESPACE_ID::uint32 tag;
     ptr = ::PROTOBUF_NAMESPACE_ID::internal::ReadTag(ptr, &tag);
@@ -959,8 +942,6 @@ void SetFramerateRequest::InternalSwap(SetFramerateRequest* other) {
 
 // ===================================================================
 
-void SetRecordingPeriodRequest::InitAsDefaultInstance() {
-}
 class SetRecordingPeriodRequest::_Internal {
  public:
 };
@@ -1019,7 +1000,6 @@ void SetRecordingPeriodRequest::Clear() {
 
 const char* SetRecordingPeriodRequest::_InternalParse(const char* ptr, ::PROTOBUF_NAMESPACE_ID::internal::ParseContext* ctx) {
 #define CHK_(x) if (PROTOBUF_PREDICT_FALSE(!(x))) goto failure
-  ::PROTOBUF_NAMESPACE_ID::Arena* arena = GetArena(); (void)arena;
   while (!ctx->Done(&ptr)) {
     ::PROTOBUF_NAMESPACE_ID::uint32 tag;
     ptr = ::PROTOBUF_NAMESPACE_ID::internal::ReadTag(ptr, &tag);
@@ -1154,8 +1134,6 @@ void SetRecordingPeriodRequest::InternalSwap(SetRecordingPeriodRequest* other) {
 
 // ===================================================================
 
-void SetReferenceCameraRequest::InitAsDefaultInstance() {
-}
 class SetReferenceCameraRequest::_Internal {
  public:
 };
@@ -1214,7 +1192,6 @@ void SetReferenceCameraRequest::Clear() {
 
 const char* SetReferenceCameraRequest::_InternalParse(const char* ptr, ::PROTOBUF_NAMESPACE_ID::internal::ParseContext* ctx) {
 #define CHK_(x) if (PROTOBUF_PREDICT_FALSE(!(x))) goto failure
-  ::PROTOBUF_NAMESPACE_ID::Arena* arena = GetArena(); (void)arena;
   while (!ctx->Done(&ptr)) {
     ::PROTOBUF_NAMESPACE_ID::uint32 tag;
     ptr = ::PROTOBUF_NAMESPACE_ID::internal::ReadTag(ptr, &tag);
@@ -1351,8 +1328,6 @@ void SetReferenceCameraRequest::InternalSwap(SetReferenceCameraRequest* other) {
 
 // ===================================================================
 
-void SetDirectoryRequest::InitAsDefaultInstance() {
-}
 class SetDirectoryRequest::_Internal {
  public:
 };
@@ -1368,7 +1343,7 @@ SetDirectoryRequest::SetDirectoryRequest(const SetDirectoryRequest& from)
   _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
   directory_.UnsafeSetDefault(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
   if (!from._internal_directory().empty()) {
-    directory_.Set(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), from._internal_directory(),
+    directory_.Set(::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, from._internal_directory(), 
       GetArena());
   }
   // @@protoc_insertion_point(copy_constructor:SetDirectoryRequest)
@@ -1411,13 +1386,12 @@ void SetDirectoryRequest::Clear() {
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
 
-  directory_.ClearToEmpty(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), GetArena());
+  directory_.ClearToEmpty();
   _internal_metadata_.Clear<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>();
 }
 
 const char* SetDirectoryRequest::_InternalParse(const char* ptr, ::PROTOBUF_NAMESPACE_ID::internal::ParseContext* ctx) {
 #define CHK_(x) if (PROTOBUF_PREDICT_FALSE(!(x))) goto failure
-  ::PROTOBUF_NAMESPACE_ID::Arena* arena = GetArena(); (void)arena;
   while (!ctx->Done(&ptr)) {
     ::PROTOBUF_NAMESPACE_ID::uint32 tag;
     ptr = ::PROTOBUF_NAMESPACE_ID::internal::ReadTag(ptr, &tag);
@@ -1560,8 +1534,6 @@ void SetDirectoryRequest::InternalSwap(SetDirectoryRequest* other) {
 
 // ===================================================================
 
-void SetGainRequest::InitAsDefaultInstance() {
-}
 class SetGainRequest::_Internal {
  public:
 };
@@ -1582,8 +1554,9 @@ SetGainRequest::SetGainRequest(const SetGainRequest& from)
 }
 
 void SetGainRequest::SharedCtor() {
-  ::memset(&gain_, 0, static_cast<size_t>(
-      reinterpret_cast<char*>(&gain_type_) -
+  ::memset(reinterpret_cast<char*>(this) + static_cast<size_t>(
+      reinterpret_cast<char*>(&gain_) - reinterpret_cast<char*>(this)),
+      0, static_cast<size_t>(reinterpret_cast<char*>(&gain_type_) -
       reinterpret_cast<char*>(&gain_)) + sizeof(gain_type_));
 }
 
@@ -1626,7 +1599,6 @@ void SetGainRequest::Clear() {
 
 const char* SetGainRequest::_InternalParse(const char* ptr, ::PROTOBUF_NAMESPACE_ID::internal::ParseContext* ctx) {
 #define CHK_(x) if (PROTOBUF_PREDICT_FALSE(!(x))) goto failure
-  ::PROTOBUF_NAMESPACE_ID::Arena* arena = GetArena(); (void)arena;
   while (!ctx->Done(&ptr)) {
     ::PROTOBUF_NAMESPACE_ID::uint32 tag;
     ptr = ::PROTOBUF_NAMESPACE_ID::internal::ReadTag(ptr, &tag);
@@ -1789,8 +1761,6 @@ void SetGainRequest::InternalSwap(SetGainRequest* other) {
 
 // ===================================================================
 
-void SetExposureRequest::InitAsDefaultInstance() {
-}
 class SetExposureRequest::_Internal {
  public:
 };
@@ -1811,8 +1781,9 @@ SetExposureRequest::SetExposureRequest(const SetExposureRequest& from)
 }
 
 void SetExposureRequest::SharedCtor() {
-  ::memset(&exposure_, 0, static_cast<size_t>(
-      reinterpret_cast<char*>(&exposure_type_) -
+  ::memset(reinterpret_cast<char*>(this) + static_cast<size_t>(
+      reinterpret_cast<char*>(&exposure_) - reinterpret_cast<char*>(this)),
+      0, static_cast<size_t>(reinterpret_cast<char*>(&exposure_type_) -
       reinterpret_cast<char*>(&exposure_)) + sizeof(exposure_type_));
 }
 
@@ -1855,7 +1826,6 @@ void SetExposureRequest::Clear() {
 
 const char* SetExposureRequest::_InternalParse(const char* ptr, ::PROTOBUF_NAMESPACE_ID::internal::ParseContext* ctx) {
 #define CHK_(x) if (PROTOBUF_PREDICT_FALSE(!(x))) goto failure
-  ::PROTOBUF_NAMESPACE_ID::Arena* arena = GetArena(); (void)arena;
   while (!ctx->Done(&ptr)) {
     ::PROTOBUF_NAMESPACE_ID::uint32 tag;
     ptr = ::PROTOBUF_NAMESPACE_ID::internal::ReadTag(ptr, &tag);

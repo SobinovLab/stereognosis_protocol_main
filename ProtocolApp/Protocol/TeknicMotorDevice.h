@@ -32,7 +32,7 @@ public:
 
 class Node {
 private:
-    sFnd::INode& m_node;
+    sFnd::INode* m_node;
     Node() = delete;
     std::string m_name;
 
@@ -50,7 +50,7 @@ private:
     int m_initiateMove(const int& moveCounts, const int& speed, const int& accel);
 
 public:
-    Node(sFnd::INode& node, const int index);
+    Node(sFnd::INode* node, const int index);
     ~Node(void);
 
     //-------- main functions used outside
@@ -98,7 +98,7 @@ private:
     sFnd::SysManager* m_manager = nullptr;
     
     std::vector<std::reference_wrapper<sFnd::IPort>> m_ports;
-    std::vector<std::reference_wrapper<Node>> m_nodes;
+    std::vector<Node> m_nodes;
 
     double action_timeout = 10;
 

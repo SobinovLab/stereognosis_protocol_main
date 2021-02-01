@@ -44,7 +44,6 @@ static void InitDefaultsscc_info_BreakRecordingResponse_tekscan_5fserver_2eproto
     new (ptr) ::TekscanServerNamespace::BreakRecordingResponse();
     ::PROTOBUF_NAMESPACE_ID::internal::OnShutdownDestroyMessage(ptr);
   }
-  ::TekscanServerNamespace::BreakRecordingResponse::InitAsDefaultInstance();
 }
 
 ::PROTOBUF_NAMESPACE_ID::internal::SCCInfo<0> scc_info_BreakRecordingResponse_tekscan_5fserver_2eproto =
@@ -58,7 +57,6 @@ static void InitDefaultsscc_info_ForceResponse_tekscan_5fserver_2eproto() {
     new (ptr) ::TekscanServerNamespace::ForceResponse();
     ::PROTOBUF_NAMESPACE_ID::internal::OnShutdownDestroyMessage(ptr);
   }
-  ::TekscanServerNamespace::ForceResponse::InitAsDefaultInstance();
 }
 
 ::PROTOBUF_NAMESPACE_ID::internal::SCCInfo<0> scc_info_ForceResponse_tekscan_5fserver_2eproto =
@@ -72,7 +70,6 @@ static void InitDefaultsscc_info_SimpleRequest_tekscan_5fserver_2eproto() {
     new (ptr) ::TekscanServerNamespace::SimpleRequest();
     ::PROTOBUF_NAMESPACE_ID::internal::OnShutdownDestroyMessage(ptr);
   }
-  ::TekscanServerNamespace::SimpleRequest::InitAsDefaultInstance();
 }
 
 ::PROTOBUF_NAMESPACE_ID::internal::SCCInfo<0> scc_info_SimpleRequest_tekscan_5fserver_2eproto =
@@ -86,7 +83,6 @@ static void InitDefaultsscc_info_SimpleResponse_tekscan_5fserver_2eproto() {
     new (ptr) ::TekscanServerNamespace::SimpleResponse();
     ::PROTOBUF_NAMESPACE_ID::internal::OnShutdownDestroyMessage(ptr);
   }
-  ::TekscanServerNamespace::SimpleResponse::InitAsDefaultInstance();
 }
 
 ::PROTOBUF_NAMESPACE_ID::internal::SCCInfo<0> scc_info_SimpleResponse_tekscan_5fserver_2eproto =
@@ -100,7 +96,6 @@ static void InitDefaultsscc_info_StartRecordingRequest_tekscan_5fserver_2eproto(
     new (ptr) ::TekscanServerNamespace::StartRecordingRequest();
     ::PROTOBUF_NAMESPACE_ID::internal::OnShutdownDestroyMessage(ptr);
   }
-  ::TekscanServerNamespace::StartRecordingRequest::InitAsDefaultInstance();
 }
 
 ::PROTOBUF_NAMESPACE_ID::internal::SCCInfo<0> scc_info_StartRecordingRequest_tekscan_5fserver_2eproto =
@@ -202,8 +197,6 @@ namespace TekscanServerNamespace {
 
 // ===================================================================
 
-void SimpleRequest::InitAsDefaultInstance() {
-}
 class SimpleRequest::_Internal {
  public:
 };
@@ -262,7 +255,6 @@ void SimpleRequest::Clear() {
 
 const char* SimpleRequest::_InternalParse(const char* ptr, ::PROTOBUF_NAMESPACE_ID::internal::ParseContext* ctx) {
 #define CHK_(x) if (PROTOBUF_PREDICT_FALSE(!(x))) goto failure
-  ::PROTOBUF_NAMESPACE_ID::Arena* arena = GetArena(); (void)arena;
   while (!ctx->Done(&ptr)) {
     ::PROTOBUF_NAMESPACE_ID::uint32 tag;
     ptr = ::PROTOBUF_NAMESPACE_ID::internal::ReadTag(ptr, &tag);
@@ -399,8 +391,6 @@ void SimpleRequest::InternalSwap(SimpleRequest* other) {
 
 // ===================================================================
 
-void SimpleResponse::InitAsDefaultInstance() {
-}
 class SimpleResponse::_Internal {
  public:
 };
@@ -416,7 +406,7 @@ SimpleResponse::SimpleResponse(const SimpleResponse& from)
   _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
   description_.UnsafeSetDefault(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited());
   if (!from._internal_description().empty()) {
-    description_.Set(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), from._internal_description(),
+    description_.Set(::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::EmptyDefault{}, from._internal_description(), 
       GetArena());
   }
   code_ = from.code_;
@@ -461,14 +451,13 @@ void SimpleResponse::Clear() {
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
 
-  description_.ClearToEmpty(&::PROTOBUF_NAMESPACE_ID::internal::GetEmptyStringAlreadyInited(), GetArena());
+  description_.ClearToEmpty();
   code_ = 0;
   _internal_metadata_.Clear<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>();
 }
 
 const char* SimpleResponse::_InternalParse(const char* ptr, ::PROTOBUF_NAMESPACE_ID::internal::ParseContext* ctx) {
 #define CHK_(x) if (PROTOBUF_PREDICT_FALSE(!(x))) goto failure
-  ::PROTOBUF_NAMESPACE_ID::Arena* arena = GetArena(); (void)arena;
   while (!ctx->Done(&ptr)) {
     ::PROTOBUF_NAMESPACE_ID::uint32 tag;
     ptr = ::PROTOBUF_NAMESPACE_ID::internal::ReadTag(ptr, &tag);
@@ -635,8 +624,6 @@ void SimpleResponse::InternalSwap(SimpleResponse* other) {
 
 // ===================================================================
 
-void StartRecordingRequest::InitAsDefaultInstance() {
-}
 class StartRecordingRequest::_Internal {
  public:
 };
@@ -695,7 +682,6 @@ void StartRecordingRequest::Clear() {
 
 const char* StartRecordingRequest::_InternalParse(const char* ptr, ::PROTOBUF_NAMESPACE_ID::internal::ParseContext* ctx) {
 #define CHK_(x) if (PROTOBUF_PREDICT_FALSE(!(x))) goto failure
-  ::PROTOBUF_NAMESPACE_ID::Arena* arena = GetArena(); (void)arena;
   while (!ctx->Done(&ptr)) {
     ::PROTOBUF_NAMESPACE_ID::uint32 tag;
     ptr = ::PROTOBUF_NAMESPACE_ID::internal::ReadTag(ptr, &tag);
@@ -832,8 +818,6 @@ void StartRecordingRequest::InternalSwap(StartRecordingRequest* other) {
 
 // ===================================================================
 
-void BreakRecordingResponse::InitAsDefaultInstance() {
-}
 class BreakRecordingResponse::_Internal {
  public:
 };
@@ -854,8 +838,9 @@ BreakRecordingResponse::BreakRecordingResponse(const BreakRecordingResponse& fro
 }
 
 void BreakRecordingResponse::SharedCtor() {
-  ::memset(&forcelevel_, 0, static_cast<size_t>(
-      reinterpret_cast<char*>(&successlevel_) -
+  ::memset(reinterpret_cast<char*>(this) + static_cast<size_t>(
+      reinterpret_cast<char*>(&forcelevel_) - reinterpret_cast<char*>(this)),
+      0, static_cast<size_t>(reinterpret_cast<char*>(&successlevel_) -
       reinterpret_cast<char*>(&forcelevel_)) + sizeof(successlevel_));
 }
 
@@ -898,7 +883,6 @@ void BreakRecordingResponse::Clear() {
 
 const char* BreakRecordingResponse::_InternalParse(const char* ptr, ::PROTOBUF_NAMESPACE_ID::internal::ParseContext* ctx) {
 #define CHK_(x) if (PROTOBUF_PREDICT_FALSE(!(x))) goto failure
-  ::PROTOBUF_NAMESPACE_ID::Arena* arena = GetArena(); (void)arena;
   while (!ctx->Done(&ptr)) {
     ::PROTOBUF_NAMESPACE_ID::uint32 tag;
     ptr = ::PROTOBUF_NAMESPACE_ID::internal::ReadTag(ptr, &tag);
@@ -1061,8 +1045,6 @@ void BreakRecordingResponse::InternalSwap(BreakRecordingResponse* other) {
 
 // ===================================================================
 
-void ForceResponse::InitAsDefaultInstance() {
-}
 class ForceResponse::_Internal {
  public:
 };
@@ -1083,8 +1065,9 @@ ForceResponse::ForceResponse(const ForceResponse& from)
 }
 
 void ForceResponse::SharedCtor() {
-  ::memset(&leftforce_, 0, static_cast<size_t>(
-      reinterpret_cast<char*>(&rightforce_) -
+  ::memset(reinterpret_cast<char*>(this) + static_cast<size_t>(
+      reinterpret_cast<char*>(&leftforce_) - reinterpret_cast<char*>(this)),
+      0, static_cast<size_t>(reinterpret_cast<char*>(&rightforce_) -
       reinterpret_cast<char*>(&leftforce_)) + sizeof(rightforce_));
 }
 
@@ -1127,7 +1110,6 @@ void ForceResponse::Clear() {
 
 const char* ForceResponse::_InternalParse(const char* ptr, ::PROTOBUF_NAMESPACE_ID::internal::ParseContext* ctx) {
 #define CHK_(x) if (PROTOBUF_PREDICT_FALSE(!(x))) goto failure
-  ::PROTOBUF_NAMESPACE_ID::Arena* arena = GetArena(); (void)arena;
   while (!ctx->Done(&ptr)) {
     ::PROTOBUF_NAMESPACE_ID::uint32 tag;
     ptr = ::PROTOBUF_NAMESPACE_ID::internal::ReadTag(ptr, &tag);

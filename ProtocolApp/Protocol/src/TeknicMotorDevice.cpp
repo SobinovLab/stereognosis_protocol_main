@@ -58,19 +58,19 @@ int Convertor::convert(const double val)
 /* 
 * Wrapper for interface
 */
-Node::Node(sFnd::INode& node, const int index) :
+Node::Node(sFnd::INode* node, const int index) :
     m_node(node) {
 
     disable();
     // set units for velocity and acceleration
-    m_node.VelUnit(INode::RPM);
-    m_node.AccUnit(INode::RPM_PER_SEC);
+    m_node->VelUnit(INode::RPM);
+    m_node->AccUnit(INode::RPM_PER_SEC);
 
     // define the node conversion modules and default values  
     switch (index)
     {
     case 0:
-        m_node.Setup.ConfigLoad("./configuration/motor_translation_z.mtr");
+        m_node->Setup.ConfigLoad("./configuration/motor_translation_z.mtr");
         // MOTOR CPM-SCHP-3441S-ELSB-1-7-D
         // https://www.teknic.com/model-info/CPM-SCHP-3441S-ELSB/
 
@@ -86,7 +86,7 @@ Node::Node(sFnd::INode& node, const int index) :
 
         break;
     case 1:
-        m_node.Setup.ConfigLoad("./configuration/motor_tilt.mtr");
+        m_node->Setup.ConfigLoad("./configuration/motor_tilt.mtr");
         // MOTOR CPM-SCHP-3421S-ELSA-1-7-D
         // https://www.teknic.com/model-info/CPM-SCHP-3421S-ELSA/
 
@@ -101,7 +101,7 @@ Node::Node(sFnd::INode& node, const int index) :
 
         break;
     case 2:
-        m_node.Setup.ConfigLoad("./configuration/motor_aperture.mtr");
+        m_node->Setup.ConfigLoad("./configuration/motor_aperture.mtr");
         // MOTOR CPM-SCHP-2311S-ELSA-1-7-D
         // https://www.teknic.com/model-info/CPM-SCHP-2311S-ELSA/
 
@@ -125,7 +125,7 @@ Node::Node(sFnd::INode& node, const int index) :
     }
 
     // name loaded with settings
-    std::string m_name = m_node.Info.UserID.Value();
+    m_name = m_node->Info.UserID.Value();
 
     printDetails();
     enable();  // waits until the node is enabled
@@ -142,14 +142,14 @@ shutdowns or NodeStops are cleared, finally the node is enabled */
 
 int Node::enable() {
     clearAlertsNodeStops();
-    m_node.EnableReq(true);
+    m_node->EnableReq(true);
 
     string buf;
 
     //define a timeout in case the node is unable to enable
     auto startTimeoutTime = Times::getCurrentTime();
     //This will loop checking on the Real time values of the node's Ready status
-    while (!m_node.Motion.IsReady()) {
+    while (!m_node->Motion.IsReady()) {
         if (Times::isTimeout(startTimeoutTime, action_timeout)) {
             buf = "TeknicMotorDevice Error: Timed out waiting for Node " + m_name + " to enable.";
             logError(buf.c_str());
@@ -163,27 +163,27 @@ int Node::enable() {
 
 
 void Node::disable() {
-    m_node.EnableReq(false);
+    m_node->EnableReq(false);
 }
 
 
 /* Find home position of the node. */
 int Node::home() {
     string buf;
-    if (m_node.Motion.Homing.HomingValid()) {
-        if (m_node.Motion.Homing.WasHomed()) {
-            buf = "Node has already been homed, current position is:" + to_string(m_node.Motion.PosnMeasured.Value());
+    if (m_node->Motion.Homing.HomingValid()) {
+        if (m_node->Motion.Homing.WasHomed()) {
+            buf = "Node has already been homed, current position is:" + to_string(m_node->Motion.PosnMeasured.Value());
             logInfo(buf.c_str());
         }
         else {
             logInfo("Node has not been homed.");
         }
         logInfo("Homing Node now...");
-        m_node.Motion.Homing.Initiate();
+        m_node->Motion.Homing.Initiate();
 
         // define a timeout in case the node is unable to home
         auto startTimeoutTime = Times::getCurrentTime();
-        while (!m_node.Motion.Homing.WasHomed()) {
+        while (!m_node->Motion.Homing.WasHomed()) {
             if (Times::isTimeout(startTimeoutTime, action_timeout)) {
                 logError("Node did not complete homing:  ");
                 logError("\t -Ensure Homing settings have been defined through ClearView.");
@@ -206,7 +206,7 @@ int Node::home() {
 /* Diagnostics print. */
 void Node::printDetails() {
     std::string nType;
-    switch (m_node.Info.NodeType()) {
+    switch (m_node->Info.NodeType()) {
     case IInfo::MERIDIAN_ISC:
         nType = "MERIDIAN_ISC";
         break;
@@ -226,11 +226,11 @@ void Node::printDetails() {
 
     buf = "  NodeType: " + nType;
     logInfo(buf.c_str());
-    buf = string("     Model: ") + m_node.Info.Model.Value();
+    buf = string("     Model: ") + m_node->Info.Model.Value();
     logInfo(buf.c_str());
-    buf = "  Serial #: " + to_string(m_node.Info.SerialNumber.Value());
+    buf = "  Serial #: " + to_string(m_node->Info.SerialNumber.Value());
     logInfo(buf.c_str());
-    buf = string("FW version: ") + m_node.Info.FirmwareVersion.Value();
+    buf = string("FW version: ") + m_node->Info.FirmwareVersion.Value();
     logInfo(buf.c_str());
     buf = "    userID: " + m_name;
     logInfo(buf.c_str());
@@ -238,8 +238,8 @@ void Node::printDetails() {
 
 void Node::clearAlertsNodeStops()
 {
-    m_node.Status.AlertsClear();
-    m_node.Motion.NodeStopClear();
+    m_node->Status.AlertsClear();
+    m_node->Motion.NodeStopClear();
 }
 
 void Node::handleAlerts() {
@@ -247,22 +247,22 @@ void Node::handleAlerts() {
     char alertList[256];
     string buf;
 
-    m_node.Status.RT.Refresh();
-    m_node.Status.Alerts.Refresh();
+    m_node->Status.RT.Refresh();
+    m_node->Status.Alerts.Refresh();
 
     // if an alert is present:
-    if (!m_node.Status.RT.Value().cpm.AlertPresent) {
+    if (!m_node->Status.RT.Value().cpm.AlertPresent) {
 
-        if (m_node.Status.Alerts.Value().isInAlert()) {
+        if (m_node->Status.Alerts.Value().isInAlert()) {
             // get a copy of the alert register bits and a text description of all bits set
-            m_node.Status.Alerts.Value().StateStr(alertList, 256);
+            m_node->Status.Alerts.Value().StateStr(alertList, 256);
             buf = string("Alerts found on ") + m_name + " node: " + alertList;
             logWarning(buf.c_str());
         }
     }
 
     //Check to see if the node experienced torque saturation
-    if (m_node.Status.HadTorqueSaturation()) {
+    if (m_node->Status.HadTorqueSaturation()) {
         buf = "Node ";
         buf += m_name + "has experienced torque saturation since last checking";
         logWarning(buf.c_str());
@@ -271,13 +271,13 @@ void Node::handleAlerts() {
 
 bool Node::isMoveDone()
 {
-    return m_node.Motion.MoveIsDone();
+    return m_node->Motion.MoveIsDone();
 }
 
 bool Node::wasHomed()
 {
-    if (m_node.Motion.Homing.HomingValid()) {
-        if (m_node.Motion.Homing.WasHomed())
+    if (m_node->Motion.Homing.HomingValid()) {
+        if (m_node->Motion.Homing.WasHomed())
             return true;
     }
     else {
@@ -300,11 +300,11 @@ void Node::m_move(const int& moveCounts, const int& speed, const int& accel) {
     clearAlertsNodeStops();
 
     string buf;
-    int relativeMoveCounts = (int)round(moveCounts - m_node.Motion.PosnMeasured.Value());
+    int relativeMoveCounts = (int)round(moveCounts - m_node->Motion.PosnMeasured.Value());
 
     // Then set the velocity/accel:
-    m_node.Motion.VelLimit = speed;
-    m_node.Motion.AccLimit = accel;
+    m_node->Motion.VelLimit = speed;
+    m_node->Motion.AccLimit = accel;
 
     // Now move.
     buf = "Moving Node " + m_name + " moveCounts " + to_string(moveCounts);
@@ -312,7 +312,7 @@ void Node::m_move(const int& moveCounts, const int& speed, const int& accel) {
 
     // start the movement, runs asynchronously
     try {
-        m_node.Motion.MovePosnStart(relativeMoveCounts);
+        m_node->Motion.MovePosnStart(relativeMoveCounts);
     }
     catch (mnErr& theErr) {
         buf = string("move Node error [") + to_string(theErr.TheAddr) + "] " + theErr.ErrorMsg;
@@ -321,7 +321,7 @@ void Node::m_move(const int& moveCounts, const int& speed, const int& accel) {
     }
 
     // some log
-    auto moveTime = m_node.Motion.MovePosnDurationMsec(moveCounts, true);
+    auto moveTime = m_node->Motion.MovePosnDurationMsec(moveCounts, true);
     buf = "Estimated move duration (abs): " + to_string(moveTime) + "ms";
     logInfo(buf.c_str());
 
@@ -336,7 +336,7 @@ void Node::m_move(const int& moveCounts, const int& speed, const int& accel) {
     buf = "Move complete on " + m_name;
     logInfo(buf.c_str());
     //! Clear the register only if it's successful?
-    // m_node.Motion.MoveWentDone();        // Clear "move done" register
+    // m_node->Motion.MoveWentDone();        // Clear "move done" register
 }
 
 int Node::m_initiateMove(const int& moveCounts, const int& speed, const int& accel)
@@ -348,11 +348,11 @@ int Node::m_initiateMove(const int& moveCounts, const int& speed, const int& acc
 
     string buf;
     // calculate how much you need to move
-    int relativeMoveCounts = (int)round(moveCounts - m_node.Motion.PosnMeasured.Value());
+    int relativeMoveCounts = (int)round(moveCounts - m_node->Motion.PosnMeasured.Value());
 
     // Then set the velocity/accel:
-    m_node.Motion.VelLimit = speed;
-    m_node.Motion.AccLimit = accel;
+    m_node->Motion.VelLimit = speed;
+    m_node->Motion.AccLimit = accel;
 
     // Now move.
     buf = "Moving Node " + m_name + " moveCounts " + to_string(moveCounts) + " relative " + to_string(relativeMoveCounts);
@@ -361,7 +361,7 @@ int Node::m_initiateMove(const int& moveCounts, const int& speed, const int& acc
     // start the movement, runs asynchronously
     int answ = 0;
     try {
-        m_node.Motion.MovePosnStart(relativeMoveCounts);
+        m_node->Motion.MovePosnStart(relativeMoveCounts);
     }
     catch (mnErr& theErr) {
         buf = string("move Node error [") + to_string(theErr.TheAddr) + "] " + theErr.ErrorMsg;
@@ -394,7 +394,7 @@ void Node::retreat()
 
 void Node::stop()
 {
-    m_node.Motion.NodeStop(STOP_TYPE_ESTOP_ABRUPT);
+    m_node->Motion.NodeStop(STOP_TYPE_ESTOP_ABRUPT);
 }
 
 int Node::initiateMove(const double& position, const int& velLevel, const int& accLevel)
@@ -496,21 +496,17 @@ MotorAPI::MotorAPI(void) {
         thisPort.BrakeControl.BrakeSetting(1, BRAKE_ALLOW_MOTION);
 
         // log
-        // TODO check, not sure if those to_strings will be very readable
         buf = ("Port: " + to_string(thisPort.NetNumber()) + 
             ", State: " + to_string(thisPort.OpenState()) + 
-            ", Node#" + to_string(thisPort.NodeCount()) + ".");
+            ", Node count: " + to_string(thisPort.NodeCount()) + ".");
         logInfo(buf.c_str());
 
         // Iterate nodes on this port
         for (int nodeIndex = 0; nodeIndex < thisPort.NodeCount(); nodeIndex++) {
-
-            Node wrappedNode = Node(thisPort.Nodes(nodeIndex), nodeIndex);
-
             // shield error throw
             try
             {
-                m_nodes.push_back(std::reference_wrapper<Node>(wrappedNode));
+                m_nodes.push_back(Node(&(thisPort.Nodes(nodeIndex)), nodeIndex));
             }
             catch (const mnErr& theErr)
             {
@@ -531,7 +527,7 @@ MotorAPI::MotorAPI(void) {
 MotorAPI::~MotorAPI(void) {
     logInfo("Teknic Shutting down. Disabling nodes, and closing port");
     for (auto e : m_nodes) {
-        e.get().disable();
+        e.disable();
     }
     if (wasInitializedCorrectly())
         m_manager->PortsClose();
@@ -546,7 +542,7 @@ int MotorAPI::home()
 
     int answ = 0;
     for (auto node : m_nodes) {
-        answ += node.get().home();
+        answ += node.home();
     }
 
     return answ;
@@ -562,7 +558,7 @@ int MotorAPI::retreat()
     for (size_t i = 0; i < m_nodes.size(); i++)
     {
         // the speed and acc variable are default
-        ret = m_nodes[i].get().initiateRetreat();
+        ret = m_nodes[i].initiateRetreat();
         if (ret) {
             return -3;
         }
@@ -577,7 +573,7 @@ int MotorAPI::retreat()
 
         mtx.lock();
         for (auto e : m_nodes) {
-            allMovementDone *= e.get().isMoveDone();
+            allMovementDone *= e.isMoveDone();
         }
         mtx.unlock();
 
@@ -611,7 +607,7 @@ int MotorAPI::move(std::vector<double> positions, std::atomic<bool>* stopTrial, 
     for (size_t i = 0; i < positions.size(); i++)
     {
         // the speed and acc variable are default
-        ret = m_nodes[i].get().initiateMove(positions[i]);
+        ret = m_nodes[i].initiateMove(positions[i]);
         if (ret) {
             return -3;
         }
@@ -630,7 +626,7 @@ int MotorAPI::move(std::vector<double> positions, std::atomic<bool>* stopTrial, 
         allMovementDone = true;
         mtx.lock();
         for (auto e : m_nodes) {
-            allMovementDone *= e.get().isMoveDone();  // any false
+            allMovementDone *= e.isMoveDone();  // any false
         }
         mtx.unlock();
         if (allMovementDone)
@@ -639,7 +635,7 @@ int MotorAPI::move(std::vector<double> positions, std::atomic<bool>* stopTrial, 
         // check if there are any alerts
         mtx.lock();
         for (auto e : m_nodes) {
-            e.get().handleAlerts();
+            e.handleAlerts();
         }
         mtx.unlock();
         // TODO check if any are dangerous and handle them
@@ -662,7 +658,7 @@ void MotorAPI::stop()
 {
     mtx.lock();
     for (auto e : m_nodes)
-        e.get().stop();
+        e.stop();
     mtx.unlock();
 }
 
@@ -675,7 +671,7 @@ bool MotorAPI::wereHomed()
 {
     bool answ = true;
     for (auto e : m_nodes)
-        answ *= e.get().wasHomed();  // any
+        answ *= e.wasHomed();  // any
     return answ;
 }
 
@@ -683,5 +679,5 @@ void MotorAPI::setActionTimeout(double timeSecs)
 {
     action_timeout = timeSecs;
     for (auto e : m_nodes)
-        e.get().action_timeout = timeSecs;
+        e.action_timeout = timeSecs;
 }
