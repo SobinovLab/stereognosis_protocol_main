@@ -24,7 +24,7 @@ namespace TekscanServerNamespace {
 static const char* TekscanServer_method_names[] = {
   "/TekscanServerNamespace.TekscanServer/StartRecording",
   "/TekscanServerNamespace.TekscanServer/BreakRecording",
-  "/TekscanServerNamespace.TekscanServer/CheckSuccess",
+  "/TekscanServerNamespace.TekscanServer/GetForce",
 };
 
 std::unique_ptr< TekscanServer::Stub> TekscanServer::NewStub(const std::shared_ptr< ::grpc::ChannelInterface>& channel, const ::grpc::StubOptions& options) {
@@ -36,7 +36,7 @@ std::unique_ptr< TekscanServer::Stub> TekscanServer::NewStub(const std::shared_p
 TekscanServer::Stub::Stub(const std::shared_ptr< ::grpc::ChannelInterface>& channel)
   : channel_(channel), rpcmethod_StartRecording_(TekscanServer_method_names[0], ::grpc::internal::RpcMethod::NORMAL_RPC, channel)
   , rpcmethod_BreakRecording_(TekscanServer_method_names[1], ::grpc::internal::RpcMethod::NORMAL_RPC, channel)
-  , rpcmethod_CheckSuccess_(TekscanServer_method_names[2], ::grpc::internal::RpcMethod::NORMAL_RPC, channel)
+  , rpcmethod_GetForce_(TekscanServer_method_names[2], ::grpc::internal::RpcMethod::NORMAL_RPC, channel)
   {}
 
 ::grpc::Status TekscanServer::Stub::StartRecording(::grpc::ClientContext* context, const ::TekscanServerNamespace::StartRecordingRequest& request, ::TekscanServerNamespace::SimpleResponse* response) {
@@ -85,25 +85,25 @@ void TekscanServer::Stub::experimental_async::BreakRecording(::grpc::ClientConte
   return result;
 }
 
-::grpc::Status TekscanServer::Stub::CheckSuccess(::grpc::ClientContext* context, const ::TekscanServerNamespace::SimpleRequest& request, ::TekscanServerNamespace::SuccessResponse* response) {
-  return ::grpc::internal::BlockingUnaryCall(channel_.get(), rpcmethod_CheckSuccess_, context, request, response);
+::grpc::Status TekscanServer::Stub::GetForce(::grpc::ClientContext* context, const ::TekscanServerNamespace::SimpleRequest& request, ::TekscanServerNamespace::ForceResponse* response) {
+  return ::grpc::internal::BlockingUnaryCall(channel_.get(), rpcmethod_GetForce_, context, request, response);
 }
 
-void TekscanServer::Stub::experimental_async::CheckSuccess(::grpc::ClientContext* context, const ::TekscanServerNamespace::SimpleRequest* request, ::TekscanServerNamespace::SuccessResponse* response, std::function<void(::grpc::Status)> f) {
-  ::grpc::internal::CallbackUnaryCall(stub_->channel_.get(), stub_->rpcmethod_CheckSuccess_, context, request, response, std::move(f));
+void TekscanServer::Stub::experimental_async::GetForce(::grpc::ClientContext* context, const ::TekscanServerNamespace::SimpleRequest* request, ::TekscanServerNamespace::ForceResponse* response, std::function<void(::grpc::Status)> f) {
+  ::grpc::internal::CallbackUnaryCall(stub_->channel_.get(), stub_->rpcmethod_GetForce_, context, request, response, std::move(f));
 }
 
-void TekscanServer::Stub::experimental_async::CheckSuccess(::grpc::ClientContext* context, const ::TekscanServerNamespace::SimpleRequest* request, ::TekscanServerNamespace::SuccessResponse* response, ::grpc::experimental::ClientUnaryReactor* reactor) {
-  ::grpc::internal::ClientCallbackUnaryFactory::Create(stub_->channel_.get(), stub_->rpcmethod_CheckSuccess_, context, request, response, reactor);
+void TekscanServer::Stub::experimental_async::GetForce(::grpc::ClientContext* context, const ::TekscanServerNamespace::SimpleRequest* request, ::TekscanServerNamespace::ForceResponse* response, ::grpc::experimental::ClientUnaryReactor* reactor) {
+  ::grpc::internal::ClientCallbackUnaryFactory::Create(stub_->channel_.get(), stub_->rpcmethod_GetForce_, context, request, response, reactor);
 }
 
-::grpc::ClientAsyncResponseReader< ::TekscanServerNamespace::SuccessResponse>* TekscanServer::Stub::PrepareAsyncCheckSuccessRaw(::grpc::ClientContext* context, const ::TekscanServerNamespace::SimpleRequest& request, ::grpc::CompletionQueue* cq) {
-  return ::grpc::internal::ClientAsyncResponseReaderFactory< ::TekscanServerNamespace::SuccessResponse>::Create(channel_.get(), cq, rpcmethod_CheckSuccess_, context, request, false);
+::grpc::ClientAsyncResponseReader< ::TekscanServerNamespace::ForceResponse>* TekscanServer::Stub::PrepareAsyncGetForceRaw(::grpc::ClientContext* context, const ::TekscanServerNamespace::SimpleRequest& request, ::grpc::CompletionQueue* cq) {
+  return ::grpc::internal::ClientAsyncResponseReaderFactory< ::TekscanServerNamespace::ForceResponse>::Create(channel_.get(), cq, rpcmethod_GetForce_, context, request, false);
 }
 
-::grpc::ClientAsyncResponseReader< ::TekscanServerNamespace::SuccessResponse>* TekscanServer::Stub::AsyncCheckSuccessRaw(::grpc::ClientContext* context, const ::TekscanServerNamespace::SimpleRequest& request, ::grpc::CompletionQueue* cq) {
+::grpc::ClientAsyncResponseReader< ::TekscanServerNamespace::ForceResponse>* TekscanServer::Stub::AsyncGetForceRaw(::grpc::ClientContext* context, const ::TekscanServerNamespace::SimpleRequest& request, ::grpc::CompletionQueue* cq) {
   auto* result =
-    this->PrepareAsyncCheckSuccessRaw(context, request, cq);
+    this->PrepareAsyncGetForceRaw(context, request, cq);
   result->StartCall();
   return result;
 }
@@ -132,12 +132,12 @@ TekscanServer::Service::Service() {
   AddMethod(new ::grpc::internal::RpcServiceMethod(
       TekscanServer_method_names[2],
       ::grpc::internal::RpcMethod::NORMAL_RPC,
-      new ::grpc::internal::RpcMethodHandler< TekscanServer::Service, ::TekscanServerNamespace::SimpleRequest, ::TekscanServerNamespace::SuccessResponse>(
+      new ::grpc::internal::RpcMethodHandler< TekscanServer::Service, ::TekscanServerNamespace::SimpleRequest, ::TekscanServerNamespace::ForceResponse>(
           [](TekscanServer::Service* service,
              ::grpc::ServerContext* ctx,
              const ::TekscanServerNamespace::SimpleRequest* req,
-             ::TekscanServerNamespace::SuccessResponse* resp) {
-               return service->CheckSuccess(ctx, req, resp);
+             ::TekscanServerNamespace::ForceResponse* resp) {
+               return service->GetForce(ctx, req, resp);
              }, this)));
 }
 
@@ -158,7 +158,7 @@ TekscanServer::Service::~Service() {
   return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
 }
 
-::grpc::Status TekscanServer::Service::CheckSuccess(::grpc::ServerContext* context, const ::TekscanServerNamespace::SimpleRequest* request, ::TekscanServerNamespace::SuccessResponse* response) {
+::grpc::Status TekscanServer::Service::GetForce(::grpc::ServerContext* context, const ::TekscanServerNamespace::SimpleRequest* request, ::TekscanServerNamespace::ForceResponse* response) {
   (void) context;
   (void) request;
   (void) response;

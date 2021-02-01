@@ -78,9 +78,9 @@ void ProtocolParameters::init()
 	tss_port = 54940;
 
 	// pressure sensor config
-	thresholdTotalForce = 50;
+	thresholdTotalForce = 3;
 	thresholdPeriod = 2;  // seconds
 	thresholdForceEachProportion = 0.2;
-	minimalTouchForce = 1;  // TODO check value
+	minimalTouchForce = 0.5;
 
 }

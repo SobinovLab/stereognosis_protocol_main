@@ -60,7 +60,7 @@ void Protocol::home_motors()
 void Protocol::connect_camera_client1()
 {
 	if (m_cameraClient1.isConnected()) {
-		// TODO warning
+		// warning?
 	}
 	else {
 		m_cameraClient1.server_ip = params.cs_ip1;
@@ -73,7 +73,7 @@ void Protocol::connect_camera_client1()
 void Protocol::connect_camera_client2()
 {
 	if (m_cameraClient2.isConnected()) {
-		// TODO warning
+		// warning?
 	}
 	else {
 		m_cameraClient2.server_ip = params.cs_ip2;
@@ -278,8 +278,9 @@ void Protocol::wait_until_monkey_release()
 {
 	atomic<double> leftForce = 0;
 	atomic<double> rightForce = 0;
-	while (true) {
-		// TODO ask pressure sensor for pressure
+	while (m_touchSensorClient.isConnected()) {
+		// ask pressure sensor for pressure
+		m_touchSensorClient.getForce(&leftForce, &rightForce);
 
 		if (leftForce + rightForce < params.minimalTouchForce)
 			break;
@@ -294,8 +295,9 @@ void Protocol::watch_early_grab()
 {
 	atomic<double> leftForce = 0;
 	atomic<double> rightForce = 0;
-	while (!stopWatch) {
-		// TODO ask pressure sensor for pressure
+	while (!stopWatch && m_touchSensorClient.isConnected()) {
+		// ask pressure sensor for pressure
+		m_touchSensorClient.getForce(&leftForce, &rightForce);
 
 		if (leftForce + rightForce > params.minimalTouchForce) {
 			stopTrial = true;
@@ -446,7 +448,7 @@ void Protocol::run()
 		object_in_position_time = Times::getCurrentTimeInMilliSecs();
 
 		// if the motors made it successfully to the final position
-		if (!stopTrial && !stopProtocol && !rets) {
+		if (!stopTrial && !stopProtocol && rets >= 0) {
 			// spawn the process that monitors the async stopping conditions
 			m_asyncTrialSuccessMonitorThread = new thread(&Protocol::m_asyncTrialConditionMonitor, this);
 
@@ -574,7 +576,6 @@ void Protocol::trialFieldsToggle(bool enable)
 
 void Protocol::trialFieldsEnableStart(bool enable)
 {
-	// TODO this randomly locks the thread on protocol end
 	startTrialBtn->EnableWindow(enable);
 }
 
@@ -747,10 +748,6 @@ void Protocol::initDevices()
 	}
 	else {
 		motorHub = new MotorAPI();
-
-		// home the motors once
-		// TODO: home/calibrate on button press
-		//motorHub->home();
 	}
 }
 
@@ -798,7 +795,7 @@ void Protocol::break_ephys_recording()
 
 /// <summary>
 /// Asks Pressure Sensor if the reward has been earned, ends when sets m_earnedReward to true
-/// TODO: Pressure sensor constantly returns whether the grab is occuring along with the success of the trial,
+/// Pressure sensor constantly returns whether the grab is occuring along with the success of the trial,
 /// and if so happens before the grasp do not give reward
 /// </summary>
 void Protocol::m_asyncTrialConditionMonitor()
@@ -813,8 +810,8 @@ void Protocol::m_asyncTrialConditionMonitor()
 
 	while (!m_stopAsyncTrialConditionMonitor) {
 		if (m_touchSensorClient.isConnected()) {
-			// TODO ask touch sensor for the force on each plate
-			// deprecated: m_touchSensorClient.checkSuccess(&result);
+			// ask touch sensor for the force on each plate
+			m_touchSensorClient.getForce(&leftForce, &rightForce);
 
 			// check if touching now and keep time of touch start
 			// minimum force level of 0.2 of desired and total excedes the desired

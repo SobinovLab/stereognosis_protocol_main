@@ -14,9 +14,9 @@ Plan for the finish of fixing stereognosis:
 	iv. selection of the default camera preset based on computer's IP? DONE
     v. Make prepare camera recording initialize the cameras if not initialized. BAD IDEA - cameras need to be checked to be USB 3 anyway, maybe in the future
 3. PRESSURE SENSOR:
-    i. Remove calculation of success from the pressure sensor - it will be calculated in the main protocol. The server should answer to a message requesting whether either sensor crossed the threshold, e.g. int crossedLeft and int crossedRight.
-    ii. Add a message to which the sensors reply if the trial has finished and all data has been saved.
-    iii. Ensure that when the "start trial" message arrives, but the previous one has not finished, it replies with failure, and does not start the new trial.
+    i. Remove calculation of success from the pressure sensor - it will be calculated in the main protocol. The server should answer to a message requesting whether either sensor crossed the threshold, e.g. int crossedLeft and int crossedRight. DONE replying with force values
+    ii. Add a message to which the sensors reply if the trial has finished and all data has been saved. NOT NEEDED
+    iii. Ensure that when the "start trial" message arrives, but the previous one has not finished, it replies with failure, and does not start the new trial. DONE
     iv*. Cleaner architecture. Possible decreasing the number of parallel processes or Tasks that are running. This is not critical, but may be a better way to work with the code. If you feel like some other architecture would fit more, please tell me.
 
 4. MAIN: 

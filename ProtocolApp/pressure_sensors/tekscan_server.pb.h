@@ -58,6 +58,9 @@ namespace TekscanServerNamespace {
 class BreakRecordingResponse;
 class BreakRecordingResponseDefaultTypeInternal;
 extern BreakRecordingResponseDefaultTypeInternal _BreakRecordingResponse_default_instance_;
+class ForceResponse;
+class ForceResponseDefaultTypeInternal;
+extern ForceResponseDefaultTypeInternal _ForceResponse_default_instance_;
 class SimpleRequest;
 class SimpleRequestDefaultTypeInternal;
 extern SimpleRequestDefaultTypeInternal _SimpleRequest_default_instance_;
@@ -67,16 +70,13 @@ extern SimpleResponseDefaultTypeInternal _SimpleResponse_default_instance_;
 class StartRecordingRequest;
 class StartRecordingRequestDefaultTypeInternal;
 extern StartRecordingRequestDefaultTypeInternal _StartRecordingRequest_default_instance_;
-class SuccessResponse;
-class SuccessResponseDefaultTypeInternal;
-extern SuccessResponseDefaultTypeInternal _SuccessResponse_default_instance_;
 }  // namespace TekscanServerNamespace
 PROTOBUF_NAMESPACE_OPEN
 template<> ::TekscanServerNamespace::BreakRecordingResponse* Arena::CreateMaybeMessage<::TekscanServerNamespace::BreakRecordingResponse>(Arena*);
+template<> ::TekscanServerNamespace::ForceResponse* Arena::CreateMaybeMessage<::TekscanServerNamespace::ForceResponse>(Arena*);
 template<> ::TekscanServerNamespace::SimpleRequest* Arena::CreateMaybeMessage<::TekscanServerNamespace::SimpleRequest>(Arena*);
 template<> ::TekscanServerNamespace::SimpleResponse* Arena::CreateMaybeMessage<::TekscanServerNamespace::SimpleResponse>(Arena*);
 template<> ::TekscanServerNamespace::StartRecordingRequest* Arena::CreateMaybeMessage<::TekscanServerNamespace::StartRecordingRequest>(Arena*);
-template<> ::TekscanServerNamespace::SuccessResponse* Arena::CreateMaybeMessage<::TekscanServerNamespace::SuccessResponse>(Arena*);
 PROTOBUF_NAMESPACE_CLOSE
 namespace TekscanServerNamespace {
 
@@ -659,23 +659,23 @@ class BreakRecordingResponse PROTOBUF_FINAL :
 };
 // -------------------------------------------------------------------
 
-class SuccessResponse PROTOBUF_FINAL :
-    public ::PROTOBUF_NAMESPACE_ID::Message /* @@protoc_insertion_point(class_definition:TekscanServerNamespace.SuccessResponse) */ {
+class ForceResponse PROTOBUF_FINAL :
+    public ::PROTOBUF_NAMESPACE_ID::Message /* @@protoc_insertion_point(class_definition:TekscanServerNamespace.ForceResponse) */ {
  public:
-  inline SuccessResponse() : SuccessResponse(nullptr) {}
-  virtual ~SuccessResponse();
+  inline ForceResponse() : ForceResponse(nullptr) {}
+  virtual ~ForceResponse();
 
-  SuccessResponse(const SuccessResponse& from);
-  SuccessResponse(SuccessResponse&& from) noexcept
-    : SuccessResponse() {
+  ForceResponse(const ForceResponse& from);
+  ForceResponse(ForceResponse&& from) noexcept
+    : ForceResponse() {
     *this = ::std::move(from);
   }
 
-  inline SuccessResponse& operator=(const SuccessResponse& from) {
+  inline ForceResponse& operator=(const ForceResponse& from) {
     CopyFrom(from);
     return *this;
   }
-  inline SuccessResponse& operator=(SuccessResponse&& from) noexcept {
+  inline ForceResponse& operator=(ForceResponse&& from) noexcept {
     if (GetArena() == from.GetArena()) {
       if (this != &from) InternalSwap(&from);
     } else {
@@ -693,20 +693,20 @@ class SuccessResponse PROTOBUF_FINAL :
   static const ::PROTOBUF_NAMESPACE_ID::Reflection* GetReflection() {
     return GetMetadataStatic().reflection;
   }
-  static const SuccessResponse& default_instance();
+  static const ForceResponse& default_instance();
 
   static void InitAsDefaultInstance();  // FOR INTERNAL USE ONLY
-  static inline const SuccessResponse* internal_default_instance() {
-    return reinterpret_cast<const SuccessResponse*>(
-               &_SuccessResponse_default_instance_);
+  static inline const ForceResponse* internal_default_instance() {
+    return reinterpret_cast<const ForceResponse*>(
+               &_ForceResponse_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
     4;
 
-  friend void swap(SuccessResponse& a, SuccessResponse& b) {
+  friend void swap(ForceResponse& a, ForceResponse& b) {
     a.Swap(&b);
   }
-  inline void Swap(SuccessResponse* other) {
+  inline void Swap(ForceResponse* other) {
     if (other == this) return;
     if (GetArena() == other->GetArena()) {
       InternalSwap(other);
@@ -714,7 +714,7 @@ class SuccessResponse PROTOBUF_FINAL :
       ::PROTOBUF_NAMESPACE_ID::internal::GenericSwap(this, other);
     }
   }
-  void UnsafeArenaSwap(SuccessResponse* other) {
+  void UnsafeArenaSwap(ForceResponse* other) {
     if (other == this) return;
     GOOGLE_DCHECK(GetArena() == other->GetArena());
     InternalSwap(other);
@@ -722,17 +722,17 @@ class SuccessResponse PROTOBUF_FINAL :
 
   // implements Message ----------------------------------------------
 
-  inline SuccessResponse* New() const final {
-    return CreateMaybeMessage<SuccessResponse>(nullptr);
+  inline ForceResponse* New() const final {
+    return CreateMaybeMessage<ForceResponse>(nullptr);
   }
 
-  SuccessResponse* New(::PROTOBUF_NAMESPACE_ID::Arena* arena) const final {
-    return CreateMaybeMessage<SuccessResponse>(arena);
+  ForceResponse* New(::PROTOBUF_NAMESPACE_ID::Arena* arena) const final {
+    return CreateMaybeMessage<ForceResponse>(arena);
   }
   void CopyFrom(const ::PROTOBUF_NAMESPACE_ID::Message& from) final;
   void MergeFrom(const ::PROTOBUF_NAMESPACE_ID::Message& from) final;
-  void CopyFrom(const SuccessResponse& from);
-  void MergeFrom(const SuccessResponse& from);
+  void CopyFrom(const ForceResponse& from);
+  void MergeFrom(const ForceResponse& from);
   PROTOBUF_ATTRIBUTE_REINITIALIZES void Clear() final;
   bool IsInitialized() const final;
 
@@ -746,13 +746,13 @@ class SuccessResponse PROTOBUF_FINAL :
   inline void SharedCtor();
   inline void SharedDtor();
   void SetCachedSize(int size) const final;
-  void InternalSwap(SuccessResponse* other);
+  void InternalSwap(ForceResponse* other);
   friend class ::PROTOBUF_NAMESPACE_ID::internal::AnyMetadata;
   static ::PROTOBUF_NAMESPACE_ID::StringPiece FullMessageName() {
-    return "TekscanServerNamespace.SuccessResponse";
+    return "TekscanServerNamespace.ForceResponse";
   }
   protected:
-  explicit SuccessResponse(::PROTOBUF_NAMESPACE_ID::Arena* arena);
+  explicit ForceResponse(::PROTOBUF_NAMESPACE_ID::Arena* arena);
   private:
   static void ArenaDtor(void* object);
   inline void RegisterArenaDtor(::PROTOBUF_NAMESPACE_ID::Arena* arena);
@@ -772,25 +772,36 @@ class SuccessResponse PROTOBUF_FINAL :
   // accessors -------------------------------------------------------
 
   enum : int {
-    kSuccessFieldNumber = 1,
+    kLeftForceFieldNumber = 1,
+    kRightForceFieldNumber = 2,
   };
-  // int32 success = 1;
-  void clear_success();
-  ::PROTOBUF_NAMESPACE_ID::int32 success() const;
-  void set_success(::PROTOBUF_NAMESPACE_ID::int32 value);
+  // double leftForce = 1;
+  void clear_leftforce();
+  double leftforce() const;
+  void set_leftforce(double value);
   private:
-  ::PROTOBUF_NAMESPACE_ID::int32 _internal_success() const;
-  void _internal_set_success(::PROTOBUF_NAMESPACE_ID::int32 value);
+  double _internal_leftforce() const;
+  void _internal_set_leftforce(double value);
   public:
 
-  // @@protoc_insertion_point(class_scope:TekscanServerNamespace.SuccessResponse)
+  // double rightForce = 2;
+  void clear_rightforce();
+  double rightforce() const;
+  void set_rightforce(double value);
+  private:
+  double _internal_rightforce() const;
+  void _internal_set_rightforce(double value);
+  public:
+
+  // @@protoc_insertion_point(class_scope:TekscanServerNamespace.ForceResponse)
  private:
   class _Internal;
 
   template <typename T> friend class ::PROTOBUF_NAMESPACE_ID::Arena::InternalHelper;
   typedef void InternalArenaConstructable_;
   typedef void DestructorSkippable_;
-  ::PROTOBUF_NAMESPACE_ID::int32 success_;
+  double leftforce_;
+  double rightforce_;
   mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
   friend struct ::TableStruct_tekscan_5fserver_2eproto;
 };
@@ -981,26 +992,46 @@ inline void BreakRecordingResponse::set_forcelevel(double value) {
 
 // -------------------------------------------------------------------
 
-// SuccessResponse
+// ForceResponse
 
-// int32 success = 1;
-inline void SuccessResponse::clear_success() {
-  success_ = 0;
+// double leftForce = 1;
+inline void ForceResponse::clear_leftforce() {
+  leftforce_ = 0;
 }
-inline ::PROTOBUF_NAMESPACE_ID::int32 SuccessResponse::_internal_success() const {
-  return success_;
+inline double ForceResponse::_internal_leftforce() const {
+  return leftforce_;
 }
-inline ::PROTOBUF_NAMESPACE_ID::int32 SuccessResponse::success() const {
-  // @@protoc_insertion_point(field_get:TekscanServerNamespace.SuccessResponse.success)
-  return _internal_success();
+inline double ForceResponse::leftforce() const {
+  // @@protoc_insertion_point(field_get:TekscanServerNamespace.ForceResponse.leftForce)
+  return _internal_leftforce();
 }
-inline void SuccessResponse::_internal_set_success(::PROTOBUF_NAMESPACE_ID::int32 value) {
+inline void ForceResponse::_internal_set_leftforce(double value) {
   
-  success_ = value;
+  leftforce_ = value;
 }
-inline void SuccessResponse::set_success(::PROTOBUF_NAMESPACE_ID::int32 value) {
-  _internal_set_success(value);
-  // @@protoc_insertion_point(field_set:TekscanServerNamespace.SuccessResponse.success)
+inline void ForceResponse::set_leftforce(double value) {
+  _internal_set_leftforce(value);
+  // @@protoc_insertion_point(field_set:TekscanServerNamespace.ForceResponse.leftForce)
+}
+
+// double rightForce = 2;
+inline void ForceResponse::clear_rightforce() {
+  rightforce_ = 0;
+}
+inline double ForceResponse::_internal_rightforce() const {
+  return rightforce_;
+}
+inline double ForceResponse::rightforce() const {
+  // @@protoc_insertion_point(field_get:TekscanServerNamespace.ForceResponse.rightForce)
+  return _internal_rightforce();
+}
+inline void ForceResponse::_internal_set_rightforce(double value) {
+  
+  rightforce_ = value;
+}
+inline void ForceResponse::set_rightforce(double value) {
+  _internal_set_rightforce(value);
+  // @@protoc_insertion_point(field_set:TekscanServerNamespace.ForceResponse.rightForce)
 }
 
 #ifdef __GNUC__
