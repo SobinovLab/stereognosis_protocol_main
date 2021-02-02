@@ -124,7 +124,8 @@ class Protocol
 		void matchLoadedSessionTrialToParams(const std::vector<std::string>& line1, const std::vector<std::string>& line2, const std::vector<double>& vec);
 		std::ofstream trialLogCsv;
 		void openCsvLog();
-		void addLineToCsvLog(const bool got_reward, const bool repeating, const long long trial_start_time, const long long object_in_position_time,
+		void addLineToCsvLog(const bool got_reward, const bool repeating, const long long trial_start_time, 
+			const long long object_in_position_time, const long long arm_liftoff_time,
 			const long long trial_end_time, const long long trial_finished_time);
 		void closeCsvLog();
 
@@ -138,6 +139,9 @@ class Protocol
 		// photoresistors
 		CStaticColor* m_frontPhotoresistorCtrl = nullptr;
 		CStaticColor* m_rearPhotoresistorCtrl = nullptr;
+		bool isArmAtRest();
+		int wait_until_arm_at_rest();
+		int wait_until_arm_liftoff();
 
 		// ephys
 		void start_ephys_recording();

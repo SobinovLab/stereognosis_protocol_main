@@ -295,13 +295,21 @@ void Protocol::watch_early_grab()
 {
 	atomic<double> leftForce = 0;
 	atomic<double> rightForce = 0;
-	while (!stopWatch && m_touchSensorClient.isConnected()) {
-		// ask pressure sensor for pressure
-		m_touchSensorClient.getForce(&leftForce, &rightForce);
-
-		if (leftForce + rightForce > params.minimalTouchForce) {
+	while (!stopWatch) {
+		// see if monkey lifted arm
+		if (!isArmAtRest()) {
 			stopTrial = true;
 			break;
+		}
+
+		// ask pressure sensor for pressure
+		if (m_touchSensorClient.isConnected()) {
+			m_touchSensorClient.getForce(&leftForce, &rightForce);
+
+			if (leftForce + rightForce > params.minimalTouchForce) {
+				stopTrial = true;
+				break;
+			}
 		}
 	}
 }
@@ -338,6 +346,7 @@ void Protocol::run()
 	openCsvLog();
 	long long trial_start_time;
 	long long object_in_position_time;
+	long long arm_liftoff_time;
 	long long trial_end_time;
 	long long trial_finished_time;
 
@@ -351,6 +360,11 @@ void Protocol::run()
 	while (!this->stopProtocol.load())
 	{
 		// ---------------- Preparing trial
+		trial_start_time = 0;
+		object_in_position_time = 0;
+		arm_liftoff_time = 0;
+		trial_end_time = 0;
+		trial_finished_time = 0;
 
 		// if went through all trials, break the loop
 		if (params.total_trials > 0 && params.trial_number >= params.total_trials)
@@ -374,6 +388,10 @@ void Protocol::run()
 
 		// wait for the monkey to release the grasp on the object - can be forced by startTrial
 		wait_until_monkey_release();
+
+		// wait until arm at rest
+		wait_until_arm_at_rest();
+
 
 		// waiting for the start of the next trial
 		while (!this->startTrial.load() && 
@@ -420,11 +438,6 @@ void Protocol::run()
 		// prepare recordings
 		send_config_to_cameras();
 
-		// start recordings
-		rets = start_camera_recording();  // TODO process it?
-		start_pressure_sensor_recording();
-		start_ephys_recording();
-
 		// GUI Can click on stop trial
 		trialFieldsEnableRetreat(true);
 
@@ -444,15 +457,24 @@ void Protocol::run()
 			// Reset to 0 if it is fine and want to test everything else
 		}
 
+		// log
+		object_in_position_time = Times::getCurrentTimeInMilliSecs();
+
 		// stop the watch thread
 		stopWatch = true;
 		watchThread.join();
 
-		// log
-		object_in_position_time = Times::getCurrentTimeInMilliSecs();
+		rets = wait_until_arm_liftoff();
+
+		arm_liftoff_time = Times::getCurrentTimeInMilliSecs();
 
 		// if the motors made it successfully to the final position
 		if (!stopTrial && !stopProtocol && rets >= 0) {
+			// start recordings
+			start_camera_recording();  // TODO process it?
+			start_pressure_sensor_recording();
+			start_ephys_recording();
+
 			// spawn the process that monitors the async stopping conditions
 			m_asyncTrialSuccessMonitorThread = new thread(&Protocol::m_asyncTrialConditionMonitor, this);
 
@@ -517,7 +539,7 @@ void Protocol::run()
 		// log the trial success, target positions and times
 		trial_finished_time = Times::getCurrentTimeInMilliSecs();
 		addLineToCsvLog(m_earnedReward || deservesReward, repeating_trial[params.trial_number], 
-			trial_start_time, object_in_position_time, trial_end_time, trial_finished_time);
+			trial_start_time, object_in_position_time, arm_liftoff_time, trial_end_time, trial_finished_time);
 
 
 		// wait for the signal from recording devices that the data has been saved - is Ready
@@ -672,6 +694,7 @@ void Protocol::openCsvLog()
 	trialLogCsv << "reward,";
 	trialLogCsv << "trial_start_time(ms),";
 	trialLogCsv << "object_in_position_time(ms),";
+	trialLogCsv << "arm_liftoff_time(ms),";
 	trialLogCsv << "trial_end_time(ms),";
 	trialLogCsv << "trial_finished_time(ms),";
 	trialLogCsv << "pos_translation_z(mm),";
@@ -681,7 +704,10 @@ void Protocol::openCsvLog()
 
 }
 
-void Protocol::addLineToCsvLog(const bool got_reward, const bool repeating, const long long trial_start_time, const long long object_in_position_time, const long long trial_end_time, const long long trial_finished_time)
+void Protocol::addLineToCsvLog(const bool got_reward, const bool repeating,
+	const long long trial_start_time, const long long object_in_position_time,
+	const long long arm_liftoff_time,
+	const long long trial_end_time, const long long trial_finished_time)
 {
 	if (!trialLogCsv.is_open()) {
 		logError("Trying to write into a closed log.");
@@ -693,6 +719,7 @@ void Protocol::addLineToCsvLog(const bool got_reward, const bool repeating, cons
 	trialLogCsv << (int)got_reward << ",";			// "reward,";
 	trialLogCsv << trial_start_time << ",";			// "trial_start_time(ms),";
 	trialLogCsv << object_in_position_time << ",";	// "object_in_position_time(ms),";
+	trialLogCsv << arm_liftoff_time << ",";			// "arm_liftoff_time(ms),";
 	trialLogCsv << trial_end_time << ",";			// "trial_end_time(ms),";
 	trialLogCsv << trial_finished_time << ",";		// "trial_finished_time(ms),";
 	trialLogCsv << params.pos_translation_z << ",";	// "pos_translation_z(mm),";
@@ -785,6 +812,50 @@ bool Protocol::isLightSensorsOn()
 bool Protocol::isEphysOn()
 {
 	return m_NIUsb6001card.wasInitializedCorrectly();
+}
+
+bool Protocol::isArmAtRest()
+{
+	if (isLightSensorsOn())
+		return IS_REAR_PHOTORESISTOR_COVERED && IS_FRONT_PHOTORESISTOR_COVERED;
+	else
+		return true;
+}
+
+int Protocol::wait_until_arm_at_rest()
+{
+	auto waitStart = Times::getCurrentTime();
+	double timeout = 5 * 60; // seconds
+
+	int flag = 0;
+	while (true) {
+		if (isArmAtRest()) {
+			break;
+		}
+		if (Times::isTimeout(waitStart, timeout)) {
+			flag = -1;
+			break;
+		}
+	}
+	return flag;
+}
+
+int Protocol::wait_until_arm_liftoff()
+{
+	auto waitStart = Times::getCurrentTime();
+	double timeout = 5 * 60; // seconds
+
+	int flag = 0;
+	while (true) {
+		if (!isArmAtRest()) {
+			break;
+		}
+		if (Times::isTimeout(waitStart, timeout)) {
+			flag = -1;
+			break;
+		}
+	}
+	return flag;
 }
 
 void Protocol::start_ephys_recording()

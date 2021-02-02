@@ -562,7 +562,7 @@ int MotorAPI::home()
     for (auto node : m_nodes) {
         answ += node.home();
     }
-    engageBrakes();
+    //engageBrakes();
 
     return answ;
 }
@@ -588,7 +588,7 @@ int MotorAPI::retreat()
         m_nodes[i].retreat();
     }
 
-    engageBrakes();
+    //engageBrakes();
     if (!answ) {
         logInfo("Retreat complete.");
     }
