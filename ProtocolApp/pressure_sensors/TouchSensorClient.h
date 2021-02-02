@@ -4,6 +4,7 @@
 
 #include <string>
 
+#pragma warning( push, 0 )
 #include <grpc/grpc.h>
 #include <grpcpp/channel.h>
 #include <grpcpp/client_context.h>
@@ -12,6 +13,7 @@
 
 #include "tekscan_server.grpc.pb.h"
 #include "tekscan_server.pb.h"
+#pragma warning(pop)
 
 using grpc::Channel;
 using grpc::ClientContext;
@@ -28,7 +30,7 @@ public:
 
 	bool startRecording(int trialnum);
 	bool breakRecording(std::atomic<int>* result);
-	bool checkSuccess(std::atomic<int>* result);
+	bool getForce(std::atomic<double>* leftForce, std::atomic<double>* rightForce);
 
 	INT32 lastCode = 0;
 	CString* lastDescritpion;
@@ -49,7 +51,7 @@ public:
 
 	virtual void startRecording(int trialnum);
 	virtual void breakRecording(std::atomic<int>* result);
-	virtual void checkSuccess(std::atomic<int>* result);
+	virtual void getForce(std::atomic<double>* leftForce, std::atomic<double>* rightForce);
 
 	CString server_ip;
 	long port;

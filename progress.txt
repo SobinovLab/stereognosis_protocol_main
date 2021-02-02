@@ -1,0 +1,35 @@
+Plan for the finish of fixing stereognosis:
+
+1. MAIN: Make protocol loop in a separate thread from GUI, transfer all device interfacesto Protocol class. DONE
+1.5 Make monitor in the GUI that updates the state based on the running loop of the trials. Or directly give access to the elements? DONE: gave direct acceess.
+1.6 Automatic looping logic enabled. DONE
+2. CAMERAS: 
+    0. Move recording functions from GUI thread, add monitor for state in the Protocol. DONE
+    0.1 Make GUI objects controlled from Protocol. DONE
+    0.2 Move directory management to the Protocol. DONE
+    0.3 Move trial run to Protocol, as well as trial number. DONE
+	i. Add response on finishing saving files, DONE
+	ii. add displayed error when could not set maximum framerate, DONE
+	iii. add button to check maximum framerate available (if connected as USB 2 or 3). DONE
+	iv. selection of the default camera preset based on computer's IP? DONE
+    v. Make prepare camera recording initialize the cameras if not initialized. BAD IDEA - cameras need to be checked to be USB 3 anyway, maybe in the future
+3. PRESSURE SENSOR:
+    i. Remove calculation of success from the pressure sensor - it will be calculated in the main protocol. The server should answer to a message requesting whether either sensor crossed the threshold, e.g. int crossedLeft and int crossedRight. DONE replying with force values
+    ii. Add a message to which the sensors reply if the trial has finished and all data has been saved. NOT NEEDED
+    iii. Ensure that when the "start trial" message arrives, but the previous one has not finished, it replies with failure, and does not start the new trial. DONE
+    iv*. Cleaner architecture. Possible decreasing the number of parallel processes or Tasks that are running. This is not critical, but may be a better way to work with the code. If you feel like some other architecture would fit more, please tell me.
+
+4. MAIN: 
+    v. Motor hub. DONE
+    v.0 load config file. DONE
+    v.1 Add a button for Home. DONE
+	i. Load the session CSV (default to the latest from a folder - make a GUI field) into a series of vectors. DONE
+	ii. Go through them stopping the protocol when it runs out of trials. DONE
+	iii. Update GUI integration of the storage folder. DONE
+    iv. GUI control of the looping logic gate. DONE
+    vi. Testing flags only try to launch something and don't break. DONE
+    vii. Finalize GUI enable-disable controls DONE
+    viii. Logging of trials. DONE
+    ix. Stop Protocol Needs debugging. DONE
+5. SERVERS:
+    i. Check if can catch connecting to nonexistant server - BAD IDEA can cause problems during servers disapperaring and reappearing.

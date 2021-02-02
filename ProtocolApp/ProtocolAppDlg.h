@@ -9,11 +9,10 @@
 #include <thread>
 #include <future>
 #include "Protocol.h"
-#include "Sounds.h"
 #include "ProtocolApp.h"
 #include "CStaticColor.h"
-#include "CameraClient.h"
-#include "TouchSensorClient.h"
+
+constexpr auto FONT_TYPE = "Courier New";
 
 #ifndef NDEBUG
 	#define new DEBUG_NEW
@@ -43,73 +42,53 @@ protected:
 
 	HICON m_hIcon;
 
-	//////// Field edits
-	// reward
-	CEdit m_rewardDurationEdtCtrl;
-	// protocol parameters
-	CEdit m_accelerationCtrl;
-	CEdit m_speedCtrl;
-	CEdit m_positionCtrl;
-	CEdit m_currentTrialEdtCtrl;
+	///////// running and controlling the protocol
+	std::thread* protocolThread;  // runs Protocol::run
+	Protocol m_protocol;
+	void stopProtocolThread();
+	void stopTrial();
 
-	//// end trial buttons
-	//CMFCButton m_retreatButton;
-	//CMFCButton m_retreatFlushWaterButton;
+public:
+
+	//////////////// Fields
+	//////// Protocol
+	void toggleProtocolCtrls(bool stopped);
+	void enableRewardCtrls(bool enable);
+	
+	// buttons
+
+	// edits
+	void setFontGuiTrialsCounter();
 
 	// light sensors
 	CStaticColor m_frontPhotoresistorCtrl;
 	CStaticColor m_rearPhotoresistorCtrl;
 
-	// camera
-	CEdit m_serverStatusCtrl1;
-	CEdit m_serverLogCtrl1;
-	CEdit m_serverStatusCtrl2;
-	CEdit m_serverLogCtrl2;
+	//////// Trial
+	// buttons
+	CButton m_startTrialBtn;
+	CButton m_retreatBtn;
+	CButton m_retreatFlushBtn;
+	CButton m_loopChk;
 
-	// touch sensors
+	// edits -- mostly used via linked text
+	CEdit m_trialStatus;
+
+	//////// Pressure Sensors
+	void toggleTouchServerCtrls(bool disconnected);
+	
+	// edits
 	CEdit m_touchServerLogCtrl;
 
-	// trial loop
-	CButton m_trialLoopChk;
+	//////// Cameras
+	void toggleCameraServer1Ctrls(bool disconnected);
+	void toggleCameraServer2Ctrls(bool disconnected);
+	
+	// edits
+	CEdit m_serverLogCtrl1;
+	CEdit m_serverLogCtrl2;
 
-	///////// running and controlling the protocol
-	std::thread* protocolThread;
-	Protocol m_protocol;
-	atomic<bool> m_stopProtocol;
-	atomic<bool> m_startTrial;
-	atomic<bool> m_stopTrial;
-	atomic<bool> m_retreatedMotors;  // needed for delayed stop of recording
-	void stopProtocolThread();
-
-	//////// both control
-	void sendStartRecording();
-	void retreatStopRecording();
-
-	//////// cameras
-	CameraClient m_cameraClient1;
-	CameraClient m_cameraClient2;
-	void sendConfig();
-	void syncTime();
-	void sendPrepareRecording();
-
-	//////// touch sensors
-	TouchSensorClient m_touchSensorClient;
-	std::thread* m_touchSensorSuccessMonitorThread;
-	void m_touchSensorSuccessMonitor();
-	std::atomic<bool> stopTouchSensorSuccessMonitor;
-
-	//////// Local devices
-	NIUsb6001card m_NIUsb6001card;
-
-	//////// Debug/testing controls
-
-	/////// Enable/disable fields
-	void enableProtocolCtrls(bool enable);
-	void enableTrialCtrls(bool enable);
-	void enableRewardCtrls(bool enable);
-	void enableCameraServer1Ctrls(bool enable);
-	void enableCameraServer2Ctrls(bool enable);
-	void enableTouchServerCtrls(bool enable);
+protected:
 
 	/////// Generated message map functions
 	virtual BOOL OnInitDialog();
@@ -117,13 +96,10 @@ protected:
 	afx_msg void OnPaint();
 	afx_msg HCURSOR OnQueryDragIcon();
 
-	// load save
-	afx_msg void OnSaveProtBtnClicked();
-	afx_msg void OnLoadProtBtnClicked();
-
 	// protocol
 	afx_msg void OnStartProtocolBtnClicked();
 	afx_msg void OnStopProtocolBtnClicked();
+	afx_msg void OnBnClickedHomeMotorsBtn();
 
 	// reward
 	afx_msg void OnFlushWaterBtnClicked();
@@ -139,7 +115,6 @@ protected:
 	afx_msg void OnConnect2BtnClicked();
 	afx_msg void OnDisconnect2BtnClicked();
 	afx_msg void OnSendConfigBtnClicked();
-	afx_msg void OnSyncTimeBtnClicked();
 	afx_msg void OnCaptureSingleFrameBtnClicked();
 
 	// TOUCH server
@@ -148,4 +123,5 @@ protected:
 	
 	DECLARE_MESSAGE_MAP()
 public:
+	afx_msg void OnBnClickedLoopChk();
 };

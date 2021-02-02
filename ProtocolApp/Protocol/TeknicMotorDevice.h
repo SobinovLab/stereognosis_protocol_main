@@ -1,72 +1,131 @@
-/*********************************************************************
-*
-* Description:
-*    This class manages a Teknic motor 
-* 
-*********************************************************************/
-#pragma once
-
-#include <Windows.h>
 #include <vector>
 #include <string>
+#include <pubSysCls.h>
+#include "Times.h"
 #include "Logger.h"
-#include <stdlib.h>
-#include "pubSysCls.h"	
-
-#define CONVERSION_ERROR -1
-
-#define MAX_ACC_LEVEL 10
-#define MAX_SPEED_LEVEL 10
-#define MAX_POSITION 240	 
-
-#define MIN_ACC_LEVEL 1
-#define MIN_SPEED_LEVEL 1
-#define MIN_POSITION 0.1	 
-
-#define MAX_ACC_LIM_RPM_PER_SEC	4000
-#define MAX_VEL_LIM_RPM			700
-#define MAX_DISTANCE_CNTS		-105000	// --->toward chair direction 
-#define TIME_TILL_TIMEOUT		10000	//The timeout used for homing(ms)
-
-#define HORIZONTAL_MOTOR   0
-#define ROTATIONAL_MOTOR   1
-#define DISH_MOTOR         2
-
-#define NUMBERS_OF_MOTORS   3
-#define NUMBERS_OF_ATTEMPTS   10
-#define PORT_NUM   0
-
-using namespace std;
-using namespace sFnd;
 
 #pragma comment(lib, "sFoundation20.lib")
 
-class TeknicMotorDevice 
-{
-	public:
-		TeknicMotorDevice();
-		~TeknicMotorDevice();
-		void init();
-		/* 
-		 * Acceleration: proportional level 1-10 (1 - 4000 RPM/S)
-		 * Speed:        proportional level 1-10 (1 - 700 RPM)
-		 * Position:     1 to 240 mm -> proportional cycles ((-1) to (-105000) CNTs)
-		 * Return a boolean value to notify if the action has been aborted (true) or not
-		*/
-		bool go(const long * positionInMillimeters, const long * speedLevel, const long * accelerationLevel);
-		void stop();
-		bool isMoving();
-		void home();
-		void reset();
-	private:
-		/*
-		*   Create the SysManager object. This object will coordinate actions among various ports
-		*   and within nodes. In this example we use this object to setup and open our port.
-		*/
-		SysManager * myMgr;	//Create System Manager myMgr
-		IPort *myPort;
-		INode * theNode;
-		long convertPositionToCNTs(long valueInMillimeter);
-		long convertSpeedLevelToRPM(long level);
-		long convertAccLevelToRPMperSecs(long level);
-};		
+
+class Convertor {
+private:
+    // Order of operations:
+    // change the direction of input vs output
+    double sign;
+    // added to the input
+    double in_offset;
+    // multiply
+    double in_to_out_factor;
+
+    // bound range
+    int min_out;
+    int max_out;
+
+public:
+    Convertor(const int _min_out, const int _max_out, const double _in_offset, const double _in_to_out_factor, const double sign=1);
+    ~Convertor();
+
+    int convert(const int val);
+    int convert(const double val);
+};
+
+
+class Node {
+private:
+    sFnd::INode* m_node;
+    Node() = delete;
+    std::string m_name;
+
+    // conversion variables
+    Convertor* pos;
+    Convertor* vel;
+    Convertor* acc;
+
+    double retreat_position;
+    double default_vel;
+    double default_acc;
+
+    // internal control functions
+    void m_move(const int& moveCounts, const double& speed, const double& accel,
+        std::atomic<bool>* stopTrial, std::atomic<bool>* stopProtocol);
+    int m_initiateMove(const int& moveCounts, const double& speed, const double& accel);
+
+public:
+    Node(sFnd::INode* node, const int index);
+    ~Node(void);
+
+    //-------- main functions used outside
+    // homes-calibrates the motors
+    int home();
+    // general move function --  efectively deprecated and not used, but OK example. see initateMove functions
+    void move(const double& position, const double& velLevel, const double& accLevel,
+        std::atomic<bool>* stopTrial, std::atomic<bool>* stopProtocol);
+    // overload with default velocity and acceleration
+    void move(const double& position,
+        std::atomic<bool>* stopTrial, std::atomic<bool>* stopProtocol);
+
+    // retreat to the starting position - call move
+    void retreat();
+    // stops the current movement
+    void stop();
+
+    // initiate async movement
+    int initiateMove(const double& position, const int& velLevel, const int& accLevel);
+    int initiateMove(const double& position);
+    int initiateRetreat();
+
+    //-------- status
+    // run on creation and destruction
+    int enable();
+    void disable();
+
+    void clearAlertsNodeStops();
+    void handleAlerts();
+
+    bool isMoveDone();
+
+    bool wasHomed();
+
+    //-------- accessory functions
+    void printDetails();
+
+    // seconds for homing and moving
+    double action_timeout = 10;
+
+};
+
+
+class MotorAPI {
+public:
+
+    MotorAPI();
+    ~MotorAPI();
+
+    // main control functions
+    int home();
+    int retreat();
+    int move(std::vector<double> positions, std::atomic<bool> *stopTrial, std::atomic<bool>* stopProtocol);
+    void stop();  // thread-safe with move and retreat
+
+    bool wasInitializedCorrectly();
+    bool wereHomed();
+
+    void setActionTimeout(double timeSecs);
+
+private:
+    bool initializedCorrectly = false;  // set by constructor
+
+    sFnd::SysManager* m_manager = nullptr;
+
+    std::vector<sFnd::IPort *> m_ports;
+    std::vector<Node> m_nodes;
+
+    double action_timeout = 10;
+
+    std::mutex mtx;
+
+    void engageBrakes();
+    void disengageBrakes();
+
+};
+

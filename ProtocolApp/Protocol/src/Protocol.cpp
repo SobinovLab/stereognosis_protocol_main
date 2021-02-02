@@ -1,226 +1,920 @@
 #include "Protocol.h"
 
-constexpr auto DATA_FOLDER = "./data";
-constexpr auto TRIAL_NUM_STR = "Trial n.";
-constexpr auto TRIAL_ABORT_STR = " Aborted";
-constexpr auto FONT_TYPE = "Courier New";
+using namespace std;
+
 constexpr auto PRECISION = "%03d";
 
-constexpr auto FREQUENCY_START_TASK_TONE = 500;
-constexpr auto FREQUENCY_ERROR_TONE = 250;
-constexpr auto DURATION_TONE = 1000; //msecs
-constexpr auto ABORT = 0;
-constexpr auto MIN_UNCOVERED_TIME = 200; //msecs
-constexpr auto TOUCHPAD_START_THREAD_DELAY = 1000; //msecs
-
-#define DATE_TIME_FORMAT "%Y_%m_%d_%H_%M_%S"
 
 Protocol::Protocol()
 {
+	this->stopProtocol.store(false);
+	this->startTrial.store(false);
+	this->stopTrial.store(false);
+
+	this->deservesReward.store(false);
+	this->loopAutomatically.store(true);
+
+	this->protocolState.store(ProtocolState::shutdown);
+
+	// test if things can be enabled and then change the variables
+	initDevices();
 }
 
 Protocol::~Protocol()
 {
+	releaseDevices();
+	closeCsvLog();
 }
 
-void Protocol::run(atomic<bool>* stopProtocol, atomic<bool>* startTrial, atomic<bool>* stopTrial, atomic<bool>* retreatedMotors, 
-	NIUsb6001card* m_NIUsb6001card, CEdit* currentTrialGUICtrl)
+void Protocol::setCurrentState(ProtocolState state)
 {
-	CreateDirectory(DATA_FOLDER, NULL);
-	long nTotTrialsPlayedUntilNow = 0;
-	setFontGuiTrialsCounter(currentTrialGUICtrl);
+	protocolState = state;
+	trialStateGuiUpdate();
+}
 
-	if (params.tstEnTouchSensors) {
-		//Touchpad3DDevice rightTouchPad, leftTouchPad;
-		//std::thread rightTouchPadThread(&Touchpad3DDevice::run, &rightTouchPad);
-		//Sleep(TOUCHPAD_START_THREAD_DELAY);
-	 //   rightTouchPad.syncWithGlobal(Logger::currentDateTimeInMilliseconds());
-		//std::thread	leftTouchPadThread(&Touchpad3DDevice::run, &leftTouchPad);
-	 //   leftTouchPad.syncWithGlobal(Logger::currentDateTimeInMilliseconds());
+ProtocolState Protocol::getCurrentState()
+{
+	return protocolState.load();
+}
+
+void Protocol::reward()
+{
+	reward(params.rewardDuration);
+}
+
+void Protocol::reward(long duration)
+{
+	m_NIUsb6001card.reward(duration);
+}
+
+bool Protocol::were_motors_homed()
+{
+	return motorHub->wereHomed();
+}
+
+void Protocol::home_motors()
+{
+	motorHub->home();
+}
+
+void Protocol::connect_camera_client1()
+{
+	if (m_cameraClient1.isConnected()) {
+		// warning?
 	}
+	else {
+		m_cameraClient1.server_ip = params.cs_ip1;
+		m_cameraClient1.port = params.cs_port1;
 
-	TeknicMotorDevice motorHub;
-	if (params.tstEnMotors) {
-		motorHub.init();
+		m_cameraClient1.connect_f();
 	}
+}
 
-	// Run the protocol loop
-	while (!stopProtocol->load())
-	{
-		updateCurrentTrialOnTheGUI(nTotTrialsPlayedUntilNow, currentTrialGUICtrl);
-		// wait for start trial signal
-		while (!startTrial->load() && !stopProtocol->load()) {}
+void Protocol::connect_camera_client2()
+{
+	if (m_cameraClient2.isConnected()) {
+		// warning?
+	}
+	else {
+		m_cameraClient2.server_ip = params.cs_ip2;
+		m_cameraClient2.port = params.cs_port2;
 
-		startTrial->store(false);
-		m_NIUsb6001card->ephysSyncStart();
+		m_cameraClient2.connect_f();
+	}
+}
 
-		if (startForwardMovement(stopProtocol, stopTrial, m_NIUsb6001card, motorHub))
-		{
-			retreatedMotors->store(false);
-			Sounds::playStartTaskTone();
+void Protocol::disconnect_camera_client1()
+{
+	m_cameraClient1.disconnect_f();
+}
 
-			auto toneStartTime = chrono::steady_clock::now();
+void Protocol::disconnect_camera_client2()
+{
+	m_cameraClient2.disconnect_f();
+}
 
-			// wait for stop trial signal NO TIMEOUT - timeout in the touch sensor monitor
-			while (!stopProtocol->load() && !stopTrial->load()) {}
-			//while (!stopProtocol->load() && !stopTrial->load() && !isTimeout(toneStartTime)) {}
+void Protocol::send_config_to_cameras()
+{
+	if (m_cameraClient1.isConnected()) {
+		m_cameraClient1.sendFramerate(params.cs_framerate);
+		m_cameraClient1.sendRecordingPeriod(params.cs_recordingPeriod);
+		m_cameraClient1.sendReferenceCamera(params.cs_refSerial);
+		m_cameraClient1.sendGain(params.cs_gain);
+		m_cameraClient1.sendExposure(params.cs_exposure);
+	}
+	if (m_cameraClient2.isConnected()) {
+		m_cameraClient2.sendFramerate(params.cs_framerate);
+		m_cameraClient2.sendRecordingPeriod(params.cs_recordingPeriod);
+		m_cameraClient2.sendReferenceCamera(params.cs_refSerial);
+		m_cameraClient2.sendGain(params.cs_gain);
+		m_cameraClient2.sendExposure(params.cs_exposure);
+	}
+}
 
-			stopTrial->store(false);
-			if (params.tstEnMotors) {
-				motorHub.reset();
-				motorHub.home();
-			}
-			retreatedMotors->store(true);
-			m_NIUsb6001card->ephysSyncStop();
+int Protocol::capture_single_frame()
+{
+	send_config_to_cameras();
+
+	int success = 0;
+	int answ = 0;
+	string buf;
+
+	if (m_cameraClient1.isConnected())
+		if (!m_cameraClient1.captureSingleFrame(&success))
+			answ = 1;  // to not mistake with the errors from success
+	if (m_cameraClient2.isConnected())
+		if (!m_cameraClient2.captureSingleFrame(&success))
+			answ = 1;
+	if (answ) {
+		buf = "Server error during capture single frame. Code " + to_string(answ);
+		logError(buf.c_str());
+	}
+	if (success) {
+		buf = "Error during capture single frame. Code " + to_string(success);
+		logError(buf.c_str());
+		answ = success;
+	}
+	return answ;
+}
+
+void Protocol::prepare_camera_recording()
+{
+	if (m_cameraClient1.isConnected()) {
+		m_cameraClient1.prepareRecording();
+	}
+	if (m_cameraClient2.isConnected()) {
+		m_cameraClient2.prepareRecording();
+	}
+}
+
+int Protocol::start_camera_recording()
+{
+	return start_camera_recording(params.trial_number);
+}
+
+int Protocol::start_camera_recording(long trial_number)
+{
+	// NB config is sent separately in the main loop
+
+	int success = 0;
+	int answ = 0;  // cameras not connected is not an error
+	string buf;
+
+	if (m_cameraClient1.isConnected()) {
+		if (!m_cameraClient1.startRecording(trial_number, &success))
+			answ = 1;  // to not mistake with the errors from success
+	}
+	if (m_cameraClient2.isConnected()) {
+		if (!m_cameraClient2.startRecording(trial_number, &success))
+			answ = 1;  // to not mistake with the errors from success
+	}
+	if (answ) {
+		buf = "Server error during start camera recording. Code " + to_string(answ);
+		logError(buf.c_str());
+	}
+	if (success) {
+		buf = "Error during start camera recording. Code " + to_string(success);
+		logError(buf.c_str());
+		answ = success;
+	}
+	return answ;
+}
+
+void Protocol::break_camera_recording()
+{
+	if (m_cameraClient1.isConnected())
+		m_cameraClient1.breakRecording();
+	if (m_cameraClient2.isConnected())
+		m_cameraClient2.breakRecording();
+}
+
+bool Protocol::did_cameras_finish_saving()
+{
+	bool answ = true;
+	int res;
+	if (m_cameraClient1.isConnected()) {
+		m_cameraClient1.areYouDoneSaving(&res);
+		if (res == 0)
+			answ = false;
+	}
+	if (answ && m_cameraClient2.isConnected()) {
+		m_cameraClient2.areYouDoneSaving(&res);
+		if (res == 0)
+			answ = false;
+	}
+	return answ;
+}
+
+int Protocol::wait_for_cameras_finish_saving()
+{
+	auto waitStart = Times::getCurrentTime();
+	double timeout = 5*60; // seconds
+	
+	int flag = 0;
+	while (true) {
+		if (did_cameras_finish_saving()) {
+			break;
 		}
-		++nTotTrialsPlayedUntilNow;
+		if (Times::isTimeout(waitStart, timeout)) {
+			flag = -1;
+			break;
+		}
 	}
+	return flag;
 }
 
-void Protocol::saveTouchPadInfoToFile(string & rightleft, string & filename, string & m_data_string)
+void Protocol::connect_pressure_sensors()
 {
-    if (std::FILE* f = std::fopen(filename.c_str(), "w")) {
-        std::fprintf(f, "%s %s", rightleft.c_str(), m_data_string.c_str());
-        std::fclose(f);
+	m_touchSensorClient.server_ip = params.tss_ip;
+	m_touchSensorClient.port = params.tss_port;
 
-        string msg = " TouchPad " + rightleft + " saved to file";
-        logInfo(msg.c_str());
-    }
-    else {
-        string msg = " TouchPad " + rightleft + " could NOT save to file";
-        logInfo(msg.c_str());
-    }
+	m_touchSensorClient.connect_f();
 }
 
-bool Protocol::isElapsedTheMinUncoveredTime(time_point<std::chrono::steady_clock>& photoresistorsUncoveredTime)
+void Protocol::disconnect_pressure_sensors()
 {
-	if (getElapsedMilliSecsSince(photoresistorsUncoveredTime) > MIN_UNCOVERED_TIME) return true;
-	return false;
+	m_touchSensorClient.disconnect_f();
 }
 
-void Protocol::setFontGuiTrialsCounter(CEdit * currentTrialGUICtrl)
+void Protocol::push_variables_to_gui()
 {
-	CFont* cEditControlFont = new CFont();
-	cEditControlFont->CreateFont(30, 0, 0, 0, FW_HEAVY, true, false, 0, ANSI_CHARSET, OUT_DEFAULT_PRECIS, CLIP_DEFAULT_PRECIS, DEFAULT_QUALITY, FIXED_PITCH | FF_MODERN, _T(FONT_TYPE));
-	currentTrialGUICtrl->SetFont(cEditControlFont);
+	if (mainWindow)
+		mainWindow->UpdateData(FALSE);
 }
 
-void Protocol::logBadTrial(const long& nCurrentTrial)
+void Protocol::pull_variables_from_gui()
 {
-	string msg = TRIAL_NUM_STR + to_string(nCurrentTrial);
-	msg = msg + TRIAL_ABORT_STR;
-	logError(msg.c_str());
+	if (mainWindow)
+		mainWindow->UpdateData(TRUE);
 }
 
-void Protocol::logGoodTrial(const long& nCurrentTrial, const long& microsecsFromStartTaskToneToLiftingMonkeyArm, const long& microsecsFromMonkeyArmRaisedToPlatesTouching)
+void Protocol::start_pressure_sensor_recording()
 {
-	string msg = TRIAL_NUM_STR + to_string(nCurrentTrial);
-	msg = msg + " monkey raised its arm in [microsecs]: " + to_string(microsecsFromStartTaskToneToLiftingMonkeyArm) + " -> monkey touched the plates in [microsecs]: " + to_string(microsecsFromMonkeyArmRaisedToPlatesTouching);
-	logInfo(msg.c_str());
+	start_pressure_sensor_recording(params.trial_number);
 }
 
-bool Protocol::isMotorMovementAborted(atomic<bool> * stopProtocol, NIUsb6001card* m_NIUsb6001card, TeknicMotorDevice& motorHub)
+void Protocol::start_pressure_sensor_recording(long trial_number)
 {
-	if (params.tstEnMotors)
-		motorHub.reset();
-	if (!stopProtocol->load() && params.tstEnMotors)
-		motorHub.home();
-	// on waiting for the monkey puts the arm on the armrest before to start the trial
-	//while (!stopProtocol->load() && ( !IS_REAR_PHOTORESISTOR_COVERED || !IS_FRONT_PHOTORESISTOR_COVERED)) {}
-
-	if (stopProtocol->load()) 
-		return true;
-	// return true -> go() aborted
-	if (params.tstEnMotors)
-		return motorHub.go(&params.position, &params.speed, &params.acceleration);
-	else
-		return true;
+	if (m_touchSensorClient.isConnected()) {
+		m_touchSensorClient.startRecording(trial_number);
+	}
 }
 
 /// <summary>
-/// 
+/// Stops the recording of the pressure sensor
 /// </summary>
-/// <param name="stopProtocol"></param>
-/// <param name="stopTrial"></param>
-/// <param name="m_NIUsb6001card"></param>
-/// <param name="motorHub"></param>
-/// <returns>True iff the motor movement started as planned or no motor initialized via testing</returns>
-bool Protocol::startForwardMovement(atomic<bool>* stopProtocol, atomic<bool>* stopTrial, NIUsb6001card* m_NIUsb6001card, TeknicMotorDevice& motorHub)
+/// <returns>Whether trial was successful. Not used in the current protocol - see monitor.</returns>
+int Protocol::break_pressure_sensor_recording()
 {
-	if (params.tstEnMotors) {
-		motorHub.reset();
-		motorHub.home();
+	if (m_touchSensorClient.isConnected()) {
+		atomic<int> result;
+		m_touchSensorClient.breakRecording(&result);
+		return result.load();
+	}
+	return -1;
+}
+
+void Protocol::wait_until_monkey_release()
+{
+	atomic<double> leftForce = 0;
+	atomic<double> rightForce = 0;
+	while (m_touchSensorClient.isConnected()) {
+		// ask pressure sensor for pressure
+		m_touchSensorClient.getForce(&leftForce, &rightForce);
+
+		if (leftForce + rightForce < params.minimalTouchForce)
+			break;
+
+		// can start manually
+		if (startTrial)
+			break;
+	}
+}
+
+void Protocol::watch_early_grab()
+{
+	atomic<double> leftForce = 0;
+	atomic<double> rightForce = 0;
+	while (!stopWatch) {
+		// see if monkey lifted arm
+		if (!isArmAtRest()) {
+			stopTrial = true;
+			break;
+		}
+
+		// ask pressure sensor for pressure
+		if (m_touchSensorClient.isConnected()) {
+			m_touchSensorClient.getForce(&leftForce, &rightForce);
+
+			if (leftForce + rightForce > params.minimalTouchForce) {
+				stopTrial = true;
+				break;
+			}
+		}
+	}
+}
+
+void Protocol::run()
+{
+	this->stopProtocol.store(false);
+	setCurrentState(ProtocolState::initializing); // display the state of the trial on the GUI
+	int rets = 0;
+	
+	// Load all trials from session config file (BL code)
+	vector<string> session_line1;
+	vector<string> session_line2;
+	vector<vector<double>> session_values;
+	vector<bool> repeating_trial;
+	bool usingLoadedSession;
+	rets = CsvParser::parseCSV(string(params.session_filename), session_line1, session_line2, session_values);
+	if (rets) {  // could not load
+		usingLoadedSession = false;
+		params.total_trials = 0;
+	}
+	else {
+		usingLoadedSession = true;
+		params.total_trials = session_values.size();
+		for (size_t i = 0; i < params.total_trials; i++)
+			repeating_trial.push_back(false);
 	}
 
-	if (stopProtocol->load() || stopTrial->load())
-		return false;
+	// on first start, looping should be disabled until the start trial button is pressed
+	autoLoopToggle(true);
+	loopAutomatically = false;
 
-	if (params.tstEnMotors)
-		return !motorHub.go(&params.position, &params.speed, &params.acceleration);
+	// open csv file for logging
+	openCsvLog();
+	long long trial_start_time;
+	long long object_in_position_time;
+	long long arm_liftoff_time;
+	long long trial_end_time;
+	long long trial_finished_time;
+
+	// class member variable
+	params.trial_number = 0;
+	int preset_trial_number;
+	auto intertrialWaitStartTime = Times::getCurrentTime();  // set at the end of the previous iteration
+	auto trialStartTime = Times::getCurrentTime();  // set when the object is in position
+
+	// Run the protocol loop
+	while (!this->stopProtocol.load())
+	{
+		// ---------------- Preparing trial
+		trial_start_time = 0;
+		object_in_position_time = 0;
+		arm_liftoff_time = 0;
+		trial_end_time = 0;
+		trial_finished_time = 0;
+
+		// if went through all trials, break the loop
+		if (params.total_trials > 0 && params.trial_number >= params.total_trials)
+			break;
+
+		// load and set the parameters of the next trial
+		preset_trial_number = params.trial_number;
+		if (usingLoadedSession) {
+			matchLoadedSessionTrialToParams(session_line1, session_line2, session_values[params.trial_number]);
+			params.total_trials = session_values.size();  // in case a failed trial was pushed to the end
+		}
+
+		// update the gui with set values and current trial #
+		push_variables_to_gui();
+
+		// TRIAL is ready to start
+		setCurrentState(ProtocolState::trialReady);
+		this->startTrial.store(false);
+
+		trialFieldsEnableStart(true);
+
+		// wait for the monkey to release the grasp on the object - can be forced by startTrial
+		wait_until_monkey_release();
+
+		// wait until arm at rest
+		wait_until_arm_at_rest();
+
+
+		// waiting for the start of the next trial
+		while (!this->startTrial.load() && 
+			!this->stopProtocol.load() && 
+			!(loopAutomatically.load() && Times::isTimeout(intertrialWaitStartTime, params.intertrialWaitTime))) {
+			// waiting for:
+			//	Start trial button to be pressed
+			//  stop of protocol 
+			//  if looping is selected, timeout of intertrial time
+		}
+
+		if (stopProtocol)
+			break;
+
+		// Default behavior is looping - after the first trial
+		autoLoopToggle(true);
+
+		// GUI Can't click on StartTrial anymore
+		trialFieldsEnableStart(false);
+
+		// just in case any parameters changed, pull from GUI
+		pull_variables_from_gui();
+
+		// if the trial changed, load it instead
+		if (usingLoadedSession && preset_trial_number != params.trial_number && params.trial_number < params.total_trials) {
+			matchLoadedSessionTrialToParams(session_line1, session_line2, session_values[params.trial_number]);
+		}
+
+		// ---------------- Running trial
+		string buf = "Upcoming position " + to_string(params.pos_translation_z) + " " +
+			to_string(params.pos_tilt) + " " + to_string(params.pos_aperture);
+		logInfo(buf.c_str());
+
+		// TRIAL in progress set state and state control variables
+		setCurrentState(ProtocolState::trialInProgress);
+		this->stopTrial.store(false);
+		// has not earned anything yet
+		m_earnedReward = false;
+		deservesReward = false;
+
+		// log
+		trial_start_time = Times::getCurrentTimeInMilliSecs();
+
+		// prepare recordings
+		send_config_to_cameras();
+
+		// GUI Can click on stop trial
+		trialFieldsEnableRetreat(true);
+
+		// start a thread that asks if monkey grabbed and stopTrial=1 if it did
+		stopWatch = false;
+		thread watchThread(&Protocol::watch_early_grab, this);
+
+		// motor movement - this thread will be locked, can be interrupted 
+		vector<double> positions = { params.pos_translation_z, params.pos_tilt, params.pos_aperture };
+		rets = 0;
+		rets = motorHub->move(positions, &stopTrial, &stopProtocol);
+		if (rets)
+		{
+			// TODO: check error with motors
+
+			// rets == -1 means motors were not initialized. 
+			// Reset to 0 if it is fine and want to test everything else
+		}
+
+		// log
+		object_in_position_time = Times::getCurrentTimeInMilliSecs();
+
+		// stop the watch thread
+		stopWatch = true;
+		watchThread.join();
+
+		rets = wait_until_arm_liftoff();
+
+		arm_liftoff_time = Times::getCurrentTimeInMilliSecs();
+
+		// if the motors made it successfully to the final position
+		if (!stopTrial && !stopProtocol && rets >= 0) {
+			// start recordings
+			start_camera_recording();  // TODO process it?
+			start_pressure_sensor_recording();
+			start_ephys_recording();
+
+			// spawn the process that monitors the async stopping conditions
+			m_asyncTrialSuccessMonitorThread = new thread(&Protocol::m_asyncTrialConditionMonitor, this);
+
+			trialStartTime = Times::getCurrentTime();
+			Sounds::playStartTaskTone();
+
+			// wait for stop trial signal from interface, success from the monitor thread, or timeout
+			while (!this->stopProtocol.load() &&
+				!this->stopTrial.load() &&
+				!this->m_earnedReward.load() &&
+				!Times::isTimeout(trialStartTime, params.maxWaitTime)) {
+			}
+
+			// if stop trial button was pressed, turn off the loop - it is reenable automatically in the beginning of trial
+			if (this->stopTrial.load())
+				autoLoopToggle(false);  // want to stop only for one trial
+
+			// stop monitor thread if it was not stopped by its own success
+			m_stopAsyncTrialConditionMonitor = true;
+			// not necessary, but cleaner:
+			if (m_asyncTrialSuccessMonitorThread) {
+				m_asyncTrialSuccessMonitorThread->join();
+				delete m_asyncTrialSuccessMonitorThread;
+				m_asyncTrialSuccessMonitorThread = nullptr;
+			}
+		}
+
+		// GUI Cannot interrupt the rest of trial
+		trialFieldsEnableRetreat(false);
+
+		// ---------------- Finishing trial
+		setCurrentState(ProtocolState::trialFinalizing);
+
+		// log
+		trial_end_time = Times::getCurrentTimeInMilliSecs();
+
+		// Give the reward or not
+		if (m_earnedReward || deservesReward) {
+			reward();
+		}
+		else {
+			Sounds::playErrorTone();
+
+			// append the failed trial to the end
+			if (usingLoadedSession) {
+				session_values.push_back(session_values[params.trial_number]);
+				repeating_trial.push_back(true);
+			}
+		}
+
+		// retreat motors
+		motorHub->retreat();
+
+		// stop recording
+		break_camera_recording();
+		break_pressure_sensor_recording();
+		break_ephys_recording();
+
+		// countdown for next trial
+		intertrialWaitStartTime = Times::getCurrentTime();
+
+		// log the trial success, target positions and times
+		trial_finished_time = Times::getCurrentTimeInMilliSecs();
+		addLineToCsvLog(m_earnedReward || deservesReward, repeating_trial[params.trial_number], 
+			trial_start_time, object_in_position_time, arm_liftoff_time, trial_end_time, trial_finished_time);
+
+
+		// wait for the signal from recording devices that the data has been saved - is Ready
+		rets = wait_for_cameras_finish_saving();
+		if (rets < 0) {
+			AfxMessageBox("Cameras are taking too long to save the data. Stopping the protocol.");
+			break;
+		}
+
+		params.trial_number++;
+	}
+	setCurrentState(ProtocolState::shuttingDown);
+
+	trialFieldsEnableStart(false);
+	trialFieldsEnableRetreat(false);
+
+	// retreat motors
+	motorHub->retreat();
+
+	// release all devices in the destructor
+	closeCsvLog();
+
+	setCurrentState(ProtocolState::shutdown);
+}
+
+void Protocol::set_photoresistor_monitors(CStaticColor* front, CStaticColor* rear)
+{
+	// does not care if the card is there or whatever
+	m_NIUsb6001card.setFrontPhotoresistorMonitor(front);
+	m_NIUsb6001card.setRearPhotoresistorMonitor(rear);
+}
+
+void Protocol::set_camera1_gui_controls(CEdit* serverLogCtrl)
+{
+	m_cameraClient1.clientLogGuiEdt = serverLogCtrl;
+}
+
+void Protocol::set_camera2_gui_controls(CEdit* serverLogCtrl)
+{
+	m_cameraClient2.clientLogGuiEdt = serverLogCtrl;
+}
+
+void Protocol::set_pressure_sensors_gui_controls(CEdit* serverLogCtrl)
+{
+	m_touchSensorClient.clientLogGuiEdt = serverLogCtrl;
+}
+
+void Protocol::set_trial_buttons(CButton* startTrialBtn, CButton* retreatBtn, CButton* retreatFlushBtn)
+{
+	this->startTrialBtn = startTrialBtn;
+	this->retreatBtn = retreatBtn;
+	this->retreatFlushBtn = retreatFlushBtn;
+}
+
+void Protocol::trialFieldsToggle(bool enable)
+{
+	trialFieldsEnableStart(enable);
+	trialFieldsEnableRetreat(!enable);
+}
+
+void Protocol::trialFieldsEnableStart(bool enable)
+{
+	startTrialBtn->EnableWindow(enable);
+}
+
+void Protocol::trialFieldsEnableRetreat(bool enable)
+{
+	retreatBtn->EnableWindow(enable);
+	retreatFlushBtn->EnableWindow(enable && isRewardOn());
+}
+
+void Protocol::matchLoadedSessionTrialToParams(const vector<string>& line1, const vector<string>& line2, const vector<double>& vec)
+{
+	string axis;
+	string deriv;
+	for (size_t i = 0; i < line1.size(); i++)
+	{
+		axis = line1[i];
+		deriv = line2[i];
+		if (axis == "translation_z") {
+			if (deriv == "position") {
+				params.pos_translation_z = vec[i];
+			}
+		}
+
+		if (axis == "tilt") {
+			if (deriv == "position") {
+				params.pos_tilt = vec[i];
+			}
+		}
+
+		if (axis == "aperture") {
+			if (deriv == "position") {
+				params.pos_aperture = vec[i];
+			}
+		}
+	}
+}
+
+void Protocol::openCsvLog()
+{
+	// check if open
+	if (trialLogCsv.is_open()) {
+		logError("Tried opening an open csv log file.");
+		return;
+	}
+
+	string filename = params.session_log_filename;
+	// check if file exists
+	while (experimental::filesystem::exists(filename)) {
+		// adjust it to have another name: filename(NUMBER).csv
+		experimental::filesystem::path filepath(filename);
+
+		string ext = filepath.extension().string();
+		string basename = filepath.filename().string();
+		// replace_extension does not remove the '.'
+		if (!ext.empty())
+			basename = basename.substr(0, basename.size() - ext.size());
+
+		// check if the name already has a number in the name
+		regex filenumber_regex("\\([0-9]+\\)$");
+		smatch filenumber_smatch;
+		int filenumber = 0;
+		if (regex_search(basename, filenumber_smatch, filenumber_regex)) {
+			basename = regex_replace(basename, filenumber_regex, "");
+			string filenumber_s = filenumber_smatch[0].str();
+			filenumber_s = filenumber_s.substr(1, filenumber_s.size() - 2); // remove parentheses
+			try
+			{
+				filenumber = stoi(filenumber_s);
+			}
+			catch (const std::exception&)
+			{
+				string buf = "Problems extracting file number from " + filename + ".";
+				logWarning(buf.c_str());
+			}
+		}
+		filenumber++;
+
+		basename = basename + "(" + to_string(filenumber) + ")" + ext;
+		filepath.replace_filename(basename);
+		filename = filepath.string();
+	}
+	params.session_log_filename = filename.c_str();
+
+	// open file
+	trialLogCsv.open(params.session_log_filename, ofstream::out);
+
+	// write the first line - header with all exported columns
+	trialLogCsv << "trial_num,";
+	trialLogCsv << "repeating_trial,";
+	trialLogCsv << "reward,";
+	trialLogCsv << "trial_start_time(ms),";
+	trialLogCsv << "object_in_position_time(ms),";
+	trialLogCsv << "arm_liftoff_time(ms),";
+	trialLogCsv << "trial_end_time(ms),";
+	trialLogCsv << "trial_finished_time(ms),";
+	trialLogCsv << "pos_translation_z(mm),";
+	trialLogCsv << "pos_tilt(deg),";
+	trialLogCsv << "pos_aperture(mm),";
+	trialLogCsv << endl;
+
+}
+
+void Protocol::addLineToCsvLog(const bool got_reward, const bool repeating,
+	const long long trial_start_time, const long long object_in_position_time,
+	const long long arm_liftoff_time,
+	const long long trial_end_time, const long long trial_finished_time)
+{
+	if (!trialLogCsv.is_open()) {
+		logError("Trying to write into a closed log.");
+		return;
+	}
+
+	trialLogCsv << params.trial_number << ",";		// "trial_num,";
+	trialLogCsv << (int)repeating << ",";			// "repeating_trial,";
+	trialLogCsv << (int)got_reward << ",";			// "reward,";
+	trialLogCsv << trial_start_time << ",";			// "trial_start_time(ms),";
+	trialLogCsv << object_in_position_time << ",";	// "object_in_position_time(ms),";
+	trialLogCsv << arm_liftoff_time << ",";			// "arm_liftoff_time(ms),";
+	trialLogCsv << trial_end_time << ",";			// "trial_end_time(ms),";
+	trialLogCsv << trial_finished_time << ",";		// "trial_finished_time(ms),";
+	trialLogCsv << params.pos_translation_z << ",";	// "pos_translation_z(mm),";
+	trialLogCsv << params.pos_tilt << ",";			// "pos_tilt(deg),";
+	trialLogCsv << params.pos_aperture << ",";		// "pos_aperture(mm),";
+	trialLogCsv << endl;
+}
+
+void Protocol::closeCsvLog()
+{
+	if (trialLogCsv.is_open())
+		trialLogCsv.close();
+}
+
+void Protocol::trialStateGuiUpdate()
+{
+	switch (protocolState)
+	{
+	case ProtocolState::shutdown:
+		m_trialStatus->SetWindowTextA("SHUTDOWN");
+		break;
+	case ProtocolState::initializing:
+		m_trialStatus->SetWindowTextA("INITIALIZING");
+		break;
+	case ProtocolState::trialReady:
+		m_trialStatus->SetWindowTextA("READY");
+		break;
+	case ProtocolState::trialInProgress:
+		m_trialStatus->SetWindowTextA("IN PROGRESS");
+		break;
+	case ProtocolState::trialFinalizing:
+		m_trialStatus->SetWindowTextA("FINALIZING");
+		break;
+	case ProtocolState::shuttingDown:
+		m_trialStatus->SetWindowTextA("SHUTTING DOWN");
+		break;
+	default:
+		m_trialStatus->SetWindowTextA("UNKNOWN-ERROR");
+		break;
+	}
+}
+
+void Protocol::autoLoopToggle(const bool enable)
+{
+	loopAutomatically = enable;
+	loopChk->SetCheck((int)enable);
+}
+
+void Protocol::initDevices()
+{
+	// NI card: photoresistors, motor, reward and ephys
+	m_NIUsb6001card.config();
+
+	// motor
+	if (motorHub) {
+		logWarning("Motor Hub already initialized, cannot init again.");
+	}
+	else {
+		motorHub = new MotorAPI();
+	}
+}
+
+void Protocol::releaseDevices()
+{
+	// NI card
+	m_NIUsb6001card.stop();
+
+	// motor
+	if (motorHub) {  // check if nullptr
+		delete motorHub;
+		motorHub = nullptr;
+	}
+}
+
+bool Protocol::isMotorsOn()
+{
+	return motorHub->wasInitializedCorrectly();
+}
+
+bool Protocol::isRewardOn()
+{
+	return m_NIUsb6001card.wasInitializedCorrectly();
+}
+
+bool Protocol::isLightSensorsOn()
+{
+	return m_NIUsb6001card.wasInitializedCorrectly();
+}
+
+bool Protocol::isEphysOn()
+{
+	return m_NIUsb6001card.wasInitializedCorrectly();
+}
+
+bool Protocol::isArmAtRest()
+{
+	if (isLightSensorsOn())
+		return IS_REAR_PHOTORESISTOR_COVERED && IS_FRONT_PHOTORESISTOR_COVERED;
 	else
 		return true;
 }
 
-void Protocol::updateCurrentTrialOnTheGUI(const long & nTotTrialsPlayedUntilNow, CEdit * currentTrialGUICtrl)
+int Protocol::wait_until_arm_at_rest()
 {
-	CStringA nTrialsConverted;
-	nTrialsConverted.Format(_T(PRECISION), nTotTrialsPlayedUntilNow);
-	currentTrialGUICtrl->SetWindowText(nTrialsConverted);
-	currentTrialNumber.store(nTotTrialsPlayedUntilNow);
+	auto waitStart = Times::getCurrentTime();
+	double timeout = 5 * 60; // seconds
+
+	int flag = 0;
+	while (true) {
+		if (isArmAtRest()) {
+			break;
+		}
+		if (Times::isTimeout(waitStart, timeout)) {
+			flag = -1;
+			break;
+		}
+	}
+	return flag;
 }
 
-void Protocol::startReward(NIUsb6001card * m_NIUsb6001card, long & proportionalDuration)
+int Protocol::wait_until_arm_liftoff()
 {
-		m_NIUsb6001card->reward(proportionalDuration);
+	auto waitStart = Times::getCurrentTime();
+	double timeout = 5 * 60; // seconds
+
+	int flag = 0;
+	while (true) {
+		if (!isArmAtRest()) {
+			break;
+		}
+		if (Times::isTimeout(waitStart, timeout)) {
+			flag = -1;
+			break;
+		}
+	}
+	return flag;
 }
 
-bool Protocol::isTimeout(time_point<std::chrono::steady_clock>& startToneTime)
+void Protocol::start_ephys_recording()
 {
-	long timeElapsedFromStartTaskTone = getElapsedMicroSecsBetween(startToneTime, chrono::steady_clock::now());
-	if (timeElapsedFromStartTaskTone > secToMicrosecs(params.maxWaitTime)) return true;
-	return false;
+	m_NIUsb6001card.ephysSyncStart();  
 }
 
-long Protocol::proportionalRewardCalculation(long long elapsed)
+void Protocol::break_ephys_recording()
 {
-	double proportionalFactor = 1 - (double)elapsed / params.maxWaitTime;
-	return (long)abs(params.rewardDuration * proportionalFactor);
+	m_NIUsb6001card.ephysSyncStop();
 }
 
-//bool Protocol::areBothSensorsTouched(Touchpad3DDevice& rightTouchPad, Touchpad3DDevice& leftTouchPad)
-//{
-//	if (rightTouchPad.isTouching && leftTouchPad.isTouching) return true;
-//	return false;
-//}
-
-void Protocol::storeStartTime(time_point<std::chrono::steady_clock>& time)
+/// <summary>
+/// Asks Pressure Sensor if the reward has been earned, ends when sets m_earnedReward to true
+/// Pressure sensor constantly returns whether the grab is occuring along with the success of the trial,
+/// and if so happens before the grasp do not give reward
+/// </summary>
+void Protocol::m_asyncTrialConditionMonitor()
 {
-	time = chrono::steady_clock::now();
-}
+	m_earnedReward = false;
+	m_stopAsyncTrialConditionMonitor = false;
 
-long Protocol::microToMillisecs(const long & microsecs)
-{
-	return (long) (microsecs / 1000);
-}
+	atomic<int> result;
+	atomic<double> leftForce = 0;
+	atomic<double> rightForce = 0;
+	std::chrono::steady_clock::time_point* startTime = nullptr;
 
-long Protocol::milliToMicrosecs(const long & millisecs)
-{
-	return millisecs * 1000;
-}
+	while (!m_stopAsyncTrialConditionMonitor) {
+		if (m_touchSensorClient.isConnected()) {
+			// ask touch sensor for the force on each plate
+			m_touchSensorClient.getForce(&leftForce, &rightForce);
 
-long Protocol::secToMicrosecs(const double& secs)
-{
-	return (long)(secs * 1000000);
-}
+			// check if touching now and keep time of touch start
+			// minimum force level of 0.2 of desired and total excedes the desired
+			if (leftForce + rightForce > params.thresholdTotalForce &&
+				leftForce > params.thresholdTotalForce * params.thresholdForceEachProportion &&
+				rightForce > params.thresholdTotalForce * params.thresholdForceEachProportion) {
+				if (!startTime) // just started touching
+					startTime = new auto(Times::getCurrentTime());
+			}
+			else { // not touching
+				if (startTime)
+					startTime = nullptr;
+			}
 
-long Protocol::getElapsedMilliSecsSince(time_point<std::chrono::steady_clock> & startTime)
-{
-	auto elapsed = duration_cast<chrono::milliseconds>(chrono::steady_clock::now() - startTime);
-	return (long)elapsed.count();
-}
+			// check if touching for long enough
+			if (startTime)
+				if (Times::getElapsedMicroSecsSince(*startTime) > Times::secToMicrosecs(params.thresholdPeriod))
+					result = 1;
 
-long Protocol::getElapsedMicroSecsBetween(time_point<std::chrono::steady_clock> & startTime, time_point<std::chrono::steady_clock> & endTime)
-{
-	auto elapsed = duration_cast<chrono::microseconds>(endTime - startTime);
-	return (long)elapsed.count();
+			// exit if result is successfull
+			if (result > 0) {
+				m_earnedReward = true;
+				m_stopAsyncTrialConditionMonitor = true;
+			}
+		}
+		else {  // no reason to run if no sensor connected
+			m_stopAsyncTrialConditionMonitor = true;
+		}
+
+	}
 }

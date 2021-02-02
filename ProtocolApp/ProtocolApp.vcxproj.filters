@@ -25,6 +25,24 @@
       <Extensions>
       </Extensions>
     </Filter>
+    <Filter Include="Header Files\utilities">
+      <UniqueIdentifier>{bcc71546-7ac4-4e4b-9fc4-8258e6a7dfa7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\cameras">
+      <UniqueIdentifier>{566792ff-3da0-4d4a-a11c-3689aff22206}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\pressure_sensors">
+      <UniqueIdentifier>{26a12b52-e263-4172-afaf-6ef5e1f1ebe7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\utilities">
+      <UniqueIdentifier>{2dadcdcf-af40-444b-8940-b5d2beb62752}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\cameras">
+      <UniqueIdentifier>{8f859597-5400-434d-a6fa-b08949481f8d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\pressure_sensors">
+      <UniqueIdentifier>{85f47759-9711-49c1-9b3a-a3967f83415f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h">
@@ -42,9 +60,6 @@
     <ClInclude Include="ProtocolApp.h">
       <Filter>Header Files\GUI</Filter>
     </ClInclude>
-    <ClInclude Include="Protocol\Logger.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Protocol\Protocol.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -60,25 +75,37 @@
     <ClInclude Include="Protocol\CStaticColor.h">
       <Filter>Header Files\GUI</Filter>
     </ClInclude>
-    <ClInclude Include="CameraClient.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="utilities\Sounds.h">
+      <Filter>Header Files\utilities</Filter>
     </ClInclude>
-    <ClInclude Include="cameras_messages.grpc.pb.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="utilities\Times.h">
+      <Filter>Header Files\utilities</Filter>
     </ClInclude>
-    <ClInclude Include="cameras_messages.pb.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="cameras\CameraClient.h">
+      <Filter>Header Files\cameras</Filter>
     </ClInclude>
-    <ClInclude Include="Sounds.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="cameras\cameras_messages.grpc.pb.h">
+      <Filter>Header Files\cameras</Filter>
     </ClInclude>
-    <ClInclude Include="tekscan_server.grpc.pb.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="cameras\cameras_messages.pb.h">
+      <Filter>Header Files\cameras</Filter>
     </ClInclude>
-    <ClInclude Include="tekscan_server.pb.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="pressure_sensors\tekscan_server.grpc.pb.h">
+      <Filter>Header Files\pressure_sensors</Filter>
     </ClInclude>
-    <ClInclude Include="TouchSensorClient.h">
+    <ClInclude Include="pressure_sensors\tekscan_server.pb.h">
+      <Filter>Header Files\pressure_sensors</Filter>
+    </ClInclude>
+    <ClInclude Include="pressure_sensors\TouchSensorClient.h">
+      <Filter>Header Files\pressure_sensors</Filter>
+    </ClInclude>
+    <ClInclude Include="utilities\Logger.h">
+      <Filter>Header Files\utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="utilities\Folders.h">
+      <Filter>Header Files\utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="utilities\CsvParser.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -91,9 +118,6 @@
     </ClCompile>
     <ClCompile Include="ProtocolAppDlg.cpp">
       <Filter>Source Files\GUI</Filter>
-    </ClCompile>
-    <ClCompile Include="Protocol\src\Logger.cpp">
-      <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Protocol\src\Protocol.cpp">
       <Filter>Source Files</Filter>
@@ -110,25 +134,37 @@
     <ClCompile Include="Protocol\src\CStaticColor.cpp">
       <Filter>Source Files\GUI</Filter>
     </ClCompile>
-    <ClCompile Include="CameraClient.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="utilities\Sounds.cpp">
+      <Filter>Source Files\utilities</Filter>
     </ClCompile>
-    <ClCompile Include="cameras_messages.grpc.pb.cc">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="utilities\Times.cpp">
+      <Filter>Source Files\utilities</Filter>
     </ClCompile>
-    <ClCompile Include="cameras_messages.pb.cc">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="utilities\Logger.cpp">
+      <Filter>Source Files\utilities</Filter>
     </ClCompile>
-    <ClCompile Include="Sounds.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="cameras\CameraClient.cpp">
+      <Filter>Source Files\cameras</Filter>
     </ClCompile>
-    <ClCompile Include="tekscan_server.grpc.pb.cc">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="cameras\cameras_messages.grpc.pb.cc">
+      <Filter>Source Files\cameras</Filter>
     </ClCompile>
-    <ClCompile Include="tekscan_server.pb.cc">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="cameras\cameras_messages.pb.cc">
+      <Filter>Source Files\cameras</Filter>
     </ClCompile>
-    <ClCompile Include="TouchSensorClient.cpp">
+    <ClCompile Include="pressure_sensors\tekscan_server.grpc.pb.cc">
+      <Filter>Source Files\pressure_sensors</Filter>
+    </ClCompile>
+    <ClCompile Include="pressure_sensors\tekscan_server.pb.cc">
+      <Filter>Source Files\pressure_sensors</Filter>
+    </ClCompile>
+    <ClCompile Include="pressure_sensors\TouchSensorClient.cpp">
+      <Filter>Source Files\pressure_sensors</Filter>
+    </ClCompile>
+    <ClCompile Include="utilities\Folders.cpp">
+      <Filter>Source Files\utilities</Filter>
+    </ClCompile>
+    <ClCompile Include="utilities\CsvParser.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

@@ -39,20 +39,24 @@ bool TouchSensorSClient::breakRecording(std::atomic<int>* result)
 	return true;
 }
 
-bool TouchSensorSClient::checkSuccess(std::atomic<int>* result)
+bool TouchSensorSClient::getForce(std::atomic<double>* leftForce, std::atomic<double>* rightForce)
 {
-	result->store(-1);
+	leftForce->store(-1);
+	rightForce->store(-1);
+
 	SimpleRequest srq;
 	srq.set_code(0);
-	SuccessResponse sr;
+
+	ForceResponse fr;
 	ClientContext context;
 
-	Status status = stub_->CheckSuccess(&context, srq, &sr);
+	Status status = stub_->GetForce(&context, srq, &fr);
 	if (!status.ok()) {
 		return false;
 	}
 
-	result->store(sr.success());
+	leftForce->store(fr.leftforce());
+	rightForce->store(fr.rightforce());
 
 	return true;
 }
@@ -132,10 +136,10 @@ void TouchSensorClient::breakRecording(std::atomic<int>* result)
 	}
 }
 
-void TouchSensorClient::checkSuccess(std::atomic<int>* result)
+void TouchSensorClient::getForce(std::atomic<double>* leftForce, std::atomic<double>* rightForce)
 {
 	if (tssc) {
-		tssc->checkSuccess(result);
+		tssc->getForce(leftForce, rightForce);
 	}
 }
 
