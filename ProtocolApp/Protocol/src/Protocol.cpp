@@ -403,6 +403,10 @@ void Protocol::run()
 		}
 
 		// ---------------- Running trial
+		string buf = "Upcoming position " + to_string(params.pos_translation_z) + " " +
+			to_string(params.pos_tilt) + " " + to_string(params.pos_aperture);
+		logInfo(buf.c_str());
+
 		// TRIAL in progress set state and state control variables
 		setCurrentState(ProtocolState::trialInProgress);
 		this->stopTrial.store(false);

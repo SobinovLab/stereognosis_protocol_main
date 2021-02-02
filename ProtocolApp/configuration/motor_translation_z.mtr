@@ -2,7 +2,7 @@
 [TEK32CS10-20-1]
 Chip Version                   = 1.7.6
 UserID0                        = TranslationZ
-File Written                   = 2021-01-26 14:17:41
+File Written                   = 2021-02-02 11:00:10
 Writer                         = sFoundation 2.1.31
 PN                             = CPM-SCHP-3441S-ELSB-1-7-D
 UserDesc                       = 
@@ -62,7 +62,7 @@ KpFactor                       = 1.000000
 KpZFactor                      = 1.000000
 KiFactor                       = 1.000000
 FineTunePosn                   = 19.000000
-TrqLim                         = 2.000122	;(A)
+TrqLim                         = 15.999756	;(A)
 FldBckHS                       = 19.999390	;(A)
 FldBckHSTC                     = 199.677705	;(msec)
 HrdStpVel                      = 1898.665046	;(ticks/sec)

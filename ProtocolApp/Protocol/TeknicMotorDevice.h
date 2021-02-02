@@ -42,12 +42,13 @@ private:
     Convertor* acc;
 
     double retreat_position;
-    int default_vel;
-    int default_acc;
+    double default_vel;
+    double default_acc;
 
     // internal control functions
-    void m_move(const int& moveCounts, const int& speed, const int& accel);
-    int m_initiateMove(const int& moveCounts, const int& speed, const int& accel);
+    void m_move(const int& moveCounts, const double& speed, const double& accel,
+        std::atomic<bool>* stopTrial, std::atomic<bool>* stopProtocol);
+    int m_initiateMove(const int& moveCounts, const double& speed, const double& accel);
 
 public:
     Node(sFnd::INode* node, const int index);
@@ -57,10 +58,13 @@ public:
     // homes-calibrates the motors
     int home();
     // general move function --  efectively deprecated and not used, but OK example. see initateMove functions
-    void move(const double& position, const int& velLevel, const int& accLevel);
+    void move(const double& position, const double& velLevel, const double& accLevel,
+        std::atomic<bool>* stopTrial, std::atomic<bool>* stopProtocol);
     // overload with default velocity and acceleration
-    void move(const double& position);
-    // retreat to the starting position - call moveHigh
+    void move(const double& position,
+        std::atomic<bool>* stopTrial, std::atomic<bool>* stopProtocol);
+
+    // retreat to the starting position - call move
     void retreat();
     // stops the current movement
     void stop();

@@ -2,7 +2,7 @@
 [TEK32CS10-20-1]
 Chip Version                   = 1.7.6
 UserID0                        = Tilt
-File Written                   = 2021-01-26 14:18:03
+File Written                   = 2021-02-02 11:01:19
 Writer                         = sFoundation 2.1.31
 PN                             = CPM-SCHP-3421S-ELSA-1-7-D
 UserDesc                       = 
@@ -50,7 +50,7 @@ Kfa                            = 6310159.000000
 Kfj                            = 0.000000
 Knv                            = 33224.000000
 AHFiltTC                       = 49.973109
-TrqBias                        = -1.360474
+TrqBias                        = -1.359863
 AHfuzz                         = 1.000000
 AHhyst                         = 1.000000
 AHhold                         = 50.038872	;(msec)
@@ -62,7 +62,7 @@ KpFactor                       = 1.000000
 KpZFactor                      = 1.000000
 KiFactor                       = 1.000000
 FineTunePosn                   = 31.000000
-TrqLim                         = 5.999756	;(A)
+TrqLim                         = 15.999756	;(A)
 FldBckPos                      = 0.200195	;(A)
 FldBckPosTC                    = 199.677705	;(msec)
 FldBckNeg                      = 0.200195	;(A)

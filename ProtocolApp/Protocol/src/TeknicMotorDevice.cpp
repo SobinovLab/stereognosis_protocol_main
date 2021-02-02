@@ -66,6 +66,9 @@ Node::Node(sFnd::INode* node, const int index) :
     m_node->VelUnit(INode::RPM);
     m_node->AccUnit(INode::RPM_PER_SEC);
 
+    retreat_position = 0;
+    default_vel = 1;
+    default_acc = 1;
     // define the node conversion modules and default values  
     switch (index)
     {
@@ -80,9 +83,7 @@ Node::Node(sFnd::INode* node, const int index) :
         // st/s^2=10'546'000 ? <- possibly wrong calculation from Teknic
         acc = new Convertor(1, 8400, 0, 8400. / 10);  // arbitrary scaling factor to RPM/s
 
-        retreat_position = 0;
-        default_vel = 5;
-        default_acc = 5;
+        default_vel = 2;
 
         break;
     case 1:
@@ -95,9 +96,7 @@ Node::Node(sFnd::INode* node, const int index) :
         vel = new Convertor(1, 1410, 0, 1410. / 10);  // arbitrary scaling factor to RPM
         acc = new Convertor(1, 14100, 0, 14100. / 10);  // arbitrary scaling factor to RPM/s
 
-        retreat_position = 0;
-        default_vel = 5;
-        default_acc = 5;
+        default_vel = 0.5;
 
         break;
     case 2:
@@ -111,9 +110,7 @@ Node::Node(sFnd::INode* node, const int index) :
         vel = new Convertor(1, 4000, 0, 4000. / 10);  // arbitrary scaling factor to RPM
         acc = new Convertor(1, 40000, 0, 40000. / 10);  // arbitrary scaling factor to RPM/s
 
-        retreat_position = 0;
-        default_vel = 5;
-        default_acc = 5;
+        default_vel = 0.5;
 
         break;
     default:
@@ -132,7 +129,8 @@ Node::Node(sFnd::INode* node, const int index) :
 }
 
 Node::~Node(void) {
-    disable();
+    // disabled by the API
+    // disable();
 }
 
 
@@ -141,6 +139,8 @@ Node::~Node(void) {
 shutdowns or NodeStops are cleared, finally the node is enabled */
 
 int Node::enable() {
+    handleAlerts();
+    // allows movement if a stop was used before
     clearAlertsNodeStops();
     m_node->EnableReq(true);
 
@@ -163,12 +163,22 @@ int Node::enable() {
 
 
 void Node::disable() {
-    m_node->EnableReq(false);
+    try
+    {
+        m_node->EnableReq(false);
+    }
+    catch (mnErr& theErr) {
+        string buf = string("home disable error [") + to_string(theErr.TheAddr) + "] " + theErr.ErrorMsg;
+        logError(buf.c_str());
+    }
 }
 
 
 /* Find home position of the node. */
 int Node::home() {
+    if (enable() < 0)
+        return -4;
+
     string buf;
     if (m_node->Motion.Homing.HomingValid()) {
         if (m_node->Motion.Homing.WasHomed()) {
@@ -179,7 +189,15 @@ int Node::home() {
             logInfo("Node has not been homed.");
         }
         logInfo("Homing Node now...");
-        m_node->Motion.Homing.Initiate();
+        try
+        {
+            m_node->Motion.Homing.Initiate();
+        }
+        catch (mnErr& theErr) {
+            buf = string("home Node error [") + to_string(theErr.TheAddr) + "] " + theErr.ErrorMsg;
+            logError(buf.c_str());
+            return -3;
+        }
 
         // define a timeout in case the node is unable to home
         auto startTimeoutTime = Times::getCurrentTime();
@@ -264,7 +282,7 @@ void Node::handleAlerts() {
     //Check to see if the node experienced torque saturation
     if (m_node->Status.HadTorqueSaturation()) {
         buf = "Node ";
-        buf += m_name + "has experienced torque saturation since last checking";
+        buf += m_name + " has experienced torque saturation since last checking";
         logWarning(buf.c_str());
     }
 }
@@ -293,11 +311,11 @@ bool Node::wasHomed()
 /// <param name="moveCounts"></param>
 /// <param name="speed"></param>
 /// <param name="accel"></param>
-void Node::m_move(const int& moveCounts, const int& speed, const int& accel) {
-    // gives a report
-    handleAlerts();
-    // allows movement if a stop was used before
-    clearAlertsNodeStops();
+void Node::m_move(const int& moveCounts, const double& speed, const double& accel,
+    atomic<bool>* stopTrial, atomic<bool>* stopProtocol) {
+    // enables and handles alerts
+    if (enable() < 0)
+        return;
 
     string buf;
     int relativeMoveCounts = (int)round(moveCounts - m_node->Motion.PosnMeasured.Value());
@@ -307,12 +325,12 @@ void Node::m_move(const int& moveCounts, const int& speed, const int& accel) {
     m_node->Motion.AccLimit = accel;
 
     // Now move.
-    buf = "Moving Node " + m_name + " moveCounts " + to_string(moveCounts);
+    buf = "Moving Node " + m_name + " moveCounts " + to_string(moveCounts) + " relative " + to_string(relativeMoveCounts);
     logInfo(buf.c_str());
 
     // start the movement, runs asynchronously
     try {
-        m_node->Motion.MovePosnStart(relativeMoveCounts);
+        m_node->Motion.MovePosnStart(moveCounts, true);
     }
     catch (mnErr& theErr) {
         buf = string("move Node error [") + to_string(theErr.TheAddr) + "] " + theErr.ErrorMsg;
@@ -320,10 +338,10 @@ void Node::m_move(const int& moveCounts, const int& speed, const int& accel) {
         return;
     }
 
-    // some log
-    auto moveTime = m_node->Motion.MovePosnDurationMsec(moveCounts, true);
-    buf = "Estimated move duration (abs): " + to_string(moveTime) + "ms";
-    logInfo(buf.c_str());
+    //// some log
+    //auto moveTime = m_node->Motion.MovePosnDurationMsec(moveCounts, true);
+    //buf = "Estimated move duration (abs): " + to_string(moveTime) + "ms";
+    //logInfo(buf.c_str());
 
     // lock the execution until the move is done or a timeout occured
     auto startTimeoutTime = Times::getCurrentTime();
@@ -332,6 +350,10 @@ void Node::m_move(const int& moveCounts, const int& speed, const int& accel) {
             logError("Timed out waiting for move to complete");
             stop();  // interrupts the movement and makes moveisdone true
         }
+
+        if (stopProtocol->load() || stopTrial->load()) {
+            stop();
+        }
     }
     buf = "Move complete on " + m_name;
     logInfo(buf.c_str());
@@ -339,12 +361,11 @@ void Node::m_move(const int& moveCounts, const int& speed, const int& accel) {
     // m_node->Motion.MoveWentDone();        // Clear "move done" register
 }
 
-int Node::m_initiateMove(const int& moveCounts, const int& speed, const int& accel)
+int Node::m_initiateMove(const int& moveCounts, const double& speed, const double& accel)
 {
-    // gives a report
-    handleAlerts();
-    // allows movement if a stop was used before
-    clearAlertsNodeStops();
+    // enables and handles alerts
+    if (enable() < 0)
+        return -4;
 
     string buf;
     // calculate how much you need to move
@@ -378,18 +399,24 @@ int Node::m_initiateMove(const int& moveCounts, const int& speed, const int& acc
 /// <param name="position">unit depends on Convert member variables</param>
 /// <param name="velLevel"></param>
 /// <param name="accLevel"></param>
-void Node::move(const double& position, const int& velLevel, const int& accLevel) {
-    m_move(pos->convert(position), vel->convert(velLevel), acc->convert(accLevel));
+void Node::move(const double& position, const double& velLevel, const double& accLevel,
+    std::atomic<bool>* stopTrial, std::atomic<bool>* stopProtocol) {
+    m_move(pos->convert(position), vel->convert(velLevel), acc->convert(accLevel),
+        stopTrial, stopProtocol);
 }
 
-void Node::move(const double& position)
+void Node::move(const double& position,
+    std::atomic<bool>* stopTrial, std::atomic<bool>* stopProtocol)
 {
-    move(position, default_vel, default_acc);
+    move(position, default_vel, default_acc,
+        stopTrial, stopProtocol);
 }
 
 void Node::retreat()
 {
-    move(retreat_position);
+    atomic<bool> stopTrial = false;
+    atomic<bool> stopProtocol = false;
+    move(retreat_position, &stopTrial, &stopProtocol);
 }
 
 void Node::stop()
@@ -554,37 +581,18 @@ int MotorAPI::retreat()
     if (!wasInitializedCorrectly())
         return -1;
 
-    int ret;
-    for (size_t i = 0; i < m_nodes.size(); i++)
-    {
-        // the speed and acc variable are default
-        ret = m_nodes[i].initiateRetreat();
-        if (ret) {
-            return -3;
-        }
-    }
+    logInfo("\tStarting retreat.");
 
     auto startTime = Times::getCurrentTime();
     int answ = 0;
-    bool allMovementDone;
-    while (true) {
-        // check if movements are done
-        allMovementDone = true;
-
-        mtx.lock();
-        for (auto e : m_nodes) {
-            allMovementDone *= e.isMoveDone();
-        }
-        mtx.unlock();
-
-        if (allMovementDone)
-            break;
-
+    for (size_t i = 0; i < m_nodes.size(); i++) {
         // check timeout
         if (Times::isTimeout(startTime, action_timeout)) {
             answ = -4;
             break;
         }
+
+        m_nodes[i].retreat();
     }
 
     if (!answ) {
@@ -603,48 +611,23 @@ int MotorAPI::move(std::vector<double> positions, std::atomic<bool>* stopTrial, 
     if (positions.size() > m_nodes.size())
         return -2;
 
-    int ret;
-    for (size_t i = 0; i < positions.size(); i++)
-    {
-        // the speed and acc variable are default
-        ret = m_nodes[i].initiateMove(positions[i]);
-        if (ret) {
-            return -3;
-        }
-    }
+    logInfo("\tStarting move.");
 
     auto startTime = Times::getCurrentTime();
     int answ = 0;
-    bool allMovementDone;
-    while (true) {
+    for (int i = positions.size() - 1; i >= 0; i--) {
         // check if trial or the whole protocol has been signalled to stop
         if (stopTrial->load() || stopProtocol->load()) {
             stop();  // this will mark all movements as done
         }
-
-        // check if movements are done
-        allMovementDone = true;
-        mtx.lock();
-        for (auto e : m_nodes) {
-            allMovementDone *= e.isMoveDone();  // any false
-        }
-        mtx.unlock();
-        if (allMovementDone)
-            break;
-
-        // check if there are any alerts
-        mtx.lock();
-        for (auto e : m_nodes) {
-            e.handleAlerts();
-        }
-        mtx.unlock();
-        // TODO check if any are dangerous and handle them
 
         // check timeout
         if (Times::isTimeout(startTime, action_timeout)) {
             answ = -4;
             break;
         }
+
+        m_nodes[i].move(positions[i], stopTrial, stopProtocol);
     }
 
     if (!answ) {
@@ -671,7 +654,7 @@ bool MotorAPI::wereHomed()
 {
     bool answ = true;
     for (auto e : m_nodes)
-        answ *= e.wasHomed();  // any
+        answ = answ && e.wasHomed();  // any
     return answ;
 }
 
