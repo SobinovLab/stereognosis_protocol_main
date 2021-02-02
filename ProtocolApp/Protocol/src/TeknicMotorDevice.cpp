@@ -1,15 +1,3 @@
-/**
- * @file motorAPI.cpp
- *
- * @brief gRPC API implemented for Teknic Clearpath motors.
- *
- * @author Danielle MacDonald
- * Contact: dmacd@uchicago.edu
- * 
- * Rewritten: Anton Sobinov
- */
-
-
 #include "TeknicMotorDevice.h"
 
 using namespace sFnd;
@@ -501,7 +489,7 @@ MotorAPI::MotorAPI(void) {
 
     // Drop all of our port references into private array
     for (size_t i = 0; i < portCount; i++)
-        m_ports.push_back(std::reference_wrapper<IPort>(m_manager->Ports(i)));
+        m_ports.push_back(&m_manager->Ports(i));
 
     // Initialize nodes. Have to iterate ports, then nodes per port
     // I only expect one port currently, but this is for safety.
@@ -512,28 +500,27 @@ MotorAPI::MotorAPI(void) {
     for (size_t i = 0; i < portCount; i++) { // For each port:
         buf = "Iterating nodes on port " + to_string(i) + ".";
         logInfo(buf.c_str());
-        IPort& thisPort = m_ports[i].get();
+        IPort* thisPort = m_ports[i];
 
         // Turn off all motors when we initialize the interfaces.
         // AS: not sure what ^ means in context
 
         // Makes both breaks on the port allow motion
-        // TODO use breaks?
-        thisPort.BrakeControl.BrakeSetting(0, BRAKE_ALLOW_MOTION);
-        thisPort.BrakeControl.BrakeSetting(1, BRAKE_ALLOW_MOTION);
+        thisPort->BrakeControl.BrakeSetting(0, BRAKE_ALLOW_MOTION);
+        thisPort->BrakeControl.BrakeSetting(1, BRAKE_ALLOW_MOTION);
 
         // log
-        buf = ("Port: " + to_string(thisPort.NetNumber()) + 
-            ", State: " + to_string(thisPort.OpenState()) + 
-            ", Node count: " + to_string(thisPort.NodeCount()) + ".");
+        buf = ("Port: " + to_string(thisPort->NetNumber()) + 
+            ", State: " + to_string(thisPort->OpenState()) +
+            ", Node count: " + to_string(thisPort->NodeCount()) + ".");
         logInfo(buf.c_str());
 
         // Iterate nodes on this port
-        for (int nodeIndex = 0; nodeIndex < thisPort.NodeCount(); nodeIndex++) {
+        for (int nodeIndex = 0; nodeIndex < thisPort->NodeCount(); nodeIndex++) {
             // shield error throw
             try
             {
-                m_nodes.push_back(Node(&(thisPort.Nodes(nodeIndex)), nodeIndex));
+                m_nodes.push_back(Node(&(thisPort->Nodes(nodeIndex)), nodeIndex));
             }
             catch (const mnErr& theErr)
             {
@@ -547,6 +534,8 @@ MotorAPI::MotorAPI(void) {
             }
         }
     }
+
+    engageBrakes();
 
     initializedCorrectly = true;
 }
@@ -567,10 +556,13 @@ int MotorAPI::home()
     if (!wasInitializedCorrectly())
         return -1;
 
+    disengageBrakes();
+
     int answ = 0;
     for (auto node : m_nodes) {
         answ += node.home();
     }
+    engageBrakes();
 
     return answ;
 }
@@ -581,6 +573,7 @@ int MotorAPI::retreat()
     if (!wasInitializedCorrectly())
         return -1;
 
+    disengageBrakes();
     logInfo("\tStarting retreat.");
 
     auto startTime = Times::getCurrentTime();
@@ -595,6 +588,7 @@ int MotorAPI::retreat()
         m_nodes[i].retreat();
     }
 
+    engageBrakes();
     if (!answ) {
         logInfo("Retreat complete.");
     }
@@ -611,6 +605,7 @@ int MotorAPI::move(std::vector<double> positions, std::atomic<bool>* stopTrial, 
     if (positions.size() > m_nodes.size())
         return -2;
 
+    disengageBrakes();
     logInfo("\tStarting move.");
 
     auto startTime = Times::getCurrentTime();
@@ -629,6 +624,8 @@ int MotorAPI::move(std::vector<double> positions, std::atomic<bool>* stopTrial, 
 
         m_nodes[i].move(positions[i], stopTrial, stopProtocol);
     }
+
+    engageBrakes();
 
     if (!answ) {
         logInfo("Move complete.");
@@ -663,4 +660,20 @@ void MotorAPI::setActionTimeout(double timeSecs)
     action_timeout = timeSecs;
     for (auto e : m_nodes)
         e.action_timeout = timeSecs;
+}
+
+void MotorAPI::engageBrakes()
+{
+    for (auto e : m_ports) {
+        e->BrakeControl.BrakeSetting(0, BRAKE_PREVENT_MOTION);
+        e->BrakeControl.BrakeSetting(1, BRAKE_PREVENT_MOTION);
+    }
+}
+
+void MotorAPI::disengageBrakes()
+{
+    for (auto e : m_ports) {
+        e->BrakeControl.BrakeSetting(0, BRAKE_ALLOW_MOTION);
+        e->BrakeControl.BrakeSetting(1, BRAKE_ALLOW_MOTION);
+    }
 }

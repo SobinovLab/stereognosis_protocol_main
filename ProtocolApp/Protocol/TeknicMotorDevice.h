@@ -96,17 +96,6 @@ public:
 
 
 class MotorAPI {
-private:
-    bool initializedCorrectly = false;  // set by constructor
-
-    sFnd::SysManager* m_manager = nullptr;
-    
-    std::vector<std::reference_wrapper<sFnd::IPort>> m_ports;
-    std::vector<Node> m_nodes;
-
-    double action_timeout = 10;
-
-    std::mutex mtx;
 public:
 
     MotorAPI();
@@ -122,6 +111,21 @@ public:
     bool wereHomed();
 
     void setActionTimeout(double timeSecs);
+
+private:
+    bool initializedCorrectly = false;  // set by constructor
+
+    sFnd::SysManager* m_manager = nullptr;
+
+    std::vector<sFnd::IPort *> m_ports;
+    std::vector<Node> m_nodes;
+
+    double action_timeout = 10;
+
+    std::mutex mtx;
+
+    void engageBrakes();
+    void disengageBrakes();
 
 };
 
