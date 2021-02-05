@@ -392,7 +392,6 @@ void Protocol::run()
 		// wait until arm at rest
 		wait_until_arm_at_rest();
 
-
 		// waiting for the start of the next trial
 		while (!this->startTrial.load() && 
 			!this->stopProtocol.load() && 
@@ -829,7 +828,7 @@ int Protocol::wait_until_arm_at_rest()
 
 	int flag = 0;
 	while (true) {
-		if (isArmAtRest()) {
+		if (!isLightSensorsOn() || isArmAtRest()) {
 			break;
 		}
 		if (Times::isTimeout(waitStart, timeout)) {
@@ -847,7 +846,7 @@ int Protocol::wait_until_arm_liftoff()
 
 	int flag = 0;
 	while (true) {
-		if (!isArmAtRest()) {
+		if (!isLightSensorsOn() || !isArmAtRest()) {
 			break;
 		}
 		if (Times::isTimeout(waitStart, timeout)) {
