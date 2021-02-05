@@ -29,6 +29,7 @@ void CProtocolAppDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_RETREAT_BTN, m_retreatBtn);
 	DDX_Control(pDX, IDC_RETREAT_FLUSH_WATER_BTN, m_retreatFlushBtn);
 	DDX_Control(pDX, IDC_LOOP_CHK, m_loopChk);
+	DDX_Control(pDX, IDC_USE_LIGHT_SENSORS_CHK, m_useLightSensorsChk);
 
 	DDX_Control(pDX, IDC_TRIAL_STATUS, m_trialStatus);
 
@@ -101,6 +102,7 @@ BEGIN_MESSAGE_MAP(CProtocolAppDlg, CDialogEx)
 	ON_BN_CLICKED(IDC_DISCONNECT_TOUCH_SENSOR_BTN, &OnDisconnectTouchSensorBtnClicked)
 	ON_BN_CLICKED(IDC_HOME_MOTORS_BTN, &OnBnClickedHomeMotorsBtn)
 	ON_BN_CLICKED(IDC_LOOP_CHK, &CProtocolAppDlg::OnBnClickedLoopChk)
+	ON_BN_CLICKED(IDC_USE_LIGHT_SENSORS_CHK, &CProtocolAppDlg::OnBnClickedUseLightSensorsChk)
 END_MESSAGE_MAP()
 
 // CProtocolAppDlg message handlers
@@ -142,6 +144,7 @@ BOOL CProtocolAppDlg::OnInitDialog()
 
 	((CButton*)GetDlgItem(IDC_LOOP_CHK))->SetCheck(BST_CHECKED);
 	m_protocol.loopChk = &m_loopChk;
+	m_useLightSensorsChk.SetCheck(BST_CHECKED);
 
 	// set the visibility of enabled devices on GUI
 	if (m_protocol.isLightSensorsOn()) ((CButton*)GetDlgItem(IDC_LIGHT_SENSORS_CHK))->SetCheck(BST_CHECKED);
@@ -476,4 +479,13 @@ void CProtocolAppDlg::OnBnClickedLoopChk()
 		m_protocol.loopAutomatically = true;
 	else
 		m_protocol.loopAutomatically = false;
+}
+
+
+void CProtocolAppDlg::OnBnClickedUseLightSensorsChk()
+{
+	if (m_useLightSensorsChk.GetCheck())
+		m_protocol.use_light_sensors = true;
+	else
+		m_protocol.use_light_sensors = false;
 }

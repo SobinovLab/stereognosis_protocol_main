@@ -297,7 +297,7 @@ void Protocol::watch_early_grab()
 	atomic<double> rightForce = 0;
 	while (!stopWatch) {
 		// see if monkey lifted arm
-		if (!isArmAtRest()) {
+		if (isLightSensorsOn() && !isArmAtRest()) {
 			stopTrial = true;
 			break;
 		}
@@ -363,6 +363,7 @@ void Protocol::run()
 		trial_start_time = 0;
 		object_in_position_time = 0;
 		arm_liftoff_time = 0;
+		m_startedTouchingTime = 0;
 		trial_end_time = 0;
 		trial_finished_time = 0;
 
@@ -694,6 +695,7 @@ void Protocol::openCsvLog()
 	trialLogCsv << "trial_start_time(ms),";
 	trialLogCsv << "object_in_position_time(ms),";
 	trialLogCsv << "arm_liftoff_time(ms),";
+	trialLogCsv << "started_touching_time(ms),";
 	trialLogCsv << "trial_end_time(ms),";
 	trialLogCsv << "trial_finished_time(ms),";
 	trialLogCsv << "pos_translation_z(mm),";
@@ -719,6 +721,10 @@ void Protocol::addLineToCsvLog(const bool got_reward, const bool repeating,
 	trialLogCsv << trial_start_time << ",";			// "trial_start_time(ms),";
 	trialLogCsv << object_in_position_time << ",";	// "object_in_position_time(ms),";
 	trialLogCsv << arm_liftoff_time << ",";			// "arm_liftoff_time(ms),";
+	if (got_reward)
+		trialLogCsv << m_startedTouchingTime << ","; // started_touching_time(ms), ";
+	else
+		trialLogCsv << "0,"; // started_touching_time(ms), ";
 	trialLogCsv << trial_end_time << ",";			// "trial_end_time(ms),";
 	trialLogCsv << trial_finished_time << ",";		// "trial_finished_time(ms),";
 	trialLogCsv << params.pos_translation_z << ",";	// "pos_translation_z(mm),";
@@ -805,7 +811,7 @@ bool Protocol::isRewardOn()
 
 bool Protocol::isLightSensorsOn()
 {
-	return m_NIUsb6001card.wasInitializedCorrectly();
+	return use_light_sensors.load() && m_NIUsb6001card.wasInitializedCorrectly();
 }
 
 bool Protocol::isEphysOn()
@@ -892,8 +898,10 @@ void Protocol::m_asyncTrialConditionMonitor()
 			if (leftForce + rightForce > params.thresholdTotalForce &&
 				leftForce > params.thresholdTotalForce * params.thresholdForceEachProportion &&
 				rightForce > params.thresholdTotalForce * params.thresholdForceEachProportion) {
-				if (!startTime) // just started touching
+				if (!startTime) { // just started touching
 					startTime = new auto(Times::getCurrentTime());
+					m_startedTouchingTime = chrono::duration_cast<chrono::milliseconds>(startTime->time_since_epoch()).count();
+				}
 			}
 			else { // not touching
 				if (startTime)

@@ -86,6 +86,9 @@ class Protocol
 		void reward();
 		void reward(long duration);
 
+		// light sensors
+		std::atomic<bool> use_light_sensors = true;
+
 		// motors
 		bool were_motors_homed();
 		void home_motors();
@@ -175,6 +178,7 @@ class Protocol
 		// calculated reward from monkey performance
 		std::atomic<bool> m_earnedReward;
 		std::atomic<bool> m_stopAsyncTrialConditionMonitor;
+		std::atomic<long long> m_startedTouchingTime;
 		std::thread* m_asyncTrialSuccessMonitorThread = nullptr;
 		void m_asyncTrialConditionMonitor();  // Monitors asynchronous conditions for trial end - force sensor press
 

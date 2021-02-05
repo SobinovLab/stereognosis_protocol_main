@@ -70,6 +70,7 @@ public:
 	CButton m_retreatBtn;
 	CButton m_retreatFlushBtn;
 	CButton m_loopChk;
+	CButton m_useLightSensorsChk;
 
 	// edits -- mostly used via linked text
 	CEdit m_trialStatus;
@@ -124,4 +125,5 @@ protected:
 	DECLARE_MESSAGE_MAP()
 public:
 	afx_msg void OnBnClickedLoopChk();
+	afx_msg void OnBnClickedUseLightSensorsChk();
 };

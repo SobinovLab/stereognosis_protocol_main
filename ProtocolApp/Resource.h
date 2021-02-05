@@ -59,6 +59,7 @@
 #define IDC_TRIAL_STATUS                1089
 #define IDC_PS_MINIMAL_TOUCH_FORCE_EDT  1090
 #define IDC_LOOP_CHK                    1091
+#define IDC_USE_LIGHT_SENSORS_CHK       1092
 
 // Next default values for new objects
 // 
@@ -66,7 +67,7 @@
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        130
 #define _APS_NEXT_COMMAND_VALUE         32771
-#define _APS_NEXT_CONTROL_VALUE         1092
+#define _APS_NEXT_CONTROL_VALUE         1093
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif

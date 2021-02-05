@@ -67,7 +67,7 @@ void ProtocolParameters::init()
 
 	// camera config
 	cs_framerate = 50;
-	cs_recordingPeriod = 25;
+	cs_recordingPeriod = 60;
 	cs_refSerial = 19194009;
 	cs_exposure = "2500";
 	cs_gain = "20";
