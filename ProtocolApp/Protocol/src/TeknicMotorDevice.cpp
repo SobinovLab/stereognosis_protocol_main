@@ -578,14 +578,19 @@ int MotorAPI::retreat()
 
     auto startTime = Times::getCurrentTime();
     int answ = 0;
-    for (size_t i = 0; i < m_nodes.size(); i++) {
-        // check timeout
-        if (Times::isTimeout(startTime, action_timeout)) {
-            answ = -4;
-            break;
-        }
+    if (retreat_node_i < 0 || retreat_node_i >= m_nodes.size()) {
+        for (size_t i = 0; i < m_nodes.size(); i++) {
+            // check timeout
+            if (Times::isTimeout(startTime, action_timeout)) {
+                answ = -4;
+                break;
+            }
 
-        m_nodes[i].retreat();
+            m_nodes[i].retreat();
+        }
+    }
+    else {
+        m_nodes[retreat_node_i].retreat();
     }
 
     //engageBrakes();
