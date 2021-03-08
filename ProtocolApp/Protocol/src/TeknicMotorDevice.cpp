@@ -78,17 +78,34 @@ Node::Node(sFnd::INode* node, const int index) :
         m_node->Setup.ConfigLoad("./configuration/motor_tilt.mtr");
         // MOTOR CPM-SCHP-3421S-ELSA-1-7-D
         // https://www.teknic.com/model-info/CPM-SCHP-3421S-ELSA/
+        // + is counterclockwise
+        // homing goes + until 50% max trq and offset 2500 cnts with V=100RPM, a=500RPM/s
 
-        pos = new Convertor(-650, 650, 0, 500. / 45); // input in degrees
+        pos = new Convertor(-40000, 40000, 0, 35000 / 45); // input in degrees
         // max is 1410 RPM @ 75 VDC
         vel = new Convertor(1, 1410, 0, 1410. / 10);  // arbitrary scaling factor to RPM
         acc = new Convertor(1, 14100, 0, 14100. / 10);  // arbitrary scaling factor to RPM/s
 
-        default_vel = 0.03;
+        default_vel = 0.07;
 
         break;
     case 2:
-        m_node->Setup.ConfigLoad("./configuration/motor_aperture.mtr");
+        m_node->Setup.ConfigLoad("./configuration/motor_aperture_left.mtr");
+        // MOTOR CPM-SCHP-2311S-ELSA-1-7-D
+        // https://www.teknic.com/model-info/CPM-SCHP-2311S-ELSA/
+        // + is <-
+
+        // Homed against the widest position - 35 mm width
+        pos = new Convertor(-500, 36000, 35, 35000. / 35, -1); // input in mm
+        // max is 4000 RPM @ 75 VDC
+        vel = new Convertor(1, 4000, 0, 4000. / 10);  // arbitrary scaling factor to RPM
+        acc = new Convertor(1, 40000, 0, 40000. / 10);  // arbitrary scaling factor to RPM/s
+
+        default_vel = 0.1;
+
+        break;
+    case 3:
+        m_node->Setup.ConfigLoad("./configuration/motor_aperture_right.mtr");
         // MOTOR CPM-SCHP-2311S-ELSA-1-7-D
         // https://www.teknic.com/model-info/CPM-SCHP-2311S-ELSA/
 
@@ -578,6 +595,7 @@ int MotorAPI::retreat()
 
     auto startTime = Times::getCurrentTime();
     int answ = 0;
+    // if retreat_node_i is set and correct, retreat only it - usually translation_z, otherwise retreat all
     if (retreat_node_i < 0 || retreat_node_i >= m_nodes.size()) {
         for (size_t i = 0; i < m_nodes.size(); i++) {
             // check timeout
@@ -610,12 +628,20 @@ int MotorAPI::move(std::vector<double> positions, std::atomic<bool>* stopTrial, 
     if (positions.size() > m_nodes.size())
         return -2;
 
+    std::vector<double> positions_l = positions;
+    // hacky way of controlling 1D with 2 motors. in the future should be organized with motor groups?
+    if (positions_l.size() == 3 && m_nodes.size() == 4) {
+        // symmetrical control of the last 2 motors
+        positions_l[2] /= 2;
+        positions_l.push_back(positions_l[2]);
+    }
+
     disengageBrakes();
     logInfo("\tStarting move.");
 
     auto startTime = Times::getCurrentTime();
     int answ = 0;
-    for (int i = positions.size() - 1; i >= 0; i--) {
+    for (int i = positions_l.size() - 1; i >= 0; i--) {
         // check if trial or the whole protocol has been signalled to stop
         if (stopTrial->load() || stopProtocol->load()) {
             stop();  // this will mark all movements as done
@@ -627,7 +653,7 @@ int MotorAPI::move(std::vector<double> positions, std::atomic<bool>* stopTrial, 
             break;
         }
 
-        m_nodes[i].move(positions[i], stopTrial, stopProtocol);
+        m_nodes[i].move(positions_l[i], stopTrial, stopProtocol);
     }
 
     engageBrakes();
