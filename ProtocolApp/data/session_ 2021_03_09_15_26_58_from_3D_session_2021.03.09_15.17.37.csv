@@ -1,0 +1,3 @@
+trial_num,repeating_trial,reward,trial_start_time(ms),object_in_position_time(ms),arm_liftoff_time(ms),started_touching_time(ms),trial_end_time(ms),trial_finished_time(ms),pos_translation_z(mm),pos_tilt(deg),pos_aperture(mm),
+0,0,0,179847529,179857631,179857632,0,179864683,179865714,142.5,-45,0,
+1,0,0,179873443,179883544,179883545,0,179887885,179888915,165,45,0,

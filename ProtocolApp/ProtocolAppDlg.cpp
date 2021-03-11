@@ -462,12 +462,16 @@ void CProtocolAppDlg::OnBnClickedHomeMotorsBtn()
 {
 	GetDlgItem(IDC_HOME_MOTORS_BTN)->EnableWindow(false);
 
+	AfxMessageBox("PUT THE CALIBRATION FIXATOR INTO PLACE AND CLICK OK");
+
 	auto state = m_protocol.getCurrentState();
 	if (state == ProtocolState::shutdown ||
 		state == ProtocolState::trialReady)
 		m_protocol.home_motors();
 	else
 		AfxMessageBox("Cannot home motors while the trials are running or initializing.");
+
+	AfxMessageBox("REMOVE THE CALIBRATION FIXATOR AND CLICK OK");
 
 	GetDlgItem(IDC_HOME_MOTORS_BTN)->EnableWindow(true);
 }

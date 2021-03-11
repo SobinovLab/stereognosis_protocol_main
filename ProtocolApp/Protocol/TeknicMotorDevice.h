@@ -90,7 +90,7 @@ public:
     void printDetails();
 
     // seconds for homing and moving
-    double action_timeout = 10;
+    double action_timeout = 60;
 
 };
 
@@ -121,7 +121,7 @@ private:
     std::vector<sFnd::IPort *> m_ports;
     std::vector<Node> m_nodes;
 
-    double action_timeout = 10;
+    double action_timeout = 60;
 
     std::mutex mtx;
 

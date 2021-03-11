@@ -1,0 +1,38 @@
+Log file created 2021_03_09
+
+179204525[WARNING]: Found no CSV files with datetimes in ./session_configs/.
+179205365[INFO]: Found 1 SC Hubs
+179206997[INFO]: Iterating through 1 nodes
+179206997[INFO]: Iterating nodes on port 0.
+179207105[INFO]: Port: 0, State: 5, Node count: 4.
+179209262[INFO]:   NodeType: CLEARPATH_SC
+179209272[INFO]:      Model: CPM-SCHP-3441S-ELSB-1-7-D
+179209275[INFO]:   Serial #: 44100923
+179209275[INFO]: FW version: 1.7.6 5E67
+179209275[INFO]:     userID: TranslationZ
+179209943[INFO]: Node enabled TranslationZ.
+179211362[INFO]:   NodeType: CLEARPATH_SC_ADV
+179211373[INFO]:      Model: CPM-SCHP-3421S-ELSA-1-7-D
+179211376[INFO]:   Serial #: 44001413
+179211376[INFO]: FW version: 1.7.6 5E67
+179211376[INFO]:     userID: Tilt
+179211971[INFO]: Node enabled Tilt.
+179214151[INFO]:   NodeType: CLEARPATH_SC_ADV
+179214162[INFO]:      Model: CPM-SCHP-2311S-ELSA-1-7-D
+179214165[INFO]:   Serial #: 49000492
+179214165[INFO]: FW version: 1.7.6 5E67
+179214165[INFO]:     userID: ApertureLeft
+179214185[INFO]: Node enabled ApertureLeft.
+179216382[INFO]:   NodeType: CLEARPATH_SC_ADV
+179216393[INFO]:      Model: CPM-SCHP-2311S-ELSA-1-7-D
+179216397[INFO]:   Serial #: 49000551
+179216397[INFO]: FW version: 1.7.6 5E67
+179216397[INFO]:     userID: ApertureRight
+179216415[INFO]: Node enabled ApertureRight.
+179227968[INFO]: Node enabled TranslationZ.
+179227970[INFO]: Node has not been homed.
+179227970[INFO]: Homing Node now...
+179229773[INFO]: Node completed homing.
+179229793[INFO]: Node enabled Tilt.
+179229796[INFO]: Node has not been homed.
+179229796[INFO]: Homing Node now...

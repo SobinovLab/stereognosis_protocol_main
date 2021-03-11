@@ -1,0 +1,105 @@
+Log file created 2021_03_09
+
+179746581[WARNING]: Found no CSV files with datetimes in ./session_configs/.
+179746751[INFO]: Found 1 SC Hubs
+179748386[INFO]: Iterating through 1 nodes
+179748387[INFO]: Iterating nodes on port 0.
+179748493[INFO]: Port: 0, State: 5, Node count: 4.
+179750594[INFO]:   NodeType: CLEARPATH_SC
+179750606[INFO]:      Model: CPM-SCHP-3441S-ELSB-1-7-D
+179750609[INFO]:   Serial #: 44100923
+179750609[INFO]: FW version: 1.7.6 5E67
+179750609[INFO]:     userID: TranslationZ
+179750628[INFO]: Node enabled TranslationZ.
+179752068[INFO]:   NodeType: CLEARPATH_SC_ADV
+179752079[INFO]:      Model: CPM-SCHP-3421S-ELSA-1-7-D
+179752082[INFO]:   Serial #: 44001413
+179752083[INFO]: FW version: 1.7.6 5E67
+179752083[INFO]:     userID: Tilt
+179752102[INFO]: Node enabled Tilt.
+179754286[INFO]:   NodeType: CLEARPATH_SC_ADV
+179754297[INFO]:      Model: CPM-SCHP-2311S-ELSA-1-7-D
+179754300[INFO]:   Serial #: 49000492
+179754300[INFO]: FW version: 1.7.6 5E67
+179754300[INFO]:     userID: ApertureLeft
+179754312[WARNING]: Node ApertureLeft has experienced torque saturation since last checking
+179754319[INFO]: Node enabled ApertureLeft.
+179756529[INFO]:   NodeType: CLEARPATH_SC_ADV
+179756541[INFO]:      Model: CPM-SCHP-2311S-ELSA-1-7-D
+179756544[INFO]:   Serial #: 49000551
+179756544[INFO]: FW version: 1.7.6 5E67
+179756544[INFO]:     userID: ApertureRight
+179756555[WARNING]: Node ApertureRight has experienced torque saturation since last checking
+179756563[INFO]: Node enabled ApertureRight.
+179759530[INFO]: Node enabled TranslationZ.
+179759534[INFO]: Node has already been homed, current position is:-1.000000
+179759534[INFO]: Homing Node now...
+179761108[INFO]: Node completed homing.
+179761128[INFO]: Node enabled Tilt.
+179761132[INFO]: Node has already been homed, current position is:-6.000000
+179761132[INFO]: Homing Node now...
+179762177[INFO]: Node completed homing.
+179762197[INFO]: Node enabled ApertureLeft.
+179762201[INFO]: Node has already been homed, current position is:14.000000
+179762201[INFO]: Homing Node now...
+179771503[INFO]: Node completed homing.
+179771522[INFO]: Node enabled ApertureRight.
+179771527[INFO]: Node has already been homed, current position is:4.000000
+179771527[INFO]: Homing Node now...
+179781530[ERROR]: Node did not complete homing:  
+179781530[ERROR]: 	 -Ensure Homing settings have been defined through ClearView.
+179781530[ERROR]: 	 -Check for alerts/Shutdowns
+179781530[ERROR]: 	 - Ensure timeout is longer than the longest possible homing move.
+179847529[INFO]: Upcoming position 142.500000 -45.000000 0.000000
+179847530[INFO]: 	Starting move.
+179847542[WARNING]: Node ApertureRight has experienced torque saturation since last checking
+179847549[INFO]: Node enabled ApertureRight.
+179847554[INFO]: Moving Node ApertureRight moveCounts 0 relative -4
+179847559[INFO]: Move complete on ApertureRight
+179847570[WARNING]: Node ApertureLeft has experienced torque saturation since last checking
+179847578[INFO]: Node enabled ApertureLeft.
+179847582[INFO]: Moving Node ApertureLeft moveCounts 0 relative -14
+179847587[INFO]: Move complete on ApertureLeft
+179847598[WARNING]: Node Tilt has experienced torque saturation since last checking
+179847606[INFO]: Node enabled Tilt.
+179847610[INFO]: Moving Node Tilt moveCounts -34965 relative -34959
+179857614[ERROR]: Timed out waiting for move to complete
+179857618[ERROR]: Timed out waiting for move to complete
+179857622[ERROR]: Timed out waiting for move to complete
+179857626[ERROR]: Timed out waiting for move to complete
+179857631[INFO]: Move complete on Tilt
+179865685[INFO]: 	Starting retreat.
+179865696[WARNING]: Node TranslationZ has experienced torque saturation since last checking
+179865704[INFO]: Node enabled TranslationZ.
+179865708[INFO]: Moving Node TranslationZ moveCounts 0 relative 1
+179865713[INFO]: Move complete on TranslationZ
+179865713[INFO]: Retreat complete.
+179873443[INFO]: Upcoming position 165.000000 45.000000 0.000000
+179873445[INFO]: 	Starting move.
+179873464[INFO]: Node enabled ApertureRight.
+179873468[INFO]: Moving Node ApertureRight moveCounts 0 relative -4
+179873473[INFO]: Move complete on ApertureRight
+179873492[INFO]: Node enabled ApertureLeft.
+179873496[INFO]: Moving Node ApertureLeft moveCounts 0 relative -14
+179873501[INFO]: Move complete on ApertureLeft
+179873520[INFO]: Node enabled Tilt.
+179873524[INFO]: Moving Node Tilt moveCounts 34965 relative 34971
+179883527[ERROR]: Timed out waiting for move to complete
+179883531[ERROR]: Timed out waiting for move to complete
+179883536[ERROR]: Timed out waiting for move to complete
+179883540[ERROR]: Timed out waiting for move to complete
+179883544[INFO]: Move complete on Tilt
+179888887[INFO]: 	Starting retreat.
+179888905[INFO]: Node enabled TranslationZ.
+179888910[INFO]: Moving Node TranslationZ moveCounts 0 relative 1
+179888914[INFO]: Move complete on TranslationZ
+179888914[INFO]: Retreat complete.
+179889359[INFO]: 	Starting retreat.
+179889379[INFO]: Node enabled TranslationZ.
+179889383[INFO]: Moving Node TranslationZ moveCounts 0 relative 1
+179889388[INFO]: Move complete on TranslationZ
+179889388[INFO]: Retreat complete.
+179890901[INFO]: Teknic Shutting down. Disabling nodes, and closing port
+179891323[INFO]: Teknic Shutdown!
+
+

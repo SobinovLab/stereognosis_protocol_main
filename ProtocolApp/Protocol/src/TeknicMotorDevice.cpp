@@ -86,7 +86,7 @@ Node::Node(sFnd::INode* node, const int index) :
         vel = new Convertor(1, 1410, 0, 1410. / 10);  // arbitrary scaling factor to RPM
         acc = new Convertor(1, 14100, 0, 14100. / 10);  // arbitrary scaling factor to RPM/s
 
-        default_vel = 0.07;
+        default_vel = 0.15;
 
         break;
     case 2:
@@ -95,13 +95,13 @@ Node::Node(sFnd::INode* node, const int index) :
         // https://www.teknic.com/model-info/CPM-SCHP-2311S-ELSA/
         // + is <-
 
-        // Homed against the widest position - 35 mm width
-        pos = new Convertor(-500, 36000, 35, 35000. / 35, -1); // input in mm
+        // Homed against the widest position and 92000 ctrs to 0
+        pos = new Convertor(-500, 90000, 0, 80000. / 39.5); // input in mm
         // max is 4000 RPM @ 75 VDC
         vel = new Convertor(1, 4000, 0, 4000. / 10);  // arbitrary scaling factor to RPM
         acc = new Convertor(1, 40000, 0, 40000. / 10);  // arbitrary scaling factor to RPM/s
 
-        default_vel = 0.1;
+        default_vel = 0.5;
 
         break;
     case 3:
@@ -109,13 +109,13 @@ Node::Node(sFnd::INode* node, const int index) :
         // MOTOR CPM-SCHP-2311S-ELSA-1-7-D
         // https://www.teknic.com/model-info/CPM-SCHP-2311S-ELSA/
 
-        // Homed against the widest position - 35 mm width
-        pos = new Convertor(-500, 36000, 35, 35000. / 35, -1); // input in mm
+        // Homed against the widest position and 92000 ctrs to 0
+        pos = new Convertor(-500, 90000, 0, 80000. / 39.5); // input in mm
         // max is 4000 RPM @ 75 VDC
         vel = new Convertor(1, 4000, 0, 4000. / 10);  // arbitrary scaling factor to RPM
         acc = new Convertor(1, 40000, 0, 40000. / 10);  // arbitrary scaling factor to RPM/s
 
-        default_vel = 0.1;
+        default_vel = 0.5;
 
         break;
     default:
@@ -576,9 +576,12 @@ int MotorAPI::home()
     disengageBrakes();
 
     int answ = 0;
-    for (auto node : m_nodes) {
-        answ += node.home();
-    }
+    // FIX lasdt motor does not home
+    for (int i = 0; i < m_nodes.size() - 1; i++)
+        answ += m_nodes[i].home();
+    //for (auto node : m_nodes) {
+    //    answ += node.home();
+    //}
     //engageBrakes();
 
     return answ;
@@ -632,8 +635,9 @@ int MotorAPI::move(std::vector<double> positions, std::atomic<bool>* stopTrial, 
     // hacky way of controlling 1D with 2 motors. in the future should be organized with motor groups?
     if (positions_l.size() == 3 && m_nodes.size() == 4) {
         // symmetrical control of the last 2 motors
-        positions_l[2] /= 2;
-        positions_l.push_back(positions_l[2]);
+        // FIX last - right aperture - motor does not work
+        //positions_l[2] /= 2;
+        //positions_l.push_back(positions_l[2]);
     }
 
     disengageBrakes();
@@ -681,8 +685,11 @@ bool MotorAPI::wasInitializedCorrectly()
 bool MotorAPI::wereHomed()
 {
     bool answ = true;
-    for (auto e : m_nodes)
-        answ = answ && e.wasHomed();  // any
+    // FIX lasdt motor does not home
+    for (int i = 0; i < m_nodes.size() - 1; i++)
+        answ = answ && m_nodes[i].wasHomed();  // any
+    //for (auto e : m_nodes)
+    //    answ = answ && e.wasHomed();  // any
     return answ;
 }
 

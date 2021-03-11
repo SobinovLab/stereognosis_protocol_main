@@ -1,0 +1,55 @@
+Log file created 2021_03_09
+
+180150052[WARNING]: Found no CSV files with datetimes in ./session_configs/.
+180150234[INFO]: Found 1 SC Hubs
+180151862[INFO]: Iterating through 1 nodes
+180151862[INFO]: Iterating nodes on port 0.
+180151968[INFO]: Port: 0, State: 5, Node count: 4.
+180154074[INFO]:   NodeType: CLEARPATH_SC
+180154086[INFO]:      Model: CPM-SCHP-3441S-ELSB-1-7-D
+180154089[INFO]:   Serial #: 44100923
+180154089[INFO]: FW version: 1.7.6 5E67
+180154089[INFO]:     userID: TranslationZ
+180154100[WARNING]: Node TranslationZ has experienced torque saturation since last checking
+180154107[INFO]: Node enabled TranslationZ.
+180155539[INFO]:   NodeType: CLEARPATH_SC_ADV
+180155550[INFO]:      Model: CPM-SCHP-3421S-ELSA-1-7-D
+180155553[INFO]:   Serial #: 44001413
+180155553[INFO]: FW version: 1.7.6 5E67
+180155553[INFO]:     userID: Tilt
+180155565[WARNING]: Node Tilt has experienced torque saturation since last checking
+180155572[INFO]: Node enabled Tilt.
+180157766[INFO]:   NodeType: CLEARPATH_SC_ADV
+180157777[INFO]:      Model: CPM-SCHP-2311S-ELSA-1-7-D
+180157780[INFO]:   Serial #: 49000492
+180157780[INFO]: FW version: 1.7.6 5E67
+180157780[INFO]:     userID: ApertureLeft
+180157792[WARNING]: Node ApertureLeft has experienced torque saturation since last checking
+180157799[INFO]: Node enabled ApertureLeft.
+180160009[INFO]:   NodeType: CLEARPATH_SC_ADV
+180160020[INFO]:      Model: CPM-SCHP-2311S-ELSA-1-7-D
+180160023[INFO]:   Serial #: 49000551
+180160023[INFO]: FW version: 1.7.6 5E67
+180160023[INFO]:     userID: ApertureRight
+180160034[WARNING]: Node ApertureRight has experienced torque saturation since last checking
+180160042[INFO]: Node enabled ApertureRight.
+180179009[INFO]: Node enabled TranslationZ.
+180179013[INFO]: Node has already been homed, current position is:-1.000000
+180179013[INFO]: Homing Node now...
+180180587[INFO]: Node completed homing.
+180180606[INFO]: Node enabled Tilt.
+180180611[INFO]: Node has already been homed, current position is:1.000000
+180180611[INFO]: Homing Node now...
+180181507[INFO]: Node completed homing.
+180181527[INFO]: Node enabled ApertureLeft.
+180181531[INFO]: Node has already been homed, current position is:13.000000
+180181531[INFO]: Homing Node now...
+180190847[INFO]: Node completed homing.
+180190866[INFO]: Node enabled ApertureRight.
+180190871[INFO]: Node has already been homed, current position is:3.000000
+180190871[INFO]: Homing Node now...
+180202581[INFO]: Node completed homing.
+180225531[INFO]: Teknic Shutting down. Disabling nodes, and closing port
+180225953[INFO]: Teknic Shutdown!
+
+

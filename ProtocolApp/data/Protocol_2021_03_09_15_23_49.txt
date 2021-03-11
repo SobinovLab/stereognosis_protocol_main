@@ -1,0 +1,54 @@
+Log file created 2021_03_09
+
+179557723[WARNING]: Found no CSV files with datetimes in ./session_configs/.
+179557883[INFO]: Found 1 SC Hubs
+179559505[INFO]: Iterating through 1 nodes
+179559505[INFO]: Iterating nodes on port 0.
+179559611[INFO]: Port: 0, State: 5, Node count: 4.
+179561761[INFO]:   NodeType: CLEARPATH_SC
+179561771[INFO]:      Model: CPM-SCHP-3441S-ELSB-1-7-D
+179561774[INFO]:   Serial #: 44100923
+179561774[INFO]: FW version: 1.7.6 5E67
+179561774[INFO]:     userID: TranslationZ
+179562445[INFO]: Node enabled TranslationZ.
+179563859[INFO]:   NodeType: CLEARPATH_SC_ADV
+179563870[INFO]:      Model: CPM-SCHP-3421S-ELSA-1-7-D
+179563873[INFO]:   Serial #: 44001413
+179563873[INFO]: FW version: 1.7.6 5E67
+179563873[INFO]:     userID: Tilt
+179563892[INFO]: Node enabled Tilt.
+179566125[INFO]:   NodeType: CLEARPATH_SC_ADV
+179566136[INFO]:      Model: CPM-SCHP-2311S-ELSA-1-7-D
+179566139[INFO]:   Serial #: 49000492
+179566139[INFO]: FW version: 1.7.6 5E67
+179566139[INFO]:     userID: ApertureLeft
+179566724[INFO]: Node enabled ApertureLeft.
+179568976[INFO]:   NodeType: CLEARPATH_SC_ADV
+179568987[INFO]:      Model: CPM-SCHP-2311S-ELSA-1-7-D
+179568990[INFO]:   Serial #: 49000551
+179568990[INFO]: FW version: 1.7.6 5E67
+179568990[INFO]:     userID: ApertureRight
+179569578[INFO]: Node enabled ApertureRight.
+179574982[INFO]: Node enabled TranslationZ.
+179574984[INFO]: Node has not been homed.
+179574984[INFO]: Homing Node now...
+179576561[INFO]: Node completed homing.
+179576580[INFO]: Node enabled Tilt.
+179576583[INFO]: Node has not been homed.
+179576583[INFO]: Homing Node now...
+179578648[INFO]: Node completed homing.
+179578668[INFO]: Node enabled ApertureLeft.
+179578670[INFO]: Node has not been homed.
+179578670[INFO]: Homing Node now...
+179588008[INFO]: Node completed homing.
+179588027[INFO]: Node enabled ApertureRight.
+179588029[INFO]: Node has not been homed.
+179588029[INFO]: Homing Node now...
+179598033[ERROR]: Node did not complete homing:  
+179598033[ERROR]: 	 -Ensure Homing settings have been defined through ClearView.
+179598033[ERROR]: 	 -Check for alerts/Shutdowns
+179598033[ERROR]: 	 - Ensure timeout is longer than the longest possible homing move.
+179615165[INFO]: Teknic Shutting down. Disabling nodes, and closing port
+179615593[INFO]: Teknic Shutdown!
+
+
