@@ -2,7 +2,7 @@
 [TEK32CS10-20-0]
 Chip Version                   = 1.7.6
 UserID0                        = ApertureLeft
-File Written                   = 2021-03-09 15:07:37
+File Written                   = 2021-03-16 13:41:12
 Writer                         = sFoundation 2.1.31
 PN                             = CPM-SCHP-2311S-ELSA-1-7-D
 UserDesc                       = 
@@ -62,7 +62,7 @@ KpFactor                       = 1.000000
 KpZFactor                      = 1.000000
 KiFactor                       = 1.000000
 FineTunePosn                   = 19.000000
-TrqLim                         = 15.999756	;(A)
+TrqLim                         = 5.000000	;(A)
 FldBckPos                      = 0.999756	;(A)
 FldBckPosTC                    = 199.677705	;(msec)
 FldBckNeg                      = 0.999756	;(A)
@@ -73,7 +73,7 @@ HrdStpVel                      = 1898.665046	;(ticks/sec)
 HrdStpTrip                     = 79.998779	;(A)
 HrdStpTime                     = 50.038872	;(msec)
 RGenOff                        = 86.000000	;(V)
-HrdStpAltTrqLim                = 5.999756	;(A)
+HrdStpAltTrqLim                = 2.000122	;(A)
 DelayDisable                   = 199.859400	;(msec)
 VRStc                          = 9.999495	;(msec)
 RGenOn                         = 88.000000	;(V)

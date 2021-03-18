@@ -72,6 +72,7 @@ Node::Node(sFnd::INode* node, const int index) :
         acc = new Convertor(1, 8400, 0, 8400. / 10);  // arbitrary scaling factor to RPM/s
 
         default_vel = 2;
+        default_acc = 0.6;
 
         break;
     case 1:
@@ -87,6 +88,7 @@ Node::Node(sFnd::INode* node, const int index) :
         acc = new Convertor(1, 14100, 0, 14100. / 10);  // arbitrary scaling factor to RPM/s
 
         default_vel = 0.15;
+        default_acc = 0.3;
 
         break;
     case 2:
@@ -102,6 +104,7 @@ Node::Node(sFnd::INode* node, const int index) :
         acc = new Convertor(1, 40000, 0, 40000. / 10);  // arbitrary scaling factor to RPM/s
 
         default_vel = 0.5;
+        default_acc = 0.125;
 
         break;
     case 3:
@@ -116,6 +119,7 @@ Node::Node(sFnd::INode* node, const int index) :
         acc = new Convertor(1, 40000, 0, 40000. / 10);  // arbitrary scaling factor to RPM/s
 
         default_vel = 0.5;
+        default_acc = 0.125;
 
         break;
     default:
