@@ -445,6 +445,9 @@ void Protocol::run()
 		stopWatch = false;
 		thread watchThread(&Protocol::watch_early_grab, this);
 
+		// send signal to ephys to start recording including the prelim data
+		start_ephys_recording();
+
 		// motor movement - this thread will be locked, can be interrupted 
 		vector<double> positions = { params.pos_translation_z, params.pos_tilt, params.pos_aperture };
 		rets = 0;
@@ -473,7 +476,7 @@ void Protocol::run()
 			// start recordings
 			start_camera_recording();  // TODO process it?
 			start_pressure_sensor_recording();
-			start_ephys_recording();
+			start_ephys_recording();  // this one just marks the synchronization point in ephys data
 
 			// spawn the process that monitors the async stopping conditions
 			m_asyncTrialSuccessMonitorThread = new thread(&Protocol::m_asyncTrialConditionMonitor, this);
