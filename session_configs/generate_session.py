@@ -190,9 +190,11 @@ def generate_session(session_config_filename, session_filename):
     # generate the array
     data = generate_data_recursively(Ns, reps, sample_values)
 
+    data_copy = deepcopy(data)
+
     # add repetitions
     for _ in range(base_reps-1):
-        data += data
+        data += data_copy
 
     # re-generate fully random dimensions
     for idim, generator in generators.items():
