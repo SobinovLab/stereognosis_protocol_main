@@ -209,7 +209,7 @@ int Protocol::wait_for_cameras_finish_saving()
 {
 	auto waitStart = Times::getCurrentTime();
 	double timeout = 5*60; // seconds
-	
+
 	int flag = 0;
 	while (true) {
 		if (did_cameras_finish_saving()) {
@@ -221,6 +221,34 @@ int Protocol::wait_for_cameras_finish_saving()
 		}
 	}
 	return flag;
+}
+
+void Protocol::sync_message_trial_start()
+{
+	if (m_cameraClient1.isConnected()) {
+		m_cameraClient1.syncMessageTrialStart();
+	}
+	if (m_cameraClient2.isConnected()) {
+		m_cameraClient2.syncMessageTrialStart();
+	}
+
+	if (m_touchSensorClient.isConnected()) {
+		m_touchSensorClient.syncMessageTrialStart();
+	}
+}
+
+void Protocol::sync_message_trial_end()
+{
+	if (m_cameraClient1.isConnected()) {
+		m_cameraClient1.syncMessageTrialEnd();
+	}
+	if (m_cameraClient2.isConnected()) {
+		m_cameraClient2.syncMessageTrialEnd();
+	}
+
+	if (m_touchSensorClient.isConnected()) {
+		m_touchSensorClient.syncMessageTrialEnd();
+	}
 }
 
 void Protocol::connect_pressure_sensors()
@@ -319,7 +347,7 @@ void Protocol::run()
 	this->stopProtocol.store(false);
 	setCurrentState(ProtocolState::initializing); // display the state of the trial on the GUI
 	int rets = 0;
-	
+
 	// Load all trials from session config file (BL code)
 	vector<string> session_line1;
 	vector<string> session_line2;
@@ -345,9 +373,19 @@ void Protocol::run()
 	// open csv file for logging
 	openCsvLog();
 	long long trial_start_time;
+    long long log_sent_config_to_cameras;
 	long long object_in_position_time;
 	long long arm_liftoff_time;
+    long long log_started_camera_recording;
+    long long log_started_ps_recording;
+    long long log_started_ephys_recording;
+	long long log_sent_start_sync_messages;
+    long long log_started_monitoring_ps;
 	long long trial_end_time;
+    long long log_starting_finishing_recordings;
+	long long log_sent_end_sync_messages;
+    long long log_stopped_camera_recordings;
+    long long log_stopped_ps_recordings;
 	long long trial_finished_time;
 
 	// class member variable
@@ -361,10 +399,20 @@ void Protocol::run()
 	{
 		// ---------------- Preparing trial
 		trial_start_time = 0;
+        log_sent_config_to_cameras = 0;
 		object_in_position_time = 0;
 		arm_liftoff_time = 0;
+        log_started_camera_recording = 0;
+        log_started_ps_recording = 0;
+        log_started_ephys_recording = 0;
+		log_sent_start_sync_messages = 0;
+        log_started_monitoring_ps = 0;
 		m_startedTouchingTime = 0;
 		trial_end_time = 0;
+        log_starting_finishing_recordings = 0;
+		log_sent_end_sync_messages = 0;
+        log_stopped_camera_recordings = 0;
+        log_stopped_ps_recordings = 0;
 		trial_finished_time = 0;
 
 		// if went through all trials, break the loop
@@ -394,12 +442,12 @@ void Protocol::run()
 		wait_until_arm_at_rest();
 
 		// waiting for the start of the next trial
-		while (!this->startTrial.load() && 
-			!this->stopProtocol.load() && 
+		while (!this->startTrial.load() &&
+			!this->stopProtocol.load() &&
 			!(loopAutomatically.load() && Times::isTimeout(intertrialWaitStartTime, params.intertrialWaitTime))) {
 			// waiting for:
 			//	Start trial button to be pressed
-			//  stop of protocol 
+			//  stop of protocol
 			//  if looping is selected, timeout of intertrial time
 		}
 
@@ -437,6 +485,7 @@ void Protocol::run()
 
 		// prepare recordings
 		send_config_to_cameras();
+        log_sent_config_to_cameras = Times::getCurrentTimeInMilliSecs();
 
 		// GUI Can click on stop trial
 		trialFieldsEnableRetreat(true);
@@ -445,10 +494,7 @@ void Protocol::run()
 		stopWatch = false;
 		thread watchThread(&Protocol::watch_early_grab, this);
 
-		// send signal to ephys to start recording including the prelim data
-		start_ephys_recording();
-
-		// motor movement - this thread will be locked, can be interrupted 
+		// motor movement - this thread will be locked, can be interrupted
 		vector<double> positions = { params.pos_translation_z, params.pos_tilt, params.pos_aperture };
 		rets = 0;
 		rets = motorHub->move(positions, &stopTrial, &stopProtocol);
@@ -456,7 +502,7 @@ void Protocol::run()
 		{
 			// TODO: check error with motors
 
-			// rets == -1 means motors were not initialized. 
+			// rets == -1 means motors were not initialized.
 			// Reset to 0 if it is fine and want to test everything else
 		}
 
@@ -475,11 +521,19 @@ void Protocol::run()
 		if (!stopTrial && !stopProtocol && rets >= 0) {
 			// start recordings
 			start_camera_recording();  // TODO process it?
+            log_started_camera_recording = Times::getCurrentTimeInMilliSecs();
 			start_pressure_sensor_recording();
-			start_ephys_recording();  // this one just marks the synchronization point in ephys data
+            log_started_ps_recording = Times::getCurrentTimeInMilliSecs();
+
+			// sync
+			start_ephys_recording();
+            log_started_ephys_recording = Times::getCurrentTimeInMilliSecs();
+			sync_message_trial_start();
+			log_sent_start_sync_messages = Times::getCurrentTimeInMilliSecs();
 
 			// spawn the process that monitors the async stopping conditions
 			m_asyncTrialSuccessMonitorThread = new thread(&Protocol::m_asyncTrialConditionMonitor, this);
+            log_started_monitoring_ps = Times::getCurrentTimeInMilliSecs();
 
 			trialStartTime = Times::getCurrentTime();
 			Sounds::playStartTaskTone();
@@ -530,19 +584,34 @@ void Protocol::run()
 
 		// retreat motors
 		motorHub->retreat();
+		log_starting_finishing_recordings = Times::getCurrentTimeInMilliSecs();
+
+		// sync again
+		break_ephys_recording();
+		sync_message_trial_end();
+		log_sent_end_sync_messages = Times::getCurrentTimeInMilliSecs();
 
 		// stop recording
 		break_camera_recording();
+        log_stopped_camera_recordings = Times::getCurrentTimeInMilliSecs();
 		break_pressure_sensor_recording();
-		break_ephys_recording();
+        log_stopped_ps_recordings = Times::getCurrentTimeInMilliSecs();
 
 		// countdown for next trial
 		intertrialWaitStartTime = Times::getCurrentTime();
 
 		// log the trial success, target positions and times
 		trial_finished_time = Times::getCurrentTimeInMilliSecs();
-		addLineToCsvLog(m_earnedReward || deservesReward, repeating_trial[params.trial_number], 
-			trial_start_time, object_in_position_time, arm_liftoff_time, trial_end_time, trial_finished_time);
+		addLineToCsvLog(m_earnedReward || deservesReward, repeating_trial[params.trial_number],
+			trial_start_time, log_sent_config_to_cameras, object_in_position_time,
+            arm_liftoff_time,
+            log_started_camera_recording, log_started_ps_recording,
+            log_started_ephys_recording, log_sent_start_sync_messages,
+			log_started_monitoring_ps,
+            trial_end_time,
+            log_starting_finishing_recordings, log_sent_end_sync_messages,
+			log_stopped_camera_recordings, log_stopped_ps_recordings,
+            trial_finished_time);
 
 
 		// wait for the signal from recording devices that the data has been saved - is Ready
@@ -695,11 +764,21 @@ void Protocol::openCsvLog()
 	trialLogCsv << "trial_num,";
 	trialLogCsv << "repeating_trial,";
 	trialLogCsv << "reward,";
-	trialLogCsv << "trial_start_time(ms),";
+    trialLogCsv << "trial_start_time(ms),";
+	trialLogCsv << "log_sent_config_to_cameras(ms),";
 	trialLogCsv << "object_in_position_time(ms),";
-	trialLogCsv << "arm_liftoff_time(ms),";
+    trialLogCsv << "arm_liftoff_time(ms),";
+    trialLogCsv << "log_started_camera_recording(ms),";
+    trialLogCsv << "log_started_ps_recording(ms),";
+    trialLogCsv << "log_started_ephys_recording(ms),";
+	trialLogCsv << "log_sent_start_sync_messages(ms),";
+	trialLogCsv << "log_started_monitoring_ps(ms),";
 	trialLogCsv << "started_touching_time(ms),";
-	trialLogCsv << "trial_end_time(ms),";
+    trialLogCsv << "trial_end_time(ms),";
+    trialLogCsv << "log_starting_finishing_recordings(ms),";
+	trialLogCsv << "log_sent_end_sync_messages(ms),";
+    trialLogCsv << "log_stopped_camera_recordings(ms),";
+	trialLogCsv << "log_stopped_ps_recordings(ms),";
 	trialLogCsv << "trial_finished_time(ms),";
 	trialLogCsv << "pos_translation_z(mm),";
 	trialLogCsv << "pos_tilt(deg),";
@@ -709,30 +788,46 @@ void Protocol::openCsvLog()
 }
 
 void Protocol::addLineToCsvLog(const bool got_reward, const bool repeating,
-	const long long trial_start_time, const long long object_in_position_time,
+	const long long trial_start_time, const long long log_sent_config_to_cameras, const long long object_in_position_time,
 	const long long arm_liftoff_time,
-	const long long trial_end_time, const long long trial_finished_time)
+    const long long log_started_camera_recording, const long long log_started_ps_recording,
+    const long long log_started_ephys_recording, const long long log_sent_start_sync_messages,
+	const long long log_started_monitoring_ps,
+	const long long trial_end_time,
+    const long long log_starting_finishing_recordings, const long long log_sent_end_sync_messages,
+	const long long log_stopped_camera_recordings, const long long log_stopped_ps_recordings,
+    const long long trial_finished_time)
 {
 	if (!trialLogCsv.is_open()) {
 		logError("Trying to write into a closed log.");
 		return;
 	}
 
-	trialLogCsv << params.trial_number << ",";		// "trial_num,";
-	trialLogCsv << (int)repeating << ",";			// "repeating_trial,";
-	trialLogCsv << (int)got_reward << ",";			// "reward,";
-	trialLogCsv << trial_start_time << ",";			// "trial_start_time(ms),";
-	trialLogCsv << object_in_position_time << ",";	// "object_in_position_time(ms),";
-	trialLogCsv << arm_liftoff_time << ",";			// "arm_liftoff_time(ms),";
+	trialLogCsv << params.trial_number << ",";                 // "trial_num,";
+	trialLogCsv << (int)repeating << ",";			           // "repeating_trial,";
+	trialLogCsv << (int)got_reward << ",";			           // "reward,";
+	trialLogCsv << trial_start_time << ",";			           // "trial_start_time(ms),";
+    trialLogCsv << log_sent_config_to_cameras << ",";          // "log_sent_config_to_cameras(ms),";
+	trialLogCsv << object_in_position_time << ",";	           // "object_in_position_time(ms),";
+	trialLogCsv << arm_liftoff_time << ",";			           // "arm_liftoff_time(ms),";
+    trialLogCsv << log_started_camera_recording << ",";        // "log_started_camera_recording(ms),";
+    trialLogCsv << log_started_ps_recording << ",";            // "log_started_ps_recording(ms),";
+    trialLogCsv << log_started_ephys_recording << ",";         // "log_started_ephys_recording(ms),";
+	trialLogCsv << log_sent_start_sync_messages << ",";        // "log_sent_start_sync_messages(ms),";
+    trialLogCsv << log_started_monitoring_ps << ",";           // "log_started_monitoring_ps(ms),";
 	if (got_reward)
 		trialLogCsv << m_startedTouchingTime << ","; // started_touching_time(ms), ";
 	else
 		trialLogCsv << "0,"; // started_touching_time(ms), ";
-	trialLogCsv << trial_end_time << ",";			// "trial_end_time(ms),";
-	trialLogCsv << trial_finished_time << ",";		// "trial_finished_time(ms),";
-	trialLogCsv << params.pos_translation_z << ",";	// "pos_translation_z(mm),";
-	trialLogCsv << params.pos_tilt << ",";			// "pos_tilt(deg),";
-	trialLogCsv << params.pos_aperture << ",";		// "pos_aperture(mm),";
+	trialLogCsv << trial_end_time << ",";			           // "trial_end_time(ms),";
+    trialLogCsv << log_starting_finishing_recordings << ",";   // "log_starting_finishing_recordings(ms),";
+	trialLogCsv << log_sent_end_sync_messages << ",";		   // "log_sent_end_sync_messages(ms),";
+    trialLogCsv << log_stopped_camera_recordings << ",";       // "log_stopped_camera_recordings(ms),";
+    trialLogCsv << log_stopped_ps_recordings << ",";           // "log_stopped_ps_recordings(ms),";
+	trialLogCsv << trial_finished_time << ",";		           // "trial_finished_time(ms),";
+	trialLogCsv << params.pos_translation_z << ",";	           // "pos_translation_z(mm),";
+	trialLogCsv << params.pos_tilt << ",";			           // "pos_tilt(deg),";
+	trialLogCsv << params.pos_aperture << ",";		           // "pos_aperture(mm),";
 	trialLogCsv << endl;
 }
 
@@ -868,7 +963,7 @@ int Protocol::wait_until_arm_liftoff()
 
 void Protocol::start_ephys_recording()
 {
-	m_NIUsb6001card.ephysSyncStart();  
+	m_NIUsb6001card.ephysSyncStart();
 }
 
 void Protocol::break_ephys_recording()

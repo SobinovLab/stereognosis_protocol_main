@@ -32,6 +32,9 @@ public:
 	bool breakRecording(std::atomic<int>* result);
 	bool getForce(std::atomic<double>* leftForce, std::atomic<double>* rightForce);
 
+	bool syncMessageTrialStart();
+	bool syncMessageTrialEnd();
+
 	INT32 lastCode = 0;
 	CString* lastDescritpion;
 
@@ -52,6 +55,9 @@ public:
 	virtual void startRecording(int trialnum);
 	virtual void breakRecording(std::atomic<int>* result);
 	virtual void getForce(std::atomic<double>* leftForce, std::atomic<double>* rightForce);
+
+	void syncMessageTrialStart();
+	void syncMessageTrialEnd();
 
 	CString server_ip;
 	long port;

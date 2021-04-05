@@ -199,6 +199,18 @@ bool CameraClient::areYouDoneSaving(int* success)
 	return false;
 }
 
+void CameraClient::syncMessageTrialStart()
+{
+	if (ccsc)
+		ccsc->syncMessageTrialStart();
+}
+
+void CameraClient::syncMessageTrialEnd()
+{
+	if (ccsc)
+		ccsc->syncMessageTrialEnd();
+}
+
 bool CameraClient::isConnected()
 {
 	if (ccsc)
@@ -435,5 +447,31 @@ bool CameraCommunicatorSClient::areYouDoneSaving(int* success)
 	lastCode = sr.code();
 	lastDescritpion = new CString(sr.description().c_str());
 
+	return true;
+}
+
+bool CameraCommunicatorSClient::syncMessageTrialStart()
+{
+	Empty eq;
+	Empty er;
+	ClientContext context;
+
+	Status status = stub_->SyncMessageTrialStart(&context, eq, &er);
+	if (!status.ok()) {
+		return false;
+	}
+	return true;
+}
+
+bool CameraCommunicatorSClient::syncMessageTrialEnd()
+{
+	Empty eq;
+	Empty er;
+	ClientContext context;
+
+	Status status = stub_->SyncMessageTrialEnd(&context, eq, &er);
+	if (!status.ok()) {
+		return false;
+	}
 	return true;
 }

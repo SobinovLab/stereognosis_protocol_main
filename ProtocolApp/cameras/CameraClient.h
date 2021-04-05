@@ -32,6 +32,9 @@ public:
 	bool breakRecording();
 	bool areYouDoneSaving(int *success);
 
+	bool syncMessageTrialStart();
+	bool syncMessageTrialEnd();
+
 	INT32 lastCode = 0;
 	CString* lastDescritpion;
 
@@ -60,6 +63,9 @@ public:
 	bool captureSingleFrame(int* success);
 	void breakRecording();
 	bool areYouDoneSaving(int* success);  // return true on successful request
+
+	void syncMessageTrialStart();
+	void syncMessageTrialEnd();
 
 	bool isConnected();
 

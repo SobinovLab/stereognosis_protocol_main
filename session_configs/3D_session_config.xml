@@ -25,6 +25,6 @@
 		<control name="position" distribution="grid" N="3" reps="1" min="-30" max="30" values="-30 -20 -10 0 10 20" />
 	</coordinate>
 	<coordinate name="aperture" reps="1">
-		<control name="position" distribution="grid" N="5" reps="1" min="0" max="20" />
+		<control name="position" distribution="grid" N="6" reps="1" min="0" max="15" />
 	</coordinate>
 </stereognosis_session_config>

@@ -127,12 +127,19 @@ class Protocol
 		void matchLoadedSessionTrialToParams(const std::vector<std::string>& line1, const std::vector<std::string>& line2, const std::vector<double>& vec);
 		std::ofstream trialLogCsv;
 		void openCsvLog();
-		void addLineToCsvLog(const bool got_reward, const bool repeating, const long long trial_start_time, 
-			const long long object_in_position_time, const long long arm_liftoff_time,
-			const long long trial_end_time, const long long trial_finished_time);
+		void addLineToCsvLog(const bool got_reward, const bool repeating,
+			const long long trial_start_time, const long long log_sent_config_to_cameras, const long long object_in_position_time,
+			const long long arm_liftoff_time,
+			const long long log_started_camera_recording, const long long log_started_ps_recording,
+			const long long log_started_ephys_recording, const long long log_sent_start_sync_messages, 
+			const long long log_started_monitoring_ps,
+			const long long trial_end_time,
+			const long long log_starting_finishing_recordings, const long long log_sent_end_sync_messages,
+			const long long log_stopped_camera_recordings, const long long log_stopped_ps_recordings,
+			const long long trial_finished_time);
 		void closeCsvLog();
 
-		//////// local devices 
+		//////// local devices
 		void initDevices();
 		void releaseDevices();
 
@@ -154,6 +161,8 @@ class Protocol
 		MotorAPI* motorHub = nullptr;
 
 		//////// connected devices
+		void sync_message_trial_start();
+		void sync_message_trial_end();
 		// cameras
 		CameraClient m_cameraClient1;
 		CameraClient m_cameraClient2;
@@ -173,6 +182,7 @@ class Protocol
 		void wait_until_monkey_release();
 		std::atomic<bool> stopWatch;
 		void watch_early_grab();
+
 
 		//////// running protocol support
 		// calculated reward from monkey performance

@@ -32,6 +32,8 @@ static const char* CameraCommunicatorS_method_names[] = {
   "/CameraCommunicatorS/SetExposure",
   "/CameraCommunicatorS/BreakRecording",
   "/CameraCommunicatorS/AreYouDoneSaving",
+  "/CameraCommunicatorS/SyncMessageTrialStart",
+  "/CameraCommunicatorS/SyncMessageTrialEnd",
 };
 
 std::unique_ptr< CameraCommunicatorS::Stub> CameraCommunicatorS::NewStub(const std::shared_ptr< ::grpc::ChannelInterface>& channel, const ::grpc::StubOptions& options) {
@@ -52,6 +54,8 @@ CameraCommunicatorS::Stub::Stub(const std::shared_ptr< ::grpc::ChannelInterface>
   , rpcmethod_SetExposure_(CameraCommunicatorS_method_names[8], ::grpc::internal::RpcMethod::NORMAL_RPC, channel)
   , rpcmethod_BreakRecording_(CameraCommunicatorS_method_names[9], ::grpc::internal::RpcMethod::NORMAL_RPC, channel)
   , rpcmethod_AreYouDoneSaving_(CameraCommunicatorS_method_names[10], ::grpc::internal::RpcMethod::NORMAL_RPC, channel)
+  , rpcmethod_SyncMessageTrialStart_(CameraCommunicatorS_method_names[11], ::grpc::internal::RpcMethod::NORMAL_RPC, channel)
+  , rpcmethod_SyncMessageTrialEnd_(CameraCommunicatorS_method_names[12], ::grpc::internal::RpcMethod::NORMAL_RPC, channel)
   {}
 
 ::grpc::Status CameraCommunicatorS::Stub::SetFramerate(::grpc::ClientContext* context, const ::SetFramerateRequest& request, ::SimpleResponse* response) {
@@ -307,6 +311,52 @@ void CameraCommunicatorS::Stub::experimental_async::AreYouDoneSaving(::grpc::Cli
   return result;
 }
 
+::grpc::Status CameraCommunicatorS::Stub::SyncMessageTrialStart(::grpc::ClientContext* context, const ::Empty& request, ::Empty* response) {
+  return ::grpc::internal::BlockingUnaryCall(channel_.get(), rpcmethod_SyncMessageTrialStart_, context, request, response);
+}
+
+void CameraCommunicatorS::Stub::experimental_async::SyncMessageTrialStart(::grpc::ClientContext* context, const ::Empty* request, ::Empty* response, std::function<void(::grpc::Status)> f) {
+  ::grpc::internal::CallbackUnaryCall(stub_->channel_.get(), stub_->rpcmethod_SyncMessageTrialStart_, context, request, response, std::move(f));
+}
+
+void CameraCommunicatorS::Stub::experimental_async::SyncMessageTrialStart(::grpc::ClientContext* context, const ::Empty* request, ::Empty* response, ::grpc::experimental::ClientUnaryReactor* reactor) {
+  ::grpc::internal::ClientCallbackUnaryFactory::Create(stub_->channel_.get(), stub_->rpcmethod_SyncMessageTrialStart_, context, request, response, reactor);
+}
+
+::grpc::ClientAsyncResponseReader< ::Empty>* CameraCommunicatorS::Stub::PrepareAsyncSyncMessageTrialStartRaw(::grpc::ClientContext* context, const ::Empty& request, ::grpc::CompletionQueue* cq) {
+  return ::grpc::internal::ClientAsyncResponseReaderFactory< ::Empty>::Create(channel_.get(), cq, rpcmethod_SyncMessageTrialStart_, context, request, false);
+}
+
+::grpc::ClientAsyncResponseReader< ::Empty>* CameraCommunicatorS::Stub::AsyncSyncMessageTrialStartRaw(::grpc::ClientContext* context, const ::Empty& request, ::grpc::CompletionQueue* cq) {
+  auto* result =
+    this->PrepareAsyncSyncMessageTrialStartRaw(context, request, cq);
+  result->StartCall();
+  return result;
+}
+
+::grpc::Status CameraCommunicatorS::Stub::SyncMessageTrialEnd(::grpc::ClientContext* context, const ::Empty& request, ::Empty* response) {
+  return ::grpc::internal::BlockingUnaryCall(channel_.get(), rpcmethod_SyncMessageTrialEnd_, context, request, response);
+}
+
+void CameraCommunicatorS::Stub::experimental_async::SyncMessageTrialEnd(::grpc::ClientContext* context, const ::Empty* request, ::Empty* response, std::function<void(::grpc::Status)> f) {
+  ::grpc::internal::CallbackUnaryCall(stub_->channel_.get(), stub_->rpcmethod_SyncMessageTrialEnd_, context, request, response, std::move(f));
+}
+
+void CameraCommunicatorS::Stub::experimental_async::SyncMessageTrialEnd(::grpc::ClientContext* context, const ::Empty* request, ::Empty* response, ::grpc::experimental::ClientUnaryReactor* reactor) {
+  ::grpc::internal::ClientCallbackUnaryFactory::Create(stub_->channel_.get(), stub_->rpcmethod_SyncMessageTrialEnd_, context, request, response, reactor);
+}
+
+::grpc::ClientAsyncResponseReader< ::Empty>* CameraCommunicatorS::Stub::PrepareAsyncSyncMessageTrialEndRaw(::grpc::ClientContext* context, const ::Empty& request, ::grpc::CompletionQueue* cq) {
+  return ::grpc::internal::ClientAsyncResponseReaderFactory< ::Empty>::Create(channel_.get(), cq, rpcmethod_SyncMessageTrialEnd_, context, request, false);
+}
+
+::grpc::ClientAsyncResponseReader< ::Empty>* CameraCommunicatorS::Stub::AsyncSyncMessageTrialEndRaw(::grpc::ClientContext* context, const ::Empty& request, ::grpc::CompletionQueue* cq) {
+  auto* result =
+    this->PrepareAsyncSyncMessageTrialEndRaw(context, request, cq);
+  result->StartCall();
+  return result;
+}
+
 CameraCommunicatorS::Service::Service() {
   AddMethod(new ::grpc::internal::RpcServiceMethod(
       CameraCommunicatorS_method_names[0],
@@ -418,6 +468,26 @@ CameraCommunicatorS::Service::Service() {
              ::SimpleResponse* resp) {
                return service->AreYouDoneSaving(ctx, req, resp);
              }, this)));
+  AddMethod(new ::grpc::internal::RpcServiceMethod(
+      CameraCommunicatorS_method_names[11],
+      ::grpc::internal::RpcMethod::NORMAL_RPC,
+      new ::grpc::internal::RpcMethodHandler< CameraCommunicatorS::Service, ::Empty, ::Empty>(
+          [](CameraCommunicatorS::Service* service,
+             ::grpc::ServerContext* ctx,
+             const ::Empty* req,
+             ::Empty* resp) {
+               return service->SyncMessageTrialStart(ctx, req, resp);
+             }, this)));
+  AddMethod(new ::grpc::internal::RpcServiceMethod(
+      CameraCommunicatorS_method_names[12],
+      ::grpc::internal::RpcMethod::NORMAL_RPC,
+      new ::grpc::internal::RpcMethodHandler< CameraCommunicatorS::Service, ::Empty, ::Empty>(
+          [](CameraCommunicatorS::Service* service,
+             ::grpc::ServerContext* ctx,
+             const ::Empty* req,
+             ::Empty* resp) {
+               return service->SyncMessageTrialEnd(ctx, req, resp);
+             }, this)));
 }
 
 CameraCommunicatorS::Service::~Service() {
@@ -494,6 +564,20 @@ CameraCommunicatorS::Service::~Service() {
 }
 
 ::grpc::Status CameraCommunicatorS::Service::AreYouDoneSaving(::grpc::ServerContext* context, const ::SimpleRequest* request, ::SimpleResponse* response) {
+  (void) context;
+  (void) request;
+  (void) response;
+  return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
+}
+
+::grpc::Status CameraCommunicatorS::Service::SyncMessageTrialStart(::grpc::ServerContext* context, const ::Empty* request, ::Empty* response) {
+  (void) context;
+  (void) request;
+  (void) response;
+  return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
+}
+
+::grpc::Status CameraCommunicatorS::Service::SyncMessageTrialEnd(::grpc::ServerContext* context, const ::Empty* request, ::Empty* response) {
   (void) context;
   (void) request;
   (void) response;

@@ -61,6 +61,32 @@ bool TouchSensorSClient::getForce(std::atomic<double>* leftForce, std::atomic<do
 	return true;
 }
 
+bool TouchSensorSClient::syncMessageTrialStart()
+{
+	Empty eq;
+	Empty er;
+	ClientContext context;
+
+	Status status = stub_->SyncMessageTrialStart(&context, eq, &er);
+	if (!status.ok()) {
+		return false;
+	}
+	return true;
+}
+
+bool TouchSensorSClient::syncMessageTrialEnd()
+{
+	Empty eq;
+	Empty er;
+	ClientContext context;
+
+	Status status = stub_->SyncMessageTrialEnd(&context, eq, &er);
+	if (!status.ok()) {
+		return false;
+	}
+	return true;
+}
+
 TouchSensorClient::TouchSensorClient()
 {
 	server_ip = "localhost";
@@ -141,6 +167,18 @@ void TouchSensorClient::getForce(std::atomic<double>* leftForce, std::atomic<dou
 	if (tssc) {
 		tssc->getForce(leftForce, rightForce);
 	}
+}
+
+void TouchSensorClient::syncMessageTrialStart()
+{
+	if (tssc)
+		tssc->syncMessageTrialStart();
+}
+
+void TouchSensorClient::syncMessageTrialEnd()
+{
+	if (tssc)
+		tssc->syncMessageTrialEnd();
 }
 
 void TouchSensorClient::appendClientLog(CString text)
