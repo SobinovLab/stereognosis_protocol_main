@@ -106,6 +106,9 @@ public:
     int retreat_node_i = 0;
     int retreat();
     int move(std::vector<double> positions, std::atomic<bool> *stopTrial, std::atomic<bool>* stopProtocol);
+    int preshape(std::vector<double> positions, std::atomic<bool>* stopTrial, std::atomic<bool>* stopProtocol);
+    int approach(std::vector<double> positions, std::atomic<bool>* stopTrial, std::atomic<bool>* stopProtocol);
+
     void stop();  // thread-safe with move and retreat
 
     bool wasInitializedCorrectly();

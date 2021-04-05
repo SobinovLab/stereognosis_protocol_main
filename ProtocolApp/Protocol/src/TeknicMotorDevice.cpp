@@ -628,7 +628,6 @@ int MotorAPI::retreat()
 
 int MotorAPI::move(std::vector<double> positions, std::atomic<bool>* stopTrial, std::atomic<bool>* stopProtocol)
 {
-    // all movements are initialized in parallel, and finish watched together here.
     if (!wasInitializedCorrectly())
         return -1;
 
@@ -636,10 +635,9 @@ int MotorAPI::move(std::vector<double> positions, std::atomic<bool>* stopTrial, 
         return -2;
 
     std::vector<double> positions_l = positions;
-    // hacky way of controlling 1D with 2 motors. in the future should be organized with motor groups?
+    // Currently ignores the last motor, whole aperture is done by the left one
     if (positions_l.size() == 3 && m_nodes.size() == 4) {
-        // symmetrical control of the last 2 motors
-        // FIX last - right aperture - motor does not work
+        // The following would enable symmetrical control of the last 2 motors:
         //positions_l[2] /= 2;
         //positions_l.push_back(positions_l[2]);
     }
@@ -668,6 +666,74 @@ int MotorAPI::move(std::vector<double> positions, std::atomic<bool>* stopTrial, 
 
     if (!answ) {
         logInfo("Move complete.");
+    }
+
+    return answ;
+}
+
+int MotorAPI::preshape(std::vector<double> positions, std::atomic<bool>* stopTrial, std::atomic<bool>* stopProtocol)
+{
+    if (!wasInitializedCorrectly())
+        return -1;
+
+    if (positions.size() > m_nodes.size())
+        return -2;
+
+    std::vector<double> positions_l = positions;
+    // Currently ignores the last motor, whole aperture is done by the left one
+    if (positions_l.size() == 3 && m_nodes.size() == 4) {
+        // The following would enable symmetrical control of the last 2 motors:
+        //positions_l[2] /= 2;
+        //positions_l.push_back(positions_l[2]);
+    }
+
+    disengageBrakes();
+    logInfo("\tStarting preshape.");
+
+    auto startTime = Times::getCurrentTime();
+    int answ = 0;
+    for (int i = positions_l.size() - 1; i > 0; i--) {  // DOES NOT USE THE FIRST MOTOR
+        // check if trial or the whole protocol has been signalled to stop
+        if (stopTrial->load() || stopProtocol->load()) {
+            stop();  // this will mark all movements as done
+        }
+
+        // check timeout
+        if (Times::isTimeout(startTime, action_timeout)) {
+            answ = -4;
+            break;
+        }
+
+        m_nodes[i].move(positions_l[i], stopTrial, stopProtocol);
+    }
+
+    if (!answ) {
+        logInfo("Preshape complete.");
+    }
+
+    return answ;
+}
+
+int MotorAPI::approach(std::vector<double> positions, std::atomic<bool>* stopTrial, std::atomic<bool>* stopProtocol)
+{
+    // Only moves the first motor (horizontal z)
+    if (!wasInitializedCorrectly())
+        return -1;
+
+    if (positions.size() > m_nodes.size())
+        return -2;
+
+    disengageBrakes();
+    logInfo("\tStarting approach.");
+
+    auto startTime = Times::getCurrentTime();
+    int answ = 0;
+    m_nodes[0].move(positions[0], stopTrial, stopProtocol);
+
+    engageBrakes();
+
+    if (!answ) {
+        logInfo("Approach complete.");
     }
 
     return answ;

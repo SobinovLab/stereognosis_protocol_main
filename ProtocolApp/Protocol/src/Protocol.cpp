@@ -497,13 +497,27 @@ void Protocol::run()
 		// motor movement - this thread will be locked, can be interrupted
 		vector<double> positions = { params.pos_translation_z, params.pos_tilt, params.pos_aperture };
 		rets = 0;
-		rets = motorHub->move(positions, &stopTrial, &stopProtocol);
+		rets = motorHub->preshape(positions, &stopTrial, &stopProtocol);
 		if (rets)
 		{
 			// TODO: check error with motors
 
 			// rets == -1 means motors were not initialized.
 			// Reset to 0 if it is fine and want to test everything else
+		}
+
+		// start recordings
+		start_camera_recording();  // TODO process it?
+		log_started_camera_recording = Times::getCurrentTimeInMilliSecs();
+		start_pressure_sensor_recording();
+		log_started_ps_recording = Times::getCurrentTimeInMilliSecs();
+
+		if (rets >= 0) {
+			rets = motorHub->approach(positions, &stopTrial, &stopProtocol);
+			if (rets)
+			{
+				// TODO: see above
+			}
 		}
 
 		// log
@@ -519,12 +533,6 @@ void Protocol::run()
 
 		// if the motors made it successfully to the final position
 		if (!stopTrial && !stopProtocol && rets >= 0) {
-			// start recordings
-			start_camera_recording();  // TODO process it?
-            log_started_camera_recording = Times::getCurrentTimeInMilliSecs();
-			start_pressure_sensor_recording();
-            log_started_ps_recording = Times::getCurrentTimeInMilliSecs();
-
 			// sync
 			start_ephys_recording();
             log_started_ephys_recording = Times::getCurrentTimeInMilliSecs();
