@@ -5,9 +5,13 @@ Code for the main rig-controlling application for the Stereognosis project.
 Locally interacts with the devices:
 1. Light sensors in the armrest
 2. 4 Motors:
+    
     i. Translation Z - moves the object closer and further from the animal.
+    
     ii. Tilt - tilts the object left and right
+    
     iii and iv. Aperture - currently only using the left (iii) to control. Mechanical links of (iv) are damaged.
+
 3. Reward system
 
 Interacts with:
