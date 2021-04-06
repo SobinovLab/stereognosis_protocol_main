@@ -25,7 +25,7 @@ How to run an experiment can be found [here](https://github.com/BensmaiaLab/ster
 
 ## Data Synchronization and Logs
 
-The main and auxillary programs save extensive logs of what is happening. This section details the saved information and how to use it for synchronization of all data.
+The main and auxiliary programs save extensive logs of what is happening. This section details the saved information and how to use it for synchronization of all data.
 
 ### Synchronization Concept
 
@@ -33,13 +33,14 @@ After the object is configured, messages are sent to cameras and pressure sensor
 
 The periods between synchronization pulses were measured on main protocol, camera servers and pressure sensor. Their variability is < 1.5 ms.
 
-To put the Main Protocol events to 0, subtract `log_sent_start_sync_messages(ms)` from each logged timepoint.
+To put the **Main Protocol** events to 0, subtract `log_sent_start_sync_messages(ms)` from each logged timepoint.
 
-To put Pressure Sensor data in sync, one should add `startedRecording(ms)`-`syncTrialStartTime(ms)` to the internal time saved in the FSX files for that trial. It is expected for the some first samples to have negative values since recording starts before the sync pulse.
+To put **Pressure Sensor** data in sync, one should add `startedRecording(ms)`-`syncTrialStartTime(ms)` to the internal time saved in the FSX files for that trial. It is expected for the some first samples to have negative values since recording starts before the sync pulse.
 
-Images from Camera Servers can be aligned in the same way as Pressure Sensor, but there is a more precise way using trial-specific CSVs. For each trial for each camera, a CSV is saved with system and camera timestamps for each captured image. The `Global Time Stamp (msec)` time of the first image for the camera can be used instead of `startedRecording(ms)`. They are provided by the same clock, but `Global Time Stamp (msec)` corresponds to the actual first image captured, while `startedRecording(ms)` - to initialization of recording, so the former is more precise for synchronization. After the start of recording, all images from all cameras are synchronized via cable pulses, so only one camera timestamps need to be synchronized, all the rest can use the same exact timeline. List of which cameras connected to which PCs:
+Images from **Camera Servers** can be aligned in the same way as Pressure Sensor, but there is a more precise way using trial-specific CSVs. For each trial for each camera, a CSV is saved with system and camera timestamps for each captured image. The `Global Time Stamp (msec)` time of the first image for the camera can be used instead of `startedRecording(ms)`. They are provided by the same clock, but `Global Time Stamp (msec)` corresponds to the actual first image captured, while `startedRecording(ms)` - to initialization of recording, so the former is more precise for synchronization. After the start of recording, all images from all cameras are synchronized via cable pulses, so only one camera timestamps need to be synchronized, all the rest can use the same exact timeline. List of which cameras connected to which PCs:
 
 PC2: 19340298, 19340300, 19335177, 19194009
+
 PC3: 19340396, 19194008, 19194005, 20050811
 
 ### Main Protocol
