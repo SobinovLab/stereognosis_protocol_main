@@ -560,5 +560,5 @@ void CProtocolAppDlg::OnBnClickedNeutralPositionBtn()
 	motorActionInProgress = true;
 
 	// spawn a thread so it can be interrupted
-	motorActionThread = new thread(&CProtocolAppDlg::homingMotorAction, this);
+	motorActionThread = new thread(&CProtocolAppDlg::neutralPositionMotorAction, this);
 }
