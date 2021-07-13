@@ -9,7 +9,7 @@
 	<!-- Each coordinate is associated with a motor/DOF of the rig. Control tags within each coordinate define the actual kinematic variable set for a trial, for example position, velocity or acceleration. As many as you want (with different names) can be present in one coordinate.
 	Attributes:
 		`reps` - how many times the sampling of the values within this coordinate is repeated. For example, if a coordinate has two controls and the coordinate `reps` is 2, each combination of controls will appear twice in the resulting session. If set to `0`, the coordinate is skipped. Defaults to `1`.  -->
-	<coordinate name="translation" >
+	<coordinate name="translation_X" >
 		<!-- Controls are the dimentions along which the motor will be controlled during the experimental session.
 		Attributes:
 		`distribution` - defines the behavior of the coordinate control from trial to trial. Required, can be set to:
