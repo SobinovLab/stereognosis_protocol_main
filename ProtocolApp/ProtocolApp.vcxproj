@@ -169,7 +169,6 @@ copy /B /V /Y "$(ProjectDir)..\session_configs\*" "$(OutDir)\session_configs\" &
     <ClInclude Include="Protocol\NIUsb6001card.h" />
     <ClInclude Include="Protocol\Protocol.h" />
     <ClInclude Include="Protocol\ProtocolParameters.h" />
-    <ClInclude Include="Protocol\TeknicMotorDevice.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="utilities\Sounds.h" />
     <ClInclude Include="stdafx.h" />
@@ -192,7 +191,6 @@ copy /B /V /Y "$(ProjectDir)..\session_configs\*" "$(OutDir)\session_configs\" &
     <ClCompile Include="Protocol\src\NIUsb6001card.cpp" />
     <ClCompile Include="Protocol\src\Protocol.cpp" />
     <ClCompile Include="Protocol\src\ProtocolParameters.cpp" />
-    <ClCompile Include="Protocol\src\TeknicMotorDevice.cpp" />
     <ClCompile Include="utilities\Sounds.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>

@@ -1,8 +1,8 @@
 
 [TEK32CS10-20-1]
 Chip Version                   = 1.7.6
-UserID0                        = TranslationZ
-File Written                   = 2021-02-02 11:00:10
+UserID0                        = TranslationX
+File Written                   = 2021-06-25 14:22:13
 Writer                         = sFoundation 2.1.31
 PN                             = CPM-SCHP-3441S-ELSB-1-7-D
 UserDesc                       = 
@@ -107,7 +107,7 @@ OverTempUser                   = 70.000000
 SpdLim                         = 437369.971090	;(ticks/sec)
 RMSStoppedSpeed                = 0.000000	;(ticks/sec)
 InductVolts                    = 280.000000	;(V)
-InductRdg                      = 5.000000
+InductRdg                      = 1.000000
 InductSetup                    = 250.000000
 RMSlim                         = 6.000000
 RMStime                        = 2.985141

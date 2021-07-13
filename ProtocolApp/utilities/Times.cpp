@@ -25,8 +25,10 @@ std::string Times::getFormattedDateTime(std::chrono::system_clock::time_point ti
 {
     time_t in_time_t = std::chrono::system_clock::to_time_t(timePoint);
 
-    std::stringstream ss;
-    ss << std::put_time(std::localtime(&in_time_t), format.c_str());
+    stringstream ss;
+    struct tm timeinfo;
+    localtime_s(&timeinfo, &in_time_t);
+    ss << put_time(&timeinfo, format.c_str());
     return ss.str();
 }
 
