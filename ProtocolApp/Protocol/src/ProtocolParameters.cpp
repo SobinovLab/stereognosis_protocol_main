@@ -55,7 +55,7 @@ void ProtocolParameters::init()
 	// trial
 	trial_number = 0;
 	total_trials = 0;
-	pos_translation_z = 115;  // see MotorAPI
+	pos_translation_x = 115;  // see MotorAPI
 	pos_tilt = 0;
 	pos_aperture = 0;
 
@@ -74,7 +74,7 @@ void ProtocolParameters::init()
 	cs_capture_n_frames = 10;
 
 	// pressure sensor server
-	tss_ip = "localhost";
+	tss_ip = "205.208.87.188";
 	tss_port = 54940;
 
 	// pressure sensor config

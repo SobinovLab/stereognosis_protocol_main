@@ -10,6 +10,7 @@
 #define IDC_STOP_PROTOCOL_BTN           1001
 #define IDC_REWARD_TIME_EDT             1021
 #define IDC_POS_TRANSLATION_Z_EDT       1022
+#define IDC_POS_TRANSLATION_X_EDT       1022
 #define IDC_FLUSH_WATER_BTN             1025
 #define IDC_PHOTORES_REAR_LBL           1028
 #define IDC_PHOTORES_FRONT_LBL          1029
@@ -60,6 +61,9 @@
 #define IDC_PS_MINIMAL_TOUCH_FORCE_EDT  1090
 #define IDC_LOOP_CHK                    1091
 #define IDC_USE_LIGHT_SENSORS_CHK       1092
+#define IDC_STOP_MOTORS_BTN             1093
+#define IDC_BUTTON2                     1094
+#define IDC_NEUTRAL_POSITION_BTN        1094
 
 // Next default values for new objects
 // 
@@ -67,7 +71,7 @@
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        130
 #define _APS_NEXT_COMMAND_VALUE         32771
-#define _APS_NEXT_CONTROL_VALUE         1093
+#define _APS_NEXT_CONTROL_VALUE         1095
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif

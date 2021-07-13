@@ -52,9 +52,19 @@ bool Protocol::were_motors_homed()
 	return motorHub->wereHomed();
 }
 
-void Protocol::home_motors()
+TEKNIC_MOTOR_API_CODE Protocol::home_motors()
 {
-	motorHub->home();
+	return motorHub->home();
+}
+
+void Protocol::stop_motors()
+{
+	motorHub->stop();
+}
+
+TEKNIC_MOTOR_API_CODE Protocol::motors_neutral_position()
+{
+	return motorHub->neutral_position();
 }
 
 void Protocol::connect_camera_client1()
@@ -327,6 +337,7 @@ void Protocol::watch_early_grab()
 		// see if monkey lifted arm
 		if (isLightSensorsOn() && !isArmAtRest()) {
 			stopTrial = true;
+			stop_motors();
 			break;
 		}
 
@@ -336,6 +347,7 @@ void Protocol::watch_early_grab()
 
 			if (leftForce + rightForce > params.minimalTouchForce) {
 				stopTrial = true;
+				stop_motors();
 				break;
 			}
 		}
@@ -347,6 +359,7 @@ void Protocol::run()
 	this->stopProtocol.store(false);
 	setCurrentState(ProtocolState::initializing); // display the state of the trial on the GUI
 	int rets = 0;
+	TEKNIC_MOTOR_API_CODE motor_rets = TEKNIC_MOTOR_API_CODE::OK;
 
 	// Load all trials from session config file (BL code)
 	vector<string> session_line1;
@@ -451,6 +464,7 @@ void Protocol::run()
 			//  if looping is selected, timeout of intertrial time
 		}
 
+		// The usual place to exit the protocol, if not at the end of a trial
 		if (stopProtocol)
 			break;
 
@@ -469,7 +483,7 @@ void Protocol::run()
 		}
 
 		// ---------------- Running trial
-		string buf = "Upcoming position " + to_string(params.pos_translation_z) + " " +
+		string buf = "Upcoming position " + to_string(params.pos_translation_x) + " " +
 			to_string(params.pos_tilt) + " " + to_string(params.pos_aperture);
 		logInfo(buf.c_str());
 
@@ -495,15 +509,24 @@ void Protocol::run()
 		thread watchThread(&Protocol::watch_early_grab, this);
 
 		// motor movement - this thread will be locked, can be interrupted
-		vector<double> positions = { params.pos_translation_z, params.pos_tilt, params.pos_aperture };
+		// The motors API only supports position control as dynamics are not important
+		// TODO make gui list-based
+		vector<string> axes = { "translation_X", "tilt", "aperture" };
+		vector<double> positions = { params.pos_translation_x, params.pos_tilt, params.pos_aperture };
 		rets = 0;
-		rets = motorHub->preshape(positions, &stopTrial, &stopProtocol);
-		if (rets)
+		if (!stopTrial)
+			motor_rets = motorHub->preshape(axes, positions);
+		if (TeknicMotorApi::isError(motor_rets))
 		{
-			// TODO: check error with motors
-
-			// rets == -1 means motors were not initialized.
-			// Reset to 0 if it is fine and want to test everything else
+			// bad error
+			if (motor_rets != TEKNIC_MOTOR_API_CODE::INITIALIZATION_ERROR && motor_rets != TEKNIC_MOTOR_API_CODE::USER_INTERRUPT) {
+				logError("Bad motor error encountered during preshape. Interrupting the protocol.");
+				rets = -1;
+			}
+			else if (motor_rets == TEKNIC_MOTOR_API_CODE::USER_INTERRUPT) {
+				// nothing, since it can be triggered by the watchThread
+				logWarning("User or early grab motor interrupt during preshape.");
+			}
 		}
 
 		// start recordings
@@ -512,27 +535,38 @@ void Protocol::run()
 		start_pressure_sensor_recording();
 		log_started_ps_recording = Times::getCurrentTimeInMilliSecs();
 
-		if (rets >= 0) {
-			rets = motorHub->approach(positions, &stopTrial, &stopProtocol);
-			if (rets)
+		if (!rets && !stopTrial) {
+			motor_rets = motorHub->approach(axes, positions);
+			if (TeknicMotorApi::isError(motor_rets))
 			{
-				// TODO: see above
+				// bad error
+				if (motor_rets != TEKNIC_MOTOR_API_CODE::INITIALIZATION_ERROR && motor_rets != TEKNIC_MOTOR_API_CODE::USER_INTERRUPT) {
+					logError("Bad motor error encountered during approach. Interrupting the protocol.");
+					rets = -1;
+				}
+				else if (motor_rets == TEKNIC_MOTOR_API_CODE::USER_INTERRUPT) {
+					// nothing, since it can be triggered by the watchThread
+				}
 			}
 		}
 
 		// log
-		object_in_position_time = Times::getCurrentTimeInMilliSecs();
+		if (!stopTrial) 
+			object_in_position_time = Times::getCurrentTimeInMilliSecs();
 
 		// stop the watch thread
 		stopWatch = true;
 		watchThread.join();
 
-		rets = wait_until_arm_liftoff();
+		// if the trial was not interrupted, wait for the hand liftoff
+		if (!stopTrial) {
+			rets = wait_until_arm_liftoff();
 
-		arm_liftoff_time = Times::getCurrentTimeInMilliSecs();
+			arm_liftoff_time = Times::getCurrentTimeInMilliSecs();
+		}
 
-		// if the motors made it successfully to the final position
-		if (!stopTrial && !stopProtocol && rets >= 0) {
+		// if the motors made it successfully to the final position and the animal has lifted the arm
+		if (!stopTrial && rets >= 0) {
 			// sync
 			start_ephys_recording();
             log_started_ephys_recording = Times::getCurrentTimeInMilliSecs();
@@ -547,8 +581,7 @@ void Protocol::run()
 			Sounds::playStartTaskTone();
 
 			// wait for stop trial signal from interface, success from the monitor thread, or timeout
-			while (!this->stopProtocol.load() &&
-				!this->stopTrial.load() &&
+			while (!this->stopTrial.load() &&
 				!this->m_earnedReward.load() &&
 				!Times::isTimeout(trialStartTime, params.maxWaitTime)) {
 			}
@@ -699,9 +732,11 @@ void Protocol::matchLoadedSessionTrialToParams(const vector<string>& line1, cons
 	{
 		axis = line1[i];
 		deriv = line2[i];
-		if (axis == "translation_z") {
+
+		// TODO make list-based GUI
+		if (axis == "translation_X") {
 			if (deriv == "position") {
-				params.pos_translation_z = vec[i];
+				params.pos_translation_x = vec[i];
 			}
 		}
 
@@ -833,7 +868,7 @@ void Protocol::addLineToCsvLog(const bool got_reward, const bool repeating,
     trialLogCsv << log_stopped_camera_recordings << ",";       // "log_stopped_camera_recordings(ms),";
     trialLogCsv << log_stopped_ps_recordings << ",";           // "log_stopped_ps_recordings(ms),";
 	trialLogCsv << trial_finished_time << ",";		           // "trial_finished_time(ms),";
-	trialLogCsv << params.pos_translation_z << ",";	           // "pos_translation_z(mm),";
+	trialLogCsv << params.pos_translation_x << ",";	           // "pos_translation_x(mm),";
 	trialLogCsv << params.pos_tilt << ",";			           // "pos_tilt(deg),";
 	trialLogCsv << params.pos_aperture << ",";		           // "pos_aperture(mm),";
 	trialLogCsv << endl;
@@ -889,7 +924,7 @@ void Protocol::initDevices()
 		logWarning("Motor Hub already initialized, cannot init again.");
 	}
 	else {
-		motorHub = new MotorAPI();
+		motorHub = new TeknicMotorApi("./configuration/motors_stereognosis1.json", "./configuration/axes_stereognosis.json");
 	}
 }
 

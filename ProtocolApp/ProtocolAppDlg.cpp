@@ -52,7 +52,7 @@ void CProtocolAppDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Text(pDX, IDC_CURRENT_TRIAL_EDT, m_protocol.params.trial_number);
 	DDX_Text(pDX, IDC_TOTAL_TRIALS_EDT, m_protocol.params.total_trials);
 
-	DDX_Text(pDX, IDC_POS_TRANSLATION_Z_EDT, m_protocol.params.pos_translation_z);
+	DDX_Text(pDX, IDC_POS_TRANSLATION_X_EDT, m_protocol.params.pos_translation_x);
 	DDX_Text(pDX, IDC_POS_TILT_EDT, m_protocol.params.pos_tilt);
 	DDX_Text(pDX, IDC_POS_APERTURE_EDT, m_protocol.params.pos_aperture);
 
@@ -103,6 +103,8 @@ BEGIN_MESSAGE_MAP(CProtocolAppDlg, CDialogEx)
 	ON_BN_CLICKED(IDC_HOME_MOTORS_BTN, &OnBnClickedHomeMotorsBtn)
 	ON_BN_CLICKED(IDC_LOOP_CHK, &CProtocolAppDlg::OnBnClickedLoopChk)
 	ON_BN_CLICKED(IDC_USE_LIGHT_SENSORS_CHK, &CProtocolAppDlg::OnBnClickedUseLightSensorsChk)
+	ON_BN_CLICKED(IDC_STOP_MOTORS_BTN, &CProtocolAppDlg::OnBnClickedStopMotorsBtn)
+	ON_BN_CLICKED(IDC_NEUTRAL_POSITION_BTN, &CProtocolAppDlg::OnBnClickedNeutralPositionBtn)
 END_MESSAGE_MAP()
 
 // CProtocolAppDlg message handlers
@@ -144,7 +146,7 @@ BOOL CProtocolAppDlg::OnInitDialog()
 
 	((CButton*)GetDlgItem(IDC_LOOP_CHK))->SetCheck(BST_CHECKED);
 	m_protocol.loopChk = &m_loopChk;
-	m_useLightSensorsChk.SetCheck(BST_CHECKED);
+	m_useLightSensorsChk.SetCheck(BST_UNCHECKED);
 
 	// set the visibility of enabled devices on GUI
 	if (m_protocol.isLightSensorsOn()) ((CButton*)GetDlgItem(IDC_LIGHT_SENSORS_CHK))->SetCheck(BST_CHECKED);
@@ -156,6 +158,7 @@ BOOL CProtocolAppDlg::OnInitDialog()
 	// protocol
 	toggleProtocolCtrls(true);
 	GetDlgItem(IDC_HOME_MOTORS_BTN)->EnableWindow(m_protocol.isMotorsOn());
+	GetDlgItem(IDC_STOP_MOTORS_BTN)->EnableWindow(m_protocol.isMotorsOn());
 
 	// trial
 	m_startTrialBtn.EnableWindow(false);
@@ -386,6 +389,7 @@ void CProtocolAppDlg::stopProtocolThread()
 {
 	if (protocolThread) {
 		m_protocol.stopProtocol.store(true);
+		stopTrial();
 		// joining the thread leads to race for the interface access which is locked in this thread.
 		// that's why start protocol checks for the protocol being shutdown
 		//protocolThread->join();
@@ -395,8 +399,54 @@ void CProtocolAppDlg::stopProtocolThread()
 
 void CProtocolAppDlg::stopTrial()
 {
+	// interrupt the motors if they were running
+	// runs before the stopTrial because in the opposite order stop motors might interrupt 
+	// the retreat
+	m_protocol.stop_motors();
 	// stop trial
 	m_protocol.stopTrial.store(true);
+}
+
+void CProtocolAppDlg::homingMotorAction()
+{
+	auto state = m_protocol.getCurrentState();
+	if (state == ProtocolState::shutdown ||
+		state == ProtocolState::trialReady) {
+		auto answ = m_protocol.home_motors();
+		string buf;
+		if (TeknicMotorApi::isError(answ)) {
+			buf = ("Error performing move command. Code: " + to_string((int)answ) + "." +
+				" Message: " + TeknicMotorApi::codeMessage(answ));
+			AfxMessageBox(buf.c_str());
+		}
+	}
+	else
+		AfxMessageBox("Cannot home motors while the trials are running or initializing.");
+
+	AfxMessageBox("REMOVE THE CALIBRATION FIXATOR AND CLICK OK");
+
+	motorActionInProgress = false;
+	GetDlgItem(IDC_HOME_MOTORS_BTN)->EnableWindow(true);
+}
+
+void CProtocolAppDlg::neutralPositionMotorAction()
+{
+	auto state = m_protocol.getCurrentState();
+	if (state == ProtocolState::shutdown ||
+		state == ProtocolState::trialReady) {
+		auto answ = m_protocol.motors_neutral_position();
+		string buf;
+		if (TeknicMotorApi::isError(answ)) {
+			buf = ("Error performing move command. Code: " + to_string((int)answ) + "." +
+				" Message: " + TeknicMotorApi::codeMessage(answ));
+			AfxMessageBox(buf.c_str());
+		}
+	}
+	else
+		AfxMessageBox("Cannot neutral position motors while the trials are running or initializing.");
+
+	motorActionInProgress = false;
+	GetDlgItem(IDC_NEUTRAL_POSITION_BTN)->EnableWindow(true);
 }
 
 void CProtocolAppDlg::toggleProtocolCtrls(bool stopped)
@@ -462,18 +512,16 @@ void CProtocolAppDlg::OnBnClickedHomeMotorsBtn()
 {
 	GetDlgItem(IDC_HOME_MOTORS_BTN)->EnableWindow(false);
 
+	if (motorActionInProgress) {
+		AfxMessageBox("Error state. Cannot start a motor action.");
+		return;
+	}
+	motorActionInProgress = true;
+
 	AfxMessageBox("PUT THE CALIBRATION FIXATOR INTO PLACE AND CLICK OK");
 
-	auto state = m_protocol.getCurrentState();
-	if (state == ProtocolState::shutdown ||
-		state == ProtocolState::trialReady)
-		m_protocol.home_motors();
-	else
-		AfxMessageBox("Cannot home motors while the trials are running or initializing.");
-
-	AfxMessageBox("REMOVE THE CALIBRATION FIXATOR AND CLICK OK");
-
-	GetDlgItem(IDC_HOME_MOTORS_BTN)->EnableWindow(true);
+	// spawn a thread so it can be interrupted
+	motorActionThread = new thread(&CProtocolAppDlg::homingMotorAction, this);
 }
 
 
@@ -492,4 +540,25 @@ void CProtocolAppDlg::OnBnClickedUseLightSensorsChk()
 		m_protocol.use_light_sensors = true;
 	else
 		m_protocol.use_light_sensors = false;
+}
+
+
+void CProtocolAppDlg::OnBnClickedStopMotorsBtn()
+{
+	m_protocol.stop_motors();
+}
+
+
+void CProtocolAppDlg::OnBnClickedNeutralPositionBtn()
+{
+	GetDlgItem(IDC_NEUTRAL_POSITION_BTN)->EnableWindow(false);
+
+	if (motorActionInProgress) {
+		AfxMessageBox("Error state. Cannot start a motor action.");
+		return;
+	}
+	motorActionInProgress = true;
+
+	// spawn a thread so it can be interrupted
+	motorActionThread = new thread(&CProtocolAppDlg::homingMotorAction, this);
 }

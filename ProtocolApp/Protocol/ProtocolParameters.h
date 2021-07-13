@@ -43,7 +43,7 @@ public:
 	// trial
 	int trial_number;
 	int total_trials;
-	double pos_translation_z;			
+	double pos_translation_x;			
 	double pos_tilt;
 	double pos_aperture;
 

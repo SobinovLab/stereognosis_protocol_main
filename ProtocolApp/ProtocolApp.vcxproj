@@ -115,7 +115,7 @@ copy /B /V /Y "$(ProjectDir)libTeknicMotor\lib_x64d\*.dll" "$(OutDir)" &gt; NUL
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;NDEBUG;HMI_API_DYNAMIC;_WINDOWS;_USE_MATH_DEFINES;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>.\;.\Protocol;.\utilities;.\cameras;.\pressure_sensors;.\libMicrochip3DTouchpad\include;.\libTeknicMotor\include;$(NIDAQ_HOME)\NI-DAQ\DAQmx ANSI C Dev\include;$(MCHP_HMI_API_PATH)\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>.\;.\Protocol;.\utilities;.\cameras;.\pressure_sensors;.\teknicMotors;.\libTeknicMotor\include;$(NIDAQ_HOME)\NI-DAQ\DAQmx ANSI C Dev\include;$(MCHP_HMI_API_PATH)\include</AdditionalIncludeDirectories>
       <ForcedIncludeFiles>stdafx.h</ForcedIncludeFiles>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <WholeProgramOptimization>false</WholeProgramOptimization>
@@ -163,6 +163,10 @@ copy /B /V /Y "$(ProjectDir)..\session_configs\*" "$(OutDir)\session_configs\" &
     <ClInclude Include="ProtocolApp.h" />
     <ClInclude Include="ProtocolAppDlg.h" />
     <ClInclude Include="Protocol\CStaticColor.h" />
+    <ClInclude Include="teknicMotors\TeknicMotorApi.h" />
+    <ClInclude Include="utilities\CEditableListBox.h" />
+    <ClInclude Include="utilities\CEditHelper.h" />
+    <ClInclude Include="utilities\Convertor.h" />
     <ClInclude Include="utilities\CsvParser.h" />
     <ClInclude Include="utilities\Folders.h" />
     <ClInclude Include="utilities\Logger.h" />
@@ -185,6 +189,10 @@ copy /B /V /Y "$(ProjectDir)..\session_configs\*" "$(OutDir)\session_configs\" &
     <ClCompile Include="ProtocolApp.cpp" />
     <ClCompile Include="ProtocolAppDlg.cpp" />
     <ClCompile Include="Protocol\src\CStaticColor.cpp" />
+    <ClCompile Include="teknicMotors\TeknicMotorApi.cpp" />
+    <ClCompile Include="utilities\CEditableListBox.cpp" />
+    <ClCompile Include="utilities\CEditHelper.cpp" />
+    <ClCompile Include="utilities\Convertor.cpp" />
     <ClCompile Include="utilities\CsvParser.cpp" />
     <ClCompile Include="utilities\Folders.cpp" />
     <ClCompile Include="utilities\Logger.cpp" />

@@ -3,7 +3,7 @@
 * https://www.codeproject.com/articles/13973/editable-listbox-tutorial
 * With small edits.
 */
-#include "pch.h"
+//#include "pch.h"
 #include "CEditableListBox.h"
 
 /////////////////////////////////////////////////////////////////////////////

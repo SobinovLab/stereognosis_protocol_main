@@ -48,6 +48,12 @@ protected:
 	void stopProtocolThread();
 	void stopTrial();
 
+	// runs homing and neutral position commands
+	std::thread* motorActionThread;
+	void homingMotorAction();
+	void neutralPositionMotorAction();
+	std::atomic<bool> motorActionInProgress = false;
+
 public:
 
 	//////////////// Fields
@@ -126,4 +132,6 @@ protected:
 public:
 	afx_msg void OnBnClickedLoopChk();
 	afx_msg void OnBnClickedUseLightSensorsChk();
+	afx_msg void OnBnClickedStopMotorsBtn();
+	afx_msg void OnBnClickedNeutralPositionBtn();
 };

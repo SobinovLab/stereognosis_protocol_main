@@ -19,7 +19,7 @@
 #include "Times.h"
 #include "CsvParser.h"
 #include "ProtocolParameters.h"
-#include "TeknicMotorDevice.h"
+#include "TeknicMotorApi.h"
 #include "NIUsb6001card.h"
 #include "CameraClient.h"
 #include "TouchSensorClient.h"
@@ -91,7 +91,9 @@ class Protocol
 
 		// motors
 		bool were_motors_homed();
-		void home_motors();
+		TEKNIC_MOTOR_API_CODE home_motors();
+		void stop_motors();
+		TEKNIC_MOTOR_API_CODE motors_neutral_position();
 
 		//////// connected devices
 		// cameras
@@ -158,7 +160,7 @@ class Protocol
 		void break_ephys_recording();
 
 		// motor
-		MotorAPI* motorHub = nullptr;
+		TeknicMotorApi* motorHub = nullptr;
 
 		//////// connected devices
 		void sync_message_trial_start();

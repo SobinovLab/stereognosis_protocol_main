@@ -102,8 +102,20 @@
     <ClInclude Include="utilities\Folders.h">
       <Filter>Header Files\utilities</Filter>
     </ClInclude>
-    <ClInclude Include="utilities\CsvParser.h">
+    <ClInclude Include="teknicMotors\TeknicMotorApi.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="utilities\CEditableListBox.h">
+      <Filter>Header Files\utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="utilities\CEditHelper.h">
+      <Filter>Header Files\utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="utilities\Convertor.h">
+      <Filter>Header Files\utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="utilities\CsvParser.h">
+      <Filter>Header Files\utilities</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -158,8 +170,20 @@
     <ClCompile Include="utilities\Folders.cpp">
       <Filter>Source Files\utilities</Filter>
     </ClCompile>
-    <ClCompile Include="utilities\CsvParser.cpp">
+    <ClCompile Include="teknicMotors\TeknicMotorApi.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="utilities\CEditableListBox.cpp">
+      <Filter>Source Files\utilities</Filter>
+    </ClCompile>
+    <ClCompile Include="utilities\CEditHelper.cpp">
+      <Filter>Source Files\utilities</Filter>
+    </ClCompile>
+    <ClCompile Include="utilities\Convertor.cpp">
+      <Filter>Source Files\utilities</Filter>
+    </ClCompile>
+    <ClCompile Include="utilities\CsvParser.cpp">
+      <Filter>Source Files\utilities</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -60,7 +60,7 @@
     "parallel_group": 1,
     "comment": "Positive is counterclockwise.",
     "neutral_position": 0,
-    "default_vel": 1.5,
+    "default_vel": 3,
     "default_acc": 3,
     "homing": {
         "direction": 1,
