@@ -300,6 +300,7 @@ void CProtocolAppDlg::OnStartTrialBtnClicked()
 /// </summary>
 void CProtocolAppDlg::OnRetreatFlushWaterBtnClicked()
 {
+	logInfo("Retreat flush water button clicked.");
 	m_protocol.deservesReward = true;
 
 	stopTrial();
@@ -310,6 +311,7 @@ void CProtocolAppDlg::OnRetreatFlushWaterBtnClicked()
 /// </summary>
 void CProtocolAppDlg::OnRetreatBtnClicked()
 {
+	logInfo("Retreat button clicked.");
 	stopTrial();
 }
 

@@ -2,7 +2,7 @@
 [TEK32CS10-20-0]
 Chip Version                   = 1.7.6
 UserID0                        = ApertureRight
-File Written                   = 2021-06-25 14:22:52
+File Written                   = 2021-07-14 10:50:08
 Writer                         = sFoundation 2.1.31
 PN                             = CPM-SCHP-2311S-ELSA-1-7-D
 UserDesc                       = 
@@ -11,7 +11,7 @@ StopType                       = 4.000000
 WDogTC                         = 2000.074440	;(msec)
 ValidOpModes                   = &H00002800
 CfgHW                          = &H00106C70
-CfgApp                         = &H00000C14
+CfgApp                         = &H00000814
 CmdTuneReg                     = &H00050084
 EStopDec                       = 68315.321665	;(ticks/sec^2)
 StopQualTime                   = 999.889176	;(msec)
@@ -111,7 +111,7 @@ OverTempUser                   = 70.000000
 SpdLim                         = 437369.971090	;(ticks/sec)
 RMSStoppedSpeed                = 0.000000	;(ticks/sec)
 InductVolts                    = 200.000000	;(V)
-InductRdg                      = 4.000000
+InductRdg                      = 1.000000
 InductSetup                    = 100.000000
 RMSlim                         = 4.000000
 RMStime                        = 2.985141

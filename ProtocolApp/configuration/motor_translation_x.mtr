@@ -2,7 +2,7 @@
 [TEK32CS10-20-1]
 Chip Version                   = 1.7.6
 UserID0                        = TranslationX
-File Written                   = 2021-06-25 14:22:13
+File Written                   = 2021-07-14 10:48:20
 Writer                         = sFoundation 2.1.31
 PN                             = CPM-SCHP-3441S-ELSB-1-7-D
 UserDesc                       = 
@@ -11,7 +11,7 @@ StopType                       = 4.000000
 WDogTC                         = 2000.074440	;(msec)
 ValidOpModes                   = &H00002800
 CfgHW                          = &H00106C70
-CfgApp                         = &H00000C14
+CfgApp                         = &H00000814
 CmdTuneReg                     = &H00000004
 EStopDec                       = 598302.976365	;(ticks/sec^2)
 StopQualTime                   = 999.889176	;(msec)

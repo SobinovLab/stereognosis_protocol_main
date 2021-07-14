@@ -67,7 +67,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;HMI_API_DYNAMIC;_WINDOWS;_USE_MATH_DEFINES;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>.\;.\Protocol;.\utilities;.\cameras;.\pressure_sensors;.\libMicrochip3DTouchpad\include;.\libTeknicMotor\include;$(NIDAQ_HOME)\NI-DAQ\DAQmx ANSI C Dev\include;$(MCHP_HMI_API_PATH)\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>.\;.\Protocol;.\utilities;.\cameras;.\pressure_sensors;.\teknicMotors;.\libTeknicMotor\include;$(NIDAQ_HOME)\NI-DAQ\DAQmx ANSI C Dev\include;$(MCHP_HMI_API_PATH)\include</AdditionalIncludeDirectories>
       <ForcedIncludeFiles>stdafx.h</ForcedIncludeFiles>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <WholeProgramOptimization>false</WholeProgramOptimization>

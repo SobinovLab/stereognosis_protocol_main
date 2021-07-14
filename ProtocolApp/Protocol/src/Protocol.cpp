@@ -1050,6 +1050,7 @@ void Protocol::m_asyncTrialConditionMonitor()
 				if (!startTime) { // just started touching
 					startTime = new auto(Times::getCurrentTime());
 					m_startedTouchingTime = chrono::duration_cast<chrono::milliseconds>(startTime->time_since_epoch()).count();
+					logInfo("Started touching.");
 				}
 			}
 			else { // not touching
@@ -1066,6 +1067,7 @@ void Protocol::m_asyncTrialConditionMonitor()
 			if (result > 0) {
 				m_earnedReward = true;
 				m_stopAsyncTrialConditionMonitor = true;
+				logInfo("Touching successfull.");
 			}
 		}
 		else {  // no reason to run if no sensor connected

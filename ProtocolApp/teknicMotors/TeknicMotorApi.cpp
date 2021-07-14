@@ -1565,6 +1565,8 @@ TEKNIC_MOTOR_API_CODE TeknicMotorApi::home(const std::vector<std::string> axes_n
             logError(buf.c_str());
             break;
         }
+        // otherwise they start with high rms torque
+        Sleep(800);
     }
 
     // check if was correctly homed but no other errors reported

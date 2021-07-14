@@ -87,7 +87,7 @@ class Protocol
 		void reward(long duration);
 
 		// light sensors
-		std::atomic<bool> use_light_sensors = true;
+		std::atomic<bool> use_light_sensors = false;
 
 		// motors
 		bool were_motors_homed();

@@ -60,12 +60,12 @@
     "parallel_group": 1,
     "comment": "Positive is counterclockwise.",
     "neutral_position": 0,
-    "default_vel": 3,
-    "default_acc": 3,
+    "default_vel": 6,
+    "default_acc": 0.5,
     "homing": {
         "direction": 1,
-        "offset_in_units": 1,
-        "torque_threshold_percent": 8,
+        "offset_in_units": 2,
+        "torque_threshold_percent": 15,
         "timeout": 300
     },
     "pos_min": -30,
@@ -79,7 +79,7 @@
     "comment": "Positive is wider. Pushing against the middle deforms, so need to move away from compliance.",
     "neutral_position": 0,
     "default_vel": 5,
-    "default_acc": 1.25,
+    "default_acc": 1,
     "homing": {
         "direction": -1,
         "offset_in_units": 3,
