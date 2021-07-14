@@ -452,7 +452,11 @@ void Protocol::run()
 		wait_until_monkey_release();
 
 		// wait until arm at rest
-		wait_until_arm_at_rest();
+		if (wait_until_arm_at_rest() < 0) {
+			// timeout for 20 mins
+			stopTrial = true;
+			stopProtocol = true;
+		}
 
 		// waiting for the start of the next trial
 		while (!this->startTrial.load() &&
@@ -514,12 +518,14 @@ void Protocol::run()
 		vector<string> axes = { "translation_X", "tilt", "aperture" };
 		vector<double> positions = { params.pos_translation_x, params.pos_tilt, params.pos_aperture };
 		rets = 0;
+		motor_rets = TEKNIC_MOTOR_API_CODE::OK;
 		if (!stopTrial)
 			motor_rets = motorHub->preshape(axes, positions);
 		if (TeknicMotorApi::isError(motor_rets))
 		{
 			// bad error
-			if (motor_rets != TEKNIC_MOTOR_API_CODE::INITIALIZATION_ERROR && motor_rets != TEKNIC_MOTOR_API_CODE::USER_INTERRUPT) {
+			if (motor_rets != TEKNIC_MOTOR_API_CODE::INITIALIZATION_ERROR && 
+				motor_rets != TEKNIC_MOTOR_API_CODE::USER_INTERRUPT) {
 				logError("Bad motor error encountered during preshape. Interrupting the protocol.");
 				rets = -1;
 			}
@@ -535,17 +541,18 @@ void Protocol::run()
 		start_pressure_sensor_recording();
 		log_started_ps_recording = Times::getCurrentTimeInMilliSecs();
 
+		// approach
 		if (!rets && !stopTrial) {
 			motor_rets = motorHub->approach(axes, positions);
 			if (TeknicMotorApi::isError(motor_rets))
 			{
-				// bad error
-				if (motor_rets != TEKNIC_MOTOR_API_CODE::INITIALIZATION_ERROR && motor_rets != TEKNIC_MOTOR_API_CODE::USER_INTERRUPT) {
+				if (motor_rets == TEKNIC_MOTOR_API_CODE::USER_INTERRUPT) {
+					// nothing, since it can be triggered by the watchThread
+				}
+				else if (motor_rets != TEKNIC_MOTOR_API_CODE::INITIALIZATION_ERROR) {
+					// bad error
 					logError("Bad motor error encountered during approach. Interrupting the protocol.");
 					rets = -1;
-				}
-				else if (motor_rets == TEKNIC_MOTOR_API_CODE::USER_INTERRUPT) {
-					// nothing, since it can be triggered by the watchThread
 				}
 			}
 		}
@@ -559,7 +566,7 @@ void Protocol::run()
 		watchThread.join();
 
 		// if the trial was not interrupted, wait for the hand liftoff
-		if (!stopTrial) {
+		if (!stopTrial && !rets) {
 			rets = wait_until_arm_liftoff();
 
 			arm_liftoff_time = Times::getCurrentTimeInMilliSecs();
@@ -659,7 +666,8 @@ void Protocol::run()
 		rets = wait_for_cameras_finish_saving();
 		if (rets < 0) {
 			AfxMessageBox("Cameras are taking too long to save the data. Stopping the protocol.");
-			break;
+			stopTrial = true;
+			stopProtocol = true;
 		}
 
 		params.trial_number++;
@@ -971,7 +979,7 @@ bool Protocol::isArmAtRest()
 int Protocol::wait_until_arm_at_rest()
 {
 	auto waitStart = Times::getCurrentTime();
-	double timeout = 5 * 60; // seconds
+	double timeout = 20 * 60; // seconds
 
 	int flag = 0;
 	while (true) {
