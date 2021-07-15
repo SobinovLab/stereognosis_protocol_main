@@ -960,6 +960,7 @@ bool Protocol::isRewardOn()
 
 bool Protocol::isLightSensorsOn()
 {
+	// TODO split NI USB card intialization into specific ones
 	return use_light_sensors.load() && m_NIUsb6001card.wasInitializedCorrectly();
 }
 

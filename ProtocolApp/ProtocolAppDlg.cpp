@@ -146,7 +146,9 @@ BOOL CProtocolAppDlg::OnInitDialog()
 
 	((CButton*)GetDlgItem(IDC_LOOP_CHK))->SetCheck(BST_CHECKED);
 	m_protocol.loopChk = &m_loopChk;
+	// there is a better way to synchronize the two variables, you are welcome to do it
 	m_useLightSensorsChk.SetCheck(BST_UNCHECKED);
+	m_protocol.use_light_sensors = false;
 
 	// set the visibility of enabled devices on GUI
 	if (m_protocol.isLightSensorsOn()) ((CButton*)GetDlgItem(IDC_LIGHT_SENSORS_CHK))->SetCheck(BST_CHECKED);
