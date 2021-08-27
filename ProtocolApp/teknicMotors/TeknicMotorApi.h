@@ -11,7 +11,6 @@
 #include <string>
 #include <fstream>
 #include <memory>
-#include <atomic>
 
 #include <nlohmann/json.hpp>
 #include <pubSysCls.h>

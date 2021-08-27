@@ -43,9 +43,15 @@ Motor::Motor(sFnd::INode& node, const json settings) :
 
     // set up converters
     pos = Convertor(input_offset, in_to_out_coefficient, true);
-    vel = Convertor(0, vel_max / 100);  // input values 0-100, sonvertor is max/100
+    if (in_to_out_coefficient > 0) {
+        vel = Convertor(0, vel_max / 100);  // input values 0-100, sonvertor is max/100
+        acc = Convertor(0, acc_max / 100);
+    }
+    else {
+        vel = Convertor(0, - vel_max / 100);  // input values 0-100, sonvertor is max/100
+        acc = Convertor(0, - acc_max / 100);
+    }
     vel.setInputRange(vector<double>{-vel_max, vel_max});
-    acc = Convertor(0, acc_max / 100);
     vel.setInputRange(vector<double>{-acc_max, acc_max});
 
     // name
@@ -1565,8 +1571,6 @@ TEKNIC_MOTOR_API_CODE TeknicMotorApi::home(const std::vector<std::string> axes_n
             logError(buf.c_str());
             break;
         }
-        // otherwise they start with high rms torque
-        Sleep(800);
     }
 
     // check if was correctly homed but no other errors reported

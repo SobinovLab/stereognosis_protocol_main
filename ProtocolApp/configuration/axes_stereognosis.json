@@ -9,7 +9,7 @@
     "default_vel": 20,
     "default_acc": 6,
     "homing": {
-        "direction": -1,
+        "direction": 1,
         "offset_in_units": 20,
         "torque_threshold_percent": 5,
         "timeout": 300
