@@ -501,6 +501,12 @@ void Protocol::run()
 		// log
 		trial_start_time = Times::getCurrentTimeInMilliSecs();
 
+		// sync
+		start_ephys_recording();
+		log_started_ephys_recording = Times::getCurrentTimeInMilliSecs();
+		sync_message_trial_start();
+		log_sent_start_sync_messages = Times::getCurrentTimeInMilliSecs();
+
 		// prepare recordings
 		send_config_to_cameras();
         log_sent_config_to_cameras = Times::getCurrentTimeInMilliSecs();
@@ -567,19 +573,14 @@ void Protocol::run()
 
 		// if the trial was not interrupted, wait for the hand liftoff
 		if (!stopTrial && !rets) {
-			rets = wait_until_arm_liftoff();
+			// TODO in the current structure does not make sense
+			//rets = wait_until_arm_liftoff();
 
 			arm_liftoff_time = Times::getCurrentTimeInMilliSecs();
 		}
 
 		// if the motors made it successfully to the final position and the animal has lifted the arm
 		if (!stopTrial && rets >= 0) {
-			// sync
-			start_ephys_recording();
-            log_started_ephys_recording = Times::getCurrentTimeInMilliSecs();
-			sync_message_trial_start();
-			log_sent_start_sync_messages = Times::getCurrentTimeInMilliSecs();
-
 			// spawn the process that monitors the async stopping conditions
 			m_asyncTrialSuccessMonitorThread = new thread(&Protocol::m_asyncTrialConditionMonitor, this);
             log_started_monitoring_ps = Times::getCurrentTimeInMilliSecs();
