@@ -45,6 +45,7 @@
 #define IDC_EPHYS_CHK                   1074
 #define IDC_HOME_MOTORS_BTN             1075
 #define IDC_PS_FORCE_THRESHOLD_EDT      1076
+#define IDC_PS_TARGET_FORCE_EDT         1076
 #define IDC_TOUCH_SENSOR_IP_EDT         1077
 #define IDC_TOUCH_SENSOR_PORT_EDT       1078
 #define IDC_CONNECT_TOUCH_SENSOR_BTN    1079
@@ -62,8 +63,11 @@
 #define IDC_LOOP_CHK                    1091
 #define IDC_USE_LIGHT_SENSORS_CHK       1092
 #define IDC_STOP_MOTORS_BTN             1093
-#define IDC_BUTTON2                     1094
 #define IDC_NEUTRAL_POSITION_BTN        1094
+#define IDC_PS_REL_RANGE_MIN_EDT        1095
+#define IDC_PS_REL_RANGE_MAX_EDT        1096
+#define IDC_EDIT3                       1097
+#define IDC_PS_TOTAL_FORCE_MIN_EDT      1097
 
 // Next default values for new objects
 // 
@@ -71,7 +75,7 @@
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        130
 #define _APS_NEXT_COMMAND_VALUE         32771
-#define _APS_NEXT_CONTROL_VALUE         1095
+#define _APS_NEXT_CONTROL_VALUE         1098
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif

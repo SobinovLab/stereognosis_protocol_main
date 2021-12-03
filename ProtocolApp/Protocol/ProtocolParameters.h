@@ -66,7 +66,10 @@ public:
 	long tss_port;
 
 	// pressure sensor config
-	double thresholdTotalForce;
+	double targetForce;
+	double targetForceRelRangeMin;
+	double targetForceRelRangeMax;
+	double targetForceTotalMinThreshold;
 	double thresholdPeriod;  // seconds
 	double thresholdForceEachProportion;
 	double minimalTouchForce;

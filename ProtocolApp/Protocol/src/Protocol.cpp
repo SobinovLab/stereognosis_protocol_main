@@ -760,6 +760,12 @@ void Protocol::matchLoadedSessionTrialToParams(const vector<string>& line1, cons
 				params.pos_aperture = vec[i];
 			}
 		}
+
+		if (axis == "total_force") {
+			if (deriv == "position") {
+				params.targetForce = vec[i];
+			}
+		}
 	}
 }
 
@@ -1044,11 +1050,14 @@ void Protocol::m_asyncTrialConditionMonitor()
 			// ask touch sensor for the force on each plate
 			m_touchSensorClient.getForce(&leftForce, &rightForce);
 
+			// TODO: update the visualized force
+
 			// check if touching now and keep time of touch start
 			// minimum force level of 0.2 of desired and total excedes the desired
-			if (leftForce + rightForce > params.thresholdTotalForce &&
-				leftForce > params.thresholdTotalForce * params.thresholdForceEachProportion &&
-				rightForce > params.thresholdTotalForce * params.thresholdForceEachProportion) {
+			if (leftForce + rightForce >= std::max(params.targetForce + params.targetForceRelRangeMin, params.targetForceTotalMinThreshold) &&
+				leftForce + rightForce <= params.targetForce + params.targetForceRelRangeMax &&
+				leftForce > params.targetForce * params.thresholdForceEachProportion &&
+				rightForce > params.targetForce * params.thresholdForceEachProportion) {
 				if (!startTime) { // just started touching
 					startTime = new auto(Times::getCurrentTime());
 					m_startedTouchingTime = chrono::duration_cast<chrono::milliseconds>(startTime->time_since_epoch()).count();
