@@ -129,7 +129,7 @@ Log with name `<data folder>/<experiment_DATETIME>/trial_log.csv` has the follow
 4. `syncTrialEndTime(ms)` - second synchronization pulse.
 5. `finishedRecording(ms)` - time when the recording was stopped.
 
-### Cameras 
+### Cameras
 
 Log with name `<data folder>/<experiment_DATETIME>/trial_log.csv` has the same structure as the Pressure Sensor one.
 
@@ -152,10 +152,13 @@ Required: Visual Studio 2019 with C++ development, .NET desktop development, Vis
 >vcpkg integrate install 
 ```
 
-2. Using vcpkg install [gRPC](https://github.com/grpc/grpc) messenger system, for most projects we need x64 architecture, therefore the `--triplet` option. [CPP manual](https://github.com/grpc/grpc/tree/master/src/cpp).
+GRPC is very picky for the versions. Instead of downloading the latest VCPKG, download the one available on the lab server `\\BENSMAIA-LAB\LabSharing\Stereognosis\Software\vcpkg` into `C:\Repositories\vcpkg` and run the integrate-install command.
+
+2. Using vcpkg install [gRPC](https://github.com/grpc/grpc) messenger system and nlohmann-json, for most projects we need x64 architecture, therefore the `--triplet` option. [CPP manual](https://github.com/grpc/grpc/tree/master/src/cpp).
 
 ```
 vcpkg install grpc --triplet x64-windows
+vcpkg install nlohmann-json --triplet x64-windows
 ```
 
 3. [NIDAQ 16.0+ Controller](https://www.ni.com/en-us/support/downloads/drivers/download.ni-daqmx.html#348669). For reward and light sensors working through a NIUSB card.
