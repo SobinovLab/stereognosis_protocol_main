@@ -22,6 +22,7 @@
 #define IDC_LIGHT_SENSORS_CHK           1045
 #define IDC_MOTORS_CHK                  1046
 #define IDC_REWARD_CHK                  1047
+#define IDC_LEDS_CHK                    1048
 #define IDC_IP_EDT1                     1050
 #define IDC_PORT_EDT1                   1051
 #define IDC_FRAMERATE_EDT               1052
@@ -68,6 +69,8 @@
 #define IDC_PS_REL_RANGE_MAX_EDT        1096
 #define IDC_EDIT3                       1097
 #define IDC_PS_TOTAL_FORCE_MIN_EDT      1097
+#define IDC_PS_TOTAL_FORCE_MIN_EDT2     1098
+#define IDC_PS_TOTAL_FORCE_MAX_EDT      1098
 
 // Next default values for new objects
 // 

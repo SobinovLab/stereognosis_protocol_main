@@ -1,6 +1,7 @@
 #include "ProtocolParameters.h"
 
 using namespace std;
+using json = nlohmann::json;
 
 CString ProtocolParameters::try_finding_session_csv()
 {
@@ -45,45 +46,124 @@ ProtocolParameters::~ProtocolParameters()
 
 void ProtocolParameters::init()
 {
-	// protocol
-	maxWaitTime = 20;  // sec
-	intertrialWaitTime = 2; // sec
+	if (load_json() < 0) {
+		logWarning("Error during loading of default protocol parameters file. Using hardcoded values.");
+	}
+
 	session_filename = try_finding_session_csv();
 	session_log_filename = make_log_filename();
-	rewardDuration = 1000;
 
-	// trial
-	trial_number = 0;
-	total_trials = 0;
-	pos_translation_x = 115;  // see MotorAPI
-	pos_tilt = 0;
-	pos_aperture = 0;
+}
 
-	// camera servers
-	cs_ip1 = "205.208.87.188";
-	cs_port1 = 63874;
-	cs_ip2 = "205.208.63.128";
-	cs_port2 = 63874;
+int ProtocolParameters::load_json()
+{
+	return load_json(default_protocol_parameters_json);
+}
 
-	// camera config
-	cs_framerate = 50;
-	cs_recordingPeriod = 60;
-	cs_refSerial = 19340298;
-	cs_exposure = "2500";
-	cs_gain = "20";
-	cs_capture_n_frames = 10;
+int ProtocolParameters::load_json(std::string filename)
+{
+	string buf;
 
-	// pressure sensor server
-	tss_ip = "205.208.87.188";
-	tss_port = 54940;
+	// load settings file
+	ifstream ifs(filename);
+	if (ifs.fail()) {
+		buf = "Could not open protocol parameters JSON file: " + filename + ". Check if it exists.";
+		logError(buf.c_str());
+		return -1;
+	}
 
-	// pressure sensor config
-	targetForce = 3;
-	targetForceRelRangeMin = -2;
-	targetForceRelRangeMax = 2;
-	targetForceTotalMinThreshold = 0.5;
-	thresholdPeriod = 2;  // seconds
-	thresholdForceEachProportion = 0.2;
-	minimalTouchForce = 0.5;
+	// parse it
+	json pp_json;
+	try
+	{
+		pp_json = json::parse(ifs);
+	}
+	catch (const json::parse_error& e)
+	{
+		buf = "Parse error during protocol parameters JSON file read: " + string(e.what());
+		logError(buf.c_str());
+		return -2;
+	}
 
+	// PROTOCOL
+	try
+	{
+		json protocol_json = pp_json.at("protocol");
+
+		maxWaitTime = protocol_json.value("maxWaitTime", maxWaitTime);
+		intertrialWaitTime = protocol_json.value("intertrialWaitTime", intertrialWaitTime);
+		default_session_file_directory = protocol_json.value("session_file_directory", default_session_file_directory);
+		default_session_log_directory = protocol_json.value("session_log_directory", default_session_log_directory);
+		rewardDuration = protocol_json.value("rewardDuration", rewardDuration);
+
+	}
+	catch (const json::exception& e)
+	{
+		buf = "Error reading 'protocol' entry of json file." + string(e.what());
+        logWarning(buf.c_str());
+	}
+
+	// TRIAL
+	try
+	{
+		json trial_json = pp_json.at("trial");
+
+		pos_translation_x = trial_json.value("pos_translation_x", pos_translation_x);
+		pos_tilt = trial_json.value("pos_tilt", pos_tilt);
+		pos_aperture = trial_json.value("pos_aperture", pos_aperture);
+
+	}
+	catch (const json::exception& e)
+	{
+		buf = "Error reading 'trial' entry of json file." + string(e.what());
+        logWarning(buf.c_str());
+	}
+
+	// CAMERAS
+	try
+	{
+		json cameras_json = pp_json.at("cameras");
+
+        cs_ip1 = ((string) cameras_json.value("ip1", cs_ip1)).c_str();
+        cs_port1 = cameras_json.value("port1", cs_port1);
+        cs_ip2 = ((string)cameras_json.value("ip2", cs_ip2)).c_str();
+        cs_port2 = cameras_json.value("port2", cs_port2);
+        cs_framerate = cameras_json.value("framerate", cs_framerate);
+        cs_recordingPeriod = cameras_json.value("recordingPeriod", cs_recordingPeriod);
+        cs_refSerial = cameras_json.value("refSerial", cs_refSerial);
+        cs_exposure = ((string) cameras_json.value("exposure", cs_exposure)).c_str();
+        cs_gain = ((string) cameras_json.value("gain", cs_gain)).c_str();
+        cs_capture_n_frames = cameras_json.value("capture_n_frames", cs_capture_n_frames);
+
+	}
+	catch (const json::exception& e)
+	{
+		buf = "Error reading 'cameras' entry of json file." + string(e.what());
+        logWarning(buf.c_str());
+	}
+
+    // PRESSURE_SENSOR
+    try
+    {
+        json pressure_sensor_json = pp_json.at("pressure_sensor");
+
+        tss_ip = ((string) pressure_sensor_json.value("ip", tss_ip)).c_str();
+        tss_port = pressure_sensor_json.value("port", tss_port);
+        targetForce = pressure_sensor_json.value("targetForce", targetForce);
+        targetForceRelRangeMin = pressure_sensor_json.value("targetForceRelRangeMin", targetForceRelRangeMin);
+        targetForceRelRangeMax = pressure_sensor_json.value("targetForceRelRangeMax", targetForceRelRangeMax);
+        targetForceTotalMinThreshold = pressure_sensor_json.value("targetForceTotalMinThreshold", targetForceTotalMinThreshold);
+        targetForceTotalMax = pressure_sensor_json.value("targetForceTotalMax", targetForceTotalMax);
+        thresholdPeriod = pressure_sensor_json.value("thresholdPeriod", thresholdPeriod);
+        thresholdForceEachProportion = pressure_sensor_json.value("thresholdForceEachProportion", thresholdForceEachProportion);
+        minimalTouchForce = pressure_sensor_json.value("minimalTouchForce", minimalTouchForce);
+
+    }
+    catch (const json::exception& e)
+    {
+        buf = "Error reading 'pressure_sensor' entry of json file." + string(e.what());
+        logWarning(buf.c_str());
+    }
+
+	return 0;
 }

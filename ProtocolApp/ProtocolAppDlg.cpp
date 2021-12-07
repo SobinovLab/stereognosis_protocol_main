@@ -65,6 +65,7 @@ void CProtocolAppDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Text(pDX, IDC_PS_REL_RANGE_MIN_EDT, m_protocol.params.targetForceRelRangeMin);
 	DDX_Text(pDX, IDC_PS_REL_RANGE_MAX_EDT, m_protocol.params.targetForceRelRangeMax);
 	DDX_Text(pDX, IDC_PS_TOTAL_FORCE_MIN_EDT, m_protocol.params.targetForceTotalMinThreshold);
+	DDX_Text(pDX, IDC_PS_TOTAL_FORCE_MAX_EDT, m_protocol.params.targetForceTotalMax);
 	DDX_Text(pDX, IDC_PS_HOLD_PERIOD_EDT, m_protocol.params.thresholdPeriod);
 	DDX_Text(pDX, IDC_PS_MIN_PARTIAL_FORCE_EDT, m_protocol.params.thresholdForceEachProportion);
 	DDX_Text(pDX, IDC_PS_MINIMAL_TOUCH_FORCE_EDT, m_protocol.params.minimalTouchForce);
