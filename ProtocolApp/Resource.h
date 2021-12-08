@@ -62,15 +62,14 @@
 #define IDC_TRIAL_STATUS                1089
 #define IDC_PS_MINIMAL_TOUCH_FORCE_EDT  1090
 #define IDC_LOOP_CHK                    1091
-#define IDC_USE_LIGHT_SENSORS_CHK       1092
+#define IDC_USE_FRONT_LIGHT_SENSOR_CHK  1092
 #define IDC_STOP_MOTORS_BTN             1093
 #define IDC_NEUTRAL_POSITION_BTN        1094
 #define IDC_PS_REL_RANGE_MIN_EDT        1095
 #define IDC_PS_REL_RANGE_MAX_EDT        1096
-#define IDC_EDIT3                       1097
 #define IDC_PS_TOTAL_FORCE_MIN_EDT      1097
-#define IDC_PS_TOTAL_FORCE_MIN_EDT2     1098
 #define IDC_PS_TOTAL_FORCE_MAX_EDT      1098
+#define IDC_USE_REAR_LIGHT_SENSOR_CHK   1099
 
 // Next default values for new objects
 // 

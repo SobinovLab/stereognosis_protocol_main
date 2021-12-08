@@ -34,5 +34,10 @@
         "thresholdPeriod": 1,
         "thresholdForceEachProportion": 0.2,
         "minimalTouchForce": 0.5
+    },
+    "leds": {
+        "com_port": "\\\\.\\COM3",
+        "top_stripe_color": [244, 67, 54],
+        "bottom_stripe_color": [76, 175, 85]
     }
 }

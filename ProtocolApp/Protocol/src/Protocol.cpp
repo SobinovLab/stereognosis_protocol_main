@@ -941,6 +941,20 @@ void Protocol::initDevices()
 	else {
 		motorHub = new TeknicMotorApi("./configuration/motors_stereognosis1.json", "./configuration/axes_stereognosis.json");
 	}
+
+	// LEDs
+	if (ledStrip) {
+		logWarning("Led strips already initialized, cannot init again.");
+	}
+	else {
+		ledStrip = new LedStrip(params.leds_com_port);
+        ledStrip->top_stripe_red = params.leds_top_stripe_color_red;
+        ledStrip->top_stripe_green = params.leds_top_stripe_color_green;
+        ledStrip->top_stripe_blue = params.leds_top_stripe_color_blue;
+        ledStrip->bottom_stripe_red = params.leds_bottom_stripe_color_red;
+        ledStrip->bottom_stripe_green = params.leds_bottom_stripe_color_green;
+        ledStrip->bottom_stripe_blue = params.leds_bottom_stripe_color_blue;
+	}
 }
 
 void Protocol::releaseDevices()
@@ -952,6 +966,12 @@ void Protocol::releaseDevices()
 	if (motorHub) {  // check if nullptr
 		delete motorHub;
 		motorHub = nullptr;
+	}
+
+	// LEDs
+	if (ledStrip) {  // check if nullptr
+		delete ledStrip;
+		ledStrip = nullptr;
 	}
 }
 
@@ -974,6 +994,11 @@ bool Protocol::isLightSensorsOn()
 bool Protocol::isEphysOn()
 {
 	return m_NIUsb6001card.wasInitializedCorrectly();
+}
+
+bool Protocol::isLedsOn()
+{
+	return ledStrip->wasInitializedCorrectly();
 }
 
 bool Protocol::isArmAtRest()
@@ -1050,7 +1075,14 @@ void Protocol::m_asyncTrialConditionMonitor()
 			// ask touch sensor for the force on each plate
 			m_touchSensorClient.getForce(&leftForce, &rightForce);
 
-			// TODO: update the visualized force
+			// update the visualized force
+			if (isLedsOn()) {
+				ledStrip->set_top_stripe_lights(
+					(params.targetForce + params.targetForceRelRangeMin) / params.targetForceTotalMax,
+					(params.targetForce + params.targetForceRelRangeMax) / params.targetForceTotalMax);
+				ledStrip->set_bottom_stripe_lights(
+					leftForce + rightForce / params.targetForceTotalMax);
+			}
 
 			// check if touching now and keep time of touch start
 			// minimum force level of 0.2 of desired and total excedes the desired

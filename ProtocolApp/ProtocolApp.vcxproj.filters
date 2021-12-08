@@ -43,6 +43,12 @@
     <Filter Include="Source Files\pressure_sensors">
       <UniqueIdentifier>{85f47759-9711-49c1-9b3a-a3967f83415f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\LEDs">
+      <UniqueIdentifier>{6bf59f8f-f83e-49cf-8ff1-f18020667eb3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\LEDs">
+      <UniqueIdentifier>{3778db03-8312-458a-979c-67c153e77548}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h">
@@ -117,6 +123,12 @@
     <ClInclude Include="utilities\CsvParser.h">
       <Filter>Header Files\utilities</Filter>
     </ClInclude>
+    <ClInclude Include="LEDs\LedStrip.h">
+      <Filter>Header Files\LEDs</Filter>
+    </ClInclude>
+    <ClInclude Include="LEDs\Serial.h">
+      <Filter>Header Files\LEDs</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -184,6 +196,12 @@
     </ClCompile>
     <ClCompile Include="utilities\CsvParser.cpp">
       <Filter>Source Files\utilities</Filter>
+    </ClCompile>
+    <ClCompile Include="LEDs\LedStrip.cpp">
+      <Filter>Source Files\LEDs</Filter>
+    </ClCompile>
+    <ClCompile Include="LEDs\Serial.cpp">
+      <Filter>Source Files\LEDs</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

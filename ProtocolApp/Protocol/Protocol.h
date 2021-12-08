@@ -23,6 +23,7 @@
 #include "NIUsb6001card.h"
 #include "CameraClient.h"
 #include "TouchSensorClient.h"
+#include "LedStrip.h"
 
 
 enum class ProtocolState
@@ -50,6 +51,7 @@ class Protocol
 		bool isRewardOn();
 		bool isLightSensorsOn();
 		bool isEphysOn();
+		bool isLedsOn();
 
 		// General parameters TODO: load ip etc from ini
 		ProtocolParameters params;
@@ -161,6 +163,9 @@ class Protocol
 
 		// motor
 		TeknicMotorApi* motorHub = nullptr;
+
+		// LEDs
+		LedStrip* ledStrip = nullptr;
 
 		//////// connected devices
 		void sync_message_trial_start();

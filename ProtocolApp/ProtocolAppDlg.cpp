@@ -159,6 +159,7 @@ BOOL CProtocolAppDlg::OnInitDialog()
 	if (m_protocol.isMotorsOn()) ((CButton*)GetDlgItem(IDC_MOTORS_CHK))->SetCheck(BST_CHECKED);
 	if (m_protocol.isRewardOn()) ((CButton*)GetDlgItem(IDC_REWARD_CHK))->SetCheck(BST_CHECKED);
 	if (m_protocol.isEphysOn()) ((CButton*)GetDlgItem(IDC_EPHYS_CHK))->SetCheck(BST_CHECKED);
+	if (m_protocol.isLedsOn()) ((CButton*)GetDlgItem(IDC_LEDS_CHK))->SetCheck(BST_CHECKED);
 
 	/////// Control what is enabled and initialized
 	// protocol
