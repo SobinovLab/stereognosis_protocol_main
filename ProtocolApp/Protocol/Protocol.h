@@ -89,7 +89,8 @@ class Protocol
 		void reward(long duration);
 
 		// light sensors
-		std::atomic<bool> use_light_sensors = false;
+		std::atomic<bool> use_front_light_sensor = false;
+		std::atomic<bool> use_rear_light_sensor = false;
 
 		// motors
 		bool were_motors_homed();
@@ -153,7 +154,9 @@ class Protocol
 		// photoresistors
 		CStaticColor* m_frontPhotoresistorCtrl = nullptr;
 		CStaticColor* m_rearPhotoresistorCtrl = nullptr;
+		// use only together in || condition with Protocol::isLightSensorsOn()
 		bool isArmAtRest();
+		// is not used
 		int wait_until_arm_at_rest();
 		int wait_until_arm_liftoff();
 

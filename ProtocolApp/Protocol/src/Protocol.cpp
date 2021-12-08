@@ -988,7 +988,7 @@ bool Protocol::isRewardOn()
 bool Protocol::isLightSensorsOn()
 {
 	// TODO split NI USB card intialization into specific ones
-	return use_light_sensors.load() && m_NIUsb6001card.wasInitializedCorrectly();
+	return (use_front_light_sensor.load() || use_rear_light_sensor.load()) && m_NIUsb6001card.wasInitializedCorrectly();
 }
 
 bool Protocol::isEphysOn()
@@ -1003,10 +1003,8 @@ bool Protocol::isLedsOn()
 
 bool Protocol::isArmAtRest()
 {
-	if (isLightSensorsOn())
-		return IS_REAR_PHOTORESISTOR_COVERED && IS_FRONT_PHOTORESISTOR_COVERED;
-	else
-		return true;
+	return ((!use_front_light_sensor.load() || IS_FRONT_PHOTORESISTOR_COVERED) && 
+			(!use_rear_light_sensor.load() || IS_REAR_PHOTORESISTOR_COVERED));
 }
 
 int Protocol::wait_until_arm_at_rest()

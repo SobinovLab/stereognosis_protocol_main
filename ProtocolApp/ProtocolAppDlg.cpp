@@ -29,7 +29,8 @@ void CProtocolAppDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_RETREAT_BTN, m_retreatBtn);
 	DDX_Control(pDX, IDC_RETREAT_FLUSH_WATER_BTN, m_retreatFlushBtn);
 	DDX_Control(pDX, IDC_LOOP_CHK, m_loopChk);
-	DDX_Control(pDX, IDC_USE_LIGHT_SENSORS_CHK, m_useLightSensorsChk);
+	DDX_Control(pDX, IDC_USE_FRONT_LIGHT_SENSOR_CHK, m_useFrontLightSensorChk);
+	DDX_Control(pDX, IDC_USE_REAR_LIGHT_SENSOR_CHK, m_useRearLightSensorChk);
 
 	DDX_Control(pDX, IDC_TRIAL_STATUS, m_trialStatus);
 
@@ -106,7 +107,8 @@ BEGIN_MESSAGE_MAP(CProtocolAppDlg, CDialogEx)
 	ON_BN_CLICKED(IDC_DISCONNECT_TOUCH_SENSOR_BTN, &OnDisconnectTouchSensorBtnClicked)
 	ON_BN_CLICKED(IDC_HOME_MOTORS_BTN, &OnBnClickedHomeMotorsBtn)
 	ON_BN_CLICKED(IDC_LOOP_CHK, &CProtocolAppDlg::OnBnClickedLoopChk)
-	ON_BN_CLICKED(IDC_USE_LIGHT_SENSORS_CHK, &CProtocolAppDlg::OnBnClickedUseLightSensorsChk)
+	ON_BN_CLICKED(IDC_USE_FRONT_LIGHT_SENSOR_CHK, &CProtocolAppDlg::OnBnClickedUseFrontLightSensorChk)
+	ON_BN_CLICKED(IDC_USE_REAR_LIGHT_SENSOR_CHK, &CProtocolAppDlg::OnBnClickedUseRearLightSensorChk)
 	ON_BN_CLICKED(IDC_STOP_MOTORS_BTN, &CProtocolAppDlg::OnBnClickedStopMotorsBtn)
 	ON_BN_CLICKED(IDC_NEUTRAL_POSITION_BTN, &CProtocolAppDlg::OnBnClickedNeutralPositionBtn)
 END_MESSAGE_MAP()
@@ -151,8 +153,10 @@ BOOL CProtocolAppDlg::OnInitDialog()
 	((CButton*)GetDlgItem(IDC_LOOP_CHK))->SetCheck(BST_CHECKED);
 	m_protocol.loopChk = &m_loopChk;
 	// there is a better way to synchronize the two variables, you are welcome to do it
-	m_useLightSensorsChk.SetCheck(BST_UNCHECKED);
-	m_protocol.use_light_sensors = false;
+	m_useFrontLightSensorChk.SetCheck(BST_UNCHECKED);
+	m_useRearLightSensorChk.SetCheck(BST_UNCHECKED);
+	m_protocol.use_front_light_sensor = false;
+	m_protocol.use_rear_light_sensor = false;
 
 	// set the visibility of enabled devices on GUI
 	if (m_protocol.isLightSensorsOn()) ((CButton*)GetDlgItem(IDC_LIGHT_SENSORS_CHK))->SetCheck(BST_CHECKED);
@@ -543,12 +547,21 @@ void CProtocolAppDlg::OnBnClickedLoopChk()
 }
 
 
-void CProtocolAppDlg::OnBnClickedUseLightSensorsChk()
+void CProtocolAppDlg::OnBnClickedUseFrontLightSensorChk()
 {
-	if (m_useLightSensorsChk.GetCheck())
-		m_protocol.use_light_sensors = true;
+	if (m_useFrontLightSensorChk.GetCheck())
+		m_protocol.use_front_light_sensor = true;
 	else
-		m_protocol.use_light_sensors = false;
+		m_protocol.use_front_light_sensor = false;
+}
+
+
+void CProtocolAppDlg::OnBnClickedUseRearLightSensorChk()
+{
+	if (m_useRearLightSensorChk.GetCheck())
+		m_protocol.use_rear_light_sensor = true;
+	else
+		m_protocol.use_rear_light_sensor = false;
 }
 
 

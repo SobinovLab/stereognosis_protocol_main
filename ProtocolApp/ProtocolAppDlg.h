@@ -76,7 +76,8 @@ public:
 	CButton m_retreatBtn;
 	CButton m_retreatFlushBtn;
 	CButton m_loopChk;
-	CButton m_useLightSensorsChk;
+	CButton m_useFrontLightSensorChk;
+	CButton m_useRearLightSensorChk;
 
 	// edits -- mostly used via linked text
 	CEdit m_trialStatus;
@@ -131,7 +132,8 @@ protected:
 	DECLARE_MESSAGE_MAP()
 public:
 	afx_msg void OnBnClickedLoopChk();
-	afx_msg void OnBnClickedUseLightSensorsChk();
+	afx_msg void OnBnClickedUseFrontLightSensorChk();
+	afx_msg void OnBnClickedUseRearLightSensorChk();
 	afx_msg void OnBnClickedStopMotorsBtn();
 	afx_msg void OnBnClickedNeutralPositionBtn();
 };
