@@ -36,8 +36,11 @@
         "minimalTouchForce": 0.5
     },
     "leds": {
-        "com_port": "\\\\.\\COM3",
+        "com_port": "\\\\.\\COM5",
+        "run_test": 1,
         "top_stripe_color": [244, 67, 54],
-        "bottom_stripe_color": [76, 175, 85]
+        "top_brightness": 0.5,
+        "bottom_stripe_color": [76, 175, 85],
+        "bottom_brightness": 0.5
     }
 }

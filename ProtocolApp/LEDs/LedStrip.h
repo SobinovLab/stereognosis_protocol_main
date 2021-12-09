@@ -35,15 +35,20 @@ public:
 	int top_stripe_red = 244;
 	int top_stripe_green = 67;
 	int top_stripe_blue = 54;
+	double top_brightness = 0.5;
 	int bottom_stripe_red = 76;
 	int bottom_stripe_green = 175;
 	int bottom_stripe_blue = 80;
+	double bottom_brightness = 0.5;
 
 	// easy control functions
 	int set_top_stripe_lights(const double end_portion);
 	int set_top_stripe_lights(const double start_portion, const double end_portion);
 	int set_bottom_stripe_lights(const double end_portion);
 	int set_bottom_stripe_lights(const double start_portion, const double end_portion);
+
+	// test
+	void test(int delay=20);
 
 	// If false, delete the object and try again
 	bool wasInitializedCorrectly();

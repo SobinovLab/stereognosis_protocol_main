@@ -15,7 +15,9 @@ int LedStrip::set_top_stripe_lights(const double end_portion)
 int LedStrip::set_top_stripe_lights(const double start_portion, const double end_portion)
 {
     return sendLedData(LED_STRIP_SIDE::LED_TOP, portionToNumLeds(start_portion), portionToNumLeds(end_portion), 
-        top_stripe_red, top_stripe_green, top_stripe_blue);
+        (int) round((double)top_stripe_red * top_brightness),
+        (int) round((double)top_stripe_green * top_brightness),
+        (int) round((double)top_stripe_blue * top_brightness));
 }
 
 int LedStrip::set_bottom_stripe_lights(const double end_portion)
@@ -26,7 +28,34 @@ int LedStrip::set_bottom_stripe_lights(const double end_portion)
 int LedStrip::set_bottom_stripe_lights(const double start_portion, const double end_portion)
 {
     return sendLedData(LED_STRIP_SIDE::LED_BOTTOM, portionToNumLeds(start_portion), portionToNumLeds(end_portion),
-        bottom_stripe_red, bottom_stripe_green, bottom_stripe_blue);
+        (int)round((double)bottom_stripe_red * bottom_brightness),
+        (int)round((double)bottom_stripe_green * bottom_brightness),
+        (int)round((double)bottom_stripe_blue * bottom_brightness));
+}
+
+void LedStrip::test(int delay)
+{
+    for (int i = 1; i <= num_leds_per_strip; i++)
+    {
+        set_top_stripe_lights((double) i / num_leds_per_strip);
+        Sleep(delay);
+    }
+    for (int i = num_leds_per_strip; i >=0 ; i--)
+    {
+        set_top_stripe_lights((double) i / num_leds_per_strip);
+        Sleep(delay);
+    }
+
+    for (int i = 1; i <= num_leds_per_strip; i++)
+    {
+        set_bottom_stripe_lights((double) i / num_leds_per_strip);
+        Sleep(delay);
+    }
+    for (int i = num_leds_per_strip; i >= 0; i--)
+    {
+        set_bottom_stripe_lights((double) i / num_leds_per_strip);
+        Sleep(delay);
+    }
 }
 
 bool LedStrip::wasInitializedCorrectly()
@@ -69,11 +98,11 @@ int LedStrip::sendLedData(LED_STRIP_SIDE side, int start_led, int end_led, int r
     // side:
     message_buffer[0] = 48 + static_cast<int>(side);
     // starting light:
-    message_buffer[2] = 48 + (end_led / 10);
-    message_buffer[3] = 48 + (end_led % 10);
+    message_buffer[2] = 48 + (start_led / 10);
+    message_buffer[3] = 48 + (start_led % 10);
     // ending light
-    message_buffer[5] = 48 + (start_led / 10);
-    message_buffer[6] = 48 + (start_led % 10);
+    message_buffer[5] = 48 + (end_led / 10);
+    message_buffer[6] = 48 + (end_led % 10);
     // red
     message_buffer[8] = 48 + (red / 100);
     message_buffer[9] = 48 + ((red % 100) / 10);

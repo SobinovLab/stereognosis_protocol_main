@@ -171,16 +171,19 @@ int ProtocolParameters::load_json(std::string filename)
 		json leds_json = pp_json.at("leds");
 
 		leds_com_port = leds_json.value("com_port", leds_com_port);
+		leds_run_test = leds_json.value("run_test", leds_run_test);
 
 		json top_color = leds_json.at("top_stripe_color");
 		leds_top_stripe_color_red = top_color[0];
 		leds_top_stripe_color_green = top_color[1];
 		leds_top_stripe_color_blue = top_color[2];
+		leds_top_stripe_brightness = leds_json.value("top_brightness", leds_top_stripe_brightness);
 
 		json bottom_color = leds_json.at("bottom_stripe_color");
 		leds_bottom_stripe_color_red = bottom_color[0];
 		leds_bottom_stripe_color_green = bottom_color[1];
 		leds_bottom_stripe_color_blue = bottom_color[2];
+		leds_bottom_stripe_brightness = leds_json.value("bottom_brightness", leds_bottom_stripe_brightness);
 	}
 	catch (const json::exception& e)
 	{

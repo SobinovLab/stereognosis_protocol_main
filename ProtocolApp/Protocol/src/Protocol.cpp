@@ -951,9 +951,15 @@ void Protocol::initDevices()
         ledStrip->top_stripe_red = params.leds_top_stripe_color_red;
         ledStrip->top_stripe_green = params.leds_top_stripe_color_green;
         ledStrip->top_stripe_blue = params.leds_top_stripe_color_blue;
+		ledStrip->top_brightness = params.leds_top_stripe_brightness;
         ledStrip->bottom_stripe_red = params.leds_bottom_stripe_color_red;
         ledStrip->bottom_stripe_green = params.leds_bottom_stripe_color_green;
         ledStrip->bottom_stripe_blue = params.leds_bottom_stripe_color_blue;
+		ledStrip->bottom_brightness = params.leds_bottom_stripe_brightness;
+		if (ledStrip->wasInitializedCorrectly() && params.leds_run_test) {
+			logInfo("Starting LED test.");
+			ledStrip->test();
+		}
 	}
 }
 
