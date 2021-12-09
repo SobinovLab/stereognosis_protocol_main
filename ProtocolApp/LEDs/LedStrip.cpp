@@ -35,23 +35,23 @@ int LedStrip::set_bottom_stripe_lights(const double start_portion, const double 
 
 void LedStrip::test(int delay)
 {
-    for (unsigned int i = 1; i <= num_leds_per_strip; i++)
+    for (int i = 1; i <= num_leds_per_strip; i++)
     {
         set_top_stripe_lights((double) i / num_leds_per_strip);
         Sleep(delay);
     }
-    for (unsigned int i = num_leds_per_strip; i >=0 ; i--)
+    for (int i = num_leds_per_strip; i >=0 ; i--)
     {
         set_top_stripe_lights((double) i / num_leds_per_strip);
         Sleep(delay);
     }
 
-    for (unsigned int i = 1; i <= num_leds_per_strip; i++)
+    for (int i = 1; i <= num_leds_per_strip; i++)
     {
         set_bottom_stripe_lights((double) i / num_leds_per_strip);
         Sleep(delay);
     }
-    for (unsigned int i = num_leds_per_strip; i >= 0; i--)
+    for (int i = num_leds_per_strip; i >= 0; i--)
     {
         set_bottom_stripe_lights((double) i / num_leds_per_strip);
         Sleep(delay);
