@@ -14,7 +14,15 @@ int LedStrip::set_top_stripe_lights(const double end_portion)
 
 int LedStrip::set_top_stripe_lights(const double start_portion, const double end_portion)
 {
-    return sendLedData(LED_STRIP_SIDE::LED_TOP, portionToNumLeds(start_portion), portionToNumLeds(end_portion), 
+    int st = portionToNumLeds(start_portion);
+    int ed = portionToNumLeds(end_portion);
+    if (top_reverse_order) {
+        int buf = st;
+        st = num_leds_per_strip - ed;
+        ed = num_leds_per_strip - buf;
+    }
+
+    return sendLedData(LED_STRIP_SIDE::LED_TOP, st, ed, 
         (int) round((double)top_stripe_red * top_brightness),
         (int) round((double)top_stripe_green * top_brightness),
         (int) round((double)top_stripe_blue * top_brightness));
@@ -27,7 +35,14 @@ int LedStrip::set_bottom_stripe_lights(const double end_portion)
 
 int LedStrip::set_bottom_stripe_lights(const double start_portion, const double end_portion)
 {
-    return sendLedData(LED_STRIP_SIDE::LED_BOTTOM, portionToNumLeds(start_portion), portionToNumLeds(end_portion),
+    int st = portionToNumLeds(start_portion);
+    int ed = portionToNumLeds(end_portion);
+    if (bottom_reverse_order) {
+        int buf = st;
+        st = num_leds_per_strip - ed;
+        ed = num_leds_per_strip - buf;
+    }
+    return sendLedData(LED_STRIP_SIDE::LED_BOTTOM, st, ed,
         (int)round((double)bottom_stripe_red * bottom_brightness),
         (int)round((double)bottom_stripe_green * bottom_brightness),
         (int)round((double)bottom_stripe_blue * bottom_brightness));

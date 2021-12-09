@@ -86,14 +86,18 @@ public:
 
 	// LEDs
 	std::string leds_com_port = "\\\\.\\COM3";
+	int leds_run_test = 1;
+
 	int leds_top_stripe_color_red = 244;
 	int leds_top_stripe_color_green = 67;
 	int leds_top_stripe_color_blue = 54;
 	double leds_top_stripe_brightness = 0.5;
+	int leds_top_stripe_reverse_order = 1;
+
 	int leds_bottom_stripe_color_red = 76;
 	int leds_bottom_stripe_color_green = 175;
 	int leds_bottom_stripe_color_blue = 85;
 	double leds_bottom_stripe_brightness = 0.5;
-	int leds_run_test = 1;
+	int leds_bottom_stripe_reverse_order = 1;
 
 };

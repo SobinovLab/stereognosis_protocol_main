@@ -40,7 +40,9 @@
         "run_test": 1,
         "top_stripe_color": [244, 67, 54],
         "top_brightness": 0.5,
+        "top_reverse_order": 1,
         "bottom_stripe_color": [76, 175, 85],
-        "bottom_brightness": 0.5
+        "bottom_brightness": 0.5,
+        "bottom_reverse_order": 1
     }
 }

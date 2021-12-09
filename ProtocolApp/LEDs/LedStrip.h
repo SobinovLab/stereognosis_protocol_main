@@ -36,10 +36,12 @@ public:
 	int top_stripe_green = 67;
 	int top_stripe_blue = 54;
 	double top_brightness = 0.5;
+	bool top_reverse_order = true;
 	int bottom_stripe_red = 76;
 	int bottom_stripe_green = 175;
 	int bottom_stripe_blue = 80;
 	double bottom_brightness = 0.5;
+	bool bottom_reverse_order = true;
 
 	// easy control functions
 	int set_top_stripe_lights(const double end_portion);
@@ -48,7 +50,7 @@ public:
 	int set_bottom_stripe_lights(const double start_portion, const double end_portion);
 
 	// test
-	void test(int delay=20);
+	void test(int delay=10);
 
 	// If false, delete the object and try again
 	bool wasInitializedCorrectly();
