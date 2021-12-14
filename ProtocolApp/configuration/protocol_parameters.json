@@ -36,7 +36,8 @@
         "minimalTouchForce": 0.5
     },
     "leds": {
-        "com_port": "\\\\.\\COM5",
+        "com_port": "",
+        "comPortFriendlyName": "Arduino Uno",
         "run_test": 1,
         "top_stripe_color": [244, 67, 54],
         "top_brightness": 0.5,

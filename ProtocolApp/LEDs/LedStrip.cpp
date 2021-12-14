@@ -138,18 +138,38 @@ int LedStrip::sendLedData(LED_STRIP_SIDE side, int start_led, int end_led, int r
         return -4;
 }
 
-LedStrip::LedStrip(std::string led_port)
+LedStrip::LedStrip(std::string led_port, std::string comPortFriendlyName)
 {
-    SP = new Serial(led_port.c_str());
+    SP = new Serial(led_port, comPortFriendlyName);
 
     // it will be set as Connected only if the initialization went fine.
-    initializedCorrectly = SP->IsConnected();
+    if (SP->IsConnected()) {
+        initializedCorrectly = true;
+        logInfo("LEDs connected.");
+    }
+    else {
+        logError("LEDs not connected.");
+    }
 
+    message_buffer[0] = '0';
     message_buffer[1] = separator;
+    message_buffer[2] = '0';
+    message_buffer[3] = '0';
     message_buffer[4] = separator;
+    message_buffer[5] = '0';
+    message_buffer[6] = '0';
     message_buffer[7] = separator;
+    message_buffer[8] = '0';
+    message_buffer[9] = '0';
+    message_buffer[10] = '0';
     message_buffer[11] = separator;
+    message_buffer[12] = '0';
+    message_buffer[13] = '0';
+    message_buffer[14] = '0';
     message_buffer[15] = separator;
+    message_buffer[16] = '0';
+    message_buffer[17] = '0';
+    message_buffer[18] = '0';
     message_buffer[19] = '\0';
 }
 

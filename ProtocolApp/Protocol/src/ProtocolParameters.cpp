@@ -171,6 +171,7 @@ int ProtocolParameters::load_json(std::string filename)
 		json leds_json = pp_json.at("leds");
 
 		leds_com_port = leds_json.value("com_port", leds_com_port);
+		leds_comPortFriendlyName = leds_json.value("comPortFriendlyName", leds_comPortFriendlyName);
 		leds_run_test = leds_json.value("run_test", leds_run_test);
 
 		json top_color = leds_json.at("top_stripe_color");

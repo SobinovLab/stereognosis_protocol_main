@@ -766,6 +766,18 @@ void Protocol::matchLoadedSessionTrialToParams(const vector<string>& line1, cons
 				params.targetForce = vec[i];
 			}
 		}
+
+		if (axis == "total_force_rel_min_bound") {
+			if (deriv == "position") {
+				params.targetForceRelRangeMin = vec[i];
+			}
+		}
+
+		if (axis == "total_force_rel_max_bound") {
+			if (deriv == "position") {
+				params.targetForceRelRangeMax = vec[i];
+			}
+		}
 	}
 }
 
@@ -947,7 +959,7 @@ void Protocol::initDevices()
 		logWarning("Led strips already initialized, cannot init again.");
 	}
 	else {
-		ledStrip = new LedStrip(params.leds_com_port);
+		ledStrip = new LedStrip(params.leds_com_port, params.leds_comPortFriendlyName);
         ledStrip->top_stripe_red = params.leds_top_stripe_color_red;
         ledStrip->top_stripe_green = params.leds_top_stripe_color_green;
         ledStrip->top_stripe_blue = params.leds_top_stripe_color_blue;

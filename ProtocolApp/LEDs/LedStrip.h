@@ -1,5 +1,8 @@
 #pragma once
 
+#include <atomic>
+#include <thread>
+#include "Times.h"
 #include "Serial.h"
 
 enum class LED_STRIP_SIDE
@@ -8,6 +11,7 @@ enum class LED_STRIP_SIDE
 	LED_TOP = 1,
 	LED_BOTTOM = 2,
 	LED_BOTH = 3,
+	TEST = 4,
 };
 
 class LedStrip
@@ -24,7 +28,7 @@ private:
 
 	bool initializedCorrectly = false;  // set by constructor
 public:
-	LedStrip(std::string led_port);
+	LedStrip(std::string led_port, std::string comPortFriendlyName);
 	~LedStrip();
 
 	// parameters of the messages

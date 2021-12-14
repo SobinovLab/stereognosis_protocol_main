@@ -86,6 +86,7 @@ public:
 
 	// LEDs
 	std::string leds_com_port = "\\\\.\\COM3";
+	std::string leds_comPortFriendlyName = "Arduino Uno";
 	int leds_run_test = 1;
 
 	int leds_top_stripe_color_red = 244;

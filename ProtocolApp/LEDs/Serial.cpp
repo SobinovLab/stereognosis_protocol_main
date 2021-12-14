@@ -1,21 +1,29 @@
 #include "stdafx.h"
 #include "Serial.h"
 
-Serial::Serial(const char* portName)
+using namespace std;
+
+Serial::Serial(const std::string portName, const std::string comPortFriendlyName)
 {
     //We're not yet connected
     this->connected = false;
 
+    string buf;
+    string locPortName = portName;
+    if (locPortName.length() == 0) {
+        locPortName = findComPort(comPortFriendlyName);
+        if (locPortName.length() == 0)
+            return;
+    }
+
     //Try to connect to the given port throuh CreateFile
-    this->hSerial = CreateFile(portName,
+    this->hSerial = CreateFile(locPortName.c_str(),
         GENERIC_READ | GENERIC_WRITE,
         0,
         NULL,
         OPEN_EXISTING,
         FILE_ATTRIBUTE_NORMAL,
         NULL);
-
-    std::string buf;
 
     //Check if the connection was successfull
     if (this->hSerial == INVALID_HANDLE_VALUE)
@@ -66,7 +74,7 @@ Serial::Serial(const char* portName)
                 //Flush any remaining characters in the buffers 
                 PurgeComm(this->hSerial, PURGE_RXCLEAR | PURGE_TXCLEAR);
                 //We wait 2s as the arduino board will be reseting
-                Sleep(ARDUINO_WAIT_TIME);
+                Sleep(arduino_wait_time);
             }
         }
     }
@@ -93,7 +101,7 @@ int Serial::ReadData(char* buffer, unsigned int nbChar)
     unsigned int toRead;
 
     //Use the ClearCommError function to get status info on the Serial port
-    ClearCommError(this->hSerial, &this->errors, &this->status);
+    ClearCommErrors();
 
     //Check if there is something to read
     if (this->status.cbInQue > 0)
@@ -132,7 +140,7 @@ bool Serial::WriteData(const char* buffer, unsigned int nbChar)
     if (!WriteFile(this->hSerial, (void*)buffer, nbChar, &bytesSend, 0))
     {
         //In case it don't work get comm error and return false
-        ClearCommError(this->hSerial, &this->errors, &this->status);
+        ClearCommErrors();
 
         return false;
     }
@@ -144,4 +152,42 @@ bool Serial::IsConnected()
 {
     //Simply return the connection status
     return this->connected;
+}
+
+void Serial::ClearCommErrors()
+{
+    ClearCommError(this->hSerial, &this->errors, &this->status);
+}
+
+std::string Serial::findComPort(const std::string comPortFriendlyName)
+{
+    bool found_port = false;
+    string locPortName = "";
+    string buf;
+    logInfo("Searching for Arduino COM port.");
+
+    vector<pair<UINT, string>> ports_info;
+    if (SerialEnumserParts::QueryUsingSetupAPI(ports_info)) {
+        logInfo("Found COM ports:");
+        for (pair<int, string> e : ports_info) {
+            buf = string("\t") + default_com_port_string + to_string(e.first) + ": " + e.second + ".";
+            logInfo(buf.c_str());
+            if (!found_port && e.second.find(comPortFriendlyName) != std::string::npos) {
+                locPortName = default_com_port_string + to_string(e.first);
+                logInfo(("\t\tFound Arduino port! " + locPortName).c_str());
+                found_port = true;
+            }
+        }
+    }
+    else {
+        logError("Problems iterating over ComPorts. Serial not set");
+        return locPortName;
+    }
+
+    if (!found_port) {
+        buf = "Could not find COM port with friendly name " + comPortFriendlyName + ". Aborting LED setup.";
+        logError(buf.c_str());
+    }
+
+    return locPortName;
 }

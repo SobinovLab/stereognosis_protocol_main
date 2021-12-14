@@ -6,10 +6,12 @@
 #include <windows.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string>
+#include <vector>
+#include <utility>
 
+#include "SerialEnumserParts.h"
 #include "Logger.h"
-
-#define ARDUINO_WAIT_TIME 2000
 
 
 class Serial
@@ -23,10 +25,15 @@ private:
     COMSTAT status;
     //Keep track of last error
     DWORD errors = 0;
+    // default com port string
+    const char* default_com_port_string = "\\\\.\\COM";
+    // wait time for arduino to set up
+    const int arduino_wait_time = 2000;
 
 public:
     //Initialize Serial communication with the given COM port
-    Serial(const char* portName);
+    // if portName is empty, it searches the COM ports for a match to comPortFriendlyName
+    Serial(const std::string portName, const std::string comPortFriendlyName);
     //Close the connection
     ~Serial();
     //Read data in a buffer, if nbChar is greater than the
@@ -39,7 +46,10 @@ public:
     bool WriteData(const char* buffer, unsigned int nbChar);
     //Check if we are actually connected
     bool IsConnected();
-
+    // Clear errors on the port
+    void ClearCommErrors();
+    // 
+    std::string findComPort(const std::string comPortFriendlyName);
 
 };
 

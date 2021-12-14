@@ -5,6 +5,7 @@
 #define LED_TOP 1
 #define LED_BOTTOM 2
 #define LED_BOTH 3
+#define TEST_MSG 4
 #define MAX_LEDS 40
 
 #define TOP_PIN 6
@@ -137,6 +138,10 @@ void loop() {
                 top_leds[i] = CRGB::Black;
                 bot_leds[i] = CRGB::Black;
             }
+            break;
+
+        case(TEST_MSG): // TEST_MSG
+            Serial.println("OK");
             break;
     }
 
