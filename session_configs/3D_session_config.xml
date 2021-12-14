@@ -31,9 +31,9 @@
 		<control name="position" distribution="grid" N="1" reps="1" min="0" max="10" values="1"/>
 	</coordinate>
 	<coordinate name="total_force_rel_min_bound" reps="1">
-		<control name="position" distribution="grid" N="1" reps="1" min="0" max="10" values="0.25"/>
+		<control name="position" distribution="grid" N="1" reps="1" min="-10" max="10" values="-0.25"/>
 	</coordinate>
 	<coordinate name="total_force_rel_max_bound" reps="1">
-		<control name="position" distribution="grid" N="1" reps="1" min="0" max="10" values="100"/>
+		<control name="position" distribution="grid" N="1" reps="1" min="0" max="100" values="100"/>
 	</coordinate>
 </stereognosis_session_config>

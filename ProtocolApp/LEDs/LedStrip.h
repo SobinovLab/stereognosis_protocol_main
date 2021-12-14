@@ -50,8 +50,11 @@ public:
 	// easy control functions
 	int set_top_stripe_lights(const double end_portion);
 	int set_top_stripe_lights(const double start_portion, const double end_portion);
+	int turn_off_top_stripe_ligths();
 	int set_bottom_stripe_lights(const double end_portion);
 	int set_bottom_stripe_lights(const double start_portion, const double end_portion);
+	int turn_off_bottom_stripe_ligths();
+	int turn_off_both_stripe_lights();
 
 	// test
 	void test(int delay=10);

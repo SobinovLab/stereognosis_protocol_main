@@ -28,6 +28,11 @@ int LedStrip::set_top_stripe_lights(const double start_portion, const double end
         (int) round((double)top_stripe_blue * top_brightness));
 }
 
+int LedStrip::turn_off_top_stripe_ligths()
+{
+    return sendLedData(LED_STRIP_SIDE::LED_TOP, 0, 0, 0, 0, 0);
+}
+
 int LedStrip::set_bottom_stripe_lights(const double end_portion)
 {
     return set_bottom_stripe_lights(0, end_portion);
@@ -46,6 +51,16 @@ int LedStrip::set_bottom_stripe_lights(const double start_portion, const double 
         (int)round((double)bottom_stripe_red * bottom_brightness),
         (int)round((double)bottom_stripe_green * bottom_brightness),
         (int)round((double)bottom_stripe_blue * bottom_brightness));
+}
+
+int LedStrip::turn_off_bottom_stripe_ligths()
+{
+    return sendLedData(LED_STRIP_SIDE::LED_TOP, 0, 0, 0, 0, 0);
+}
+
+int LedStrip::turn_off_both_stripe_lights()
+{
+    return sendLedData(LED_STRIP_SIDE::LED_OFF, 0, 0, 0, 0, 0);
 }
 
 void LedStrip::test(int delay)

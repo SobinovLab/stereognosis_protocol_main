@@ -1136,4 +1136,8 @@ void Protocol::m_asyncTrialConditionMonitor()
 		}
 
 	}
+
+	if (isLedsOn()) {
+		ledStrip->turn_off_both_stripe_lights();
+	}
 }
