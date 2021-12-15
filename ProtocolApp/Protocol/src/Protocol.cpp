@@ -853,6 +853,9 @@ void Protocol::openCsvLog()
 	trialLogCsv << "pos_translation_z(mm),";
 	trialLogCsv << "pos_tilt(deg),";
 	trialLogCsv << "pos_aperture(mm),";
+	trialLogCsv << "targetForce(N),";
+	trialLogCsv << "targetForceRelRangeMin(N),";
+	trialLogCsv << "targetForceRelRangeMax(N),";
 	trialLogCsv << endl;
 
 }
@@ -898,6 +901,9 @@ void Protocol::addLineToCsvLog(const bool got_reward, const bool repeating,
 	trialLogCsv << params.pos_translation_x << ",";	           // "pos_translation_x(mm),";
 	trialLogCsv << params.pos_tilt << ",";			           // "pos_tilt(deg),";
 	trialLogCsv << params.pos_aperture << ",";		           // "pos_aperture(mm),";
+	trialLogCsv << params.targetForce << ",";		           // "targetForce(N),";
+	trialLogCsv << params.targetForceRelRangeMin << ",";	   // "targetForceRelRangeMin(N),";
+	trialLogCsv << params.targetForceRelRangeMax << ",";	   // "targetForceRelRangeMax(N),";
 	trialLogCsv << endl;
 }
 
