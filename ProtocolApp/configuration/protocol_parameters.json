@@ -26,9 +26,9 @@
     "pressure_sensor": {
         "ip": "205.208.63.251",
         "port": 54940,
-        "targetForce": 0.75,
-        "targetForceRelRangeMin": -0.5,
-        "targetForceRelRangeMax": 0.5,
+        "targetForce": 1,
+        "targetForceRelRangeMin": -0.25,
+        "targetForceRelRangeMax": 100,
         "targetForceTotalMinThreshold": 0.1,
         "targetForceTotalMax": 4,
         "thresholdPeriod": 1,
