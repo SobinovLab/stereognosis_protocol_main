@@ -1092,31 +1092,41 @@ void Protocol::m_asyncTrialConditionMonitor()
 	atomic<int> result;
 	atomic<double> leftForce = 0;
 	atomic<double> rightForce = 0;
+	double totalForce = 0;
+
+	// unchanging definitions
+	double targetForceMin = std::max(params.targetForce + params.targetForceRelRangeMin, params.targetForceTotalMinThreshold);
+	double targetForceMax = params.targetForce + params.targetForceRelRangeMax;
+	double proportionForceMin = params.targetForce * params.thresholdForceEachProportion;
+
+	// target force range
+	if (!m_stopAsyncTrialConditionMonitor && isLedsOn() && m_touchSensorClient.isConnected()) {
+		ledStrip->set_top_stripe_lights(
+			targetForceMin / params.targetForceTotalMax, 
+			targetForceMax / params.targetForceTotalMax);
+	}
+
+	// tracking the touching period
 	std::chrono::steady_clock::time_point* startTime = nullptr;
 
 	while (!m_stopAsyncTrialConditionMonitor) {
 		if (m_touchSensorClient.isConnected()) {
 			// ask touch sensor for the force on each plate
 			m_touchSensorClient.getForce(&leftForce, &rightForce);
+			totalForce = leftForce + rightForce;
 
 			// update the visualized force
 			if (isLedsOn()) {
-				ledStrip->set_top_stripe_lights(
-					(params.targetForce + params.targetForceRelRangeMin) / params.targetForceTotalMax,
-					(params.targetForce + params.targetForceRelRangeMax) / params.targetForceTotalMax);
-				ledStrip->set_bottom_stripe_lights(
-					leftForce + rightForce / params.targetForceTotalMax);
+				ledStrip->set_bottom_stripe_lights(totalForce / params.targetForceTotalMax);
 			}
 
 			// check if touching now and keep time of touch start
 			// minimum force level of 0.2 of desired and total excedes the desired
-			if (leftForce + rightForce >= std::max(params.targetForce + params.targetForceRelRangeMin, params.targetForceTotalMinThreshold) &&
-				leftForce + rightForce <= params.targetForce + params.targetForceRelRangeMax &&
-				leftForce > params.targetForce * params.thresholdForceEachProportion &&
-				rightForce > params.targetForce * params.thresholdForceEachProportion) {
+			if (totalForce >= targetForceMin && totalForce <= targetForceMax &&
+				leftForce >= proportionForceMin && rightForce >= proportionForceMin) {
 				if (!startTime) { // just started touching
 					startTime = new auto(Times::getCurrentTime());
-					m_startedTouchingTime = chrono::duration_cast<chrono::milliseconds>(startTime->time_since_epoch()).count();
+					m_startedTouchingTime = Times::getCurrentTimeInMilliSecs();
 					logInfo("Started touching.");
 				}
 			}
@@ -1140,7 +1150,6 @@ void Protocol::m_asyncTrialConditionMonitor()
 		else {  // no reason to run if no sensor connected
 			m_stopAsyncTrialConditionMonitor = true;
 		}
-
 	}
 
 	if (isLedsOn()) {
