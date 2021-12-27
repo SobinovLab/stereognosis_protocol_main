@@ -1098,6 +1098,7 @@ void Protocol::m_asyncTrialConditionMonitor()
 	double targetForceMin = std::max(params.targetForce + params.targetForceRelRangeMin, params.targetForceTotalMinThreshold);
 	double targetForceMax = params.targetForce + params.targetForceRelRangeMax;
 	double proportionForceMin = params.targetForce * params.thresholdForceEachProportion;
+	long thresholdPeriodMicrosecs = Times::secToMicrosecs(params.thresholdPeriod);
 
 	// target force range
 	if (!m_stopAsyncTrialConditionMonitor && isLedsOn() && m_touchSensorClient.isConnected()) {
@@ -1137,7 +1138,7 @@ void Protocol::m_asyncTrialConditionMonitor()
 
 			// check if touching for long enough
 			if (startTime)
-				if (Times::getElapsedMicroSecsSince(*startTime) > Times::secToMicrosecs(params.thresholdPeriod))
+				if (Times::getElapsedMicroSecsSince(*startTime) > thresholdPeriodMicrosecs)
 					result = 1;
 
 			// exit if result is successfull
