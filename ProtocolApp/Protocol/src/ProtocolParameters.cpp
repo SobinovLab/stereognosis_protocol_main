@@ -187,6 +187,7 @@ int ProtocolParameters::load_json(std::string filename)
 		leds_bottom_stripe_color_blue = bottom_color[2];
 		leds_bottom_stripe_brightness = leds_json.value("bottom_brightness", leds_bottom_stripe_brightness);
 		leds_bottom_stripe_reverse_order = leds_json.value("bottom_reverse_order", leds_bottom_stripe_reverse_order);
+		leds_early_target_force_lightup = leds_json.value("early_target_force_lightup", leds_early_target_force_lightup);
 	}
 	catch (const json::exception& e)
 	{

@@ -70,6 +70,7 @@
 #define IDC_PS_TOTAL_FORCE_MIN_EDT      1097
 #define IDC_PS_TOTAL_FORCE_MAX_EDT      1098
 #define IDC_USE_REAR_LIGHT_SENSOR_CHK   1099
+#define IDC_LEDS_EARLY_TARGET_FORCE_LIGHT_CHK 1100
 
 // Next default values for new objects
 // 
@@ -77,7 +78,7 @@
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        130
 #define _APS_NEXT_COMMAND_VALUE         32771
-#define _APS_NEXT_CONTROL_VALUE         1098
+#define _APS_NEXT_CONTROL_VALUE         1101
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif

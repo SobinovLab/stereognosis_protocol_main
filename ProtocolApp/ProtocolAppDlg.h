@@ -78,6 +78,7 @@ public:
 	CButton m_loopChk;
 	CButton m_useFrontLightSensorChk;
 	CButton m_useRearLightSensorChk;
+	CButton m_ledsEarlyTargetForceLightChk;
 
 	// edits -- mostly used via linked text
 	CEdit m_trialStatus;
@@ -136,4 +137,5 @@ public:
 	afx_msg void OnBnClickedUseRearLightSensorChk();
 	afx_msg void OnBnClickedStopMotorsBtn();
 	afx_msg void OnBnClickedNeutralPositionBtn();
+	afx_msg void OnBnClickedLedsEarlyTargetForceLightChk();
 };

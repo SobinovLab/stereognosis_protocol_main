@@ -541,6 +541,18 @@ void Protocol::run()
 			}
 		}
 
+		// show target force
+		if (params.leds_early_target_force_lightup && isLedsOn() && m_touchSensorClient.isConnected()) {
+			// unchanging definitions - same as in the Monitor
+			double targetForceMin = std::max(params.targetForce + params.targetForceRelRangeMin, params.targetForceTotalMinThreshold);
+			double targetForceMax = params.targetForce + params.targetForceRelRangeMax;
+
+			// target force range
+			ledStrip->set_top_stripe_lights(
+				targetForceMin / params.targetForceTotalMax,
+				targetForceMax / params.targetForceTotalMax);
+		}
+
 		// start recordings
 		start_camera_recording();  // TODO process it?
 		log_started_camera_recording = Times::getCurrentTimeInMilliSecs();
@@ -606,6 +618,11 @@ void Protocol::run()
 				delete m_asyncTrialSuccessMonitorThread;
 				m_asyncTrialSuccessMonitorThread = nullptr;
 			}
+		}
+
+		// turn off leds whether they were on or not
+		if (isLedsOn()) {
+			ledStrip->turn_off_both_stripe_lights();
 		}
 
 		// GUI Cannot interrupt the rest of trial
@@ -1151,9 +1168,5 @@ void Protocol::m_asyncTrialConditionMonitor()
 		else {  // no reason to run if no sensor connected
 			m_stopAsyncTrialConditionMonitor = true;
 		}
-	}
-
-	if (isLedsOn()) {
-		ledStrip->turn_off_both_stripe_lights();
 	}
 }

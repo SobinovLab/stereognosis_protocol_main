@@ -41,6 +41,9 @@ void CProtocolAppDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_SERVER_LOG_EDT1, m_serverLogCtrl1);
 	DDX_Control(pDX, IDC_SERVER_LOG_EDT2, m_serverLogCtrl2);
 
+	// LEDs
+	DDX_Control(pDX, IDC_LEDS_EARLY_TARGET_FORCE_LIGHT_CHK, m_ledsEarlyTargetForceLightChk);
+
 	// VARIABLE LINKS
 	// protocol
 	DDX_Text(pDX, IDC_MAX_WAIT_EDT_BOX, m_protocol.params.maxWaitTime);
@@ -111,6 +114,7 @@ BEGIN_MESSAGE_MAP(CProtocolAppDlg, CDialogEx)
 	ON_BN_CLICKED(IDC_USE_REAR_LIGHT_SENSOR_CHK, &CProtocolAppDlg::OnBnClickedUseRearLightSensorChk)
 	ON_BN_CLICKED(IDC_STOP_MOTORS_BTN, &CProtocolAppDlg::OnBnClickedStopMotorsBtn)
 	ON_BN_CLICKED(IDC_NEUTRAL_POSITION_BTN, &CProtocolAppDlg::OnBnClickedNeutralPositionBtn)
+	ON_BN_CLICKED(IDC_LEDS_EARLY_TARGET_FORCE_LIGHT_CHK, &CProtocolAppDlg::OnBnClickedLedsEarlyTargetForceLightChk)
 END_MESSAGE_MAP()
 
 // CProtocolAppDlg message handlers
@@ -185,6 +189,13 @@ BOOL CProtocolAppDlg::OnInitDialog()
 
 	// touch sensor
 	toggleTouchServerCtrls(true);
+
+	// leds
+	m_ledsEarlyTargetForceLightChk.EnableWindow(m_protocol.isLedsOn());
+	if (m_protocol.params.leds_early_target_force_lightup) 
+		m_ledsEarlyTargetForceLightChk.SetCheck(BST_CHECKED);
+	else
+		m_ledsEarlyTargetForceLightChk.SetCheck(BST_UNCHECKED);
 
 	return TRUE;  // return TRUE  unless you set the focus to a control
 }
@@ -583,4 +594,13 @@ void CProtocolAppDlg::OnBnClickedNeutralPositionBtn()
 
 	// spawn a thread so it can be interrupted
 	motorActionThread = new thread(&CProtocolAppDlg::neutralPositionMotorAction, this);
+}
+
+
+void CProtocolAppDlg::OnBnClickedLedsEarlyTargetForceLightChk()
+{
+	if (m_ledsEarlyTargetForceLightChk.GetCheck())
+		m_protocol.params.leds_early_target_force_lightup = true;
+	else
+		m_protocol.params.leds_early_target_force_lightup = false;
 }
