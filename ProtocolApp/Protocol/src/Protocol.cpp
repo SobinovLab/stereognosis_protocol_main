@@ -425,7 +425,8 @@ void Protocol::run()
 		log_sent_start_sync_messages = 0;
         log_started_monitoring_ps = 0;
 		m_force_target_start_times.clear();
-		m_force_target_start_times.push_back(0);
+		m_started_touching_times.clear();
+		m_started_touching_times.push_back(0);
 		trial_end_time = 0;
         log_starting_finishing_recordings = 0;
 		log_sent_end_sync_messages = 0;
@@ -887,6 +888,10 @@ void Protocol::openCsvLog()
 	trialLogCsv << "pos_tilt(deg),";
 	trialLogCsv << "pos_aperture(mm),";
 	trialLogCsv << "targetForce(N),";
+	for (size_t i_force = 1; i_force < forceTargetIds.size(); i_force++)
+	{
+		trialLogCsv << "targetForce_" << i_force + 1 << "(N), ";
+	}
 	trialLogCsv << "targetForceRelRangeMin(N),";
 	trialLogCsv << "targetForceRelRangeMax(N),";
 	trialLogCsv << endl;
@@ -954,6 +959,10 @@ void Protocol::addLineToCsvLog(const bool got_reward, const bool repeating,
 	trialLogCsv << params.pos_tilt << ",";			           // "pos_tilt(deg),";
 	trialLogCsv << params.pos_aperture << ",";		           // "pos_aperture(mm),";
 	trialLogCsv << params.targetForce << ",";		           // "targetForce(N),";
+	for (size_t i_force = 1; i_force < forceTargets.size(); i_force++)
+	{
+		trialLogCsv << forceTargets[i_force] << ",";
+	}
 	trialLogCsv << params.targetForceRelRangeMin << ",";	   // "targetForceRelRangeMin(N),";
 	trialLogCsv << params.targetForceRelRangeMax << ",";	   // "targetForceRelRangeMax(N),";
 	trialLogCsv << endl;
@@ -1165,9 +1174,9 @@ void Protocol::m_asyncTrialConditionMonitor()
 
 	// additional forces
 	m_force_target_start_times.clear();
-	m_force_target_start_times.push_back(0);
 	int i_force = 0;
 	m_started_touching_times.clear();
+	m_started_touching_times.push_back(0);
 
 	// tracking the touching period
 	std::chrono::steady_clock::time_point* startTime = nullptr;
@@ -1189,7 +1198,7 @@ void Protocol::m_asyncTrialConditionMonitor()
 				leftForce >= proportionForceMin && rightForce >= proportionForceMin) {
 				if (!startTime) { // just started touching
 					startTime = new auto(Times::getCurrentTime());
-					m_force_target_start_times[i_force] = Times::getCurrentTimeInMilliSecs();
+					m_started_touching_times[i_force] = Times::getCurrentTimeInMilliSecs();
 					logInfo("Started touching.");
 				}
 			}
