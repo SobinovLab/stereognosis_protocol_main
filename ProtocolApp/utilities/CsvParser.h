@@ -12,6 +12,7 @@ public:
         std::vector<std::string>& line1,
         std::vector<std::string>& line2,
         std::vector<std::vector<double>>& vec2d);
+    static std::vector<int> getForceTargets(std::vector<std::string>& line1);
 
 private:
     static void line2vec_str(std::string line, std::string delim, std::vector<std::string>& vec);

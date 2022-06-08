@@ -97,3 +97,38 @@ int CsvParser::parseCSV(const string& filename, vector<string>& line1, vector<st
 
     return 0;
 }
+
+vector<int> CsvParser::getForceTargets(vector<string>& line1)
+{
+    string axis;
+    string deriv;
+    vector<int> targetForces(1, -1);
+    for (size_t i_col = 0; i_col < line1.size(); i_col++)
+    {
+        axis = line1[i_col];
+
+        if (axis == "total_force") {
+            targetForces[0] = i_col;
+        }
+
+        // parse total_force_[0-9]+
+        int force_order;
+        if (sscanf_s(axis.c_str(), "total_force_%d", &force_order) == 1) {
+            // add lacking intermediate indices
+            for (int i = 0; i < force_order - targetForces.size(); i++)
+                targetForces.push_back(-1);
+            // numeration starts at 1
+            targetForces[(size_t) force_order - 1] = i_col;
+        }
+    }
+
+    // check
+    for (int i_force = 0; i_force < targetForces.size(); i_force++)
+        if (targetForces[i_force] < 0) {
+            logWarning("Some intermediate additional forces were not set. Removing all additional target forces.");
+            targetForces = vector<int>(1, targetForces[0]);
+            break;
+        }
+
+    return targetForces;
+}

@@ -143,6 +143,7 @@ int ProtocolParameters::load_json(std::string filename)
 	}
 
     // PRESSURE_SENSOR
+	//TODO add number of target forces
     try
     {
         json pressure_sensor_json = pp_json.at("pressure_sensor");

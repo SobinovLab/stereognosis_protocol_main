@@ -129,6 +129,8 @@ class Protocol
 		void trialFieldsEnableRetreat(bool enable);
 
 		// logging and session params
+		std::vector<int> forceTargetIds;
+		std::deque<double> forceTargets;
 		void matchLoadedSessionTrialToParams(const std::vector<std::string>& line1, const std::vector<std::string>& line2, const std::vector<double>& vec);
 		std::ofstream trialLogCsv;
 		void openCsvLog();
@@ -198,7 +200,8 @@ class Protocol
 		// calculated reward from monkey performance
 		std::atomic<bool> m_earnedReward;
 		std::atomic<bool> m_stopAsyncTrialConditionMonitor;
-		std::atomic<long long> m_startedTouchingTime;
+		std::vector<long long> m_force_target_start_times;
+		std::vector<long long> m_started_touching_times;
 		std::thread* m_asyncTrialSuccessMonitorThread = nullptr;
 		void m_asyncTrialConditionMonitor();  // Monitors asynchronous conditions for trial end - force sensor press
 

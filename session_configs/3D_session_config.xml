@@ -4,7 +4,7 @@
 	`reps` - defines how many times the whole set of trials is repeated. If a dimension is randomly distributed, the values will be independently random in each repetition. Defaults (if absent) to 1.
 	`shuffle` - defines whether to shuffle the trials after all of them are generated (default). Otherwise they will be in default order.
 	Total number of trials is: number reps TIMES the number of coordinate reps TIMES the number of reps of each control. -->
-<stereognosis_session_config name="Pimms" reps="100" shuffle="true">
+<stereognosis_session_config name="Pimms" reps="1" shuffle="true">
 	<!-- List of coordinates -->
 	<!-- Each coordinate is associated with a motor/DOF of the rig. Control tags within each coordinate define the actual kinematic variable set for a trial, for example position, velocity or acceleration. As many as you want (with different names) can be present in one coordinate.
 	Attributes:
@@ -28,7 +28,13 @@
 		<control name="position" distribution="grid" N="1" reps="1" min="0" max="10" values="0"/>
 	</coordinate>
 	<coordinate name="total_force" reps="1">
-		<control name="position" distribution="grid" N="1" reps="1" min="0" max="10" values="1"/>
+		<control name="position" distribution="grid" N="1" reps="1" min="0" max="10" values="1 2 3"/>
+	</coordinate>
+	<coordinate name="total_force_2" reps="1">
+		<control name="position" distribution="grid" N="1" reps="1" min="0" max="10" values="1 2 3"/>
+	</coordinate>
+	<coordinate name="total_force_3" reps="1">
+		<control name="position" distribution="grid" N="1" reps="1" min="0" max="10" values="1 2 3"/>
 	</coordinate>
 	<coordinate name="total_force_rel_min_bound" reps="1">
 		<control name="position" distribution="grid" N="1" reps="1" min="-10" max="10" values="-0.25"/>

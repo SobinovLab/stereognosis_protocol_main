@@ -371,12 +371,16 @@ void Protocol::run()
 	if (rets) {  // could not load
 		usingLoadedSession = false;
 		params.total_trials = 0;
+		forceTargetIds.clear();
+		forceTargets.clear();
 	}
 	else {
 		usingLoadedSession = true;
 		params.total_trials = session_values.size();
 		for (size_t i = 0; i < params.total_trials; i++)
 			repeating_trial.push_back(false);
+		forceTargetIds = CsvParser::getForceTargets(session_line1);
+		forceTargets.clear();
 	}
 
 	// on first start, looping should be disabled until the start trial button is pressed
@@ -420,7 +424,8 @@ void Protocol::run()
         log_started_ephys_recording = 0;
 		log_sent_start_sync_messages = 0;
         log_started_monitoring_ps = 0;
-		m_startedTouchingTime = 0;
+		m_force_target_start_times.clear();
+		m_force_target_start_times.push_back(0);
 		trial_end_time = 0;
         log_starting_finishing_recordings = 0;
 		log_sent_end_sync_messages = 0;
@@ -479,6 +484,7 @@ void Protocol::run()
 		trialFieldsEnableStart(false);
 
 		// just in case any parameters changed, pull from GUI
+		// might update the first target
 		pull_variables_from_gui();
 
 		// if the trial changed, load it instead
@@ -754,47 +760,49 @@ void Protocol::matchLoadedSessionTrialToParams(const vector<string>& line1, cons
 {
 	string axis;
 	string deriv;
-	for (size_t i = 0; i < line1.size(); i++)
+	for (size_t i_col = 0; i_col < line1.size(); i_col++)
 	{
-		axis = line1[i];
-		deriv = line2[i];
+		axis = line1[i_col];
+		deriv = line2[i_col];
 
 		// TODO make list-based GUI
 		if (axis == "translation_X") {
 			if (deriv == "position") {
-				params.pos_translation_x = vec[i];
+				params.pos_translation_x = vec[i_col];
 			}
 		}
 
 		if (axis == "tilt") {
 			if (deriv == "position") {
-				params.pos_tilt = vec[i];
+				params.pos_tilt = vec[i_col];
 			}
 		}
 
 		if (axis == "aperture") {
 			if (deriv == "position") {
-				params.pos_aperture = vec[i];
-			}
-		}
-
-		if (axis == "total_force") {
-			if (deriv == "position") {
-				params.targetForce = vec[i];
+				params.pos_aperture = vec[i_col];
 			}
 		}
 
 		if (axis == "total_force_rel_min_bound") {
 			if (deriv == "position") {
-				params.targetForceRelRangeMin = vec[i];
+				params.targetForceRelRangeMin = vec[i_col];
 			}
 		}
 
 		if (axis == "total_force_rel_max_bound") {
 			if (deriv == "position") {
-				params.targetForceRelRangeMax = vec[i];
+				params.targetForceRelRangeMax = vec[i_col];
 			}
 		}
+	}
+
+	// process force targets
+	forceTargets.clear();
+	if (!forceTargetIds.empty()) {
+		params.targetForce = vec[forceTargetIds[0]];
+		for (auto fti : forceTargetIds)
+			forceTargets.push_back(vec[fti]);
 	}
 }
 
@@ -861,6 +869,14 @@ void Protocol::openCsvLog()
 	trialLogCsv << "log_sent_start_sync_messages(ms),";
 	trialLogCsv << "log_started_monitoring_ps(ms),";
 	trialLogCsv << "started_touching_time(ms),";
+	for (size_t i_force = 1; i_force < forceTargetIds.size(); i_force++)
+	{
+		trialLogCsv << "started_touching_time_" << i_force+1 << "(ms), ";
+	}
+	for (size_t i_force = 1; i_force < forceTargetIds.size(); i_force++)
+	{
+		trialLogCsv << "force_target_start_time_" << i_force + 1 << "(ms), ";
+	}
     trialLogCsv << "trial_end_time(ms),";
     trialLogCsv << "log_starting_finishing_recordings(ms),";
 	trialLogCsv << "log_sent_end_sync_messages(ms),";
@@ -893,6 +909,7 @@ void Protocol::addLineToCsvLog(const bool got_reward, const bool repeating,
 		return;
 	}
 
+	// process multi-grasp data
 	trialLogCsv << params.trial_number << ",";                 // "trial_num,";
 	trialLogCsv << (int)repeating << ",";			           // "repeating_trial,";
 	trialLogCsv << (int)got_reward << ",";			           // "reward,";
@@ -905,10 +922,28 @@ void Protocol::addLineToCsvLog(const bool got_reward, const bool repeating,
     trialLogCsv << log_started_ephys_recording << ",";         // "log_started_ephys_recording(ms),";
 	trialLogCsv << log_sent_start_sync_messages << ",";        // "log_sent_start_sync_messages(ms),";
     trialLogCsv << log_started_monitoring_ps << ",";           // "log_started_monitoring_ps(ms),";
-	if (got_reward)
-		trialLogCsv << m_startedTouchingTime << ","; // started_touching_time(ms), ";
-	else
-		trialLogCsv << "0,"; // started_touching_time(ms), ";
+
+	// process multi-grasp data
+	for (size_t i_force = 0; i_force < forceTargetIds.size(); i_force++)
+	{
+		// started_touching_time(ms), ";
+		// or
+		// "started_touching_time_" << i_force + 1 << "(ms), ";
+		if (i_force < m_started_touching_times.size())
+			trialLogCsv << m_started_touching_times[i_force] << ",";
+		else
+			trialLogCsv << "0,";
+	}
+	// this one only if there are more than 1 grasps expected
+	for (size_t i_force = 1; i_force < forceTargetIds.size(); i_force++)
+	{
+		// "force_target_start_time_" << i_force + 1 << "(ms), ";
+		if (i_force - 1 < m_force_target_start_times.size())
+			trialLogCsv << m_force_target_start_times[i_force - 1] << ",";	
+		else
+			trialLogCsv << "0,";
+	}
+
 	trialLogCsv << trial_end_time << ",";			           // "trial_end_time(ms),";
     trialLogCsv << log_starting_finishing_recordings << ",";   // "log_starting_finishing_recordings(ms),";
 	trialLogCsv << log_sent_end_sync_messages << ",";		   // "log_sent_end_sync_messages(ms),";
@@ -1111,10 +1146,14 @@ void Protocol::m_asyncTrialConditionMonitor()
 	atomic<double> rightForce = 0;
 	double totalForce = 0;
 
-	// unchanging definitions
-	double targetForceMin = std::max(params.targetForce + params.targetForceRelRangeMin, params.targetForceTotalMinThreshold);
-	double targetForceMax = params.targetForce + params.targetForceRelRangeMax;
-	double proportionForceMin = params.targetForce * params.thresholdForceEachProportion;
+	// unchanging definitions (per force target)
+	std::deque<double> additionalTargetForces(forceTargets);
+	if (!additionalTargetForces.empty())  // the first one is always used from params - connected to GUI
+		additionalTargetForces.pop_front();
+	double targetForce = params.targetForce;
+	double targetForceMin = std::max(targetForce + params.targetForceRelRangeMin, params.targetForceTotalMinThreshold);
+	double targetForceMax = targetForce + params.targetForceRelRangeMax;
+	double proportionForceMin = targetForce * params.thresholdForceEachProportion;
 	long thresholdPeriodMicrosecs = Times::secToMicrosecs(params.thresholdPeriod);
 
 	// target force range
@@ -1123,6 +1162,12 @@ void Protocol::m_asyncTrialConditionMonitor()
 			targetForceMin / params.targetForceTotalMax, 
 			targetForceMax / params.targetForceTotalMax);
 	}
+
+	// additional forces
+	m_force_target_start_times.clear();
+	m_force_target_start_times.push_back(0);
+	int i_force = 0;
+	m_started_touching_times.clear();
 
 	// tracking the touching period
 	std::chrono::steady_clock::time_point* startTime = nullptr;
@@ -1144,7 +1189,7 @@ void Protocol::m_asyncTrialConditionMonitor()
 				leftForce >= proportionForceMin && rightForce >= proportionForceMin) {
 				if (!startTime) { // just started touching
 					startTime = new auto(Times::getCurrentTime());
-					m_startedTouchingTime = Times::getCurrentTimeInMilliSecs();
+					m_force_target_start_times[i_force] = Times::getCurrentTimeInMilliSecs();
 					logInfo("Started touching.");
 				}
 			}
@@ -1159,10 +1204,41 @@ void Protocol::m_asyncTrialConditionMonitor()
 					result = 1;
 
 			// exit if result is successfull
+			// or move to the next target force
 			if (result > 0) {
-				m_earnedReward = true;
-				m_stopAsyncTrialConditionMonitor = true;
-				logInfo("Touching successfull.");
+				if (additionalTargetForces.size() == 0) {
+					m_earnedReward = true;
+					m_stopAsyncTrialConditionMonitor = true;
+					logInfo("Touching successfull.");
+				}
+				else {
+					logInfo("Going to next force level.");
+
+					// pull the new force 
+					targetForce = additionalTargetForces.front();
+					additionalTargetForces.pop_front();  // clean
+
+					// and reset the variables
+					targetForceMin = std::max(targetForce + params.targetForceRelRangeMin, params.targetForceTotalMinThreshold);
+					targetForceMax = targetForce + params.targetForceRelRangeMax;
+					proportionForceMin = targetForce * params.thresholdForceEachProportion;
+
+					// change target force
+					if (isLedsOn()) {
+						ledStrip->set_top_stripe_lights(
+							targetForceMin / params.targetForceTotalMax,
+							targetForceMax / params.targetForceTotalMax);
+					}
+
+					// record the time of switch and increase the counter
+					m_force_target_start_times.push_back(Times::getCurrentTimeInMilliSecs());
+					m_started_touching_times.push_back(0);
+					i_force++;
+
+					// restart the time counter
+					startTime = nullptr;
+					result = 0;
+				}
 			}
 		}
 		else {  // no reason to run if no sensor connected

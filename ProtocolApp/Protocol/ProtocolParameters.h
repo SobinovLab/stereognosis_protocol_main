@@ -8,6 +8,7 @@
 #pragma once
 #include <string>
 #include <fstream>
+#include <deque>
 
 #include <nlohmann/json.hpp>
 
