@@ -103,4 +103,11 @@ public:
 	double leds_bottom_stripe_brightness = 0.5;
 	int leds_bottom_stripe_reverse_order = 1;
 
+	// sounds
+	bool sounds_modulation_enabled = false;
+	double sounds_minforce = 1;
+	double sounds_maxforce = 4;
+	double sounds_minfreq = 450;
+	double sounds_maxfreq = 550;
+
 };

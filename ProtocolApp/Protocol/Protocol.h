@@ -195,6 +195,8 @@ class Protocol
 		std::atomic<bool> stopWatch;
 		void watch_early_grab();
 
+		// smart sounds
+		void playStartTaskTone();
 
 		//////// running protocol support
 		// calculated reward from monkey performance

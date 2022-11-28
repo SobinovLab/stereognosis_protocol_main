@@ -99,7 +99,7 @@ int ProtocolParameters::load_json(std::string filename)
 	}
 	catch (const json::exception& e)
 	{
-		buf = "Error reading 'protocol' entry of json file." + string(e.what());
+		buf = "Error reading 'protocol' entry of json file. Using defaults." + string(e.what());
         logWarning(buf.c_str());
 	}
 
@@ -115,7 +115,7 @@ int ProtocolParameters::load_json(std::string filename)
 	}
 	catch (const json::exception& e)
 	{
-		buf = "Error reading 'trial' entry of json file." + string(e.what());
+		buf = "Error reading 'trial' entry of json file. Using defaults." + string(e.what());
         logWarning(buf.c_str());
 	}
 
@@ -138,7 +138,7 @@ int ProtocolParameters::load_json(std::string filename)
 	}
 	catch (const json::exception& e)
 	{
-		buf = "Error reading 'cameras' entry of json file." + string(e.what());
+		buf = "Error reading 'cameras' entry of json file. Using defaults." + string(e.what());
         logWarning(buf.c_str());
 	}
 
@@ -162,7 +162,7 @@ int ProtocolParameters::load_json(std::string filename)
     }
     catch (const json::exception& e)
     {
-        buf = "Error reading 'pressure_sensor' entry of json file." + string(e.what());
+        buf = "Error reading 'pressure_sensor' entry of json file. Using defaults." + string(e.what());
         logWarning(buf.c_str());
     }
 
@@ -192,7 +192,26 @@ int ProtocolParameters::load_json(std::string filename)
 	}
 	catch (const json::exception& e)
 	{
-		buf = "Error reading 'leds' entry of json file." + string(e.what());
+		buf = "Error reading 'leds' entry of json file. Using defaults." + string(e.what());
+		logWarning(buf.c_str());
+	}
+
+	// sounds
+	try
+	{
+		json sounds_json = pp_json.at("sounds");
+
+		int smed = sounds_json.value("enabled", (int) sounds_modulation_enabled);
+		sounds_modulation_enabled = (bool)smed;
+
+		sounds_minforce = sounds_json.value("minforce", sounds_minforce);
+		sounds_maxforce = sounds_json.value("maxforce", sounds_maxforce);
+		sounds_minfreq = sounds_json.value("minfreq", sounds_minfreq);
+		sounds_maxfreq = sounds_json.value("maxfreq", sounds_maxfreq);
+	}
+	catch (const json::exception& e)
+	{
+		buf = "Error reading 'sounds' entry of json file. Using defaults." + string(e.what());
 		logWarning(buf.c_str());
 	}
 

@@ -7,5 +7,6 @@ public:
 	static void playWarningTone();
 
 	static void playTone(const unsigned long frequency, const unsigned long duration);
+	static void playTone(const unsigned long frequency);
 };
 

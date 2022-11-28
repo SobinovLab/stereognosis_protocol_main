@@ -26,3 +26,8 @@ void Sounds::playTone(const unsigned long frequency, const unsigned long duratio
 {
 	Beep(frequency, duration);
 }
+
+void Sounds::playTone(const unsigned long frequency)
+{
+	playTone(frequency, DURATION_TONE);
+}

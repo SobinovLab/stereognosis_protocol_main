@@ -354,6 +354,17 @@ void Protocol::watch_early_grab()
 	}
 }
 
+void Protocol::playStartTaskTone()
+{
+	if (params.sounds_modulation_enabled) {
+		double normedForce = (params.targetForce - params.sounds_minforce) / (params.sounds_maxforce - params.sounds_minforce);
+		normedForce = max(min(1.0, normedForce), 0.0);
+		Sounds::playTone(normedForce * (params.sounds_maxfreq - params.sounds_minfreq) + params.sounds_minfreq);
+	}
+	else
+		Sounds::playStartTaskTone();
+}
+
 void Protocol::run()
 {
 	this->stopProtocol.store(false);
@@ -605,7 +616,7 @@ void Protocol::run()
             log_started_monitoring_ps = Times::getCurrentTimeInMilliSecs();
 
 			trialStartTime = Times::getCurrentTime();
-			Sounds::playStartTaskTone();
+			playStartTaskTone();
 
 			// wait for stop trial signal from interface, success from the monitor thread, or timeout
 			while (!this->stopTrial.load() &&

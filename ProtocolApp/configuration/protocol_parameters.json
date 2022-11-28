@@ -46,5 +46,12 @@
         "bottom_stripe_color": [76, 175, 85],
         "bottom_brightness": 0.5,
         "bottom_reverse_order": 1
+    },
+    "sounds": {
+        "enabled": 0,
+        "minforce": 1,
+        "maxforce": 4,
+        "minfreq": 450,
+        "maxfreq": 550
     }
 }
