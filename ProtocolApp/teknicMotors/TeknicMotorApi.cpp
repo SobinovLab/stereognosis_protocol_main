@@ -1027,11 +1027,28 @@ void Axis::stop()
     }
 }
 
-void Axis::disable()
+TEKNIC_MOTOR_API_CODE Axis::disable()
 {
+    TEKNIC_MOTOR_API_CODE answ = TEKNIC_MOTOR_API_CODE::OK;
     for (auto& motor : motors)
-        if (!motor->isDisabledByConfig())
-            motor->disable();
+        if (!motor->isDisabledByConfig()) {
+            TEKNIC_MOTOR_API_CODE answ_l = motor->disable();
+            if (answ_l != TEKNIC_MOTOR_API_CODE::OK)
+                answ = answ_l;
+        }
+    return answ;
+}
+
+TEKNIC_MOTOR_API_CODE Axis::enable()
+{
+    TEKNIC_MOTOR_API_CODE answ = TEKNIC_MOTOR_API_CODE::OK;
+    for (auto& motor : motors)
+        if (!motor->isDisabledByConfig()) {
+            TEKNIC_MOTOR_API_CODE answ_l = motor->enable();
+            if (answ_l != TEKNIC_MOTOR_API_CODE::OK)
+                answ = answ_l;
+        }
+    return answ;
 }
 
 void Axis::clearMoves()
@@ -1613,6 +1630,24 @@ TEKNIC_MOTOR_API_CODE TeknicMotorApi::neutral_position(const std::vector<std::st
     return move(np_axes_names, np_positions, false);  // don't engage brakes after neutral position move
 }
 
+TEKNIC_MOTOR_API_CODE TeknicMotorApi::init_neutral_position()
+{
+    TEKNIC_MOTOR_API_CODE answ = enable();
+    if (isError(answ))
+        return answ;
+
+    return neutral_position();
+}
+
+TEKNIC_MOTOR_API_CODE TeknicMotorApi::init_neutral_position(const std::vector<std::string> axes_names)
+{
+    TEKNIC_MOTOR_API_CODE answ = enable();
+    if (isError(answ))
+        return answ;
+
+    return neutral_position(axes_names);
+}
+
 TEKNIC_MOTOR_API_CODE TeknicMotorApi::retreat()
 {
     if (!wasInitializedCorrectly())
@@ -1630,6 +1665,15 @@ TEKNIC_MOTOR_API_CODE TeknicMotorApi::retreat()
     }
 
     return move(retreat_axes_names, retreat_positions, false);  // don't engage brakes after retreat
+}
+
+TEKNIC_MOTOR_API_CODE TeknicMotorApi::init_retreat()
+{
+    TEKNIC_MOTOR_API_CODE answ = enable();
+    if (isError(answ))
+        return answ;
+
+    return retreat();
 }
 
 /// <summary>
@@ -1813,10 +1857,42 @@ TEKNIC_MOTOR_API_CODE TeknicMotorApi::approach(const std::vector<std::string> ax
     return move(approach_axes_names, approach_positions, true);  // engage brakes after approach
 }
 
+TEKNIC_MOTOR_API_CODE TeknicMotorApi::approach_deinit(const std::vector<std::string> axes_names, const std::vector<double> positions)
+{
+    TEKNIC_MOTOR_API_CODE answ = approach(axes_names, positions);
+    if (isError(answ))
+        return answ;
+
+    answ = disable();
+    return answ;
+}
+
 void TeknicMotorApi::stop()
 {
     for (auto& axis : axes)
         axis->stop();
+}
+
+TEKNIC_MOTOR_API_CODE TeknicMotorApi::enable()
+{
+    TEKNIC_MOTOR_API_CODE answ_l, answ = TEKNIC_MOTOR_API_CODE::OK;
+    for (auto& axis : axes) {
+        answ_l = axis->enable();
+        if (answ_l != TEKNIC_MOTOR_API_CODE::OK)
+            answ = answ_l;
+    }
+    return answ;
+}
+
+TEKNIC_MOTOR_API_CODE TeknicMotorApi::disable()
+{
+    TEKNIC_MOTOR_API_CODE answ_l, answ = TEKNIC_MOTOR_API_CODE::OK;
+    for (auto& axis : axes) {
+        answ_l = axis->disable();
+        if (answ_l != TEKNIC_MOTOR_API_CODE::OK)
+            answ = answ_l;
+    }
+    return answ;
 }
 
 std::vector<TEKNIC_MOTOR_API_CODE> TeknicMotorApi::checkPosition(const std::vector<std::string> axes_names, std::vector<double>& positions)

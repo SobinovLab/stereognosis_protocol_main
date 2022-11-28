@@ -227,7 +227,8 @@ public:
     void stop();
 
     // --------- status
-    void disable();
+    TEKNIC_MOTOR_API_CODE disable();
+    TEKNIC_MOTOR_API_CODE enable();
     void clearMoves();
 
     bool wereAllHomed();
@@ -279,6 +280,9 @@ public:
     // will move axes to the neutral position
     // does not engage brakes after completion
     TEKNIC_MOTOR_API_CODE neutral_position(const std::vector<std::string> axes_names);
+    // initalizes and then moves to neutral position
+    TEKNIC_MOTOR_API_CODE init_neutral_position();
+    TEKNIC_MOTOR_API_CODE init_neutral_position(const std::vector<std::string> axes_names);
 
     // Homes all axes. if advanced axis, homes motors on them in parallel
     TEKNIC_MOTOR_API_CODE home();
@@ -296,13 +300,23 @@ public:
     TEKNIC_MOTOR_API_CODE approach(
         const std::vector<std::string> axes_names, 
         const std::vector<double> positions);
+    // deinitializes motors after approach - attempting to reduce noise
+    TEKNIC_MOTOR_API_CODE approach_deinit(
+        const std::vector<std::string> axes_names,
+        const std::vector<double> positions);
     // will move all axes marked as 'retreat_axis' to the neutral position
     // does not engage brakes after completion
     TEKNIC_MOTOR_API_CODE retreat();
+    // initializes the motors and then retreats
+    TEKNIC_MOTOR_API_CODE init_retreat();
 
     // stop all axes and motors
     // thread-safe at the motor level
     void stop();
+
+    // enable and disable all axes
+    TEKNIC_MOTOR_API_CODE enable();
+    TEKNIC_MOTOR_API_CODE disable();
 
     // -------- accessory functions
     std::vector<TEKNIC_MOTOR_API_CODE> checkPosition(const std::vector<std::string> axes_names,
