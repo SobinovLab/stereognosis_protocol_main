@@ -486,7 +486,8 @@ void CProtocolAppDlg::toggleProtocolCtrls(bool stopped)
 	((CEdit*)GetDlgItem(IDC_SESSION_LOG_FILE_EDT))->SetReadOnly(!stopped);
 
 	// reward duration
-	((CEdit*)GetDlgItem(IDC_REWARD_TIME_EDT))->SetReadOnly(!(stopped && m_protocol.isRewardOn()));
+	// access conflict possibility should be low
+	//((CEdit*)GetDlgItem(IDC_REWARD_TIME_EDT))->SetReadOnly(!(stopped && m_protocol.isRewardOn()));
 }
 
 void CProtocolAppDlg::enableRewardCtrls(bool enable)
