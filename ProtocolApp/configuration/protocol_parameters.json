@@ -2,8 +2,10 @@
     "protocol": {
         "maxWaitTime": 20,
         "intertrialWaitTime": 2 ,
-        "session_file_directory": "./session_configs/",
-        "session_log_directory": "./data/",
+        "primary_session_file_directory": "C:/PrehensionProtocol/session_configs/",
+        "secondary_session_file_directory": "./session_configs/",
+        "primary_session_log_directory": "C:/PrehensionProtocol/data/",
+        "secondary_session_log_directory": "./data/",
         "rewardDuration": 1000
     },
     "trial": {
@@ -24,7 +26,7 @@
         "capture_n_frames": 10
     },
     "pressure_sensor": {
-        "ip": "205.208.63.251",
+        "ip": "205.208.87.249",
         "port": 54940,
         "targetForce": 1,
         "targetForceRelRangeMin": -0.25,
@@ -49,8 +51,8 @@
     },
     "sounds": {
         "enabled": 0,
-        "minforce": 1,
-        "maxforce": 4,
+        "minforce": 2,
+        "maxforce": 3.75,
         "minfreq": 450,
         "maxfreq": 550
     }

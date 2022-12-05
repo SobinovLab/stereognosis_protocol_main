@@ -7,10 +7,17 @@ CString ProtocolParameters::try_finding_session_csv()
 {
 	string fname;
 
-	if (Folders::find_latest_csv(default_session_file_directory, fname)) {
+	string session_file_directory;
+	if (Folders::path_exists(primary_session_file_directory))
+		session_file_directory = primary_session_file_directory;
+	else
+		session_file_directory = secondary_session_file_directory;
+
+	if (Folders::find_latest_csv(session_file_directory, fname)) {
 		return CString(fname.c_str());
 	}
 
+	// solely for debugging
 	if (Folders::find_latest_csv("./App/session_configs", fname)) {  // debugging
 		return CString(fname.c_str());
 	}
@@ -30,7 +37,13 @@ CString ProtocolParameters::make_log_filename()
 			file_basename.substr(0, file_basename.size() - 4) + ".csv";
 	}
 
-	file_basename = default_session_log_directory + file_basename;
+	string session_log_directory;
+	if (Folders::path_exists(primary_session_log_directory))
+		session_log_directory = primary_session_log_directory;
+	else
+		session_log_directory = secondary_session_log_directory;
+
+	file_basename = session_log_directory + file_basename;
 
 	return file_basename.c_str();
 }
@@ -92,8 +105,10 @@ int ProtocolParameters::load_json(std::string filename)
 
 		maxWaitTime = protocol_json.value("maxWaitTime", maxWaitTime);
 		intertrialWaitTime = protocol_json.value("intertrialWaitTime", intertrialWaitTime);
-		default_session_file_directory = protocol_json.value("session_file_directory", default_session_file_directory);
-		default_session_log_directory = protocol_json.value("session_log_directory", default_session_log_directory);
+		primary_session_file_directory = protocol_json.value("primary_session_file_directory", primary_session_file_directory);
+		secondary_session_file_directory = protocol_json.value("secondary_session_file_directory", secondary_session_file_directory);
+		primary_session_log_directory = protocol_json.value("primary_session_log_directory", primary_session_log_directory);
+		secondary_session_log_directory = protocol_json.value("secondary_session_log_directory", secondary_session_log_directory);
 		rewardDuration = protocol_json.value("rewardDuration", rewardDuration);
 
 	}

@@ -495,7 +495,6 @@ void Protocol::run()
 		// GUI Can't click on StartTrial anymore
 		trialFieldsEnableStart(false);
 
-		// TODO make the following smarter or prevent trial parameters to be changed if a session config was loaded
 		// just in case any parameters changed, pull from GUI
 		// might update the first target
 		pull_variables_from_gui();
@@ -503,10 +502,9 @@ void Protocol::run()
 		// if the trial changed, load it instead
 		if (usingLoadedSession && preset_trial_number != params.trial_number && params.trial_number < params.total_trials) {
 			matchLoadedSessionTrialToParams(session_line1, session_line2, session_values[params.trial_number]);
+			// update the gui if trial was changed
+			push_variables_to_gui();
 		}
-
-		// update the gui if trial was changed
-		push_variables_to_gui();
 
 		// ---------------- Running trial
 		string buf = "Upcoming position " + to_string(params.pos_translation_x) + " " +

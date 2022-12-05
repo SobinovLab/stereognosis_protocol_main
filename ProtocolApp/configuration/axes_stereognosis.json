@@ -6,8 +6,8 @@
     "parallel_group": 0,
     "comment": "Positive is towards the animal.",
     "neutral_position": 0,
-    "default_vel": 20,
-    "default_acc": 6,
+    "default_vel": 18,
+    "default_acc": 3,
     "homing": {
         "direction": 1,
         "offset_in_units": 20,

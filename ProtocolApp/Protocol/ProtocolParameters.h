@@ -20,9 +20,11 @@ class ProtocolParameters
 {
 private:
 	// where to look for a latest CSV with the description of the session
-	std::string default_session_file_directory = "./session_configs/";
+	std::string primary_session_file_directory = "C:/PrehensionProtocol/session_configs/";
+	std::string secondary_session_file_directory = "./session_configs/";
 	// default output directory for trial log
-	std::string default_session_log_directory = "./data/";
+	std::string primary_session_log_directory = "C:/PrehensionProtocol/data/";
+	std::string secondary_session_log_directory = "./data/";
 	// default json file that populates ProtocolParameters
 	std::string default_protocol_parameters_json = "./configuration/protocol_parameters.json";
 

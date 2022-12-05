@@ -43,6 +43,11 @@ bool Folders::extract_date(const string str, std::chrono::system_clock::time_poi
     return true;
 }
 
+bool Folders::path_exists(const std::string& path)
+{
+    return fs::exists(path);
+}
+
 bool Folders::find_latest_csv(const string& dirpath, string& latestfile) {
     system_clock::time_point dt_latest, dt_compare;
     bool foundAFile = false;
