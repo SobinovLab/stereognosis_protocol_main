@@ -26,7 +26,7 @@
         "capture_n_frames": 10
     },
     "pressure_sensor": {
-        "ip": "205.208.87.249",
+        "ip": "205.208.63.200",
         "port": 54940,
         "targetForce": 1,
         "targetForceRelRangeMin": -0.25,
