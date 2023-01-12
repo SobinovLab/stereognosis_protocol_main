@@ -335,10 +335,15 @@ void Protocol::watch_early_grab()
 	atomic<double> rightForce = 0;
 	while (!stopWatch) {
 		// see if monkey lifted arm
-		if (isLightSensorsOn() && !isArmAtRest()) {
-			stopTrial = true;
-			stop_motors();
-			break;
+		// if (isLightSensorsOn() && !isArmAtRest()) {
+		if (isLightSensorsOn()) {
+			if ((use_front_light_sensor.load() && !IS_FRONT_PHOTORESISTOR_COVERED) || (
+				use_rear_light_sensor.load() && !IS_REAR_PHOTORESISTOR_COVERED)) {
+
+				stopTrial = true;
+				stop_motors();
+				break;
+			}
 		}
 
 		// ask pressure sensor for pressure
@@ -1088,7 +1093,8 @@ bool Protocol::isRewardOn()
 bool Protocol::isLightSensorsOn()
 {
 	// TODO split NI USB card intialization into specific ones
-	return (use_front_light_sensor.load() || use_rear_light_sensor.load()) && m_NIUsb6001card.wasInitializedCorrectly();
+	// return (use_front_light_sensor.load() || use_rear_light_sensor.load()) && m_NIUsb6001card.wasInitializedCorrectly();
+	return m_NIUsb6001card.wasInitializedCorrectly();
 }
 
 bool Protocol::isEphysOn()
@@ -1109,14 +1115,31 @@ bool Protocol::isArmAtRest()
 
 int Protocol::wait_until_arm_at_rest()
 {
+	int flag = 0;
+	// sensors not found, or ignore them both - skip this whole function
+	if (!isLightSensorsOn() || !(use_front_light_sensor.load() || use_rear_light_sensor.load())) {
+		return flag;
+	}
+
 	auto waitStart = Times::getCurrentTime();
 	double timeout = 20 * 60; // seconds
 
-	int flag = 0;
 	while (true) {
-		if (!isLightSensorsOn() || isArmAtRest()) {
-			break;
+		if (use_front_light_sensor.load() && use_rear_light_sensor.load()) {
+			if (IS_FRONT_PHOTORESISTOR_COVERED && IS_REAR_PHOTORESISTOR_COVERED)
+				break;
 		}
+		else if (use_front_light_sensor.load()) {
+			if (IS_FRONT_PHOTORESISTOR_COVERED)
+				break;
+		}
+		else {
+			if (IS_REAR_PHOTORESISTOR_COVERED)
+				break;
+		}
+		//if (!isLightSensorsOn() || isArmAtRest()) {
+		//	break;
+		//}
 		if (Times::isTimeout(waitStart, timeout)) {
 			flag = -1;
 			break;
@@ -1127,14 +1150,31 @@ int Protocol::wait_until_arm_at_rest()
 
 int Protocol::wait_until_arm_liftoff()
 {
+	int flag = 0;
+	// sensors not found, or ignore them both - skip this whole function
+	if (!isLightSensorsOn() || !(use_front_light_sensor.load() || use_rear_light_sensor.load())) {
+		return flag;
+	}
+
 	auto waitStart = Times::getCurrentTime();
 	double timeout = 5 * 60; // seconds
 
-	int flag = 0;
 	while (true) {
-		if (!isLightSensorsOn() || !isArmAtRest()) {
-			break;
+		if (use_front_light_sensor.load() && use_rear_light_sensor.load()) {
+			if (!IS_FRONT_PHOTORESISTOR_COVERED && !IS_REAR_PHOTORESISTOR_COVERED)
+				break;
 		}
+		else if (use_front_light_sensor.load()) {
+			if (!IS_FRONT_PHOTORESISTOR_COVERED)
+				break;
+		}
+		else {
+			if (!IS_REAR_PHOTORESISTOR_COVERED)
+				break;
+		}
+		//if (!isLightSensorsOn() || !isArmAtRest()) {
+		//	break;
+		//}
 		if (Times::isTimeout(waitStart, timeout)) {
 			flag = -1;
 			break;
