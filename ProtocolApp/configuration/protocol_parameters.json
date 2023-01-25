@@ -20,7 +20,7 @@
         "port2": 63874,
         "framerate": 50,
         "recordingPeriod": 60,
-        "refSerial": 19340298,
+        "refSerial": 22401386,
         "exposure": "2500",
         "gain": "20",
         "capture_n_frames": 10
@@ -52,8 +52,8 @@
     "sounds": {
         "enabled": 0,
         "minforce": 2,
-        "maxforce": 3.75,
-        "minfreq": 450,
-        "maxfreq": 550
+        "maxforce": 5,
+        "minfreq": 475,
+        "maxfreq": 525
     }
 }
