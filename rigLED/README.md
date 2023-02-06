@@ -20,3 +20,11 @@ bottom defualts to 0, top defaults to MAX_LED, and red, green and blue default t
 while sendLedData(LED_OFF); will turn off both. Using LED_BOTH will write to same color to both strips, if you want different colors just send two commands in succession.
 
 See ledWriteStrip for more in depth comments.
+
+To push the code using Python to the Arduino board, run, but better use the GUI interface described above:
+
+RIG1: `system("\"C:\Program Files (x86)\Arduino\hardware\tools\avr/bin/avrdude\" \"-CC:\Program Files (x86)\Arduino\hardware\tools\avr/etc/avrdude.conf\" -v -patmega328p -carduino -PCOM3 -b115200 -D -Uflash:w:C:\Users\Somlab\Desktop\arduino_build_338582/rigLED.ino.hex:i);`
+
+RIG2: `system("\"C:\Program Files (x86)\Arduino\hardware\tools\avr/bin/avrdude\" \"-CC:\Program Files (x86)\Arduino\hardware\tools\avr/etc/avrdude.conf\" -v -patmega328p -carduino -PCOM3 -b115200 -D -Uflash:w:C:\Users\Somlab\Desktop\arduino_build_338582/rigLED_V2.ino.hex:i);`
+
+Substitute the INO address.
