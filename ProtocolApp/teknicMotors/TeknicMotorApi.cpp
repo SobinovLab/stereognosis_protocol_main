@@ -44,11 +44,11 @@ Motor::Motor(sFnd::INode& node, const json settings) :
     // set up converters
     pos = Convertor(input_offset, in_to_out_coefficient, true);
     if (in_to_out_coefficient > 0) {
-        vel = Convertor(0, vel_max / 100);  // input values 0-100, sonvertor is max/100
+        vel = Convertor(0, vel_max / 100);  // input values 0-100, convertor is max/100
         acc = Convertor(0, acc_max / 100);
     }
     else {
-        vel = Convertor(0, - vel_max / 100);  // input values 0-100, sonvertor is max/100
+        vel = Convertor(0, - vel_max / 100);  // input values 0-100, convertor is max/100
         acc = Convertor(0, - acc_max / 100);
     }
     vel.setInputRange(vector<double>{-vel_max, vel_max});
@@ -149,7 +149,7 @@ void Motor::clearMoves()
 /// the default Teknic's catch of high torque or heat.
 /// </summary>
 /// <returns></returns>
-TEKNIC_MOTOR_API_CODE Motor::homeBasic() {
+TEKNIC_MOTOR_API_CODE Motor::homeBasic(const double& position_error_threshold) {
     if (TeknicMotorApi::isError(prepareForAction()))
         return TEKNIC_MOTOR_API_CODE::COULD_NOT_ENABLE_MOTOR;
 
@@ -193,7 +193,7 @@ TEKNIC_MOTOR_API_CODE Motor::homeBasic() {
     }
 
     // The motor has to have a correct flag and be in zero position
-    if (m_node.Motion.Homing.WasHomed() && isInPosition(0)) {
+    if (m_node.Motion.Homing.WasHomed() && isInPosition(0, position_error_threshold)) {
         buf = "Motor " + name + " completed homing.";
         logInfo(buf.c_str());
     }
@@ -277,9 +277,9 @@ void Motor::removeRange()
     pos.removeRange();
 }
 
-int Motor::getCurrentPosition()
+double Motor::getCurrentPosition()
 {
-    return (int) round(m_node.Motion.PosnMeasured.Value());
+    return pos.convertBack(m_getCurrentPosition());
 }
 
 void Motor::clearNodeStops()
@@ -367,9 +367,9 @@ bool Motor::isAdvanced()
     return m_node.Info.NodeType() == IInfo::CLEARPATH_SC_ADV;
 }
 
-bool Motor::isInPosition(const double& position)
+bool Motor::isInPosition(const double& position, const double& position_error_threshold)
 {
-    return m_isInPosition((int) pos(position));
+    return m_isInPosition((int) pos(position), (int) fabs(pos.normalize(position_error_threshold)));
 }
 
 double Motor::getTorque()
@@ -383,7 +383,8 @@ double Motor::getTorque()
 /// Uses basic features of the motor firmware.
 /// In units of MOTOR - counts, RPM, RPM/s.
 /// </summary>
-TEKNIC_MOTOR_API_CODE Motor::m_moveBasic(const int& moveCounts, const double& velocity, const double& acceleration) {
+TEKNIC_MOTOR_API_CODE Motor::m_moveBasic(const int& moveCounts, const double& velocity, const double& acceleration,
+    const int& position_error_threshold_counts) {
     auto startTimeoutTime = Times::getCurrentTime();
     string buf;
 
@@ -396,7 +397,7 @@ TEKNIC_MOTOR_API_CODE Motor::m_moveBasic(const int& moveCounts, const double& ve
     m_node.Motion.AccLimit = abs(acceleration);
 
     // log
-    int relativeMoveCounts = moveCounts - getCurrentPosition();
+    int relativeMoveCounts = moveCounts - m_getCurrentPosition();
     buf = "Moving basic motor: " + name + " moveCounts: " + to_string(moveCounts) + " relative: " + to_string(relativeMoveCounts) + ".";
     logInfo(buf.c_str());
 
@@ -421,11 +422,11 @@ TEKNIC_MOTOR_API_CODE Motor::m_moveBasic(const int& moveCounts, const double& ve
     }
 
     // if end position is too far from the target
-    if (!TeknicMotorApi::isError(answ) && !m_isInPosition(moveCounts))
+    if (!TeknicMotorApi::isError(answ) && !m_isInPosition(moveCounts, position_error_threshold_counts))
         answ = TEKNIC_MOTOR_API_CODE::ACTION_COMPLETED_INCORRECTLY;
 
     buf = ("Move complete on " + name + " in " + to_string(((double)Times::getElapsedMilliSecsSince(startTimeoutTime))/1000.) + " sec." + 
-        " Current postion " + to_string(getCurrentPosition()) + " counts." +
+        " Current postion " + to_string(m_getCurrentPosition()) + " counts." +
         " Completion code " + to_string((int)answ));
     logInfo(buf.c_str());
 
@@ -471,13 +472,13 @@ TEKNIC_MOTOR_API_CODE Motor::m_prepareMoveBasic(const double velocity, const dou
 TEKNIC_MOTOR_API_CODE Motor::m_startMoveBasic(const int moveCounts)
 {
     string buf;
-    int relativeMoveCounts = moveCounts - getCurrentPosition();
+    int relativeMoveCounts = moveCounts - m_getCurrentPosition();
 
     // log
     buf = ("Starting basic motor " + name + "."
-        " Current postion " + to_string(getCurrentPosition()) + " counts."
+        " Current postion " + to_string(m_getCurrentPosition()) + " counts."
         " Target position " + to_string(moveCounts) + " counts."
-        " Relative " + to_string(moveCounts - getCurrentPosition()) + " counts.");
+        " Relative " + to_string(moveCounts - m_getCurrentPosition()) + " counts.");
     logInfo(buf.c_str());
 
     // start the movement
@@ -517,9 +518,9 @@ TEKNIC_MOTOR_API_CODE Motor::m_prepareMoveAdvanced(const int moveCounts, const d
 
     // log
     buf = ("Preparing trigger to move advanced Node " + name + "."
-        " Current postion " + to_string(getCurrentPosition()) + " counts."
+        " Current postion " + to_string(m_getCurrentPosition()) + " counts."
         " Target position " + to_string(moveCounts) + " counts."
-        " Relative " + to_string(moveCounts - getCurrentPosition()) + " counts.");
+        " Relative " + to_string(moveCounts - m_getCurrentPosition()) + " counts.");
     logInfo(buf.c_str());
 
     // set the move
@@ -563,12 +564,17 @@ TEKNIC_MOTOR_API_CODE Motor::m_prepareHomeAdvanced(const double velocity, const 
     return TEKNIC_MOTOR_API_CODE::OK;
 }
 
-bool Motor::m_isInPosition(const int targetCounts)
+bool Motor::m_isInPosition(const int targetCounts, const int position_error_threshold_counts)
 {
     // if end position is too far from the target
-    if (abs(getCurrentPosition() - targetCounts) <= Motor::POSITION_COUNT_THRESHOLD)
+    if (abs(m_getCurrentPosition() - targetCounts) <= position_error_threshold_counts)
         return true;
     return false;
+}
+
+int Motor::m_getCurrentPosition()
+{
+    return (int)round(m_node.Motion.PosnMeasured.Value());
 }
 
 bool Motor::motionIsReady()
@@ -577,9 +583,10 @@ bool Motor::motionIsReady()
     return m_node.Motion.IsReady();
 }
 
-TEKNIC_MOTOR_API_CODE Motor::moveBasic(const double& position, const double& velocity, const double& acceleration)
+TEKNIC_MOTOR_API_CODE Motor::moveBasic(const double& position, const double& velocity, const double& acceleration, 
+    const double& position_error_threshold)
 {
-    return m_moveBasic((int)pos(position), vel(velocity), acc(acceleration));
+    return m_moveBasic((int)pos(position), vel(velocity), acc(acceleration), (int)pos.normalize(position_error_threshold));
 }
 
 TEKNIC_MOTOR_API_CODE Motor::prepareMoveBasic(const double& velocity, const double& acceleration)
@@ -594,11 +601,15 @@ TEKNIC_MOTOR_API_CODE Motor::startMoveBasic(const double& position)
 
 TEKNIC_MOTOR_API_CODE Motor::prepareMoveAdvanced(const double& position, const double& velocity, const double& acceleration)
 {
+    //string buf = "Preparing move with position " + to_string((int)pos(position)) + " velocity " + to_string(vel(velocity)) + " acc " + to_string(acc(acceleration)) + ".";
+    //logInfo(buf.c_str());
     return m_prepareMoveAdvanced((int)pos(position), vel(velocity), acc(acceleration));
 }
 
 TEKNIC_MOTOR_API_CODE Motor::prepareHomeAdvanced(const double& velocity, const double& acceleration)
 {
+    //string buf = "Preparing home with velocity " + to_string(vel(velocity)) + ".";
+    //logInfo(buf.c_str());
     return m_prepareHomeAdvanced(vel(velocity), acc(acceleration));
 }
 
@@ -709,7 +720,7 @@ TEKNIC_MOTOR_API_CODE Axis::homeBasic()
             continue;
 
         // home
-        res = motor->homeBasic();
+        res = motor->homeBasic(position_error_threshold);
 
         // check for errors
         if (TeknicMotorApi::isError(res)) {
@@ -800,7 +811,11 @@ TEKNIC_MOTOR_API_CODE Axis::moveBasic(const double& position, const double& velo
 
     // check the final position
     for (auto& motor : motors) {
-        if (!motor->isDisabledByConfig() && !motor->isInPosition(position)) {
+        if (!motor->isDisabledByConfig() && !motor->isInPosition(position, position_error_threshold)) {
+            buf = "Axis " + name + " failed to get in position after move. Current position ";
+            buf += to_string(motor->getCurrentPosition()) + ", target: " + to_string(position) + 
+                ", threshold: " + to_string(position_error_threshold) + ".";
+            logError(buf.c_str());
             res = TEKNIC_MOTOR_API_CODE::ACTION_COMPLETED_INCORRECTLY;
             break;
         }
@@ -920,16 +935,41 @@ TEKNIC_MOTOR_API_CODE Axis::homeAdvanced(int freeGroupNumber)
         }
 
         // check motors excedeing torque max
-        for (auto& motor : motors) {
-            if (motor->isDisabledByConfig())
-                continue;
-            torque = abs(motor->getTorque());
-            if (torque >= homing_torque_threshold_percent) {
-                stop();
+        switch (homing_stop_condition)
+        {
+        case 0:
+            // ANY motor reached torque, everyone stops
+            for (auto& motor : motors) {
+                if (motor->isDisabledByConfig())
+                    continue;
+                torque = abs(motor->getTorque());
+                if (torque >= homing_torque_threshold_percent) {
+                    stop();
+                    torqueReachedPeriod = Times::getElapsedMicroSecsSince(startTimeoutTime);
+                    ordinary_exit = true;  // otherwise isAllMoveDone triggers error break
+                    break;
+                }
+            }
+            break;
+        case 1:
+            // ALL: when each motor reaches torque, it stops. Homing is done when all motors stop.
+            for (auto& motor : motors) {
+                if (motor->isDisabledByConfig() || motor->isMoveDone())
+                    continue;
+                torque = abs(motor->getTorque());
+                if (torque >= homing_torque_threshold_percent) {
+                    motor->stop();
+                }
+            }
+            if (isAllMoveDone()) {  // all motors stopped
                 torqueReachedPeriod = Times::getElapsedMicroSecsSince(startTimeoutTime);
                 ordinary_exit = true;  // otherwise isAllMoveDone triggers error break
-                break;
             }
+            break;
+        default:
+            stop();
+            return TEKNIC_MOTOR_API_CODE::MOTOR_HOMING_INVALID;
+            break;
         }
     }
 
@@ -978,14 +1018,6 @@ TEKNIC_MOTOR_API_CODE Axis::homeAdvanced(int freeGroupNumber)
         return res;
     }
 
-    // add range constraints back
-    for (auto& motor : motors) {
-        if (motor->isDisabledByConfig())
-            continue;
-
-        motor->setRange(range);
-    }
-
     // monitor the move back
     while (!isAllMoveDone()) {
         if (Times::isTimeout(startTimeoutTime, homing_timeout)) {
@@ -1001,11 +1033,22 @@ TEKNIC_MOTOR_API_CODE Axis::homeAdvanced(int freeGroupNumber)
         if (motor->isDisabledByConfig())
             continue;
 
-        if (!motor->isInPosition(postStopMove)) {
-            buf = "Axis " + name + " failed to get in position after hard stop during homing.";
+        if (!motor->isInPosition(postStopMove, position_error_threshold)) {
+            buf = "Axis " + name + " failed to get in position after hard stop during homing. ";
+            buf += "Current position " + to_string(motor->getCurrentPosition()) + ", ";
+            buf += "target: " + to_string(postStopMove) + ", ";
+            buf += "threshold: " + to_string(position_error_threshold) + ".";
             logError(buf.c_str());
             return TEKNIC_MOTOR_API_CODE::ACTION_COMPLETED_INCORRECTLY;
         }
+    }
+
+    // add range constraints back
+    for (auto& motor : motors) {
+        if (motor->isDisabledByConfig())
+            continue;
+
+        motor->setRange(range);
     }
 
     // mark the homing as completed
@@ -1027,28 +1070,11 @@ void Axis::stop()
     }
 }
 
-TEKNIC_MOTOR_API_CODE Axis::disable()
+void Axis::disable()
 {
-    TEKNIC_MOTOR_API_CODE answ = TEKNIC_MOTOR_API_CODE::OK;
     for (auto& motor : motors)
-        if (!motor->isDisabledByConfig()) {
-            TEKNIC_MOTOR_API_CODE answ_l = motor->disable();
-            if (answ_l != TEKNIC_MOTOR_API_CODE::OK)
-                answ = answ_l;
-        }
-    return answ;
-}
-
-TEKNIC_MOTOR_API_CODE Axis::enable()
-{
-    TEKNIC_MOTOR_API_CODE answ = TEKNIC_MOTOR_API_CODE::OK;
-    for (auto& motor : motors)
-        if (!motor->isDisabledByConfig()) {
-            TEKNIC_MOTOR_API_CODE answ_l = motor->enable();
-            if (answ_l != TEKNIC_MOTOR_API_CODE::OK)
-                answ = answ_l;
-        }
-    return answ;
+        if (!motor->isDisabledByConfig())
+            motor->disable();
 }
 
 void Axis::clearMoves()
@@ -1139,8 +1165,16 @@ void Axis::loadJsonSettings(json axis_json)
     homing_offset_in_units = abs(homing_offset_in_units);  // always in the opposite direction bc of hardstop
     homing_torque_threshold_percent = homing.at("torque_threshold_percent");
     homing_timeout = homing.at("timeout");
+    string s_stop_condition = homing.value("stop_condition", "any");
+    if (!s_stop_condition.compare("any"))
+        homing_stop_condition = 0;
+    else if (!s_stop_condition.compare("all"))
+        homing_stop_condition = 1;
+    else
+        throw invalid_argument("Received " + s_stop_condition + " as stop_condition in axis config.");
 
     range = { axis_json.at("pos_min"), axis_json.at("pos_max") };
+    position_error_threshold = axis_json.value("position_error_threshold", abs(range[1] - range[0]) * 0.01);
 
     basic_action_timeout = axis_json.value("basic_action_timeout", basic_action_timeout);
 }
@@ -1630,24 +1664,6 @@ TEKNIC_MOTOR_API_CODE TeknicMotorApi::neutral_position(const std::vector<std::st
     return move(np_axes_names, np_positions, false);  // don't engage brakes after neutral position move
 }
 
-TEKNIC_MOTOR_API_CODE TeknicMotorApi::init_neutral_position()
-{
-    TEKNIC_MOTOR_API_CODE answ = enable();
-    if (isError(answ))
-        return answ;
-
-    return neutral_position();
-}
-
-TEKNIC_MOTOR_API_CODE TeknicMotorApi::init_neutral_position(const std::vector<std::string> axes_names)
-{
-    TEKNIC_MOTOR_API_CODE answ = enable();
-    if (isError(answ))
-        return answ;
-
-    return neutral_position(axes_names);
-}
-
 TEKNIC_MOTOR_API_CODE TeknicMotorApi::retreat()
 {
     if (!wasInitializedCorrectly())
@@ -1665,15 +1681,6 @@ TEKNIC_MOTOR_API_CODE TeknicMotorApi::retreat()
     }
 
     return move(retreat_axes_names, retreat_positions, false);  // don't engage brakes after retreat
-}
-
-TEKNIC_MOTOR_API_CODE TeknicMotorApi::init_retreat()
-{
-    TEKNIC_MOTOR_API_CODE answ = enable();
-    if (isError(answ))
-        return answ;
-
-    return retreat();
 }
 
 /// <summary>
@@ -1857,42 +1864,10 @@ TEKNIC_MOTOR_API_CODE TeknicMotorApi::approach(const std::vector<std::string> ax
     return move(approach_axes_names, approach_positions, true);  // engage brakes after approach
 }
 
-TEKNIC_MOTOR_API_CODE TeknicMotorApi::approach_deinit(const std::vector<std::string> axes_names, const std::vector<double> positions)
-{
-    TEKNIC_MOTOR_API_CODE answ = approach(axes_names, positions);
-    if (isError(answ))
-        return answ;
-
-    answ = disable();
-    return answ;
-}
-
 void TeknicMotorApi::stop()
 {
     for (auto& axis : axes)
         axis->stop();
-}
-
-TEKNIC_MOTOR_API_CODE TeknicMotorApi::enable()
-{
-    TEKNIC_MOTOR_API_CODE answ_l, answ = TEKNIC_MOTOR_API_CODE::OK;
-    for (auto& axis : axes) {
-        answ_l = axis->enable();
-        if (answ_l != TEKNIC_MOTOR_API_CODE::OK)
-            answ = answ_l;
-    }
-    return answ;
-}
-
-TEKNIC_MOTOR_API_CODE TeknicMotorApi::disable()
-{
-    TEKNIC_MOTOR_API_CODE answ_l, answ = TEKNIC_MOTOR_API_CODE::OK;
-    for (auto& axis : axes) {
-        answ_l = axis->disable();
-        if (answ_l != TEKNIC_MOTOR_API_CODE::OK)
-            answ = answ_l;
-    }
-    return answ;
 }
 
 std::vector<TEKNIC_MOTOR_API_CODE> TeknicMotorApi::checkPosition(const std::vector<std::string> axes_names, std::vector<double>& positions)

@@ -49,6 +49,16 @@ double Convertor::operator()(const double val)
     return this->convert(val);
 }
 
+double Convertor::normalize(const double val)
+{
+    double answ = val * in_to_out_factor;
+
+    if (bind_to_int)
+        answ = round(answ);
+
+    return answ;
+}
+
 double Convertor::convertBack(const double val)
 {
     double answ = val;

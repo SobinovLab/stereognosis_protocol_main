@@ -15,6 +15,9 @@ public:
     double convert(const double val);
     double operator() (const double val);  // calls 'convert'
 
+    // only normalizes, does not check range or add offset
+    double normalize(const double val);
+
     // from output - counts into input units
     double convertBack(const double val);
 

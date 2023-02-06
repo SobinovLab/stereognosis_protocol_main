@@ -23,22 +23,22 @@
 
 
 enum class TEKNIC_MOTOR_API_CODE {
-    OK = 0,
-    MOTOR_DISABLED_BY_CONFIG = 1,
-    MOTOR_ALREADY_ENABLED = 2,
-    NO_MOTORS_ON_AXIS = 3,
+    OK                              = 0,
+    MOTOR_DISABLED_BY_CONFIG        = 1,
+    MOTOR_ALREADY_ENABLED           = 2,
+    NO_MOTORS_ON_AXIS               = 3,
 
-    ACTION_TIMEOUT = -1,
-    MOTOR_HOMING_INVALID = -2,
-    TEKNIC_ERROR = -3,
-    COULD_NOT_ENABLE_MOTOR = -4,
-    ACTION_COMPLETED_INCORRECTLY = -5,
-    DOES_NOT_SUPPORT_FUNCTION = -6,
-    USER_INTERRUPT = -7,
-    RANGE_INCONSISTENT = -8,
-    INITIALIZATION_ERROR = -9,
-    ENGAGED = -10,
-    JSON_PARSING_ERROR = -11,
+    ACTION_TIMEOUT                  = -1,
+    MOTOR_HOMING_INVALID            = -2,
+    TEKNIC_ERROR                    = -3,
+    COULD_NOT_ENABLE_MOTOR          = -4,
+    ACTION_COMPLETED_INCORRECTLY    = -5,
+    DOES_NOT_SUPPORT_FUNCTION       = -6,
+    USER_INTERRUPT                  = -7,
+    RANGE_INCONSISTENT              = -8,
+    INITIALIZATION_ERROR            = -9,
+    ENGAGED                         = -10,
+    JSON_PARSING_ERROR              = -11,
 };
 
 
@@ -56,10 +56,11 @@ public:
     //      to use with advanced (ELSA) motors. These should be used when ALL motors on the axis are advanced.
 
     // to use on ELSB (basic) not-advanced motors 
-    TEKNIC_MOTOR_API_CODE moveBasic(const double& position, const double& velocity, const double& acceleration);
+    TEKNIC_MOTOR_API_CODE moveBasic(const double& position, const double& velocity, const double& acceleration,
+        const double& position_error_threshold);
 
     // to use on ELSB (basic) not-advanced motors 
-    TEKNIC_MOTOR_API_CODE homeBasic();
+    TEKNIC_MOTOR_API_CODE homeBasic(const double& position_error_threshold);
     
     // async basic movement. enables motor, handles alerts and set limits
     TEKNIC_MOTOR_API_CODE prepareMoveBasic(const double& velocity, const double& acceleration);
@@ -102,7 +103,9 @@ public:
     // thread-safe
     bool isHoming();
     bool isAdvanced();
-    bool isInPosition(const double& position);
+    bool isInPosition(const double& position, const double& position_error_threshold);
+
+    double getCurrentPosition();
 
     // thread-safe
     double getTorque();
@@ -127,10 +130,6 @@ public:
     std::vector<double> getPosRange();
     void removeRange();
 
-    static const int POSITION_COUNT_THRESHOLD = 50;
-
-    int getCurrentPosition();
-
 private:
     // reference to the control structure
     sFnd::INode& m_node;
@@ -148,7 +147,8 @@ private:
 
     // -------- internal control functions - in units of the MOTOR
     //  counts, RPM, RPM/s
-    TEKNIC_MOTOR_API_CODE m_moveBasic(const int& moveCounts, const double& velocity, const double& acceleration);
+    TEKNIC_MOTOR_API_CODE m_moveBasic(const int& moveCounts, const double& velocity, const double& acceleration,
+        const int& position_error_threshold_counts);
 
     // basic parallel control of motors
     TEKNIC_MOTOR_API_CODE m_prepareMoveBasic(const double velocity, const double acceleration);
@@ -160,7 +160,9 @@ private:
     // advanced parallel homing of motors
     TEKNIC_MOTOR_API_CODE m_prepareHomeAdvanced(const double velocity, const double acceleration);
 
-    bool m_isInPosition(const int targetCounts);
+    bool m_isInPosition(const int targetCounts, const int position_error_threshold_counts);
+
+    int m_getCurrentPosition();
 
     // -------- thread-safe node function call wrappers
     // Only functions that are frequently called and can be interrupted by STOP are wrapped
@@ -191,11 +193,17 @@ public:
     double neutral_pos;
     std::vector<double> range;
 
+    // used to evaluate if the movement was successfull. Defaults to 1% of the ROM
+    double position_error_threshold;
+
     // homing parameters
     int homing_direction;
     double homing_offset_in_units;
     double homing_torque_threshold_percent;
     double homing_timeout;  // seconds
+    // 0: "any", when any motor reached torque, stop all, default; 
+    // 1: "all", when each motor reaches torque, it stops. When all motors stopped, homing is done.
+    int homing_stop_condition;
 
     // other parameters
     double basic_action_timeout = 60;  // homing and moving
@@ -227,8 +235,7 @@ public:
     void stop();
 
     // --------- status
-    TEKNIC_MOTOR_API_CODE disable();
-    TEKNIC_MOTOR_API_CODE enable();
+    void disable();
     void clearMoves();
 
     bool wereAllHomed();
@@ -280,9 +287,6 @@ public:
     // will move axes to the neutral position
     // does not engage brakes after completion
     TEKNIC_MOTOR_API_CODE neutral_position(const std::vector<std::string> axes_names);
-    // initalizes and then moves to neutral position
-    TEKNIC_MOTOR_API_CODE init_neutral_position();
-    TEKNIC_MOTOR_API_CODE init_neutral_position(const std::vector<std::string> axes_names);
 
     // Homes all axes. if advanced axis, homes motors on them in parallel
     TEKNIC_MOTOR_API_CODE home();
@@ -300,23 +304,13 @@ public:
     TEKNIC_MOTOR_API_CODE approach(
         const std::vector<std::string> axes_names, 
         const std::vector<double> positions);
-    // deinitializes motors after approach - attempting to reduce noise
-    TEKNIC_MOTOR_API_CODE approach_deinit(
-        const std::vector<std::string> axes_names,
-        const std::vector<double> positions);
     // will move all axes marked as 'retreat_axis' to the neutral position
     // does not engage brakes after completion
     TEKNIC_MOTOR_API_CODE retreat();
-    // initializes the motors and then retreats
-    TEKNIC_MOTOR_API_CODE init_retreat();
 
     // stop all axes and motors
     // thread-safe at the motor level
     void stop();
-
-    // enable and disable all axes
-    TEKNIC_MOTOR_API_CODE enable();
-    TEKNIC_MOTOR_API_CODE disable();
 
     // -------- accessory functions
     std::vector<TEKNIC_MOTOR_API_CODE> checkPosition(const std::vector<std::string> axes_names,
