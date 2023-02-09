@@ -72,8 +72,8 @@ void loop() {
             end_led = MAX_LEDS;
     }
 
-    //Hilariously the strip currently being used is wired wrong so its GRB not RGB, so
-    //thats why I do the stupid green = red, red = green thing.
+    // Due to some quirks of laughing gods, we have to change GRB not RGB, so
+    // that's why we switch green = red, red = green.
     switch(side)
     {
         case(LED_OFF):  // OFF

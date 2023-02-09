@@ -72,7 +72,8 @@ void loop() {
             end_led = MAX_LEDS;
     }
 
-    //RGB was fixed on the second rig
+    // Due to some quirks of laughing gods, we have to change GRB not RGB, so
+    // that's why we switch green = red, red = green.
     switch(side)
     {
         case(LED_OFF):  // OFF
@@ -90,8 +91,8 @@ void loop() {
             }
             for (int i = start_led; i < end_led; i++)
             {
-                top_leds[i].g = green;
-                top_leds[i].r = red;
+                top_leds[i].g = red;
+                top_leds[i].r = green;
                 top_leds[i].b = blue;
             }
             for (int i = end_led; i < MAX_LEDS; i++)
@@ -107,8 +108,8 @@ void loop() {
             }
             for (int i = start_led; i < end_led; i++)
             {
-                bot_leds[i].g = green;
-                bot_leds[i].r = red;
+                bot_leds[i].g = red;
+                bot_leds[i].r = green;
                 bot_leds[i].b = blue;
             }
             for (int i = end_led; i < MAX_LEDS; i++)
@@ -125,11 +126,11 @@ void loop() {
             }
             for (int i = 0; i < end_led; i++)
             {
-                top_leds[i].g = green;
-                top_leds[i].r = red;
+                top_leds[i].g = red;
+                top_leds[i].r = green;
                 top_leds[i].b = blue;
-                bot_leds[i].g = green;
-                bot_leds[i].r = red;
+                bot_leds[i].g = red;
+                bot_leds[i].r = green;
                 bot_leds[i].b = blue;
             }
             for (int i = end_led; i < MAX_LEDS; i++)
