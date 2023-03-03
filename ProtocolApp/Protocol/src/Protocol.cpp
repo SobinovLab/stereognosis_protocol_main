@@ -1144,14 +1144,18 @@ int Protocol::wait_until_arm_at_rest()
 		if ((use_front_light_sensor.load() && !IS_FRONT_PHOTORESISTOR_COVERED) ||
 			(use_rear_light_sensor.load() && !IS_REAR_PHOTORESISTOR_COVERED)) {
 			// uncovered
-			startTime = nullptr;
+			if (startTime) {
+				delete startTime;
+				startTime = nullptr;
+			}
 		}
 		else {
-			// jsut started covering
-			startTime = new auto(Times::getCurrentTime());
+			// just started covering
+			if (!startTime)
+				startTime = new auto(Times::getCurrentTime());
 		}
 
-		if (startTime && Times::isTimeout(*startTime, params.photoresistor_status_switch_delay / 1000)) {
+		if (startTime && Times::getElapsedMilliSecsSince(*startTime) > params.photoresistor_status_switch_delay) {
 			break;
 		}
 
@@ -1166,6 +1170,7 @@ int Protocol::wait_until_arm_at_rest()
 
 int Protocol::wait_until_arm_liftoff()
 {
+	// NOT USED
 	int flag = 0;
 	// sensors not found, or ignore them both - skip this whole function
 	if (!isLightSensorsOn() || !(use_front_light_sensor.load() || use_rear_light_sensor.load())) {
