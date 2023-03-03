@@ -35,7 +35,7 @@ int32   N_SAMPLES = 1;
 
 uInt8 ACTIVATE_REWARD_BITS_MAP[1] = { 1 };
 uInt8 DEACTIVATE_REWARD_BITS_MAP[1] = { 0 };
-uInt8 PHOTORESISTORS_STATUS[2] = { 0, 0 }; // monitor buffer
+uInt8 PHOTORESISTORS_STATUS[2] = { 0, 0 }; // monitor buffer 0 covered 1 uncovered
 int32 N_PHOTORESISTORS = 2;
 static TaskHandle  AItaskHandle = 0, PhotoResistorStatus_taskHandle = 0, RewardSystem_taskHandle = 0, ephysSync_taskHandle = 0;
 
@@ -44,12 +44,13 @@ atomic<bool> IS_FRONT_PHOTORESISTOR_COVERED;
 
 CStaticColor * FRONT_PHOTORESISTOR_GUI_MONITOR;
 CStaticColor * REAR_PHOTORESISTOR_GUI_MONITOR;
-COLORREF red = RGB(255, 0, 0);
-COLORREF green = RGB(0, 255, 0);
+COLORREF white = RGB(255, 255, 255);
+COLORREF black = RGB(0, 0, 0);
 DWORD sysColor = GetSysColor(COLOR_BTNFACE);
 COLORREF normal = RGB(GetRValue(sysColor), GetGValue(sysColor), GetBValue(sysColor));
 
-NIUsb6001card::NIUsb6001card() {}
+NIUsb6001card::NIUsb6001card() {
+}
 
 NIUsb6001card::~NIUsb6001card() { 
 	stopAllTasks(); 
@@ -64,13 +65,32 @@ int NIUsb6001card::config() {
 	TCHAR value[32];
 
 	// read default values from the .ini file
-	GetPrivateProfileString(TEXT("RewardSystem"),   TEXT("physicalChannel"),   TEXT("Error loading physical reward sys channel"), value, 32, TEXT(USB6001_CFG_FILE));
+	GetPrivateProfileString(
+		TEXT("RewardSystem"),   
+		TEXT("physicalChannel"),   
+		TEXT("Error loading physical reward sys channel"), 
+		value, 32, TEXT(USB6001_CFG_FILE));
 	m_physicalChanRewardSystem = string(value);
-	GetPrivateProfileString(TEXT("Photoresistors"), TEXT("physicalChannelDI"), TEXT("Error loading physical stimulation DI channel"), value, 32, TEXT(USB6001_CFG_FILE));
+
+	GetPrivateProfileString(
+		TEXT("Photoresistors"), 
+		TEXT("physicalChannelDI"), 
+		TEXT("Error loading physical stimulation DI channel"), 
+		value, 32, TEXT(USB6001_CFG_FILE));
 	m_physicalChanPhotoresistors = string(value);
-	GetPrivateProfileString(TEXT("Photoresistors"), TEXT("physicalChannelAI"), TEXT("Error loading physical stimulation AI channel"), value, 32, TEXT(USB6001_CFG_FILE));
+
+	GetPrivateProfileString(
+		TEXT("Photoresistors"), 
+		TEXT("physicalChannelAI"), 
+		TEXT("Error loading physical stimulation AI channel"), 
+		value, 32, TEXT(USB6001_CFG_FILE));
 	m_physicalChanAI = string(value);
-	GetPrivateProfileString(TEXT("ephysSync"),      TEXT("physicalChannel"),   TEXT("Error loading ephysSync channel"), value, 32, TEXT(USB6001_CFG_FILE));
+
+	GetPrivateProfileString(
+		TEXT("ephysSync"),      
+		TEXT("physicalChannel"),   
+		TEXT("Error loading ephysSync channel"), 
+		value, 32, TEXT(USB6001_CFG_FILE));
 	m_physicalChanEphysSync = string(value);
 
 
@@ -321,7 +341,7 @@ int32 CVICALLBACK EveryNCallback(TaskHandle taskHandle, int32 everyNsamplesEvent
 void updatePhotoresistorGuiMonitor(CStaticColor* gui_monitor, PhotoResistor photoResistor)
 {
 	if (gui_monitor != NULL) 
-		gui_monitor->SetBkColor(PHOTORESISTORS_STATUS[photoResistor] ? red : green);
+		gui_monitor->SetBkColor(PHOTORESISTORS_STATUS[photoResistor] ? white : black);
 }
 
 void resetPhotoresistorGuiMonitor(CStaticColor* gui_monitor)

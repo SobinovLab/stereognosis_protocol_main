@@ -329,36 +329,6 @@ void Protocol::wait_until_monkey_release()
 	}
 }
 
-void Protocol::watch_early_grab()
-{
-	atomic<double> leftForce = 0;
-	atomic<double> rightForce = 0;
-	while (!stopWatch) {
-		// see if monkey lifted arm
-		// if (isLightSensorsOn() && !isArmAtRest()) {
-		if (isLightSensorsOn()) {
-			if ((use_front_light_sensor.load() && !IS_FRONT_PHOTORESISTOR_COVERED) || (
-				use_rear_light_sensor.load() && !IS_REAR_PHOTORESISTOR_COVERED)) {
-
-				stopTrial = true;
-				stop_motors();
-				break;
-			}
-		}
-
-		// ask pressure sensor for pressure
-		if (m_touchSensorClient.isConnected()) {
-			m_touchSensorClient.getForce(&leftForce, &rightForce);
-
-			if (leftForce + rightForce > params.minimalTouchForce) {
-				stopTrial = true;
-				stop_motors();
-				break;
-			}
-		}
-	}
-}
-
 void Protocol::playStartTaskTone()
 {
 	if (params.sounds_modulation_enabled) {
@@ -1107,6 +1077,48 @@ bool Protocol::isLedsOn()
 	return ledStrip->wasInitializedCorrectly();
 }
 
+void Protocol::watch_early_grab()
+{
+	std::chrono::steady_clock::time_point* startTime = nullptr;
+	atomic<double> leftForce = 0;
+	atomic<double> rightForce = 0;
+	while (!stopWatch) {
+		// see if monkey lifted arm
+		// if (isLightSensorsOn() && !isArmAtRest()) {
+		if (isLightSensorsOn()) {
+			if ((use_front_light_sensor.load() && !IS_FRONT_PHOTORESISTOR_COVERED) || (
+				use_rear_light_sensor.load() && !IS_REAR_PHOTORESISTOR_COVERED)) {
+
+				if (!startTime) {
+					// jsut started
+					startTime = new auto(Times::getCurrentTime());
+				}
+
+			}
+			else {
+				startTime = nullptr;
+			}
+		}
+
+		if (startTime && Times::isTimeout(*startTime, params.photoresistor_status_switch_delay / 1000)) {
+			stopTrial = true;
+			stop_motors();
+			break;
+		}
+
+		// ask pressure sensor for pressure
+		if (m_touchSensorClient.isConnected()) {
+			m_touchSensorClient.getForce(&leftForce, &rightForce);
+
+			if (leftForce + rightForce > params.minimalTouchForce) {
+				stopTrial = true;
+				stop_motors();
+				break;
+			}
+		}
+	}
+}
+
 bool Protocol::isArmAtRest()
 {
 	return ((!use_front_light_sensor.load() || IS_FRONT_PHOTORESISTOR_COVERED) && 
@@ -1122,24 +1134,26 @@ int Protocol::wait_until_arm_at_rest()
 	}
 
 	auto waitStart = Times::getCurrentTime();
+	std::chrono::steady_clock::time_point* startTime = nullptr;
 	double timeout = 20 * 60; // seconds
+	bool covered;
 
 	while (true) {
-		if (use_front_light_sensor.load() && use_rear_light_sensor.load()) {
-			if (IS_FRONT_PHOTORESISTOR_COVERED && IS_REAR_PHOTORESISTOR_COVERED)
-				break;
-		}
-		else if (use_front_light_sensor.load()) {
-			if (IS_FRONT_PHOTORESISTOR_COVERED)
-				break;
+		if ((use_front_light_sensor.load() && !IS_FRONT_PHOTORESISTOR_COVERED) ||
+			(use_rear_light_sensor.load() && !IS_REAR_PHOTORESISTOR_COVERED)) {
+			// uncovered
+			startTime = nullptr;
 		}
 		else {
-			if (IS_REAR_PHOTORESISTOR_COVERED)
-				break;
+			// jsut started covering
+			startTime = new auto(Times::getCurrentTime());
 		}
-		//if (!isLightSensorsOn() || isArmAtRest()) {
-		//	break;
-		//}
+
+		if (startTime && Times::isTimeout(*startTime, params.photoresistor_status_switch_delay / 1000)) {
+			break;
+		}
+
+
 		if (Times::isTimeout(waitStart, timeout)) {
 			flag = -1;
 			break;

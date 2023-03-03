@@ -111,6 +111,8 @@ int ProtocolParameters::load_json(std::string filename)
 		secondary_session_log_directory = protocol_json.value("secondary_session_log_directory", secondary_session_log_directory);
 		rewardDuration = protocol_json.value("rewardDuration", rewardDuration);
 
+		photoresistor_status_switch_delay = protocol_json.value("photoresistor_status_switch_delay", photoresistor_status_switch_delay);
+
 	}
 	catch (const json::exception& e)
 	{

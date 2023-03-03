@@ -52,6 +52,10 @@ public:
 	CString session_log_filename;  // make_log_filename
 	long rewardDuration = 1000;	//msecs
 
+	// photoresistors
+	// how long needs to pass for the protocol to recognize the switch
+	double photoresistor_status_switch_delay = 250;  // msec
+
 	// trial
 	int trial_number = 0;
 	int total_trials = 0;
