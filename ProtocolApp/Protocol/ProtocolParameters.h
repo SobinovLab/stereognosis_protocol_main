@@ -96,6 +96,7 @@ public:
 	std::string leds_comPortFriendlyName = "Arduino Uno";
 	int leds_run_test = 1;
 	int leds_early_target_force_lightup = 1;
+	int leds_number = 40;
 
 	int leds_top_stripe_color_red = 244;
 	int leds_top_stripe_color_green = 67;

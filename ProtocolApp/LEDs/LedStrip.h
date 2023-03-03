@@ -57,7 +57,7 @@ public:
 	int turn_off_both_stripe_lights();
 
 	// test
-	void test(int delay=10);
+	void test(int delay=3);
 
 	// If false, delete the object and try again
 	bool wasInitializedCorrectly();

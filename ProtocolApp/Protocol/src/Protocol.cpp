@@ -1025,6 +1025,8 @@ void Protocol::initDevices()
         ledStrip->bottom_stripe_blue = params.leds_bottom_stripe_color_blue;
 		ledStrip->bottom_brightness = params.leds_bottom_stripe_brightness;
 		ledStrip->bottom_reverse_order = (bool) params.leds_bottom_stripe_reverse_order;
+		if (params.leds_number > 0)
+			ledStrip->num_leds_per_strip = (unsigned int) params.leds_number;
 		if (ledStrip->wasInitializedCorrectly() && params.leds_run_test) {
 			logInfo("Starting LED test.");
 			ledStrip->test();
