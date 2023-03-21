@@ -1327,7 +1327,7 @@ TeknicMotorApi::TeknicMotorApi(const std::string motor_config_filename, const st
     }
 
     // load motor configuration file
-    string setting_dir = Folders::dirname(motor_config_filename);
+    string setting_dir = Directories::dirname(motor_config_filename);
     ifstream ifs(motor_config_filename);
     if (ifs.fail()) {
         buf = "TeknicMotorApi. Could not open motor settings JSON file: " + motor_config_filename + ". Check if it exists.";

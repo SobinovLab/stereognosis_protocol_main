@@ -8,17 +8,17 @@ CString ProtocolParameters::try_finding_session_csv()
 	string fname;
 
 	string session_file_directory;
-	if (Folders::path_exists(primary_session_file_directory))
+	if (Directories::path_exists(primary_session_file_directory))
 		session_file_directory = primary_session_file_directory;
 	else
 		session_file_directory = secondary_session_file_directory;
 
-	if (Folders::find_latest_csv(session_file_directory, fname)) {
+	if (Directories::find_latest_csv(session_file_directory, fname)) {
 		return CString(fname.c_str());
 	}
 
 	// solely for debugging
-	if (Folders::find_latest_csv("./App/session_configs", fname)) {  // debugging
+	if (Directories::find_latest_csv("./App/session_configs", fname)) {  // debugging
 		return CString(fname.c_str());
 	}
 
@@ -38,7 +38,7 @@ CString ProtocolParameters::make_log_filename()
 	}
 
 	string session_log_directory;
-	if (Folders::path_exists(primary_session_log_directory))
+	if (Directories::path_exists(primary_session_log_directory))
 		session_log_directory = primary_session_log_directory;
 	else
 		session_log_directory = secondary_session_log_directory;
@@ -68,10 +68,29 @@ void ProtocolParameters::init()
 
 }
 
+bool ProtocolParameters::identify_pc(std::string& pc)
+{
+	if (!Directories::grep_one(global_default_directory, regex("PC=.*"), pc))
+		return false;
+
+	if (pc.size() > 3)
+		pc = pc.substr(3);
+	else
+		pc = "";
+
+	return true;
+}
+
 int ProtocolParameters::load_json()
 {
-	if (Folders::path_exists(global_default_protocol_parameters_json))
-		return load_json(global_default_protocol_parameters_json);
+	string gdppj, pc;
+	if (identify_pc(pc))
+		gdppj = global_default_directory + pc + "/" + global_default_pp_filename;
+	else
+		gdppj = global_default_directory + global_default_pp_filename;
+
+	if (Directories::path_exists(gdppj))
+		return load_json(gdppj);
 	return load_json(default_protocol_parameters_json);
 }
 

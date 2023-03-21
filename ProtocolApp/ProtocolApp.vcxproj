@@ -102,7 +102,7 @@ copy /B /V /Y "$(ProjectDir)..\session_configs\*" "$(OutDir)\session_configs\" &
     <ClInclude Include="utilities\CEditHelper.h" />
     <ClInclude Include="utilities\Convertor.h" />
     <ClInclude Include="utilities\CsvParser.h" />
-    <ClInclude Include="utilities\Folders.h" />
+    <ClInclude Include="utilities\Directories.h" />
     <ClInclude Include="utilities\Logger.h" />
     <ClInclude Include="Protocol\NIUsb6001card.h" />
     <ClInclude Include="Protocol\Protocol.h" />
@@ -131,7 +131,7 @@ copy /B /V /Y "$(ProjectDir)..\session_configs\*" "$(OutDir)\session_configs\" &
     <ClCompile Include="utilities\CEditHelper.cpp" />
     <ClCompile Include="utilities\Convertor.cpp" />
     <ClCompile Include="utilities\CsvParser.cpp" />
-    <ClCompile Include="utilities\Folders.cpp" />
+    <ClCompile Include="utilities\Directories.cpp" />
     <ClCompile Include="utilities\Logger.cpp" />
     <ClCompile Include="Protocol\src\NIUsb6001card.cpp" />
     <ClCompile Include="Protocol\src\Protocol.cpp" />

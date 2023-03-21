@@ -18,7 +18,7 @@
 #include "Convertor.h"
 #include "Times.h"
 #include "Logger.h"
-#include "Folders.h"
+#include "Directories.h"
 
 #pragma comment(lib, "sFoundation20.lib")
 

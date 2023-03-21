@@ -105,9 +105,6 @@
     <ClInclude Include="utilities\Logger.h">
       <Filter>Header Files\utilities</Filter>
     </ClInclude>
-    <ClInclude Include="utilities\Folders.h">
-      <Filter>Header Files\utilities</Filter>
-    </ClInclude>
     <ClInclude Include="teknicMotors\TeknicMotorApi.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -131,6 +128,9 @@
     </ClInclude>
     <ClInclude Include="LEDs\SerialEnumserParts.h">
       <Filter>Header Files\LEDs</Filter>
+    </ClInclude>
+    <ClInclude Include="utilities\Directories.h">
+      <Filter>Header Files\utilities</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -182,9 +182,6 @@
     <ClCompile Include="pressure_sensors\TouchSensorClient.cpp">
       <Filter>Source Files\pressure_sensors</Filter>
     </ClCompile>
-    <ClCompile Include="utilities\Folders.cpp">
-      <Filter>Source Files\utilities</Filter>
-    </ClCompile>
     <ClCompile Include="teknicMotors\TeknicMotorApi.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -208,6 +205,9 @@
     </ClCompile>
     <ClCompile Include="LEDs\SerialEnumserParts.cpp">
       <Filter>Source Files\LEDs</Filter>
+    </ClCompile>
+    <ClCompile Include="utilities\Directories.cpp">
+      <Filter>Source Files\utilities</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
