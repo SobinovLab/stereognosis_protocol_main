@@ -18,6 +18,7 @@
 #include "Convertor.h"
 #include "Times.h"
 #include "Logger.h"
+#include "Folders.h"
 
 #pragma comment(lib, "sFoundation20.lib")
 
@@ -44,7 +45,7 @@ enum class TEKNIC_MOTOR_API_CODE {
 
 class Motor {
 public:
-    Motor(sFnd::INode& node, const nlohmann::json settings);
+    Motor(sFnd::INode& node, const nlohmann::json settings, const std::string setting_dir);
     ~Motor(void);
 
     // ------- general move functions - in units of AXIS
@@ -209,7 +210,7 @@ public:
     double basic_action_timeout = 60;  // homing and moving
 
     // adds a properly created motor object to the motors vector
-    TEKNIC_MOTOR_API_CODE addMotor(sFnd::INode& node, nlohmann::json motor_json);
+    TEKNIC_MOTOR_API_CODE addMotor(sFnd::INode& node, nlohmann::json motor_json, const std::string setting_dir);
     //-------- main functions - move all motors on the axis
     // If any of the motors on the axis are basic, they cannot be physically coupled
     // a new parallel basic homing function should be developed to allow that behavior

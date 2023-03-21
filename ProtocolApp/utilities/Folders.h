@@ -18,6 +18,8 @@ public:
     // returns true if found a file
     static bool find_latest_csv(const std::string& dirpath, std::string& latestfile);
 
+    static std::string dirname(const std::string& filename);
+
 private:
     static bool extract_date(const std::string str, std::chrono::system_clock::time_point& dt);
 };

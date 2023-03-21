@@ -81,3 +81,8 @@ bool Folders::find_latest_csv(const string& dirpath, string& latestfile) {
 
     return foundAFile;
 }
+
+std::string Folders::dirname(const std::string& filename)
+{
+    return fs::absolute(fs::path(filename)).parent_path().string();
+}

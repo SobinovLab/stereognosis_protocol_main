@@ -18,7 +18,7 @@ double round(const double val, const int num_numbers)
 //------------------------------------------------------------------------------------
 //--------------------------------------- MOTOR --------------------------------------
 //------------------------------------------------------------------------------------
-Motor::Motor(sFnd::INode& node, const json settings) :
+Motor::Motor(sFnd::INode& node, const json settings, const std::string setting_dir) :
     m_node(node) {
 
     disable();
@@ -39,7 +39,7 @@ Motor::Motor(sFnd::INode& node, const json settings) :
     basic_action_timeout = settings.value("basic_action_timeout", basic_action_timeout);
 
     // load settings onto motor
-    m_node.Setup.ConfigLoad(config_file.c_str());
+    m_node.Setup.ConfigLoad((setting_dir + "/" + config_file).c_str());
 
     // set up converters
     pos = Convertor(input_offset, in_to_out_coefficient, true);
@@ -675,12 +675,12 @@ Axis::~Axis()
     motors.clear();
 }
 
-TEKNIC_MOTOR_API_CODE Axis::addMotor(sFnd::INode& node, nlohmann::json motor_json)
+TEKNIC_MOTOR_API_CODE Axis::addMotor(sFnd::INode& node, nlohmann::json motor_json, const std::string setting_dir)
 {
     string buf;
     try
     {
-        motors.push_back(make_unique<Motor>(node, motor_json));
+        motors.push_back(make_unique<Motor>(node, motor_json, setting_dir));
     }
     catch (const mnErr& theErr)
     {
@@ -1327,6 +1327,7 @@ TeknicMotorApi::TeknicMotorApi(const std::string motor_config_filename, const st
     }
 
     // load motor configuration file
+    string setting_dir = Folders::dirname(motor_config_filename);
     ifstream ifs(motor_config_filename);
     if (ifs.fail()) {
         buf = "TeknicMotorApi. Could not open motor settings JSON file: " + motor_config_filename + ". Check if it exists.";
@@ -1423,7 +1424,7 @@ TeknicMotorApi::TeknicMotorApi(const std::string motor_config_filename, const st
             }
 
             // otherwise add the motor to the node
-            if ( isError(axes[found_axis]->addMotor(port.Nodes(nodeIndex), single_mc)) ) {
+            if ( isError(axes[found_axis]->addMotor(port.Nodes(nodeIndex), single_mc, setting_dir)) ) {
                 buf = ("Error during Node " + to_string(nodeIndex) +
                     " initialization.");
                 logError(buf.c_str());

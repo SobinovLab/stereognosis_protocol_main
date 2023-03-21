@@ -1015,7 +1015,7 @@ void Protocol::initDevices()
 		logWarning("Motor Hub already initialized, cannot init again.");
 	}
 	else {
-		motorHub = new TeknicMotorApi("./configuration/motors_stereognosis1.json", "./configuration/axes_stereognosis.json");
+		motorHub = new TeknicMotorApi(params.motors_motors_filename, params.motors_axes_filename);
 	}
 
 	// LEDs

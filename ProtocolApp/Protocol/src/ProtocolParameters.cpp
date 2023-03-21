@@ -237,5 +237,19 @@ int ProtocolParameters::load_json(std::string filename)
 		logWarning(buf.c_str());
 	}
 
+	// motors
+	try
+	{
+		json motors_json = pp_json.at("motors");
+
+		motors_axes_filename = motors_json.value("axes_filename", motors_axes_filename);
+		motors_motors_filename = motors_json.value("motors_filename", motors_motors_filename);
+	}
+	catch (const json::exception& e)
+	{
+		buf = "Error reading 'motors' entry of json file. Using defaults." + string(e.what());
+		logWarning(buf.c_str());
+	}
+
 	return 0;
 }

@@ -120,4 +120,7 @@ public:
 	double sounds_minfreq = 450;
 	double sounds_maxfreq = 550;
 
+	// motors
+	std::string motors_axes_filename = "./configuration/axes_stereognosis.json";
+	std::string motors_motors_filename = "./configuration/motors_stereognosis1.json";
 };

@@ -57,5 +57,9 @@
         "maxforce": 5,
         "minfreq": 475,
         "maxfreq": 525
+    },
+    "motors": {
+        "axes_filename": "C:/PrehensionProtocol/motors/axes_stereognosis_v1.json",
+        "motors_filename": "C:/PrehensionProtocol/motors/motors_stereognosis_v1.json"
     }
 }
