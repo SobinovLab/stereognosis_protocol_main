@@ -13,7 +13,7 @@
 class Folders
 {
 public:
-    static bool path_exists(const std::string& pathpath);
+    static bool path_exists(const std::string& path);
 
     // returns true if found a file
     static bool find_latest_csv(const std::string& dirpath, std::string& latestfile);

@@ -86,7 +86,7 @@ int ProtocolParameters::load_json(std::string filename)
 		logError(buf.c_str());
 		return -1;
 	}
-	buf = "Loaded protocol parameters JSON file: " + filename + ".";
+	buf = "Loading protocol parameters JSON file: " + filename + ".";
 	logInfo(buf.c_str());
 
 	// parse it
