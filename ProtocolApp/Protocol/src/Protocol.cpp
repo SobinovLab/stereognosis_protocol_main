@@ -443,21 +443,30 @@ void Protocol::run()
 		// wait for the monkey to release the grasp on the object - can be forced by startTrial
 		wait_until_monkey_release();
 
-		// wait until arm at rest
-		if (wait_until_arm_at_rest() < 0) {
-			// timeout for 20 mins
-			stopTrial = true;
-			stopProtocol = true;
-		}
+		//// wait until arm at rest
+		//if (wait_until_arm_at_rest() < 0) {
+		//	// timeout for 20 mins
+		//	stopTrial = true;
+		//	stopProtocol = true;
+		//}
+		// instead, now this:
+		prepare_to_monitor_arm_at_rest();
+		bool arm_at_rest = false;
 
 		// waiting for the start of the next trial
-		while (!this->startTrial.load() &&
-			!this->stopProtocol.load() &&
-			!(loopAutomatically.load() && Times::isTimeout(intertrialWaitStartTime, params.intertrialWaitTime))) {
+		while (!this->startTrial.load() && !this->stopProtocol.load()) {
 			// waiting for:
 			//	Start trial button to be pressed
 			//  stop of protocol
+			
+			// once the state has switched to covered - arm is at rest
+			if (!arm_at_rest)
+				arm_at_rest = is_arm_at_rest();
+
+			// ony wait for
 			//  if looping is selected, timeout of intertrial time
+			if (loopAutomatically.load() && Times::isTimeout(intertrialWaitStartTime, params.intertrialWaitTime) && arm_at_rest)
+				break;
 		}
 
 		// The usual place to exit the protocol, if not at the end of a trial
@@ -1121,10 +1130,41 @@ void Protocol::watch_early_grab()
 	}
 }
 
-bool Protocol::isArmAtRest()
+bool Protocol::is_arm_at_rest()
 {
-	return ((!use_front_light_sensor.load() || IS_FRONT_PHOTORESISTOR_COVERED) && 
-			(!use_rear_light_sensor.load() || IS_REAR_PHOTORESISTOR_COVERED));
+	// sensors not found, or ignore them both - skip this whole function
+	if (!isLightSensorsOn() || !(use_front_light_sensor.load() || use_rear_light_sensor.load())) {
+		return true;
+	}
+
+	if ((use_front_light_sensor.load() && !IS_FRONT_PHOTORESISTOR_COVERED) ||
+		(use_rear_light_sensor.load() && !IS_REAR_PHOTORESISTOR_COVERED)) {
+		// uncovered
+		if (_arm_at_rest_start_time) {
+			delete _arm_at_rest_start_time;
+			_arm_at_rest_start_time = nullptr;
+		}
+	}
+	else {
+		// just started covering
+		if (!_arm_at_rest_start_time)
+			_arm_at_rest_start_time = new auto(Times::getCurrentTime());
+	}
+
+	if (_arm_at_rest_start_time && 
+		Times::getElapsedMilliSecsSince(*_arm_at_rest_start_time) > params.photoresistor_status_switch_delay) {
+		return true;
+	}
+
+	return false;
+}
+
+void Protocol::prepare_to_monitor_arm_at_rest()
+{
+	if (_arm_at_rest_start_time) {
+		delete _arm_at_rest_start_time;
+		_arm_at_rest_start_time = nullptr;
+	}
 }
 
 int Protocol::wait_until_arm_at_rest()
@@ -1138,7 +1178,6 @@ int Protocol::wait_until_arm_at_rest()
 	auto waitStart = Times::getCurrentTime();
 	std::chrono::steady_clock::time_point* startTime = nullptr;
 	double timeout = 20 * 60; // seconds
-	bool covered;
 
 	while (true) {
 		if ((use_front_light_sensor.load() && !IS_FRONT_PHOTORESISTOR_COVERED) ||
@@ -1167,6 +1206,8 @@ int Protocol::wait_until_arm_at_rest()
 	}
 	return flag;
 }
+
+
 
 int Protocol::wait_until_arm_liftoff()
 {

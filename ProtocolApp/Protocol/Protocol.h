@@ -156,10 +156,16 @@ class Protocol
 		// photoresistors
 		CStaticColor* m_frontPhotoresistorCtrl = nullptr;
 		CStaticColor* m_rearPhotoresistorCtrl = nullptr;
-		// use only together in || condition with Protocol::isLightSensorsOn()
-		bool isArmAtRest();
-		// is not used
+		// used to monitor cover/uncover in seq with other calls
+		std::chrono::steady_clock::time_point* _arm_at_rest_start_time = nullptr;
+		// use in seq for waiting for start of the next trial
+		// put _arm_at_rest_start_time to null before first call using going_to_monitor_arm_at_rest
+		bool is_arm_at_rest();
+		// call before the first call to is_arm_at_rest
+		void prepare_to_monitor_arm_at_rest();
+		// DEPRECATED and is not used
 		int wait_until_arm_at_rest();
+		// DEPRECATED and is not used
 		int wait_until_arm_liftoff();
 
 		// ephys

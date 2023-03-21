@@ -173,6 +173,7 @@ BOOL CProtocolAppDlg::OnInitDialog()
 	// protocol
 	toggleProtocolCtrls(true);
 	GetDlgItem(IDC_HOME_MOTORS_BTN)->EnableWindow(m_protocol.isMotorsOn());
+	GetDlgItem(IDC_NEUTRAL_POSITION_BTN)->EnableWindow(m_protocol.isMotorsOn());
 	GetDlgItem(IDC_STOP_MOTORS_BTN)->EnableWindow(m_protocol.isMotorsOn());
 
 	// trial
