@@ -4,7 +4,7 @@
         "intertrialWaitTime": 2 ,
         "primary_session_file_directory": "C:/PrehensionProtocol/session_configs/",
         "secondary_session_file_directory": "./session_configs/",
-        "primary_session_log_directory": "C:/PrehensionProtocol/data/",
+        "primary_session_log_directory": "C:/PrehensionProtocol/session_logs/",
         "secondary_session_log_directory": "./data/",
         "rewardDuration": 1000,
         "photoresistor_status_switch_delay":  250

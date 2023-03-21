@@ -70,6 +70,8 @@ void ProtocolParameters::init()
 
 int ProtocolParameters::load_json()
 {
+	if (Folders::path_exists(global_default_protocol_parameters_json))
+		return load_json(global_default_protocol_parameters_json);
 	return load_json(default_protocol_parameters_json);
 }
 
@@ -84,6 +86,8 @@ int ProtocolParameters::load_json(std::string filename)
 		logError(buf.c_str());
 		return -1;
 	}
+	buf = "Loaded protocol parameters JSON file: " + filename + ".";
+	logInfo(buf.c_str());
 
 	// parse it
 	json pp_json;
