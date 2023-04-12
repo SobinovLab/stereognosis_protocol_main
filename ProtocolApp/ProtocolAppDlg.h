@@ -37,6 +37,11 @@ protected:
 // Implementation
 protected:
 	virtual void OnOK() override;
+	virtual BOOL CProtocolAppDlg::PreTranslateMessage(MSG* pMsg) override;
+	void OnKeyPress_S();
+	void OnKeyPress_T();
+	void OnKeyPress_W();
+	void OnKeyPress_F();
 
 	enum UpdateDataDirection { FromVariablesToControls = FALSE, FromControlsToVariables = TRUE };
 

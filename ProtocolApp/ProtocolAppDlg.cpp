@@ -206,7 +206,8 @@ void CProtocolAppDlg::OnSysCommand(UINT nID, LPARAM lParam)
 	UINT command = (nID & 0xFFF0);
 
 	if (command == SC_CLOSE) {
-		OnStopProtocolBtnClicked();
+		if (GetDlgItem(IDC_STOP_PROTOCOL_BTN)->IsWindowEnabled())
+			OnStopProtocolBtnClicked();
 	}
 	CDialogEx::OnSysCommand(nID, lParam);
 }
@@ -246,6 +247,56 @@ void CProtocolAppDlg::OnPaint()
 void CProtocolAppDlg::OnOK()
 {
 	UpdateData(FromControlsToVariables);
+}
+
+BOOL CProtocolAppDlg::PreTranslateMessage(MSG* pMsg)
+{
+	// bad practice, but fuck mfc
+	if (pMsg->message == WM_KEYDOWN)
+	{
+		switch (pMsg->wParam)
+		{
+		case 's':
+		case 'S':
+			OnKeyPress_S();
+		case 't':
+		case 'T':
+			OnKeyPress_T();
+		case 'w':
+		case 'W':
+			OnKeyPress_W();
+		case 'f':
+		case 'F':
+			OnKeyPress_F();
+		default:
+			break;
+		}
+	}
+	return CDialog::PreTranslateMessage(pMsg);
+}
+
+void CProtocolAppDlg::OnKeyPress_S()
+{
+	if (GetDlgItem(IDC_START_TRIAL_BTN)->IsWindowEnabled())
+		OnStartTrialBtnClicked();
+}
+
+void CProtocolAppDlg::OnKeyPress_T()
+{
+	if (GetDlgItem(IDC_RETREAT_BTN)->IsWindowEnabled())
+		OnRetreatBtnClicked();
+}
+
+void CProtocolAppDlg::OnKeyPress_W()
+{
+	if (GetDlgItem(IDC_RETREAT_FLUSH_WATER_BTN)->IsWindowEnabled())
+		OnRetreatFlushWaterBtnClicked();
+}
+
+void CProtocolAppDlg::OnKeyPress_F()
+{
+	if (GetDlgItem(IDC_FLUSH_WATER_BTN)->IsWindowEnabled())
+		OnFlushWaterBtnClicked();
 }
 
 /// <summary>
