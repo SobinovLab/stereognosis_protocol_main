@@ -372,6 +372,7 @@ void Protocol::run()
 	// on first start, looping should be disabled until the start trial button is pressed
 	autoLoopToggle(true);
 	loopAutomatically = false;
+	bool arm_at_rest;
 
 	// open csv file for logging
 	openCsvLog();
@@ -451,7 +452,7 @@ void Protocol::run()
 		//}
 		// instead, now this:
 		prepare_to_monitor_arm_at_rest();
-		bool arm_at_rest = false;
+		arm_at_rest = false;
 
 		// waiting for the start of the next trial
 		while (!this->startTrial.load() && !this->stopProtocol.load()) {
@@ -518,10 +519,6 @@ void Protocol::run()
 		// GUI Can click on stop trial
 		trialFieldsEnableRetreat(true);
 
-		// start a thread that asks if monkey grabbed and stopTrial=1 if it did
-		stopWatch = false;
-		thread watchThread(&Protocol::watch_early_grab, this);
-
 		// motor movement - this thread will be locked, can be interrupted
 		// The motors API only supports position control as dynamics are not important
 		// TODO make gui list-based
@@ -556,6 +553,19 @@ void Protocol::run()
 				targetForceMin / params.targetForceTotalMax,
 				targetForceMax / params.targetForceTotalMax);
 		}
+
+		// wait until arm at rest
+		prepare_to_monitor_arm_at_rest();
+		while (!this->stopTrial.load() && !is_arm_at_rest()) {
+			// waiting for:
+			//	Stop trial button to be pressed
+			//  stop of protocol
+			//  arm at rest
+		}
+
+		// start a thread that asks if monkey grabbed/lifted arm and stopTrial=1 if it did
+		stopWatch = false;
+		thread watchThread(&Protocol::watch_early_grab, this);
 
 		// start recordings
 		start_camera_recording();  // TODO process it?
