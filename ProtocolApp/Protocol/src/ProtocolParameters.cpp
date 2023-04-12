@@ -136,6 +136,8 @@ int ProtocolParameters::load_json(std::string filename)
 
 		photoresistor_status_switch_delay = protocol_json.value("photoresistor_status_switch_delay", photoresistor_status_switch_delay);
 
+		int dlomr = protocol_json.value("disable_looping_on_manual_retreat", (int)disable_looping_on_manual_retreat);
+		disable_looping_on_manual_retreat = (bool)dlomr;
 	}
 	catch (const json::exception& e)
 	{

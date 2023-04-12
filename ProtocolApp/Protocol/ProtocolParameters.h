@@ -58,6 +58,7 @@ public:
 	CString session_filename;  // try_finding_session_csv()
 	CString session_log_filename;  // make_log_filename
 	long rewardDuration = 1000;	//msecs
+	bool disable_looping_on_manual_retreat = true;
 
 	// photoresistors
 	// how long needs to pass for the protocol to recognize the switch

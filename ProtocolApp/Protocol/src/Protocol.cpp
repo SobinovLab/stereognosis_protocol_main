@@ -621,7 +621,7 @@ void Protocol::run()
 			}
 
 			// if stop trial button was pressed, turn off the loop - it is reenable automatically in the beginning of trial
-			if (this->stopTrial.load())
+			if (this->stopTrial.load() && params.disable_looping_on_manual_retreat)
 				autoLoopToggle(false);  // want to stop only for one trial
 
 			// stop monitor thread if it was not stopped by its own success
