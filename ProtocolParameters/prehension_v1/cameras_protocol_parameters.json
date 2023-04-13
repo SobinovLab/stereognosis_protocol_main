@@ -1,0 +1,32 @@
+{
+  "exposure": "2500",
+  "gain": "20",
+  "outputFolder": "./data/",
+  "ip": "localhost",
+  "port": 63874,
+  "framerate": 40,
+  "recordingPeriod": 10,
+  "camera_configs_dir": "C:/PrehensionProtocol/cameras/",
+  "presets": {
+    "PC2": {
+      "ip": "205.208.87.108",
+      "outputFolder": "D:/camera_data/"
+    },
+    "PC3": {
+      "ip": "205.208.63.128",
+      "outputFolder": "D:/camera_data/"
+    },
+    "Cameras1": {
+      "ip": "205.208.63.167",
+      "outputFolder": "E:/camera_data/"
+    },
+    "Cameras2": {
+      "ip": "205.208.63.60",
+      "outputFolder": "E:/camera_data/"
+    },
+    "_Anton": {
+      "ip": "localhost",
+      "outputFolder": "E:/camera_data/"
+    }
+  }
+}

@@ -1,0 +1,58 @@
+{
+  "0": {
+    "config_file": "motor_translation_x.mtr",
+    "axis": "translation_X",
+    "enabled": 1,
+    "timeout_for_enable": 60,
+    "conversion": {
+        "input_offset": 0,
+        "in_to_out_coefficient": -500,
+        "vel_max": 840,
+        "acc_max": 8400
+    },
+    "model": "CPM-SCHP-3441S-ELSB",
+    "comment": "https://www.teknic.com/model-info/CPM-SCHP-3441S-ELSB/"
+  },
+  "1": {
+    "config_file": "motor_tilt.mtr",
+    "axis": "tilt",
+    "enabled": 1,
+    "timeout_for_enable": 60,
+    "conversion": {
+        "input_offset": 0,
+        "in_to_out_coefficient": 700,
+        "vel_max": 1410,
+        "acc_max": 14100
+    },
+    "model": "CPM-SCHP-3421S-ELSA",
+    "comment": "https://www.teknic.com/model-info/CPM-SCHP-3421S-ELSA/"
+  },
+  "2": {
+    "config_file": "motor_aperture_left.mtr",
+    "axis": "aperture",
+    "enabled": 1,
+    "timeout_for_enable": 60,
+    "conversion": {
+        "input_offset": 0,
+        "in_to_out_coefficient": 2000,
+        "vel_max": 4000,
+        "acc_max": 40000
+    },
+    "model": "CPM-SCHP-2311S-ELSA",
+    "comment": "https://www.teknic.com/model-info/CPM-SCHP-2311S-ELSA/"
+  },
+  "3": {
+    "config_file": "motor_aperture_right.mtr",
+    "axis": "aperture",
+    "enabled": 1,
+    "timeout_for_enable": 60,
+    "conversion": {
+        "input_offset": 0,
+        "in_to_out_coefficient": 2000,
+        "vel_max": 4000,
+        "acc_max": 40000
+    },
+    "model": "CPM-SCHP-2311S-ELSA",
+    "comment": "https://www.teknic.com/model-info/CPM-SCHP-2311S-ELSA/"
+  }
+}

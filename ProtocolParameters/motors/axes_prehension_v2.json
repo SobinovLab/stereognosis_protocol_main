@@ -1,0 +1,96 @@
+{
+  "0": {
+    "name": "translation_X",
+    "units": "mm",
+    "retreat_axis": 1,
+    "parallel_group": 0,
+    "comment": "Positive is towards the animal.",
+    "neutral_position": 0,
+    "default_vel": 10,
+    "default_acc": 2,
+    "position_error_threshold": 1,
+    "homing": {
+        "direction": -1,
+        "offset_in_units": 205,
+        "torque_threshold_percent": 80,
+        "timeout": 300,
+        "stop_condition": "all"
+    },
+    "pos_min": -204,
+    "pos_max": 128
+  },
+  "1": {
+    "name": "translation_Y",
+    "units": "mm",
+    "retreat_axis": 0,
+    "parallel_group": 1,
+    "comment": "Positive is moving right from animals POV. STEREOGNOSIS 2. Unconfigured.",
+    "neutral_position": 0,
+    "default_vel": 20,
+    "default_acc": 6,
+    "homing": {
+        "direction": 1,
+        "offset_in_units": 1,
+        "torque_threshold_percent": 2,
+        "timeout": 300
+    },
+    "pos_min": -99,
+    "pos_max": 100000
+  },
+  "2": {
+    "name": "translation_Z",
+    "units": "mm",
+    "retreat_axis": 0,
+    "parallel_group": 1,
+    "comment": "Positive is up. STEREOGNOSIS 2. Unconfigured.",
+    "neutral_position": 0,
+    "default_vel": 20,
+    "default_acc": 6,
+    "homing": {
+        "direction": 1,
+        "offset_in_units": 1,
+        "torque_threshold_percent": 2,
+        "timeout": 300
+    },
+    "pos_min": -99,
+    "pos_max": 100000
+  },
+  "3": {
+    "name": "tilt",
+    "units": "deg",
+    "retreat_axis": 0,
+    "parallel_group": 1,
+    "comment": "Positive is counterclockwise.",
+    "neutral_position": 0,
+    "default_vel": 3,
+    "default_acc": 0.5,
+    "homing": {
+        "direction": 1,
+        "offset_in_units": 2,
+        "torque_threshold_percent": 15,
+        "timeout": 300,
+        "stop_condition": "all"
+    },
+    "pos_min": -30,
+    "pos_max": 30
+  },
+  "4": {
+    "name": "aperture",
+    "units": "mm",
+    "retreat_axis": 0,
+    "parallel_group": 1,
+    "comment": "Positive is wider. Pushing against the middle deforms, so need to move away from compliance.",
+    "neutral_position": 0,
+    "default_vel": 5,
+    "default_acc": 1,
+    "homing": {
+        "direction": -1,
+        "offset_in_units": 3,
+        "torque_threshold_percent": 30,
+        "timeout": 300,
+        "stop_condition": "any"
+    },
+    "pos_min": 0,
+    "pos_max": 44
+  }
+}

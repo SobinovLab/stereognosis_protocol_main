@@ -1,0 +1,30 @@
+{
+  "0": {
+    "config_file": "./configuration/left.mtr",
+    "axis": "translation_X",
+    "enabled": 1,
+    "timeout_for_enable": 60,
+    "conversion": {
+        "input_offset": 0,
+        "in_to_out_coefficient": 1,
+        "vel_max": 100,
+        "acc_max": 1000
+    },
+    "model": "CPM-SCHP-2321S-ELSA",
+    "comment": "https://www.teknic.com/model-info/CPM-SCHP-2321S-ELSA/"
+  },
+  "1": {
+    "config_file": "./configuration/right.mtr",
+    "axis": "translation_X",
+    "enabled": 1,
+    "timeout_for_enable": 60,
+    "conversion": {
+        "input_offset": 0,
+        "in_to_out_coefficient": 1,
+        "vel_max": 100,
+        "acc_max": 1000
+    },
+    "model": "CPM-SCHP-2321S-ELSA",
+    "comment": "https://www.teknic.com/model-info/CPM-SCHP-2321S-ELSA/"
+  }
+}

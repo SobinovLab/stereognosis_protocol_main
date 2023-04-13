@@ -1,0 +1,66 @@
+{
+  "protocol": {
+    "maxWaitTime": 20,
+    "intertrialWaitTime": 2,
+    "primary_session_file_directory": "C:/PrehensionProtocol/session_configs/",
+    "secondary_session_file_directory": "./session_configs/",
+    "primary_session_log_directory": "C:/PrehensionProtocol/session_logs/",
+    "secondary_session_log_directory": "./data/",
+    "rewardDuration": 1000,
+    "photoresistor_status_switch_delay": 250,
+    "disable_looping_on_manual_retreat": 1
+  },
+    "trial": {
+        "pos_translation_x": 115,
+        "pos_tilt": 0,
+        "pos_aperture": 0
+    },
+    "cameras": {
+        "ip1": "205.208.63.167",
+        "port1": 63874,
+        "ip2": "205.208.63.60",
+        "port2": 63874,
+        "framerate": 40,
+        "recordingPeriod": 60,
+        "refSerial": 22401386,
+        "exposure": "2500",
+        "gain": "20",
+        "capture_n_frames": 10
+    },
+    "pressure_sensor": {
+        "ip": "205.208.63.251",
+        "port": 54940,
+        "targetForce": 1,
+        "targetForceRelRangeMin": -0.25,
+        "targetForceRelRangeMax": 100,
+        "targetForceTotalMinThreshold": 0.1,
+        "targetForceTotalMax": 4,
+        "thresholdPeriod": 1,
+        "thresholdForceEachProportion": 0.2,
+        "minimalTouchForce": 0.5
+    },
+    "leds": {
+        "com_port": "",
+        "comPortFriendlyName": "Arduino Uno",
+        "run_test": 1,
+        "number": 40,
+        "early_target_force_lightup": 1,
+        "top_stripe_color": [244, 67, 54],
+        "top_brightness": 0.5,
+        "top_reverse_order": 1,
+        "bottom_stripe_color": [76, 175, 85],
+        "bottom_brightness": 0.5,
+        "bottom_reverse_order": 1
+    },
+    "sounds": {
+        "enabled": 0,
+        "minforce": 2,
+        "maxforce": 5,
+        "minfreq": 475,
+        "maxfreq": 525
+    },
+    "motors": {
+        "axes_filename": "C:/PrehensionProtocol/motors/axes_prehension_v1.json",
+        "motors_filename": "C:/PrehensionProtocol/motors/motors_prehension_v1.json"
+    }
+}

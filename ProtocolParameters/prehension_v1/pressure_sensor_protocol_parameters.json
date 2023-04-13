@@ -1,0 +1,20 @@
+{
+    "IP": "205.208.63.251",
+    "port": 54940,
+    "sensor_left": {
+        "serial": "00110-2743",
+        "description": "orange",
+        "calibration": "C:/PrehensionProtocol/pressure_sensors/calibration_sensor white2.cal"
+    },
+    "sensor_right": {
+        "serial": "00110-2746",
+        "description": "blue",
+        "calibration": "C:/PrehensionProtocol/pressure_sensors/calibration_sensor green2.cal"
+    },
+    "sensor_map": "C:/PrehensionProtocol/pressure_sensors/5076.mp",
+    "default_output_folder": "D:/tekscan_data/",
+    "log_directory": "./log/",
+    "rate": 300,
+    "visualization_rate": 60,
+    "max_trial_time": 120
+}

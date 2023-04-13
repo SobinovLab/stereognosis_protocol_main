@@ -1,0 +1,92 @@
+{
+  "0": {
+    "name": "translation_X",
+    "units": "cnts",
+    "retreat_axis": 1,
+    "parallel_group": 0,
+    "comment": "Positive is towards the animal.",
+    "neutral_position": 0,
+    "default_vel": 20,
+    "default_acc": 6,
+    "homing": {
+        "direction": -1,
+        "offset_in_units": 1000,
+        "torque_threshold_percent": 2,
+        "timeout": 300
+    },
+    "pos_min": -99,
+    "pos_max": 100000
+  },
+  "1": {
+    "name": "translation_Y",
+    "units": "mm",
+    "retreat_axis": 0,
+    "parallel_group": 1,
+    "comment": "Positive is moving right from animals POV.",
+    "neutral_position": 0,
+    "default_vel": 20,
+    "default_acc": 6,
+    "homing": {
+        "direction": 1,
+        "offset_in_units": 1,
+        "torque_threshold_percent": 2,
+        "timeout": 300
+    },
+    "pos_min": -99,
+    "pos_max": 100000
+  },
+  "2": {
+    "name": "translation_Z",
+    "units": "mm",
+    "retreat_axis": 0,
+    "parallel_group": 1,
+    "comment": "Positive is up.",
+    "neutral_position": 0,
+    "default_vel": 20,
+    "default_acc": 6,
+    "homing": {
+        "direction": 1,
+        "offset_in_units": 1,
+        "torque_threshold_percent": 2,
+        "timeout": 300
+    },
+    "pos_min": -99,
+    "pos_max": 100000
+  },
+  "3": {
+    "name": "tilt",
+    "units": "deg",
+    "retreat_axis": 0,
+    "parallel_group": 1,
+    "comment": "Positive is counterclockwise.",
+    "neutral_position": 0,
+    "default_vel": 1.5,
+    "default_acc": 3,
+    "homing": {
+        "direction": 1,
+        "offset_in_units": 1,
+        "torque_threshold_percent": 2,
+        "timeout": 300
+    },
+    "pos_min": -99,
+    "pos_max": 100000
+  },
+  "4": {
+    "name": "aperture",
+    "units": "mm",
+    "retreat_axis": 0,
+    "parallel_group": 1,
+    "comment": "Positive is wider.",
+    "neutral_position": 0,
+    "default_vel": 1.5,
+    "default_acc": 3,
+    "homing": {
+        "direction": 1,
+        "offset_in_units": 1,
+        "torque_threshold_percent": 2,
+        "timeout": 300
+    },
+    "pos_min": -99,
+    "pos_max": 100000
+  }
+}
