@@ -1,0 +1,49 @@
+syntax = "proto3";
+
+service armCommunication {
+    rpc armStatus (statusRequest) returns (statusResponse) {}
+    rpc armControl (moveArm) returns (moveResponse) {}
+    rpc armHome (moveHome) returns (moveResponse) {}
+    rpc armFeedback (torqueRequest) returns (stream torqueResponse) {}
+}
+
+
+message statusRequest {
+    uint32 flag = 1;
+}
+
+message statusResponse {
+    uint32 flag = 1;
+}
+
+message moveArm{
+    double lateral = 1;
+    double depth = 2;
+    double height = 3;
+    double theta = 4;
+    double phi = 5;
+    double chi = 6;
+    double width = 7;
+}
+
+message moveHome{
+    uint32 flag = 1;
+}
+
+message moveResponse {
+    int32 responseCode = 1;
+}
+
+message torqueRequest {
+    int32 flag = 1;
+}
+
+message torqueResponse {
+    double joint1 = 1;
+    double joint2 = 2;
+    double joint3 = 3;
+    double joint4 = 4;
+    double joint5 = 5;
+    double joint6 = 6;
+    double endpoint = 7;
+}
