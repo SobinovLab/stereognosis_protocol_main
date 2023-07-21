@@ -4,6 +4,12 @@ from typing import ClassVar as _ClassVar, Optional as _Optional
 
 DESCRIPTOR: _descriptor.FileDescriptor
 
+class gripperRequest(_message.Message):
+    __slots__ = ["width"]
+    WIDTH_FIELD_NUMBER: _ClassVar[int]
+    width: float
+    def __init__(self, width: _Optional[float] = ...) -> None: ...
+
 class moveArm(_message.Message):
     __slots__ = ["chi", "depth", "height", "lateral", "phi", "theta", "width"]
     CHI_FIELD_NUMBER: _ClassVar[int]
@@ -45,6 +51,10 @@ class statusResponse(_message.Message):
     FLAG_FIELD_NUMBER: _ClassVar[int]
     flag: int
     def __init__(self, flag: _Optional[int] = ...) -> None: ...
+
+class stopRequest(_message.Message):
+    __slots__ = []
+    def __init__(self) -> None: ...
 
 class torqueRequest(_message.Message):
     __slots__ = ["flag"]

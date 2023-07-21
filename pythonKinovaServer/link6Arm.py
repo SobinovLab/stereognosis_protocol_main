@@ -58,13 +58,13 @@ class KinovaArm(QObject):
 
     actionStarted = False
     #Home position coordinates in both forms
-    homeCart = [0, -.200, .480, 0, 180, 90]
-    homeAngular = [-71.65515899658203,
-    -50.30020523071289,
-    -118.6649169921875,
-    -41.86516571044922,
-    118.029541015625,
-    -51.11912536621094]
+    homeCart = [0, -.200, .480, 90, -180, 0]
+    homeAngular = [-72.9454651,
+                    -50.2982483,
+                    -118.821823,
+                    -41.3727722,
+                    117.561745,
+                    -141.523972]
     xLimits = [-.381, .381]
     yLimits = [-.200, -.600]
     zLimits = [.380, .580]
@@ -217,7 +217,14 @@ class KinovaArm(QObject):
         except Exception as e:
             yield(-13, e)
     
-    def addNotificationCallback(self, func):
+    def clearFaults(self):
+        try:
+            self.base.ClearFaults()
+            return (1, None)
+        except Exception as e:
+            return(-14, e)
+        
+    def addArmNotificationCallback(self, func):
         '''
         Func: an external function that will be called when an action ends.
         I use this to allow for waiting on actions to finish as func sets
@@ -233,15 +240,39 @@ class KinovaArm(QObject):
             if data["actionEvent"].strip(" ") == "ACTION_END" and self.actionStarted:
                 print("Got inside correctly, calling func")
                 self.actionStarted = False
-                func()
+                func(True)
             elif data["actionEvent"].strip(" ") == "ACTION_START":
                 print("Setting started")
                 self.actionStarted = True
                 return
+            elif data["actionEvent"].strip(" ") == "ACTION_ABORT":
+                if self.base.GetArmState().active_state == Base_pb2.ARMSTATE_ARM_OPERATIONAL:
+                    func(True)
+                else:
+                    func(False)
             else:
                 print("Got a different callback function: ", data["actionEvent"])
                 return
         self.base.OnNotificationActionTopic(logicWrapper, Base_pb2.NotificationOptions())
+        return
+    
+    def addGripperNotificationCallback(self, func):
+        
+        def logicWrapper(data):
+            data = json_format.MessageToDict(data)
+            if data["actionEvent"].strip(" ") == "ACTION_END":
+                print("Gripper action finished")
+                func(True)
+            elif data["actionEvent"].strip(" ") == "ACTION_ABORT":
+                if self.gripper_plugin.GetStatus().state == Plugin_pb2.STATE_ERROR:   
+                    func(False)
+                else:
+                    func(True)
+            else:
+                print("Got a different callback function: ", data["actionEvent"])
+                return
+            return
+        self.gripper_plugin.OnNotificationActionTopic(logicWrapper, Plugin_pb2.NotificationOptions())
         return
     
     def unsubscribe(self, notif_handle):
@@ -310,6 +341,7 @@ class KinovaArm(QObject):
         called and passes our input to it. This cut down on lots of duplicated 
         lines.
         '''
+        self.gripper_plugin.On
         try:
             action_list = self.gripper_plugin.GetActionTypes()
 

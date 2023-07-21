@@ -61,15 +61,34 @@ public:
         return moveResp.responsecode();
     }
 
-    int moveToPosition(double X, double Y, double Z, double theta, double phi, double chi, double width)
+    int preshape(double width)
+    {
+        grpc::ClientContext context;
+        gripperRequest gReq;
+        moveResponse moveResp;
+
+        gReq.set_width(width);
+
+        grpc::Status status = stub->gripperOpen(&context, gReq, &moveResp);
+        if(!status.ok())
+        {
+            std::cout << "GRPC preshape request failed. Error: " << status.error_message() << std::endl;
+            return -20;
+        }
+        std::cout << "Preshape Resp: " << moveResp.responsecode() << std::endl;
+        return moveResp.responsecode();
+        
+    }
+
+    int moveToPosition(double lateral, double depth, double height, double theta, double phi, double chi, double width)
     {
         grpc::ClientContext context;
         moveArm moveReq;
         moveResponse moveResp;
 
-        moveReq.set_x(X/1000.0);
-        moveReq.set_y(Y/1000.0);
-        moveReq.set_z(Z/1000.0);
+        moveReq.set_lateral(lateral/1000.0);
+        moveReq.set_depth(depth/1000.0);
+        moveReq.set_height(height/1000.0);
         moveReq.set_theta(theta);
         moveReq.set_phi(phi);
         moveReq.set_chi(chi);
@@ -84,6 +103,22 @@ public:
         std::cout << "Home Resp: " << moveResp.responsecode() << std::endl;
         return moveResp.responsecode();
     }
+
+    int stopArm()
+    {
+        grpc::ClientContext context;
+        stopRequest req;
+        moveResponse resp;
+        grpc::Status status = stub->stopArm(&context, req, &resp);
+        if(!status.ok())
+        {
+            std::cout << "GRPC stopArm request failed. Error: " << status.error_message() << std::endl;
+            return -20;
+        }
+        std::cout << "Stop Status: " <<  resp.responsecode() << std::endl;
+        return resp.responsecode();
+    }
+
     void getTorques()
     {
         //TODO: Future feature

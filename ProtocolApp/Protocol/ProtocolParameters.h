@@ -67,7 +67,9 @@ public:
 	// trial
 	int trial_number = 0;
 	int total_trials = 0;
-	double pos_translation_x = 115;			
+	double pos_translation_x = 0;
+    double pos_translation_height = 0;
+    double pos_translation_depth = 0;
 	double pos_tilt = 0;
 	double pos_aperture = 0;
 

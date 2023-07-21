@@ -48,6 +48,20 @@ class armCommunication final {
     std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::moveResponse>> PrepareAsyncarmControl(::grpc::ClientContext* context, const ::moveArm& request, ::grpc::CompletionQueue* cq) {
       return std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::moveResponse>>(PrepareAsyncarmControlRaw(context, request, cq));
     }
+    virtual ::grpc::Status gripperOpen(::grpc::ClientContext* context, const ::gripperRequest& request, ::moveResponse* response) = 0;
+    std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::moveResponse>> AsyncgripperOpen(::grpc::ClientContext* context, const ::gripperRequest& request, ::grpc::CompletionQueue* cq) {
+      return std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::moveResponse>>(AsyncgripperOpenRaw(context, request, cq));
+    }
+    std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::moveResponse>> PrepareAsyncgripperOpen(::grpc::ClientContext* context, const ::gripperRequest& request, ::grpc::CompletionQueue* cq) {
+      return std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::moveResponse>>(PrepareAsyncgripperOpenRaw(context, request, cq));
+    }
+    virtual ::grpc::Status stopArm(::grpc::ClientContext* context, const ::stopRequest& request, ::moveResponse* response) = 0;
+    std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::moveResponse>> AsyncstopArm(::grpc::ClientContext* context, const ::stopRequest& request, ::grpc::CompletionQueue* cq) {
+      return std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::moveResponse>>(AsyncstopArmRaw(context, request, cq));
+    }
+    std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::moveResponse>> PrepareAsyncstopArm(::grpc::ClientContext* context, const ::stopRequest& request, ::grpc::CompletionQueue* cq) {
+      return std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::moveResponse>>(PrepareAsyncstopArmRaw(context, request, cq));
+    }
     virtual ::grpc::Status armHome(::grpc::ClientContext* context, const ::moveHome& request, ::moveResponse* response) = 0;
     std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::moveResponse>> AsyncarmHome(::grpc::ClientContext* context, const ::moveHome& request, ::grpc::CompletionQueue* cq) {
       return std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::moveResponse>>(AsyncarmHomeRaw(context, request, cq));
@@ -79,6 +93,18 @@ class armCommunication final {
       #else
       virtual void armControl(::grpc::ClientContext* context, const ::moveArm* request, ::moveResponse* response, ::grpc::experimental::ClientUnaryReactor* reactor) = 0;
       #endif
+      virtual void gripperOpen(::grpc::ClientContext* context, const ::gripperRequest* request, ::moveResponse* response, std::function<void(::grpc::Status)>) = 0;
+      #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
+      virtual void gripperOpen(::grpc::ClientContext* context, const ::gripperRequest* request, ::moveResponse* response, ::grpc::ClientUnaryReactor* reactor) = 0;
+      #else
+      virtual void gripperOpen(::grpc::ClientContext* context, const ::gripperRequest* request, ::moveResponse* response, ::grpc::experimental::ClientUnaryReactor* reactor) = 0;
+      #endif
+      virtual void stopArm(::grpc::ClientContext* context, const ::stopRequest* request, ::moveResponse* response, std::function<void(::grpc::Status)>) = 0;
+      #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
+      virtual void stopArm(::grpc::ClientContext* context, const ::stopRequest* request, ::moveResponse* response, ::grpc::ClientUnaryReactor* reactor) = 0;
+      #else
+      virtual void stopArm(::grpc::ClientContext* context, const ::stopRequest* request, ::moveResponse* response, ::grpc::experimental::ClientUnaryReactor* reactor) = 0;
+      #endif
       virtual void armHome(::grpc::ClientContext* context, const ::moveHome* request, ::moveResponse* response, std::function<void(::grpc::Status)>) = 0;
       #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
       virtual void armHome(::grpc::ClientContext* context, const ::moveHome* request, ::moveResponse* response, ::grpc::ClientUnaryReactor* reactor) = 0;
@@ -103,6 +129,10 @@ class armCommunication final {
     virtual ::grpc::ClientAsyncResponseReaderInterface< ::statusResponse>* PrepareAsyncarmStatusRaw(::grpc::ClientContext* context, const ::statusRequest& request, ::grpc::CompletionQueue* cq) = 0;
     virtual ::grpc::ClientAsyncResponseReaderInterface< ::moveResponse>* AsyncarmControlRaw(::grpc::ClientContext* context, const ::moveArm& request, ::grpc::CompletionQueue* cq) = 0;
     virtual ::grpc::ClientAsyncResponseReaderInterface< ::moveResponse>* PrepareAsyncarmControlRaw(::grpc::ClientContext* context, const ::moveArm& request, ::grpc::CompletionQueue* cq) = 0;
+    virtual ::grpc::ClientAsyncResponseReaderInterface< ::moveResponse>* AsyncgripperOpenRaw(::grpc::ClientContext* context, const ::gripperRequest& request, ::grpc::CompletionQueue* cq) = 0;
+    virtual ::grpc::ClientAsyncResponseReaderInterface< ::moveResponse>* PrepareAsyncgripperOpenRaw(::grpc::ClientContext* context, const ::gripperRequest& request, ::grpc::CompletionQueue* cq) = 0;
+    virtual ::grpc::ClientAsyncResponseReaderInterface< ::moveResponse>* AsyncstopArmRaw(::grpc::ClientContext* context, const ::stopRequest& request, ::grpc::CompletionQueue* cq) = 0;
+    virtual ::grpc::ClientAsyncResponseReaderInterface< ::moveResponse>* PrepareAsyncstopArmRaw(::grpc::ClientContext* context, const ::stopRequest& request, ::grpc::CompletionQueue* cq) = 0;
     virtual ::grpc::ClientAsyncResponseReaderInterface< ::moveResponse>* AsyncarmHomeRaw(::grpc::ClientContext* context, const ::moveHome& request, ::grpc::CompletionQueue* cq) = 0;
     virtual ::grpc::ClientAsyncResponseReaderInterface< ::moveResponse>* PrepareAsyncarmHomeRaw(::grpc::ClientContext* context, const ::moveHome& request, ::grpc::CompletionQueue* cq) = 0;
     virtual ::grpc::ClientReaderInterface< ::torqueResponse>* armFeedbackRaw(::grpc::ClientContext* context, const ::torqueRequest& request) = 0;
@@ -125,6 +155,20 @@ class armCommunication final {
     }
     std::unique_ptr< ::grpc::ClientAsyncResponseReader< ::moveResponse>> PrepareAsyncarmControl(::grpc::ClientContext* context, const ::moveArm& request, ::grpc::CompletionQueue* cq) {
       return std::unique_ptr< ::grpc::ClientAsyncResponseReader< ::moveResponse>>(PrepareAsyncarmControlRaw(context, request, cq));
+    }
+    ::grpc::Status gripperOpen(::grpc::ClientContext* context, const ::gripperRequest& request, ::moveResponse* response) override;
+    std::unique_ptr< ::grpc::ClientAsyncResponseReader< ::moveResponse>> AsyncgripperOpen(::grpc::ClientContext* context, const ::gripperRequest& request, ::grpc::CompletionQueue* cq) {
+      return std::unique_ptr< ::grpc::ClientAsyncResponseReader< ::moveResponse>>(AsyncgripperOpenRaw(context, request, cq));
+    }
+    std::unique_ptr< ::grpc::ClientAsyncResponseReader< ::moveResponse>> PrepareAsyncgripperOpen(::grpc::ClientContext* context, const ::gripperRequest& request, ::grpc::CompletionQueue* cq) {
+      return std::unique_ptr< ::grpc::ClientAsyncResponseReader< ::moveResponse>>(PrepareAsyncgripperOpenRaw(context, request, cq));
+    }
+    ::grpc::Status stopArm(::grpc::ClientContext* context, const ::stopRequest& request, ::moveResponse* response) override;
+    std::unique_ptr< ::grpc::ClientAsyncResponseReader< ::moveResponse>> AsyncstopArm(::grpc::ClientContext* context, const ::stopRequest& request, ::grpc::CompletionQueue* cq) {
+      return std::unique_ptr< ::grpc::ClientAsyncResponseReader< ::moveResponse>>(AsyncstopArmRaw(context, request, cq));
+    }
+    std::unique_ptr< ::grpc::ClientAsyncResponseReader< ::moveResponse>> PrepareAsyncstopArm(::grpc::ClientContext* context, const ::stopRequest& request, ::grpc::CompletionQueue* cq) {
+      return std::unique_ptr< ::grpc::ClientAsyncResponseReader< ::moveResponse>>(PrepareAsyncstopArmRaw(context, request, cq));
     }
     ::grpc::Status armHome(::grpc::ClientContext* context, const ::moveHome& request, ::moveResponse* response) override;
     std::unique_ptr< ::grpc::ClientAsyncResponseReader< ::moveResponse>> AsyncarmHome(::grpc::ClientContext* context, const ::moveHome& request, ::grpc::CompletionQueue* cq) {
@@ -157,6 +201,18 @@ class armCommunication final {
       #else
       void armControl(::grpc::ClientContext* context, const ::moveArm* request, ::moveResponse* response, ::grpc::experimental::ClientUnaryReactor* reactor) override;
       #endif
+      void gripperOpen(::grpc::ClientContext* context, const ::gripperRequest* request, ::moveResponse* response, std::function<void(::grpc::Status)>) override;
+      #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
+      void gripperOpen(::grpc::ClientContext* context, const ::gripperRequest* request, ::moveResponse* response, ::grpc::ClientUnaryReactor* reactor) override;
+      #else
+      void gripperOpen(::grpc::ClientContext* context, const ::gripperRequest* request, ::moveResponse* response, ::grpc::experimental::ClientUnaryReactor* reactor) override;
+      #endif
+      void stopArm(::grpc::ClientContext* context, const ::stopRequest* request, ::moveResponse* response, std::function<void(::grpc::Status)>) override;
+      #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
+      void stopArm(::grpc::ClientContext* context, const ::stopRequest* request, ::moveResponse* response, ::grpc::ClientUnaryReactor* reactor) override;
+      #else
+      void stopArm(::grpc::ClientContext* context, const ::stopRequest* request, ::moveResponse* response, ::grpc::experimental::ClientUnaryReactor* reactor) override;
+      #endif
       void armHome(::grpc::ClientContext* context, const ::moveHome* request, ::moveResponse* response, std::function<void(::grpc::Status)>) override;
       #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
       void armHome(::grpc::ClientContext* context, const ::moveHome* request, ::moveResponse* response, ::grpc::ClientUnaryReactor* reactor) override;
@@ -183,6 +239,10 @@ class armCommunication final {
     ::grpc::ClientAsyncResponseReader< ::statusResponse>* PrepareAsyncarmStatusRaw(::grpc::ClientContext* context, const ::statusRequest& request, ::grpc::CompletionQueue* cq) override;
     ::grpc::ClientAsyncResponseReader< ::moveResponse>* AsyncarmControlRaw(::grpc::ClientContext* context, const ::moveArm& request, ::grpc::CompletionQueue* cq) override;
     ::grpc::ClientAsyncResponseReader< ::moveResponse>* PrepareAsyncarmControlRaw(::grpc::ClientContext* context, const ::moveArm& request, ::grpc::CompletionQueue* cq) override;
+    ::grpc::ClientAsyncResponseReader< ::moveResponse>* AsyncgripperOpenRaw(::grpc::ClientContext* context, const ::gripperRequest& request, ::grpc::CompletionQueue* cq) override;
+    ::grpc::ClientAsyncResponseReader< ::moveResponse>* PrepareAsyncgripperOpenRaw(::grpc::ClientContext* context, const ::gripperRequest& request, ::grpc::CompletionQueue* cq) override;
+    ::grpc::ClientAsyncResponseReader< ::moveResponse>* AsyncstopArmRaw(::grpc::ClientContext* context, const ::stopRequest& request, ::grpc::CompletionQueue* cq) override;
+    ::grpc::ClientAsyncResponseReader< ::moveResponse>* PrepareAsyncstopArmRaw(::grpc::ClientContext* context, const ::stopRequest& request, ::grpc::CompletionQueue* cq) override;
     ::grpc::ClientAsyncResponseReader< ::moveResponse>* AsyncarmHomeRaw(::grpc::ClientContext* context, const ::moveHome& request, ::grpc::CompletionQueue* cq) override;
     ::grpc::ClientAsyncResponseReader< ::moveResponse>* PrepareAsyncarmHomeRaw(::grpc::ClientContext* context, const ::moveHome& request, ::grpc::CompletionQueue* cq) override;
     ::grpc::ClientReader< ::torqueResponse>* armFeedbackRaw(::grpc::ClientContext* context, const ::torqueRequest& request) override;
@@ -190,6 +250,8 @@ class armCommunication final {
     ::grpc::ClientAsyncReader< ::torqueResponse>* PrepareAsyncarmFeedbackRaw(::grpc::ClientContext* context, const ::torqueRequest& request, ::grpc::CompletionQueue* cq) override;
     const ::grpc::internal::RpcMethod rpcmethod_armStatus_;
     const ::grpc::internal::RpcMethod rpcmethod_armControl_;
+    const ::grpc::internal::RpcMethod rpcmethod_gripperOpen_;
+    const ::grpc::internal::RpcMethod rpcmethod_stopArm_;
     const ::grpc::internal::RpcMethod rpcmethod_armHome_;
     const ::grpc::internal::RpcMethod rpcmethod_armFeedback_;
   };
@@ -201,6 +263,8 @@ class armCommunication final {
     virtual ~Service();
     virtual ::grpc::Status armStatus(::grpc::ServerContext* context, const ::statusRequest* request, ::statusResponse* response);
     virtual ::grpc::Status armControl(::grpc::ServerContext* context, const ::moveArm* request, ::moveResponse* response);
+    virtual ::grpc::Status gripperOpen(::grpc::ServerContext* context, const ::gripperRequest* request, ::moveResponse* response);
+    virtual ::grpc::Status stopArm(::grpc::ServerContext* context, const ::stopRequest* request, ::moveResponse* response);
     virtual ::grpc::Status armHome(::grpc::ServerContext* context, const ::moveHome* request, ::moveResponse* response);
     virtual ::grpc::Status armFeedback(::grpc::ServerContext* context, const ::torqueRequest* request, ::grpc::ServerWriter< ::torqueResponse>* writer);
   };
@@ -245,12 +309,52 @@ class armCommunication final {
     }
   };
   template <class BaseClass>
+  class WithAsyncMethod_gripperOpen : public BaseClass {
+   private:
+    void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
+   public:
+    WithAsyncMethod_gripperOpen() {
+      ::grpc::Service::MarkMethodAsync(2);
+    }
+    ~WithAsyncMethod_gripperOpen() override {
+      BaseClassMustBeDerivedFromService(this);
+    }
+    // disable synchronous version of this method
+    ::grpc::Status gripperOpen(::grpc::ServerContext* /*context*/, const ::gripperRequest* /*request*/, ::moveResponse* /*response*/) override {
+      abort();
+      return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
+    }
+    void RequestgripperOpen(::grpc::ServerContext* context, ::gripperRequest* request, ::grpc::ServerAsyncResponseWriter< ::moveResponse>* response, ::grpc::CompletionQueue* new_call_cq, ::grpc::ServerCompletionQueue* notification_cq, void *tag) {
+      ::grpc::Service::RequestAsyncUnary(2, context, request, response, new_call_cq, notification_cq, tag);
+    }
+  };
+  template <class BaseClass>
+  class WithAsyncMethod_stopArm : public BaseClass {
+   private:
+    void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
+   public:
+    WithAsyncMethod_stopArm() {
+      ::grpc::Service::MarkMethodAsync(3);
+    }
+    ~WithAsyncMethod_stopArm() override {
+      BaseClassMustBeDerivedFromService(this);
+    }
+    // disable synchronous version of this method
+    ::grpc::Status stopArm(::grpc::ServerContext* /*context*/, const ::stopRequest* /*request*/, ::moveResponse* /*response*/) override {
+      abort();
+      return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
+    }
+    void RequeststopArm(::grpc::ServerContext* context, ::stopRequest* request, ::grpc::ServerAsyncResponseWriter< ::moveResponse>* response, ::grpc::CompletionQueue* new_call_cq, ::grpc::ServerCompletionQueue* notification_cq, void *tag) {
+      ::grpc::Service::RequestAsyncUnary(3, context, request, response, new_call_cq, notification_cq, tag);
+    }
+  };
+  template <class BaseClass>
   class WithAsyncMethod_armHome : public BaseClass {
    private:
     void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
    public:
     WithAsyncMethod_armHome() {
-      ::grpc::Service::MarkMethodAsync(2);
+      ::grpc::Service::MarkMethodAsync(4);
     }
     ~WithAsyncMethod_armHome() override {
       BaseClassMustBeDerivedFromService(this);
@@ -261,7 +365,7 @@ class armCommunication final {
       return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
     }
     void RequestarmHome(::grpc::ServerContext* context, ::moveHome* request, ::grpc::ServerAsyncResponseWriter< ::moveResponse>* response, ::grpc::CompletionQueue* new_call_cq, ::grpc::ServerCompletionQueue* notification_cq, void *tag) {
-      ::grpc::Service::RequestAsyncUnary(2, context, request, response, new_call_cq, notification_cq, tag);
+      ::grpc::Service::RequestAsyncUnary(4, context, request, response, new_call_cq, notification_cq, tag);
     }
   };
   template <class BaseClass>
@@ -270,7 +374,7 @@ class armCommunication final {
     void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
    public:
     WithAsyncMethod_armFeedback() {
-      ::grpc::Service::MarkMethodAsync(3);
+      ::grpc::Service::MarkMethodAsync(5);
     }
     ~WithAsyncMethod_armFeedback() override {
       BaseClassMustBeDerivedFromService(this);
@@ -281,10 +385,10 @@ class armCommunication final {
       return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
     }
     void RequestarmFeedback(::grpc::ServerContext* context, ::torqueRequest* request, ::grpc::ServerAsyncWriter< ::torqueResponse>* writer, ::grpc::CompletionQueue* new_call_cq, ::grpc::ServerCompletionQueue* notification_cq, void *tag) {
-      ::grpc::Service::RequestAsyncServerStreaming(3, context, request, writer, new_call_cq, notification_cq, tag);
+      ::grpc::Service::RequestAsyncServerStreaming(5, context, request, writer, new_call_cq, notification_cq, tag);
     }
   };
-  typedef WithAsyncMethod_armStatus<WithAsyncMethod_armControl<WithAsyncMethod_armHome<WithAsyncMethod_armFeedback<Service > > > > AsyncService;
+  typedef WithAsyncMethod_armStatus<WithAsyncMethod_armControl<WithAsyncMethod_gripperOpen<WithAsyncMethod_stopArm<WithAsyncMethod_armHome<WithAsyncMethod_armFeedback<Service > > > > > > AsyncService;
   template <class BaseClass>
   class ExperimentalWithCallbackMethod_armStatus : public BaseClass {
    private:
@@ -380,6 +484,100 @@ class armCommunication final {
       { return nullptr; }
   };
   template <class BaseClass>
+  class ExperimentalWithCallbackMethod_gripperOpen : public BaseClass {
+   private:
+    void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
+   public:
+    ExperimentalWithCallbackMethod_gripperOpen() {
+    #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
+      ::grpc::Service::
+    #else
+      ::grpc::Service::experimental().
+    #endif
+        MarkMethodCallback(2,
+          new ::grpc::internal::CallbackUnaryHandler< ::gripperRequest, ::moveResponse>(
+            [this](
+    #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
+                   ::grpc::CallbackServerContext*
+    #else
+                   ::grpc::experimental::CallbackServerContext*
+    #endif
+                     context, const ::gripperRequest* request, ::moveResponse* response) { return this->gripperOpen(context, request, response); }));}
+    void SetMessageAllocatorFor_gripperOpen(
+        ::grpc::experimental::MessageAllocator< ::gripperRequest, ::moveResponse>* allocator) {
+    #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
+      ::grpc::internal::MethodHandler* const handler = ::grpc::Service::GetHandler(2);
+    #else
+      ::grpc::internal::MethodHandler* const handler = ::grpc::Service::experimental().GetHandler(2);
+    #endif
+      static_cast<::grpc::internal::CallbackUnaryHandler< ::gripperRequest, ::moveResponse>*>(handler)
+              ->SetMessageAllocator(allocator);
+    }
+    ~ExperimentalWithCallbackMethod_gripperOpen() override {
+      BaseClassMustBeDerivedFromService(this);
+    }
+    // disable synchronous version of this method
+    ::grpc::Status gripperOpen(::grpc::ServerContext* /*context*/, const ::gripperRequest* /*request*/, ::moveResponse* /*response*/) override {
+      abort();
+      return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
+    }
+    #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
+    virtual ::grpc::ServerUnaryReactor* gripperOpen(
+      ::grpc::CallbackServerContext* /*context*/, const ::gripperRequest* /*request*/, ::moveResponse* /*response*/)
+    #else
+    virtual ::grpc::experimental::ServerUnaryReactor* gripperOpen(
+      ::grpc::experimental::CallbackServerContext* /*context*/, const ::gripperRequest* /*request*/, ::moveResponse* /*response*/)
+    #endif
+      { return nullptr; }
+  };
+  template <class BaseClass>
+  class ExperimentalWithCallbackMethod_stopArm : public BaseClass {
+   private:
+    void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
+   public:
+    ExperimentalWithCallbackMethod_stopArm() {
+    #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
+      ::grpc::Service::
+    #else
+      ::grpc::Service::experimental().
+    #endif
+        MarkMethodCallback(3,
+          new ::grpc::internal::CallbackUnaryHandler< ::stopRequest, ::moveResponse>(
+            [this](
+    #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
+                   ::grpc::CallbackServerContext*
+    #else
+                   ::grpc::experimental::CallbackServerContext*
+    #endif
+                     context, const ::stopRequest* request, ::moveResponse* response) { return this->stopArm(context, request, response); }));}
+    void SetMessageAllocatorFor_stopArm(
+        ::grpc::experimental::MessageAllocator< ::stopRequest, ::moveResponse>* allocator) {
+    #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
+      ::grpc::internal::MethodHandler* const handler = ::grpc::Service::GetHandler(3);
+    #else
+      ::grpc::internal::MethodHandler* const handler = ::grpc::Service::experimental().GetHandler(3);
+    #endif
+      static_cast<::grpc::internal::CallbackUnaryHandler< ::stopRequest, ::moveResponse>*>(handler)
+              ->SetMessageAllocator(allocator);
+    }
+    ~ExperimentalWithCallbackMethod_stopArm() override {
+      BaseClassMustBeDerivedFromService(this);
+    }
+    // disable synchronous version of this method
+    ::grpc::Status stopArm(::grpc::ServerContext* /*context*/, const ::stopRequest* /*request*/, ::moveResponse* /*response*/) override {
+      abort();
+      return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
+    }
+    #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
+    virtual ::grpc::ServerUnaryReactor* stopArm(
+      ::grpc::CallbackServerContext* /*context*/, const ::stopRequest* /*request*/, ::moveResponse* /*response*/)
+    #else
+    virtual ::grpc::experimental::ServerUnaryReactor* stopArm(
+      ::grpc::experimental::CallbackServerContext* /*context*/, const ::stopRequest* /*request*/, ::moveResponse* /*response*/)
+    #endif
+      { return nullptr; }
+  };
+  template <class BaseClass>
   class ExperimentalWithCallbackMethod_armHome : public BaseClass {
    private:
     void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
@@ -390,7 +588,7 @@ class armCommunication final {
     #else
       ::grpc::Service::experimental().
     #endif
-        MarkMethodCallback(2,
+        MarkMethodCallback(4,
           new ::grpc::internal::CallbackUnaryHandler< ::moveHome, ::moveResponse>(
             [this](
     #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
@@ -402,9 +600,9 @@ class armCommunication final {
     void SetMessageAllocatorFor_armHome(
         ::grpc::experimental::MessageAllocator< ::moveHome, ::moveResponse>* allocator) {
     #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
-      ::grpc::internal::MethodHandler* const handler = ::grpc::Service::GetHandler(2);
+      ::grpc::internal::MethodHandler* const handler = ::grpc::Service::GetHandler(4);
     #else
-      ::grpc::internal::MethodHandler* const handler = ::grpc::Service::experimental().GetHandler(2);
+      ::grpc::internal::MethodHandler* const handler = ::grpc::Service::experimental().GetHandler(4);
     #endif
       static_cast<::grpc::internal::CallbackUnaryHandler< ::moveHome, ::moveResponse>*>(handler)
               ->SetMessageAllocator(allocator);
@@ -437,7 +635,7 @@ class armCommunication final {
     #else
       ::grpc::Service::experimental().
     #endif
-        MarkMethodCallback(3,
+        MarkMethodCallback(5,
           new ::grpc::internal::CallbackServerStreamingHandler< ::torqueRequest, ::torqueResponse>(
             [this](
     #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
@@ -465,10 +663,10 @@ class armCommunication final {
       { return nullptr; }
   };
   #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
-  typedef ExperimentalWithCallbackMethod_armStatus<ExperimentalWithCallbackMethod_armControl<ExperimentalWithCallbackMethod_armHome<ExperimentalWithCallbackMethod_armFeedback<Service > > > > CallbackService;
+  typedef ExperimentalWithCallbackMethod_armStatus<ExperimentalWithCallbackMethod_armControl<ExperimentalWithCallbackMethod_gripperOpen<ExperimentalWithCallbackMethod_stopArm<ExperimentalWithCallbackMethod_armHome<ExperimentalWithCallbackMethod_armFeedback<Service > > > > > > CallbackService;
   #endif
 
-  typedef ExperimentalWithCallbackMethod_armStatus<ExperimentalWithCallbackMethod_armControl<ExperimentalWithCallbackMethod_armHome<ExperimentalWithCallbackMethod_armFeedback<Service > > > > ExperimentalCallbackService;
+  typedef ExperimentalWithCallbackMethod_armStatus<ExperimentalWithCallbackMethod_armControl<ExperimentalWithCallbackMethod_gripperOpen<ExperimentalWithCallbackMethod_stopArm<ExperimentalWithCallbackMethod_armHome<ExperimentalWithCallbackMethod_armFeedback<Service > > > > > > ExperimentalCallbackService;
   template <class BaseClass>
   class WithGenericMethod_armStatus : public BaseClass {
    private:
@@ -504,12 +702,46 @@ class armCommunication final {
     }
   };
   template <class BaseClass>
+  class WithGenericMethod_gripperOpen : public BaseClass {
+   private:
+    void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
+   public:
+    WithGenericMethod_gripperOpen() {
+      ::grpc::Service::MarkMethodGeneric(2);
+    }
+    ~WithGenericMethod_gripperOpen() override {
+      BaseClassMustBeDerivedFromService(this);
+    }
+    // disable synchronous version of this method
+    ::grpc::Status gripperOpen(::grpc::ServerContext* /*context*/, const ::gripperRequest* /*request*/, ::moveResponse* /*response*/) override {
+      abort();
+      return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
+    }
+  };
+  template <class BaseClass>
+  class WithGenericMethod_stopArm : public BaseClass {
+   private:
+    void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
+   public:
+    WithGenericMethod_stopArm() {
+      ::grpc::Service::MarkMethodGeneric(3);
+    }
+    ~WithGenericMethod_stopArm() override {
+      BaseClassMustBeDerivedFromService(this);
+    }
+    // disable synchronous version of this method
+    ::grpc::Status stopArm(::grpc::ServerContext* /*context*/, const ::stopRequest* /*request*/, ::moveResponse* /*response*/) override {
+      abort();
+      return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
+    }
+  };
+  template <class BaseClass>
   class WithGenericMethod_armHome : public BaseClass {
    private:
     void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
    public:
     WithGenericMethod_armHome() {
-      ::grpc::Service::MarkMethodGeneric(2);
+      ::grpc::Service::MarkMethodGeneric(4);
     }
     ~WithGenericMethod_armHome() override {
       BaseClassMustBeDerivedFromService(this);
@@ -526,7 +758,7 @@ class armCommunication final {
     void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
    public:
     WithGenericMethod_armFeedback() {
-      ::grpc::Service::MarkMethodGeneric(3);
+      ::grpc::Service::MarkMethodGeneric(5);
     }
     ~WithGenericMethod_armFeedback() override {
       BaseClassMustBeDerivedFromService(this);
@@ -578,12 +810,52 @@ class armCommunication final {
     }
   };
   template <class BaseClass>
+  class WithRawMethod_gripperOpen : public BaseClass {
+   private:
+    void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
+   public:
+    WithRawMethod_gripperOpen() {
+      ::grpc::Service::MarkMethodRaw(2);
+    }
+    ~WithRawMethod_gripperOpen() override {
+      BaseClassMustBeDerivedFromService(this);
+    }
+    // disable synchronous version of this method
+    ::grpc::Status gripperOpen(::grpc::ServerContext* /*context*/, const ::gripperRequest* /*request*/, ::moveResponse* /*response*/) override {
+      abort();
+      return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
+    }
+    void RequestgripperOpen(::grpc::ServerContext* context, ::grpc::ByteBuffer* request, ::grpc::ServerAsyncResponseWriter< ::grpc::ByteBuffer>* response, ::grpc::CompletionQueue* new_call_cq, ::grpc::ServerCompletionQueue* notification_cq, void *tag) {
+      ::grpc::Service::RequestAsyncUnary(2, context, request, response, new_call_cq, notification_cq, tag);
+    }
+  };
+  template <class BaseClass>
+  class WithRawMethod_stopArm : public BaseClass {
+   private:
+    void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
+   public:
+    WithRawMethod_stopArm() {
+      ::grpc::Service::MarkMethodRaw(3);
+    }
+    ~WithRawMethod_stopArm() override {
+      BaseClassMustBeDerivedFromService(this);
+    }
+    // disable synchronous version of this method
+    ::grpc::Status stopArm(::grpc::ServerContext* /*context*/, const ::stopRequest* /*request*/, ::moveResponse* /*response*/) override {
+      abort();
+      return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
+    }
+    void RequeststopArm(::grpc::ServerContext* context, ::grpc::ByteBuffer* request, ::grpc::ServerAsyncResponseWriter< ::grpc::ByteBuffer>* response, ::grpc::CompletionQueue* new_call_cq, ::grpc::ServerCompletionQueue* notification_cq, void *tag) {
+      ::grpc::Service::RequestAsyncUnary(3, context, request, response, new_call_cq, notification_cq, tag);
+    }
+  };
+  template <class BaseClass>
   class WithRawMethod_armHome : public BaseClass {
    private:
     void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
    public:
     WithRawMethod_armHome() {
-      ::grpc::Service::MarkMethodRaw(2);
+      ::grpc::Service::MarkMethodRaw(4);
     }
     ~WithRawMethod_armHome() override {
       BaseClassMustBeDerivedFromService(this);
@@ -594,7 +866,7 @@ class armCommunication final {
       return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
     }
     void RequestarmHome(::grpc::ServerContext* context, ::grpc::ByteBuffer* request, ::grpc::ServerAsyncResponseWriter< ::grpc::ByteBuffer>* response, ::grpc::CompletionQueue* new_call_cq, ::grpc::ServerCompletionQueue* notification_cq, void *tag) {
-      ::grpc::Service::RequestAsyncUnary(2, context, request, response, new_call_cq, notification_cq, tag);
+      ::grpc::Service::RequestAsyncUnary(4, context, request, response, new_call_cq, notification_cq, tag);
     }
   };
   template <class BaseClass>
@@ -603,7 +875,7 @@ class armCommunication final {
     void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
    public:
     WithRawMethod_armFeedback() {
-      ::grpc::Service::MarkMethodRaw(3);
+      ::grpc::Service::MarkMethodRaw(5);
     }
     ~WithRawMethod_armFeedback() override {
       BaseClassMustBeDerivedFromService(this);
@@ -614,7 +886,7 @@ class armCommunication final {
       return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
     }
     void RequestarmFeedback(::grpc::ServerContext* context, ::grpc::ByteBuffer* request, ::grpc::ServerAsyncWriter< ::grpc::ByteBuffer>* writer, ::grpc::CompletionQueue* new_call_cq, ::grpc::ServerCompletionQueue* notification_cq, void *tag) {
-      ::grpc::Service::RequestAsyncServerStreaming(3, context, request, writer, new_call_cq, notification_cq, tag);
+      ::grpc::Service::RequestAsyncServerStreaming(5, context, request, writer, new_call_cq, notification_cq, tag);
     }
   };
   template <class BaseClass>
@@ -694,6 +966,82 @@ class armCommunication final {
       { return nullptr; }
   };
   template <class BaseClass>
+  class ExperimentalWithRawCallbackMethod_gripperOpen : public BaseClass {
+   private:
+    void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
+   public:
+    ExperimentalWithRawCallbackMethod_gripperOpen() {
+    #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
+      ::grpc::Service::
+    #else
+      ::grpc::Service::experimental().
+    #endif
+        MarkMethodRawCallback(2,
+          new ::grpc::internal::CallbackUnaryHandler< ::grpc::ByteBuffer, ::grpc::ByteBuffer>(
+            [this](
+    #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
+                   ::grpc::CallbackServerContext*
+    #else
+                   ::grpc::experimental::CallbackServerContext*
+    #endif
+                     context, const ::grpc::ByteBuffer* request, ::grpc::ByteBuffer* response) { return this->gripperOpen(context, request, response); }));
+    }
+    ~ExperimentalWithRawCallbackMethod_gripperOpen() override {
+      BaseClassMustBeDerivedFromService(this);
+    }
+    // disable synchronous version of this method
+    ::grpc::Status gripperOpen(::grpc::ServerContext* /*context*/, const ::gripperRequest* /*request*/, ::moveResponse* /*response*/) override {
+      abort();
+      return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
+    }
+    #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
+    virtual ::grpc::ServerUnaryReactor* gripperOpen(
+      ::grpc::CallbackServerContext* /*context*/, const ::grpc::ByteBuffer* /*request*/, ::grpc::ByteBuffer* /*response*/)
+    #else
+    virtual ::grpc::experimental::ServerUnaryReactor* gripperOpen(
+      ::grpc::experimental::CallbackServerContext* /*context*/, const ::grpc::ByteBuffer* /*request*/, ::grpc::ByteBuffer* /*response*/)
+    #endif
+      { return nullptr; }
+  };
+  template <class BaseClass>
+  class ExperimentalWithRawCallbackMethod_stopArm : public BaseClass {
+   private:
+    void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
+   public:
+    ExperimentalWithRawCallbackMethod_stopArm() {
+    #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
+      ::grpc::Service::
+    #else
+      ::grpc::Service::experimental().
+    #endif
+        MarkMethodRawCallback(3,
+          new ::grpc::internal::CallbackUnaryHandler< ::grpc::ByteBuffer, ::grpc::ByteBuffer>(
+            [this](
+    #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
+                   ::grpc::CallbackServerContext*
+    #else
+                   ::grpc::experimental::CallbackServerContext*
+    #endif
+                     context, const ::grpc::ByteBuffer* request, ::grpc::ByteBuffer* response) { return this->stopArm(context, request, response); }));
+    }
+    ~ExperimentalWithRawCallbackMethod_stopArm() override {
+      BaseClassMustBeDerivedFromService(this);
+    }
+    // disable synchronous version of this method
+    ::grpc::Status stopArm(::grpc::ServerContext* /*context*/, const ::stopRequest* /*request*/, ::moveResponse* /*response*/) override {
+      abort();
+      return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
+    }
+    #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
+    virtual ::grpc::ServerUnaryReactor* stopArm(
+      ::grpc::CallbackServerContext* /*context*/, const ::grpc::ByteBuffer* /*request*/, ::grpc::ByteBuffer* /*response*/)
+    #else
+    virtual ::grpc::experimental::ServerUnaryReactor* stopArm(
+      ::grpc::experimental::CallbackServerContext* /*context*/, const ::grpc::ByteBuffer* /*request*/, ::grpc::ByteBuffer* /*response*/)
+    #endif
+      { return nullptr; }
+  };
+  template <class BaseClass>
   class ExperimentalWithRawCallbackMethod_armHome : public BaseClass {
    private:
     void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
@@ -704,7 +1052,7 @@ class armCommunication final {
     #else
       ::grpc::Service::experimental().
     #endif
-        MarkMethodRawCallback(2,
+        MarkMethodRawCallback(4,
           new ::grpc::internal::CallbackUnaryHandler< ::grpc::ByteBuffer, ::grpc::ByteBuffer>(
             [this](
     #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
@@ -742,7 +1090,7 @@ class armCommunication final {
     #else
       ::grpc::Service::experimental().
     #endif
-        MarkMethodRawCallback(3,
+        MarkMethodRawCallback(5,
           new ::grpc::internal::CallbackServerStreamingHandler< ::grpc::ByteBuffer, ::grpc::ByteBuffer>(
             [this](
     #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
@@ -824,12 +1172,66 @@ class armCommunication final {
     virtual ::grpc::Status StreamedarmControl(::grpc::ServerContext* context, ::grpc::ServerUnaryStreamer< ::moveArm,::moveResponse>* server_unary_streamer) = 0;
   };
   template <class BaseClass>
+  class WithStreamedUnaryMethod_gripperOpen : public BaseClass {
+   private:
+    void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
+   public:
+    WithStreamedUnaryMethod_gripperOpen() {
+      ::grpc::Service::MarkMethodStreamed(2,
+        new ::grpc::internal::StreamedUnaryHandler<
+          ::gripperRequest, ::moveResponse>(
+            [this](::grpc::ServerContext* context,
+                   ::grpc::ServerUnaryStreamer<
+                     ::gripperRequest, ::moveResponse>* streamer) {
+                       return this->StreamedgripperOpen(context,
+                         streamer);
+                  }));
+    }
+    ~WithStreamedUnaryMethod_gripperOpen() override {
+      BaseClassMustBeDerivedFromService(this);
+    }
+    // disable regular version of this method
+    ::grpc::Status gripperOpen(::grpc::ServerContext* /*context*/, const ::gripperRequest* /*request*/, ::moveResponse* /*response*/) override {
+      abort();
+      return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
+    }
+    // replace default version of method with streamed unary
+    virtual ::grpc::Status StreamedgripperOpen(::grpc::ServerContext* context, ::grpc::ServerUnaryStreamer< ::gripperRequest,::moveResponse>* server_unary_streamer) = 0;
+  };
+  template <class BaseClass>
+  class WithStreamedUnaryMethod_stopArm : public BaseClass {
+   private:
+    void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
+   public:
+    WithStreamedUnaryMethod_stopArm() {
+      ::grpc::Service::MarkMethodStreamed(3,
+        new ::grpc::internal::StreamedUnaryHandler<
+          ::stopRequest, ::moveResponse>(
+            [this](::grpc::ServerContext* context,
+                   ::grpc::ServerUnaryStreamer<
+                     ::stopRequest, ::moveResponse>* streamer) {
+                       return this->StreamedstopArm(context,
+                         streamer);
+                  }));
+    }
+    ~WithStreamedUnaryMethod_stopArm() override {
+      BaseClassMustBeDerivedFromService(this);
+    }
+    // disable regular version of this method
+    ::grpc::Status stopArm(::grpc::ServerContext* /*context*/, const ::stopRequest* /*request*/, ::moveResponse* /*response*/) override {
+      abort();
+      return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
+    }
+    // replace default version of method with streamed unary
+    virtual ::grpc::Status StreamedstopArm(::grpc::ServerContext* context, ::grpc::ServerUnaryStreamer< ::stopRequest,::moveResponse>* server_unary_streamer) = 0;
+  };
+  template <class BaseClass>
   class WithStreamedUnaryMethod_armHome : public BaseClass {
    private:
     void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
    public:
     WithStreamedUnaryMethod_armHome() {
-      ::grpc::Service::MarkMethodStreamed(2,
+      ::grpc::Service::MarkMethodStreamed(4,
         new ::grpc::internal::StreamedUnaryHandler<
           ::moveHome, ::moveResponse>(
             [this](::grpc::ServerContext* context,
@@ -850,14 +1252,14 @@ class armCommunication final {
     // replace default version of method with streamed unary
     virtual ::grpc::Status StreamedarmHome(::grpc::ServerContext* context, ::grpc::ServerUnaryStreamer< ::moveHome,::moveResponse>* server_unary_streamer) = 0;
   };
-  typedef WithStreamedUnaryMethod_armStatus<WithStreamedUnaryMethod_armControl<WithStreamedUnaryMethod_armHome<Service > > > StreamedUnaryService;
+  typedef WithStreamedUnaryMethod_armStatus<WithStreamedUnaryMethod_armControl<WithStreamedUnaryMethod_gripperOpen<WithStreamedUnaryMethod_stopArm<WithStreamedUnaryMethod_armHome<Service > > > > > StreamedUnaryService;
   template <class BaseClass>
   class WithSplitStreamingMethod_armFeedback : public BaseClass {
    private:
     void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
    public:
     WithSplitStreamingMethod_armFeedback() {
-      ::grpc::Service::MarkMethodStreamed(3,
+      ::grpc::Service::MarkMethodStreamed(5,
         new ::grpc::internal::SplitServerStreamingHandler<
           ::torqueRequest, ::torqueResponse>(
             [this](::grpc::ServerContext* context,
@@ -879,7 +1281,7 @@ class armCommunication final {
     virtual ::grpc::Status StreamedarmFeedback(::grpc::ServerContext* context, ::grpc::ServerSplitStreamer< ::torqueRequest,::torqueResponse>* server_split_streamer) = 0;
   };
   typedef WithSplitStreamingMethod_armFeedback<Service > SplitStreamedService;
-  typedef WithStreamedUnaryMethod_armStatus<WithStreamedUnaryMethod_armControl<WithStreamedUnaryMethod_armHome<WithSplitStreamingMethod_armFeedback<Service > > > > StreamedService;
+  typedef WithStreamedUnaryMethod_armStatus<WithStreamedUnaryMethod_armControl<WithStreamedUnaryMethod_gripperOpen<WithStreamedUnaryMethod_stopArm<WithStreamedUnaryMethod_armHome<WithSplitStreamingMethod_armFeedback<Service > > > > > > StreamedService;
 };
 
 

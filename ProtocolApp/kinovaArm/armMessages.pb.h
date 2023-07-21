@@ -46,13 +46,16 @@ struct TableStruct_armMessages_2eproto {
     PROTOBUF_SECTION_VARIABLE(protodesc_cold);
   static const ::PROTOBUF_NAMESPACE_ID::internal::AuxiliaryParseTableField aux[]
     PROTOBUF_SECTION_VARIABLE(protodesc_cold);
-  static const ::PROTOBUF_NAMESPACE_ID::internal::ParseTable schema[7]
+  static const ::PROTOBUF_NAMESPACE_ID::internal::ParseTable schema[9]
     PROTOBUF_SECTION_VARIABLE(protodesc_cold);
   static const ::PROTOBUF_NAMESPACE_ID::internal::FieldMetadata field_metadata[];
   static const ::PROTOBUF_NAMESPACE_ID::internal::SerializationTable serialization_table[];
   static const ::PROTOBUF_NAMESPACE_ID::uint32 offsets[];
 };
 extern const ::PROTOBUF_NAMESPACE_ID::internal::DescriptorTable descriptor_table_armMessages_2eproto;
+class gripperRequest;
+class gripperRequestDefaultTypeInternal;
+extern gripperRequestDefaultTypeInternal _gripperRequest_default_instance_;
 class moveArm;
 class moveArmDefaultTypeInternal;
 extern moveArmDefaultTypeInternal _moveArm_default_instance_;
@@ -68,6 +71,9 @@ extern statusRequestDefaultTypeInternal _statusRequest_default_instance_;
 class statusResponse;
 class statusResponseDefaultTypeInternal;
 extern statusResponseDefaultTypeInternal _statusResponse_default_instance_;
+class stopRequest;
+class stopRequestDefaultTypeInternal;
+extern stopRequestDefaultTypeInternal _stopRequest_default_instance_;
 class torqueRequest;
 class torqueRequestDefaultTypeInternal;
 extern torqueRequestDefaultTypeInternal _torqueRequest_default_instance_;
@@ -75,11 +81,13 @@ class torqueResponse;
 class torqueResponseDefaultTypeInternal;
 extern torqueResponseDefaultTypeInternal _torqueResponse_default_instance_;
 PROTOBUF_NAMESPACE_OPEN
+template<> ::gripperRequest* Arena::CreateMaybeMessage<::gripperRequest>(Arena*);
 template<> ::moveArm* Arena::CreateMaybeMessage<::moveArm>(Arena*);
 template<> ::moveHome* Arena::CreateMaybeMessage<::moveHome>(Arena*);
 template<> ::moveResponse* Arena::CreateMaybeMessage<::moveResponse>(Arena*);
 template<> ::statusRequest* Arena::CreateMaybeMessage<::statusRequest>(Arena*);
 template<> ::statusResponse* Arena::CreateMaybeMessage<::statusResponse>(Arena*);
+template<> ::stopRequest* Arena::CreateMaybeMessage<::stopRequest>(Arena*);
 template<> ::torqueRequest* Arena::CreateMaybeMessage<::torqueRequest>(Arena*);
 template<> ::torqueResponse* Arena::CreateMaybeMessage<::torqueResponse>(Arena*);
 PROTOBUF_NAMESPACE_CLOSE
@@ -358,6 +366,265 @@ class statusResponse PROTOBUF_FINAL :
 };
 // -------------------------------------------------------------------
 
+class gripperRequest PROTOBUF_FINAL :
+    public ::PROTOBUF_NAMESPACE_ID::Message /* @@protoc_insertion_point(class_definition:gripperRequest) */ {
+ public:
+  inline gripperRequest() : gripperRequest(nullptr) {}
+  virtual ~gripperRequest();
+
+  gripperRequest(const gripperRequest& from);
+  gripperRequest(gripperRequest&& from) noexcept
+    : gripperRequest() {
+    *this = ::std::move(from);
+  }
+
+  inline gripperRequest& operator=(const gripperRequest& from) {
+    CopyFrom(from);
+    return *this;
+  }
+  inline gripperRequest& operator=(gripperRequest&& from) noexcept {
+    if (GetArena() == from.GetArena()) {
+      if (this != &from) InternalSwap(&from);
+    } else {
+      CopyFrom(from);
+    }
+    return *this;
+  }
+
+  static const ::PROTOBUF_NAMESPACE_ID::Descriptor* descriptor() {
+    return GetDescriptor();
+  }
+  static const ::PROTOBUF_NAMESPACE_ID::Descriptor* GetDescriptor() {
+    return GetMetadataStatic().descriptor;
+  }
+  static const ::PROTOBUF_NAMESPACE_ID::Reflection* GetReflection() {
+    return GetMetadataStatic().reflection;
+  }
+  static const gripperRequest& default_instance();
+
+  static inline const gripperRequest* internal_default_instance() {
+    return reinterpret_cast<const gripperRequest*>(
+               &_gripperRequest_default_instance_);
+  }
+  static constexpr int kIndexInFileMessages =
+    2;
+
+  friend void swap(gripperRequest& a, gripperRequest& b) {
+    a.Swap(&b);
+  }
+  inline void Swap(gripperRequest* other) {
+    if (other == this) return;
+    if (GetArena() == other->GetArena()) {
+      InternalSwap(other);
+    } else {
+      ::PROTOBUF_NAMESPACE_ID::internal::GenericSwap(this, other);
+    }
+  }
+  void UnsafeArenaSwap(gripperRequest* other) {
+    if (other == this) return;
+    GOOGLE_DCHECK(GetArena() == other->GetArena());
+    InternalSwap(other);
+  }
+
+  // implements Message ----------------------------------------------
+
+  inline gripperRequest* New() const final {
+    return CreateMaybeMessage<gripperRequest>(nullptr);
+  }
+
+  gripperRequest* New(::PROTOBUF_NAMESPACE_ID::Arena* arena) const final {
+    return CreateMaybeMessage<gripperRequest>(arena);
+  }
+  void CopyFrom(const ::PROTOBUF_NAMESPACE_ID::Message& from) final;
+  void MergeFrom(const ::PROTOBUF_NAMESPACE_ID::Message& from) final;
+  void CopyFrom(const gripperRequest& from);
+  void MergeFrom(const gripperRequest& from);
+  PROTOBUF_ATTRIBUTE_REINITIALIZES void Clear() final;
+  bool IsInitialized() const final;
+
+  size_t ByteSizeLong() const final;
+  const char* _InternalParse(const char* ptr, ::PROTOBUF_NAMESPACE_ID::internal::ParseContext* ctx) final;
+  ::PROTOBUF_NAMESPACE_ID::uint8* _InternalSerialize(
+      ::PROTOBUF_NAMESPACE_ID::uint8* target, ::PROTOBUF_NAMESPACE_ID::io::EpsCopyOutputStream* stream) const final;
+  int GetCachedSize() const final { return _cached_size_.Get(); }
+
+  private:
+  inline void SharedCtor();
+  inline void SharedDtor();
+  void SetCachedSize(int size) const final;
+  void InternalSwap(gripperRequest* other);
+  friend class ::PROTOBUF_NAMESPACE_ID::internal::AnyMetadata;
+  static ::PROTOBUF_NAMESPACE_ID::StringPiece FullMessageName() {
+    return "gripperRequest";
+  }
+  protected:
+  explicit gripperRequest(::PROTOBUF_NAMESPACE_ID::Arena* arena);
+  private:
+  static void ArenaDtor(void* object);
+  inline void RegisterArenaDtor(::PROTOBUF_NAMESPACE_ID::Arena* arena);
+  public:
+
+  ::PROTOBUF_NAMESPACE_ID::Metadata GetMetadata() const final;
+  private:
+  static ::PROTOBUF_NAMESPACE_ID::Metadata GetMetadataStatic() {
+    ::PROTOBUF_NAMESPACE_ID::internal::AssignDescriptors(&::descriptor_table_armMessages_2eproto);
+    return ::descriptor_table_armMessages_2eproto.file_level_metadata[kIndexInFileMessages];
+  }
+
+  public:
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  enum : int {
+    kWidthFieldNumber = 1,
+  };
+  // double width = 1;
+  void clear_width();
+  double width() const;
+  void set_width(double value);
+  private:
+  double _internal_width() const;
+  void _internal_set_width(double value);
+  public:
+
+  // @@protoc_insertion_point(class_scope:gripperRequest)
+ private:
+  class _Internal;
+
+  template <typename T> friend class ::PROTOBUF_NAMESPACE_ID::Arena::InternalHelper;
+  typedef void InternalArenaConstructable_;
+  typedef void DestructorSkippable_;
+  double width_;
+  mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
+  friend struct ::TableStruct_armMessages_2eproto;
+};
+// -------------------------------------------------------------------
+
+class stopRequest PROTOBUF_FINAL :
+    public ::PROTOBUF_NAMESPACE_ID::Message /* @@protoc_insertion_point(class_definition:stopRequest) */ {
+ public:
+  inline stopRequest() : stopRequest(nullptr) {}
+  virtual ~stopRequest();
+
+  stopRequest(const stopRequest& from);
+  stopRequest(stopRequest&& from) noexcept
+    : stopRequest() {
+    *this = ::std::move(from);
+  }
+
+  inline stopRequest& operator=(const stopRequest& from) {
+    CopyFrom(from);
+    return *this;
+  }
+  inline stopRequest& operator=(stopRequest&& from) noexcept {
+    if (GetArena() == from.GetArena()) {
+      if (this != &from) InternalSwap(&from);
+    } else {
+      CopyFrom(from);
+    }
+    return *this;
+  }
+
+  static const ::PROTOBUF_NAMESPACE_ID::Descriptor* descriptor() {
+    return GetDescriptor();
+  }
+  static const ::PROTOBUF_NAMESPACE_ID::Descriptor* GetDescriptor() {
+    return GetMetadataStatic().descriptor;
+  }
+  static const ::PROTOBUF_NAMESPACE_ID::Reflection* GetReflection() {
+    return GetMetadataStatic().reflection;
+  }
+  static const stopRequest& default_instance();
+
+  static inline const stopRequest* internal_default_instance() {
+    return reinterpret_cast<const stopRequest*>(
+               &_stopRequest_default_instance_);
+  }
+  static constexpr int kIndexInFileMessages =
+    3;
+
+  friend void swap(stopRequest& a, stopRequest& b) {
+    a.Swap(&b);
+  }
+  inline void Swap(stopRequest* other) {
+    if (other == this) return;
+    if (GetArena() == other->GetArena()) {
+      InternalSwap(other);
+    } else {
+      ::PROTOBUF_NAMESPACE_ID::internal::GenericSwap(this, other);
+    }
+  }
+  void UnsafeArenaSwap(stopRequest* other) {
+    if (other == this) return;
+    GOOGLE_DCHECK(GetArena() == other->GetArena());
+    InternalSwap(other);
+  }
+
+  // implements Message ----------------------------------------------
+
+  inline stopRequest* New() const final {
+    return CreateMaybeMessage<stopRequest>(nullptr);
+  }
+
+  stopRequest* New(::PROTOBUF_NAMESPACE_ID::Arena* arena) const final {
+    return CreateMaybeMessage<stopRequest>(arena);
+  }
+  void CopyFrom(const ::PROTOBUF_NAMESPACE_ID::Message& from) final;
+  void MergeFrom(const ::PROTOBUF_NAMESPACE_ID::Message& from) final;
+  void CopyFrom(const stopRequest& from);
+  void MergeFrom(const stopRequest& from);
+  PROTOBUF_ATTRIBUTE_REINITIALIZES void Clear() final;
+  bool IsInitialized() const final;
+
+  size_t ByteSizeLong() const final;
+  const char* _InternalParse(const char* ptr, ::PROTOBUF_NAMESPACE_ID::internal::ParseContext* ctx) final;
+  ::PROTOBUF_NAMESPACE_ID::uint8* _InternalSerialize(
+      ::PROTOBUF_NAMESPACE_ID::uint8* target, ::PROTOBUF_NAMESPACE_ID::io::EpsCopyOutputStream* stream) const final;
+  int GetCachedSize() const final { return _cached_size_.Get(); }
+
+  private:
+  inline void SharedCtor();
+  inline void SharedDtor();
+  void SetCachedSize(int size) const final;
+  void InternalSwap(stopRequest* other);
+  friend class ::PROTOBUF_NAMESPACE_ID::internal::AnyMetadata;
+  static ::PROTOBUF_NAMESPACE_ID::StringPiece FullMessageName() {
+    return "stopRequest";
+  }
+  protected:
+  explicit stopRequest(::PROTOBUF_NAMESPACE_ID::Arena* arena);
+  private:
+  static void ArenaDtor(void* object);
+  inline void RegisterArenaDtor(::PROTOBUF_NAMESPACE_ID::Arena* arena);
+  public:
+
+  ::PROTOBUF_NAMESPACE_ID::Metadata GetMetadata() const final;
+  private:
+  static ::PROTOBUF_NAMESPACE_ID::Metadata GetMetadataStatic() {
+    ::PROTOBUF_NAMESPACE_ID::internal::AssignDescriptors(&::descriptor_table_armMessages_2eproto);
+    return ::descriptor_table_armMessages_2eproto.file_level_metadata[kIndexInFileMessages];
+  }
+
+  public:
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  // @@protoc_insertion_point(class_scope:stopRequest)
+ private:
+  class _Internal;
+
+  template <typename T> friend class ::PROTOBUF_NAMESPACE_ID::Arena::InternalHelper;
+  typedef void InternalArenaConstructable_;
+  typedef void DestructorSkippable_;
+  mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
+  friend struct ::TableStruct_armMessages_2eproto;
+};
+// -------------------------------------------------------------------
+
 class moveArm PROTOBUF_FINAL :
     public ::PROTOBUF_NAMESPACE_ID::Message /* @@protoc_insertion_point(class_definition:moveArm) */ {
  public:
@@ -399,7 +666,7 @@ class moveArm PROTOBUF_FINAL :
                &_moveArm_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    2;
+    4;
 
   friend void swap(moveArm& a, moveArm& b) {
     a.Swap(&b);
@@ -601,7 +868,7 @@ class moveHome PROTOBUF_FINAL :
                &_moveHome_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    3;
+    5;
 
   friend void swap(moveHome& a, moveHome& b) {
     a.Swap(&b);
@@ -674,13 +941,13 @@ class moveHome PROTOBUF_FINAL :
   enum : int {
     kFlagFieldNumber = 1,
   };
-  // uint32 flag = 1;
+  // int32 flag = 1;
   void clear_flag();
-  ::PROTOBUF_NAMESPACE_ID::uint32 flag() const;
-  void set_flag(::PROTOBUF_NAMESPACE_ID::uint32 value);
+  ::PROTOBUF_NAMESPACE_ID::int32 flag() const;
+  void set_flag(::PROTOBUF_NAMESPACE_ID::int32 value);
   private:
-  ::PROTOBUF_NAMESPACE_ID::uint32 _internal_flag() const;
-  void _internal_set_flag(::PROTOBUF_NAMESPACE_ID::uint32 value);
+  ::PROTOBUF_NAMESPACE_ID::int32 _internal_flag() const;
+  void _internal_set_flag(::PROTOBUF_NAMESPACE_ID::int32 value);
   public:
 
   // @@protoc_insertion_point(class_scope:moveHome)
@@ -690,7 +957,7 @@ class moveHome PROTOBUF_FINAL :
   template <typename T> friend class ::PROTOBUF_NAMESPACE_ID::Arena::InternalHelper;
   typedef void InternalArenaConstructable_;
   typedef void DestructorSkippable_;
-  ::PROTOBUF_NAMESPACE_ID::uint32 flag_;
+  ::PROTOBUF_NAMESPACE_ID::int32 flag_;
   mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
   friend struct ::TableStruct_armMessages_2eproto;
 };
@@ -737,7 +1004,7 @@ class moveResponse PROTOBUF_FINAL :
                &_moveResponse_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    4;
+    6;
 
   friend void swap(moveResponse& a, moveResponse& b) {
     a.Swap(&b);
@@ -873,7 +1140,7 @@ class torqueRequest PROTOBUF_FINAL :
                &_torqueRequest_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    5;
+    7;
 
   friend void swap(torqueRequest& a, torqueRequest& b) {
     a.Swap(&b);
@@ -1009,7 +1276,7 @@ class torqueResponse PROTOBUF_FINAL :
                &_torqueResponse_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    6;
+    8;
 
   friend void swap(torqueResponse& a, torqueResponse& b) {
     a.Swap(&b);
@@ -1225,6 +1492,34 @@ inline void statusResponse::set_flag(::PROTOBUF_NAMESPACE_ID::uint32 value) {
 
 // -------------------------------------------------------------------
 
+// gripperRequest
+
+// double width = 1;
+inline void gripperRequest::clear_width() {
+  width_ = 0;
+}
+inline double gripperRequest::_internal_width() const {
+  return width_;
+}
+inline double gripperRequest::width() const {
+  // @@protoc_insertion_point(field_get:gripperRequest.width)
+  return _internal_width();
+}
+inline void gripperRequest::_internal_set_width(double value) {
+  
+  width_ = value;
+}
+inline void gripperRequest::set_width(double value) {
+  _internal_set_width(value);
+  // @@protoc_insertion_point(field_set:gripperRequest.width)
+}
+
+// -------------------------------------------------------------------
+
+// stopRequest
+
+// -------------------------------------------------------------------
+
 // moveArm
 
 // double lateral = 1;
@@ -1371,22 +1666,22 @@ inline void moveArm::set_width(double value) {
 
 // moveHome
 
-// uint32 flag = 1;
+// int32 flag = 1;
 inline void moveHome::clear_flag() {
-  flag_ = 0u;
+  flag_ = 0;
 }
-inline ::PROTOBUF_NAMESPACE_ID::uint32 moveHome::_internal_flag() const {
+inline ::PROTOBUF_NAMESPACE_ID::int32 moveHome::_internal_flag() const {
   return flag_;
 }
-inline ::PROTOBUF_NAMESPACE_ID::uint32 moveHome::flag() const {
+inline ::PROTOBUF_NAMESPACE_ID::int32 moveHome::flag() const {
   // @@protoc_insertion_point(field_get:moveHome.flag)
   return _internal_flag();
 }
-inline void moveHome::_internal_set_flag(::PROTOBUF_NAMESPACE_ID::uint32 value) {
+inline void moveHome::_internal_set_flag(::PROTOBUF_NAMESPACE_ID::int32 value) {
   
   flag_ = value;
 }
-inline void moveHome::set_flag(::PROTOBUF_NAMESPACE_ID::uint32 value) {
+inline void moveHome::set_flag(::PROTOBUF_NAMESPACE_ID::int32 value) {
   _internal_set_flag(value);
   // @@protoc_insertion_point(field_set:moveHome.flag)
 }
@@ -1586,6 +1881,10 @@ inline void torqueResponse::set_endpoint(double value) {
 #ifdef __GNUC__
   #pragma GCC diagnostic pop
 #endif  // __GNUC__
+// -------------------------------------------------------------------
+
+// -------------------------------------------------------------------
+
 // -------------------------------------------------------------------
 
 // -------------------------------------------------------------------

@@ -13,7 +13,7 @@ _sym_db = _symbol_database.Default()
 
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x11\x61rmMessages.proto\"\x1d\n\rstatusRequest\x12\x0c\n\x04\x66lag\x18\x01 \x01(\r\"\x1e\n\x0estatusResponse\x12\x0c\n\x04\x66lag\x18\x01 \x01(\r\"q\n\x07moveArm\x12\x0f\n\x07lateral\x18\x01 \x01(\x01\x12\r\n\x05\x64\x65pth\x18\x02 \x01(\x01\x12\x0e\n\x06height\x18\x03 \x01(\x01\x12\r\n\x05theta\x18\x04 \x01(\x01\x12\x0b\n\x03phi\x18\x05 \x01(\x01\x12\x0b\n\x03\x63hi\x18\x06 \x01(\x01\x12\r\n\x05width\x18\x07 \x01(\x01\"\x18\n\x08moveHome\x12\x0c\n\x04\x66lag\x18\x01 \x01(\r\"$\n\x0cmoveResponse\x12\x14\n\x0cresponseCode\x18\x01 \x01(\x05\"\x1d\n\rtorqueRequest\x12\x0c\n\x04\x66lag\x18\x01 \x01(\x05\"\x82\x01\n\x0etorqueResponse\x12\x0e\n\x06joint1\x18\x01 \x01(\x01\x12\x0e\n\x06joint2\x18\x02 \x01(\x01\x12\x0e\n\x06joint3\x18\x03 \x01(\x01\x12\x0e\n\x06joint4\x18\x04 \x01(\x01\x12\x0e\n\x06joint5\x18\x05 \x01(\x01\x12\x0e\n\x06joint6\x18\x06 \x01(\x01\x12\x10\n\x08\x65ndpoint\x18\x07 \x01(\x01\x32\xc6\x01\n\x10\x61rmCommunication\x12.\n\tarmStatus\x12\x0e.statusRequest\x1a\x0f.statusResponse\"\x00\x12\'\n\narmControl\x12\x08.moveArm\x1a\r.moveResponse\"\x00\x12%\n\x07\x61rmHome\x12\t.moveHome\x1a\r.moveResponse\"\x00\x12\x32\n\x0b\x61rmFeedback\x12\x0e.torqueRequest\x1a\x0f.torqueResponse\"\x00\x30\x01\x62\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x11\x61rmMessages.proto\"\x1d\n\rstatusRequest\x12\x0c\n\x04\x66lag\x18\x01 \x01(\r\"\x1e\n\x0estatusResponse\x12\x0c\n\x04\x66lag\x18\x01 \x01(\r\"\x1f\n\x0egripperRequest\x12\r\n\x05width\x18\x01 \x01(\x01\"\r\n\x0bstopRequest\"q\n\x07moveArm\x12\x0f\n\x07lateral\x18\x01 \x01(\x01\x12\r\n\x05\x64\x65pth\x18\x02 \x01(\x01\x12\x0e\n\x06height\x18\x03 \x01(\x01\x12\r\n\x05theta\x18\x04 \x01(\x01\x12\x0b\n\x03phi\x18\x05 \x01(\x01\x12\x0b\n\x03\x63hi\x18\x06 \x01(\x01\x12\r\n\x05width\x18\x07 \x01(\x01\"\x18\n\x08moveHome\x12\x0c\n\x04\x66lag\x18\x01 \x01(\x05\"$\n\x0cmoveResponse\x12\x14\n\x0cresponseCode\x18\x01 \x01(\x05\"\x1d\n\rtorqueRequest\x12\x0c\n\x04\x66lag\x18\x01 \x01(\x05\"\x82\x01\n\x0etorqueResponse\x12\x0e\n\x06joint1\x18\x01 \x01(\x01\x12\x0e\n\x06joint2\x18\x02 \x01(\x01\x12\x0e\n\x06joint3\x18\x03 \x01(\x01\x12\x0e\n\x06joint4\x18\x04 \x01(\x01\x12\x0e\n\x06joint5\x18\x05 \x01(\x01\x12\x0e\n\x06joint6\x18\x06 \x01(\x01\x12\x10\n\x08\x65ndpoint\x18\x07 \x01(\x01\x32\xa1\x02\n\x10\x61rmCommunication\x12.\n\tarmStatus\x12\x0e.statusRequest\x1a\x0f.statusResponse\"\x00\x12\'\n\narmControl\x12\x08.moveArm\x1a\r.moveResponse\"\x00\x12/\n\x0bgripperOpen\x12\x0f.gripperRequest\x1a\r.moveResponse\"\x00\x12(\n\x07stopArm\x12\x0c.stopRequest\x1a\r.moveResponse\"\x00\x12%\n\x07\x61rmHome\x12\t.moveHome\x1a\r.moveResponse\"\x00\x12\x32\n\x0b\x61rmFeedback\x12\x0e.torqueRequest\x1a\x0f.torqueResponse\"\x00\x30\x01\x62\x06proto3')
 
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, globals())
 _builder.BuildTopDescriptorsAndMessages(DESCRIPTOR, 'armMessages_pb2', globals())
@@ -24,16 +24,20 @@ if _descriptor._USE_C_DESCRIPTORS == False:
   _STATUSREQUEST._serialized_end=50
   _STATUSRESPONSE._serialized_start=52
   _STATUSRESPONSE._serialized_end=82
-  _MOVEARM._serialized_start=84
-  _MOVEARM._serialized_end=197
-  _MOVEHOME._serialized_start=199
-  _MOVEHOME._serialized_end=223
-  _MOVERESPONSE._serialized_start=225
-  _MOVERESPONSE._serialized_end=261
-  _TORQUEREQUEST._serialized_start=263
-  _TORQUEREQUEST._serialized_end=292
-  _TORQUERESPONSE._serialized_start=295
-  _TORQUERESPONSE._serialized_end=425
-  _ARMCOMMUNICATION._serialized_start=428
-  _ARMCOMMUNICATION._serialized_end=626
+  _GRIPPERREQUEST._serialized_start=84
+  _GRIPPERREQUEST._serialized_end=115
+  _STOPREQUEST._serialized_start=117
+  _STOPREQUEST._serialized_end=130
+  _MOVEARM._serialized_start=132
+  _MOVEARM._serialized_end=245
+  _MOVEHOME._serialized_start=247
+  _MOVEHOME._serialized_end=271
+  _MOVERESPONSE._serialized_start=273
+  _MOVERESPONSE._serialized_end=309
+  _TORQUEREQUEST._serialized_start=311
+  _TORQUEREQUEST._serialized_end=340
+  _TORQUERESPONSE._serialized_start=343
+  _TORQUERESPONSE._serialized_end=473
+  _ARMCOMMUNICATION._serialized_start=476
+  _ARMCOMMUNICATION._serialized_end=765
 # @@protoc_insertion_point(module_scope)

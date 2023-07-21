@@ -490,9 +490,9 @@ void CProtocolAppDlg::homingMotorAction()
 		state == ProtocolState::trialReady) {
 		auto answ = m_protocol.home_motors();
 		string buf;
-		if (TeknicMotorApi::isError(answ)) {
+		if (answ < 0) {
 			buf = ("Error performing move command. Code: " + to_string((int)answ) + "." +
-				" Message: " + TeknicMotorApi::codeMessage(answ));
+				" Message: " + checkKinovaErrCode(answ));
 			AfxMessageBox(buf.c_str());
 		}
 	}
@@ -512,9 +512,9 @@ void CProtocolAppDlg::neutralPositionMotorAction()
 		state == ProtocolState::trialReady) {
 		auto answ = m_protocol.motors_neutral_position();
 		string buf;
-		if (TeknicMotorApi::isError(answ)) {
+		if (answ < 0) {
 			buf = ("Error performing move command. Code: " + to_string((int)answ) + "." +
-				" Message: " + TeknicMotorApi::codeMessage(answ));
+				" Message: " + checkKinovaErrCode(answ));
 			AfxMessageBox(buf.c_str());
 		}
 	}

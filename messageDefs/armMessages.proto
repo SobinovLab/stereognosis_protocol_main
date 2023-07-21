@@ -3,6 +3,8 @@ syntax = "proto3";
 service armCommunication {
     rpc armStatus (statusRequest) returns (statusResponse) {}
     rpc armControl (moveArm) returns (moveResponse) {}
+	rpc gripperOpen (gripperRequest) returns (moveResponse) {}
+	rpc stopArm (stopRequest) returns (moveResponse) {}
     rpc armHome (moveHome) returns (moveResponse) {}
     rpc armFeedback (torqueRequest) returns (stream torqueResponse) {}
 }
@@ -16,6 +18,13 @@ message statusResponse {
     uint32 flag = 1;
 }
 
+message gripperRequest{
+	double width = 1;
+}
+
+message stopRequest {
+}
+
 message moveArm{
     double lateral = 1;
     double depth = 2;
@@ -27,7 +36,7 @@ message moveArm{
 }
 
 message moveHome{
-    uint32 flag = 1;
+    int32 flag = 1;
 }
 
 message moveResponse {

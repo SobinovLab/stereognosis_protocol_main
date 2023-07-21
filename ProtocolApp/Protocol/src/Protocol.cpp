@@ -49,22 +49,26 @@ void Protocol::reward(long duration)
 
 bool Protocol::were_motors_homed()
 {
-	return motorHub->wereHomed();
+	//return motorHub->wereHomed();
+    return true; //with the Arm, homing is not reqcuired
 }
 
-TEKNIC_MOTOR_API_CODE Protocol::home_motors()
+int Protocol::home_motors()
 {
-	return motorHub->home();
+	//return motorHub->home();
+    return armClient->goToHome();
 }
 
 void Protocol::stop_motors()
 {
-	motorHub->stop();
+    armClient->stopArm();
+	//motorHub->stop();
 }
 
-TEKNIC_MOTOR_API_CODE Protocol::motors_neutral_position()
+int Protocol::motors_neutral_position()
 {
-	return motorHub->neutral_position();
+	//return motorHub->neutral_position();
+    return armClient->goToHome();
 }
 
 void Protocol::connect_camera_client1()
@@ -346,6 +350,7 @@ void Protocol::run()
 	setCurrentState(ProtocolState::initializing); // display the state of the trial on the GUI
 	int rets = 0;
 	TEKNIC_MOTOR_API_CODE motor_rets = TEKNIC_MOTOR_API_CODE::OK;
+    int motorRet;
 
 	// Load all trials from session config file (BL code)
 	vector<string> session_line1;
@@ -522,24 +527,18 @@ void Protocol::run()
 		// motor movement - this thread will be locked, can be interrupted
 		// The motors API only supports position control as dynamics are not important
 		// TODO make gui list-based
-		vector<string> axes = { "translation_X", "tilt", "aperture" };
-		vector<double> positions = { params.pos_translation_x, params.pos_tilt, params.pos_aperture };
+		//vector<string> axes = { "translation_X", "tilt", "aperture" };
+		//vector<double> positions = { params.pos_translation_x, params.pos_tilt, params.pos_aperture };
 		rets = 0;
-		motor_rets = TEKNIC_MOTOR_API_CODE::OK;
+		motorRet = 1;
 		if (!stopTrial)
-			motor_rets = motorHub->preshape(axes, positions);
-		if (TeknicMotorApi::isError(motor_rets))
+			motorRet = armClient->preshape(params.pos_aperture);
+		if (motorRet < 0)
 		{
 			// bad error
-			if (motor_rets != TEKNIC_MOTOR_API_CODE::INITIALIZATION_ERROR && 
-				motor_rets != TEKNIC_MOTOR_API_CODE::USER_INTERRUPT) {
-				logError("Bad motor error encountered during preshape. Interrupting the protocol.");
-				rets = -1;
-			}
-			else if (motor_rets == TEKNIC_MOTOR_API_CODE::USER_INTERRUPT) {
-				// nothing, since it can be triggered by the watchThread
-				logWarning("User or early grab motor interrupt during preshape.");
-			}
+			logError("Bad motor error encountered during preshape. Interrupting the protocol. Error is the following:");
+            logError(checkKinovaErrCode(motorRet).c_str());
+			rets = -1;
 		}
 
 		// show target force
@@ -575,17 +574,13 @@ void Protocol::run()
 
 		// approach
 		if (!rets && !stopTrial) {
-			motor_rets = motorHub->approach(axes, positions);
-			if (TeknicMotorApi::isError(motor_rets))
+			//motor_rets = motorHub->approach(axes, positions);
+            motorRet = armClient->moveToPosition(params.pos_translation_x, params.pos_translation_depth, params.pos_translation_height, params.pos_tilt, 0, 0, params.pos_aperture);
+			if (motorRet < 0)
 			{
-				if (motor_rets == TEKNIC_MOTOR_API_CODE::USER_INTERRUPT) {
-					// nothing, since it can be triggered by the watchThread
-				}
-				else if (motor_rets != TEKNIC_MOTOR_API_CODE::INITIALIZATION_ERROR) {
-					// bad error
-					logError("Bad motor error encountered during approach. Interrupting the protocol.");
-					rets = -1;
-				}
+                logError("Bad motor error encountered during approach. Interrupting the protocol. Error is the following");
+                logError(checkKinovaErrCode(motorRet).c_str());
+                rets = -1;
 			}
 		}
 
@@ -663,7 +658,8 @@ void Protocol::run()
 		}
 
 		// retreat motors
-		motorHub->retreat();
+		//motorHub->retreat();
+        armClient->goToHome();
 		log_starting_finishing_recordings = Times::getCurrentTimeInMilliSecs();
 
 		// sync again
@@ -710,7 +706,8 @@ void Protocol::run()
 	trialFieldsEnableRetreat(false);
 
 	// retreat motors
-	motorHub->retreat();
+	//motorHub->retreat();
+    armClient->goToHome();
 
 	// release all devices in the destructor
 	closeCsvLog();
@@ -1025,8 +1022,13 @@ void Protocol::initDevices()
 		logWarning("Motor Hub already initialized, cannot init again.");
 	}
 	else {
-		motorHub = new TeknicMotorApi(params.motors_motors_filename, params.motors_axes_filename);
+		//motorHub = new TeknicMotorApi(params.motors_motors_filename, params.motors_axes_filename);
 	}
+
+    if(armClient)
+        logWarning("Arm Client already initialized, cannot init again");
+    else
+        armClient = new KinovaArmClient();
 
 	// LEDs
 	if (ledStrip) {
@@ -1063,6 +1065,12 @@ void Protocol::releaseDevices()
 		delete motorHub;
 		motorHub = nullptr;
 	}
+
+    if(armClient)
+    {
+        delete armClient;
+        armClient = nullptr;
+    }
 
 	// LEDs
 	if (ledStrip) {  // check if nullptr

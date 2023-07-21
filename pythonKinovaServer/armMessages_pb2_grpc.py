@@ -24,6 +24,16 @@ class armCommunicationStub(object):
                 request_serializer=armMessages__pb2.moveArm.SerializeToString,
                 response_deserializer=armMessages__pb2.moveResponse.FromString,
                 )
+        self.gripperOpen = channel.unary_unary(
+                '/armCommunication/gripperOpen',
+                request_serializer=armMessages__pb2.gripperRequest.SerializeToString,
+                response_deserializer=armMessages__pb2.moveResponse.FromString,
+                )
+        self.stopArm = channel.unary_unary(
+                '/armCommunication/stopArm',
+                request_serializer=armMessages__pb2.stopRequest.SerializeToString,
+                response_deserializer=armMessages__pb2.moveResponse.FromString,
+                )
         self.armHome = channel.unary_unary(
                 '/armCommunication/armHome',
                 request_serializer=armMessages__pb2.moveHome.SerializeToString,
@@ -46,6 +56,18 @@ class armCommunicationServicer(object):
         raise NotImplementedError('Method not implemented!')
 
     def armControl(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def gripperOpen(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
+    def stopArm(self, request, context):
         """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
         context.set_details('Method not implemented!')
@@ -74,6 +96,16 @@ def add_armCommunicationServicer_to_server(servicer, server):
             'armControl': grpc.unary_unary_rpc_method_handler(
                     servicer.armControl,
                     request_deserializer=armMessages__pb2.moveArm.FromString,
+                    response_serializer=armMessages__pb2.moveResponse.SerializeToString,
+            ),
+            'gripperOpen': grpc.unary_unary_rpc_method_handler(
+                    servicer.gripperOpen,
+                    request_deserializer=armMessages__pb2.gripperRequest.FromString,
+                    response_serializer=armMessages__pb2.moveResponse.SerializeToString,
+            ),
+            'stopArm': grpc.unary_unary_rpc_method_handler(
+                    servicer.stopArm,
+                    request_deserializer=armMessages__pb2.stopRequest.FromString,
                     response_serializer=armMessages__pb2.moveResponse.SerializeToString,
             ),
             'armHome': grpc.unary_unary_rpc_method_handler(
@@ -126,6 +158,40 @@ class armCommunication(object):
             metadata=None):
         return grpc.experimental.unary_unary(request, target, '/armCommunication/armControl',
             armMessages__pb2.moveArm.SerializeToString,
+            armMessages__pb2.moveResponse.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def gripperOpen(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/armCommunication/gripperOpen',
+            armMessages__pb2.gripperRequest.SerializeToString,
+            armMessages__pb2.moveResponse.FromString,
+            options, channel_credentials,
+            insecure, call_credentials, compression, wait_for_ready, timeout, metadata)
+
+    @staticmethod
+    def stopArm(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(request, target, '/armCommunication/stopArm',
+            armMessages__pb2.stopRequest.SerializeToString,
             armMessages__pb2.moveResponse.FromString,
             options, channel_credentials,
             insecure, call_credentials, compression, wait_for_ready, timeout, metadata)

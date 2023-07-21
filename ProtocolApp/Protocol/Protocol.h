@@ -24,6 +24,8 @@
 #include "CameraClient.h"
 #include "TouchSensorClient.h"
 #include "LedStrip.h"
+#include "armCinterface.h"
+#include "kinovaErrCode.h"
 
 
 enum class ProtocolState
@@ -94,9 +96,9 @@ class Protocol
 
 		// motors
 		bool were_motors_homed();
-		TEKNIC_MOTOR_API_CODE home_motors();
+		int home_motors();
 		void stop_motors();
-		TEKNIC_MOTOR_API_CODE motors_neutral_position();
+		int motors_neutral_position();
 
 		//////// connected devices
 		// cameras
@@ -174,6 +176,9 @@ class Protocol
 
 		// motor
 		TeknicMotorApi* motorHub = nullptr;
+
+        // arm (replacing motorHub)
+        KinovaArmClient* armClient = nullptr;
 
 		// LEDs
 		LedStrip* ledStrip = nullptr;
