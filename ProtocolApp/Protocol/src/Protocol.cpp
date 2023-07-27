@@ -788,6 +788,30 @@ void Protocol::matchLoadedSessionTrialToParams(const vector<string>& line1, cons
 				params.pos_aperture = vec[i_col];
 			}
 		}
+        
+        if (axis == "") {
+			if (deriv == "position") {
+				params.pos_translation_depth = vec[i_col];
+			}
+		}
+
+        if (axis == "") {
+			if (deriv == "position") {
+				params.pos_translation_height = vec[i_col];
+			}
+		}
+
+        if (axis == "") {
+			if (deriv == "position") {
+				params.pos_yaw = vec[i_col];
+			}
+		}
+
+        if (axis == "") {
+			if (deriv == "position") {
+				params.pos_pitch = vec[i_col];
+			}
+		}
 
 		if (axis == "total_force_rel_min_bound") {
 			if (deriv == "position") {

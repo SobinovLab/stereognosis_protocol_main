@@ -115,6 +115,7 @@ BEGIN_MESSAGE_MAP(CProtocolAppDlg, CDialogEx)
 	ON_BN_CLICKED(IDC_STOP_MOTORS_BTN, &CProtocolAppDlg::OnBnClickedStopMotorsBtn)
 	ON_BN_CLICKED(IDC_NEUTRAL_POSITION_BTN, &CProtocolAppDlg::OnBnClickedNeutralPositionBtn)
 	ON_BN_CLICKED(IDC_LEDS_EARLY_TARGET_FORCE_LIGHT_CHK, &CProtocolAppDlg::OnBnClickedLedsEarlyTargetForceLightChk)
+    ON_EN_CHANGE(IDC_SESSION_FILE_EDT, &CProtocolAppDlg::OnEnChangeSessionFileEdt)
 END_MESSAGE_MAP()
 
 // CProtocolAppDlg message handlers
@@ -589,16 +590,11 @@ void CProtocolAppDlg::OnBnClickedHomeMotorsBtn()
 {
 	GetDlgItem(IDC_HOME_MOTORS_BTN)->EnableWindow(false);
 
-	if (motorActionInProgress) {
-		AfxMessageBox("Error state. Cannot start a motor action.");
-		return;
-	}
-	motorActionInProgress = true;
-
-	AfxMessageBox("PUT THE CALIBRATION FIXATOR INTO PLACE AND CLICK OK");
-
+	AfxMessageBox("MAKE SURE YOU HAVE CLICKED GO TO HOME ON THE KINOVA SERVER");
+    return;
 	// spawn a thread so it can be interrupted
 	motorActionThread = new thread(&CProtocolAppDlg::homingMotorAction, this);
+    
 }
 
 
@@ -656,4 +652,15 @@ void CProtocolAppDlg::OnBnClickedLedsEarlyTargetForceLightChk()
 		m_protocol.params.leds_early_target_force_lightup = true;
 	else
 		m_protocol.params.leds_early_target_force_lightup = false;
+}
+
+
+void CProtocolAppDlg::OnEnChangeSessionFileEdt()
+{
+    // TODO:  If this is a RICHEDIT control, the control will not
+    // send this notification unless you override the CDialogEx::OnInitDialog()
+    // function and call CRichEditCtrl().SetEventMask()
+    // with the ENM_CHANGE flag ORed into the mask.
+
+    // TODO:  Add your control notification handler code here
 }

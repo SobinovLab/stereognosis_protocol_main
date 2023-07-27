@@ -71,6 +71,8 @@ public:
     double pos_translation_height = 0;
     double pos_translation_depth = 0;
 	double pos_tilt = 0;
+    double pos_pitch = 0;
+    double pos_yaw = 0;
 	double pos_aperture = 0;
 
 	// camera servers

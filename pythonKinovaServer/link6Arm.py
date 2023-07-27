@@ -68,6 +68,7 @@ class KinovaArm(QObject):
     xLimits = [-.381, .381]
     yLimits = [-.200, -.600]
     zLimits = [.380, .580]
+    homeSet = False
 
     def __init__(self):
         super(KinovaArm, self).__init__()
@@ -366,7 +367,14 @@ class KinovaArm(QObject):
         return dx, dy, dz
         
     def moveHome(self):
-        return self.angularMoveArm(*self.homeAngular)
+        ret, err = self.angularMoveArm(*self.homeAngular)
+        if not self.homeSet and ret >= 0:
+            self.homeSet = True
+            mp = self.base.GetMeasuredCartesianPose()
+            self.homeCart[3] = round(mp.theta_x / 90) * 90
+            self.homeCart[4] = round(mp.theta_y / 90) * 90
+            self.homeCart[5] = round(mp.theta_z / 90) * 90
+        return (ret, err)
     
     def referencedMoveArmCartesian(self, lateral, depth, height, theta, phi, chi, dur = 0):
         dx, dy, dz = self.translateAngles(theta, chi, phi)

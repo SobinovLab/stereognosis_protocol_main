@@ -60,6 +60,10 @@ std::string checkKinovaErrCode(int code)
         case -20:
             msg = "GRPC failed in making a request to the server";
             break;
+        default:
+            msg = "Encountered an Error number unplanned for";
+            break;
+
     }
     return msg;
 
