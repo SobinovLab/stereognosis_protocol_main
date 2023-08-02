@@ -789,25 +789,25 @@ void Protocol::matchLoadedSessionTrialToParams(const vector<string>& line1, cons
 			}
 		}
         
-        if (axis == "") {
+        if (axis == "translation_Y") {
 			if (deriv == "position") {
 				params.pos_translation_depth = vec[i_col];
 			}
 		}
 
-        if (axis == "") {
+        if (axis == "translation_Z") {
 			if (deriv == "position") {
 				params.pos_translation_height = vec[i_col];
 			}
 		}
 
-        if (axis == "") {
+        if (axis == "yaw") {
 			if (deriv == "position") {
 				params.pos_yaw = vec[i_col];
 			}
 		}
 
-        if (axis == "") {
+        if (axis == "pitch") {
 			if (deriv == "position") {
 				params.pos_pitch = vec[i_col];
 			}

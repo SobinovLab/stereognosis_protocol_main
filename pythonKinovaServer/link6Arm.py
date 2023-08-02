@@ -342,7 +342,6 @@ class KinovaArm(QObject):
         called and passes our input to it. This cut down on lots of duplicated 
         lines.
         '''
-        self.gripper_plugin.On
         try:
             action_list = self.gripper_plugin.GetActionTypes()
 

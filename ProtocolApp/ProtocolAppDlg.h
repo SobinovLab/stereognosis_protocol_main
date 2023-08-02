@@ -143,4 +143,5 @@ public:
 	afx_msg void OnBnClickedStopMotorsBtn();
 	afx_msg void OnBnClickedNeutralPositionBtn();
 	afx_msg void OnBnClickedLedsEarlyTargetForceLightChk();
+    afx_msg void OnEnChangeSessionFileEdt();
 };
