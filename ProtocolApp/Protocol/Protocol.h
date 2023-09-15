@@ -69,6 +69,12 @@ class Protocol
 		// main loop that is run in a thread when StartProtocol is clicked
 		virtual void run();
 
+        // motor
+		TeknicMotorApi* motorHub = nullptr;
+
+        // arm (replacing motorHub)
+        KinovaArmClient* armClient = nullptr;
+
 		// current state of the protocol/trial
 		void setCurrentState(ProtocolState state);
 		ProtocolState getCurrentState();
@@ -174,11 +180,6 @@ class Protocol
 		void start_ephys_recording();
 		void break_ephys_recording();
 
-		// motor
-		TeknicMotorApi* motorHub = nullptr;
-
-        // arm (replacing motorHub)
-        KinovaArmClient* armClient = nullptr;
 
 		// LEDs
 		LedStrip* ledStrip = nullptr;

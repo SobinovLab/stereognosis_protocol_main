@@ -233,6 +233,9 @@
     <ClCompile Include="kinovaArm\armMessages.pb.cc">
       <Filter>Source Files\kinovaArm</Filter>
     </ClCompile>
+    <ClCompile Include="kinovaErrCode.cpp">
+      <Filter>Source Files\kinovaArm</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="ProtocolApp.rc">

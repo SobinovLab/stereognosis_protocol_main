@@ -46,7 +46,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;NDEBUG;HMI_API_DYNAMIC;_WINDOWS;_USE_MATH_DEFINES;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>.\;.\Protocol;.\utilities;.\cameras;.\pressure_sensors;.\teknicMotors;.\libTeknicMotor\include;.\LEDs;$(NIDAQ_HOME)\NI-DAQ\DAQmx ANSI C Dev\include;$(MCHP_HMI_API_PATH)\include;.\kinovaArm;$(NIDAQ)\include;E:\repos\json\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>.\;.\Protocol;.\utilities;.\cameras;.\pressure_sensors;.\teknicMotors;.\libTeknicMotor\include;.\LEDs;$(NIDAQ_HOME)\NI-DAQ\DAQmx ANSI C Dev\include;$(MCHP_HMI_API_PATH)\include;.\kinovaArm</AdditionalIncludeDirectories>
       <ForcedIncludeFiles>stdafx.h</ForcedIncludeFiles>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <WholeProgramOptimization>false</WholeProgramOptimization>
@@ -132,6 +132,7 @@ copy /B /V /Y "$(ProjectDir)..\session_configs\*" "$(OutDir)\session_configs\" &
     <ClCompile Include="ProtocolApp.cpp" />
     <ClCompile Include="ProtocolAppDlg.cpp" />
     <ClCompile Include="Protocol\src\CStaticColor.cpp" />
+    <ClCompile Include="kinovaErrCode.cpp" />
     <ClCompile Include="teknicMotors\TeknicMotorApi.cpp" />
     <ClCompile Include="utilities\CEditableListBox.cpp" />
     <ClCompile Include="utilities\CEditHelper.cpp" />

@@ -75,7 +75,7 @@ class KinovaServer(QObject):
         return
 
     def armNotificationCallback(self, completed):
-        print("In Notif Callback")
+        print("In Arm Notif Callback")
         if completed:
             self.isInFault = False
         else:
@@ -85,12 +85,13 @@ class KinovaServer(QObject):
         return
     
     def gripperNotificationCallback(self, completed):
+        print("In Gripper Notif Callback")
         if completed:
             self.isInFault = False
         else:
             print("FUCK")
             self.isInFault = True
-        self.movementEvent.set()
+        self.gripperEvent.set()
         return
 
 
@@ -155,8 +156,11 @@ class KinovaServer(QObject):
             self.changeErrorBoxText(errText, 12, textRed)
 
         if wait:
+            print("Waiting for gripper event")
             self.gripperEvent.wait()
+            print("Finished waiting for event")
         self.movementLock.release()
+        print("Finished with openGripper")
         return ret
 
     def moveArmToPosition(self, x, y, z, theta, phi, chi, width):
@@ -206,6 +210,18 @@ class KinovaServer(QObject):
     GRPC FUNCTIONS, these functions must be named this
     ###############################################
     '''
+    def armReady(self, request, context):
+        print("Ready Request recieved")
+        ret = self.arm.checkArmReady()
+        if not ret:
+            self.moveArmHome(wait = True)
+            ret = self.arm.checkArmReady()
+        if not ret:
+            ret = -1
+        else:
+            ret = 1
+        return armMessages_pb2.readyResponse(flag=ret)
+
     def armStatus(self, request, context):
         print("Status Request: ", request.flag)
         comString = "Req: status"
@@ -215,16 +231,16 @@ class KinovaServer(QObject):
     
     def gripperOpen(self, request, context):
         print("Gripper open: ", request.width)
-        self.addCommandToList(comString)
         comString = "Opn: {}".format(request.width)
+        self.addCommandToList(comString)
         ret = self.openGripper(request.width, wait=True)
         return armMessages_pb2.moveResponse(responseCode=ret)
 
     def armControl(self, request, context):
-        print("Arm Control: ", request.X, request.Y, request.Z)
-        comString = "Mov: {} {} {} :: {} {} {} :: {}".format(request.X, request.Y, request.Z, request.theta, request.phi, request.chi, request.width)
+        print("Arm Control: ", request.lateral, request.depth, request.height)
+        comString = "Mov: {} {} {} :: {} {} {} :: {}".format(request.lateral, request.depth, request.height, request.theta, request.phi, request.chi, request.width)
         self.addCommandToList(comString)
-        ret = self.moveArmToPosition(request.X, request.Y, request.Z, request.theta, request.phi, request.chi, request.width)
+        ret = self.moveArmToPosition(request.lateral, request.depth, request.height, request.theta, request.phi, request.chi, request.width)
         return armMessages_pb2.moveResponse(responseCode=ret)
 
     def armHome(self, request, context):
@@ -234,7 +250,7 @@ class KinovaServer(QObject):
         ret = self.moveArmHome(wait=True)
         return armMessages_pb2.moveResponse(responseCode=ret)
     
-    def armStop(self, request, context):
+    def stopArm(self, request, context):
         ret = self.emergencyStop()
         print("STOP ARM")
         comString = "STOP ARM"
@@ -387,6 +403,11 @@ class KinovaServer(QObject):
             #t = threading.Thread(target = waitForPower)
             #t.start()
         return
+    
+    def checkPower(self):
+        if(self.arm.checkArmPowered()):
+            self.ui.armButton.setStyleSheet("background-color : green")
+            self.setPowerProgress(100)
 
     def text_changed(self, s):
         side = self.mDB[s]["side"]
@@ -432,9 +453,11 @@ class KinovaServer(QObject):
         self.ui.gripperButton.clicked.connect(self.activateGripper)
         self.ui.homeButton.clicked.connect(self.moveArmHome)
         self.ui.devButton.clicked.connect(self.developerInput)
+        self.ui.checkPowerButton.clicked.connect(self.checkPower)
 
         self.safteyCount = 0
-
+        '''
+        #Old code from when monkey selection would be here and not in trial creation
         F = open(monkey_path)
         mDB = json.load(F)
         F.close()
@@ -442,7 +465,7 @@ class KinovaServer(QObject):
         for m in mDB:
             self.ui.monkeySelectBox.addItem(m)
         self.ui.monkeySelectBox.currentTextChanged.connect(self.text_changed)
-
+        '''
 
 
 class TestServer:

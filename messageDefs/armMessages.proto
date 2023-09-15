@@ -1,6 +1,7 @@
 syntax = "proto3";
 
 service armCommunication {
+    rpc armReady (readyRequest) returns (readyResponse) {}
     rpc armStatus (statusRequest) returns (statusResponse) {}
     rpc armControl (moveArm) returns (moveResponse) {}
 	rpc gripperOpen (gripperRequest) returns (moveResponse) {}
@@ -9,13 +10,19 @@ service armCommunication {
     rpc armFeedback (torqueRequest) returns (stream torqueResponse) {}
 }
 
+message readyRequest{
+}
+
+message readyResponse{
+    int32 flag = 1;
+}
 
 message statusRequest {
-    uint32 flag = 1;
+    int32 flag = 1;
 }
 
 message statusResponse {
-    uint32 flag = 1;
+    int32 flag = 1;
 }
 
 message gripperRequest{

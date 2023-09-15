@@ -588,12 +588,19 @@ void CProtocolAppDlg::toggleTouchServerCtrls(bool disconnected)
 
 void CProtocolAppDlg::OnBnClickedHomeMotorsBtn()
 {
-	GetDlgItem(IDC_HOME_MOTORS_BTN)->EnableWindow(false);
-
-	AfxMessageBox("MAKE SURE YOU HAVE CLICKED GO TO HOME ON THE KINOVA SERVER");
+    int ret = m_protocol.armClient->armReady();
+    if(ret < 0)
+    {
+        AfxMessageBox("SOME SHIT IS FUCKED, SHOULD HAVE HOMED");
+    }
+    else
+    {
+        AfxMessageBox("GOOD JOB");
+        GetDlgItem(IDC_HOME_MOTORS_BTN)->EnableWindow(false);
+    }
     return;
-	// spawn a thread so it can be interrupted
-	motorActionThread = new thread(&CProtocolAppDlg::homingMotorAction, this);
+	//*DEPRECATED* spawn a thread so it can be interrupted
+	//motorActionThread = new thread(&CProtocolAppDlg::homingMotorAction, this);
     
 }
 

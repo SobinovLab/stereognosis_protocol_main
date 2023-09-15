@@ -29,6 +29,21 @@ public:
         stub = armCommunication::NewStub(grpc::CreateChannel(IP, grpc::InsecureChannelCredentials()));
     }
 
+    int armReady()
+    {
+        grpc::ClientContext context;
+        readyRequest req;
+        readyResponse resp;
+        grpc::Status status = stub->armReady(&context, req, &resp);
+        if(!status.ok())
+        {
+            std::cout << "GRPC getArmStatus request failed. Error: " << status.error_message() << std::endl;
+            return -20;
+        }
+        std::cout << "GRPC armReady status: " << resp.flag() << std::endl;
+        return resp.flag();
+    }
+
     int getArmStatus()
     {
         grpc::ClientContext context;
@@ -126,6 +141,7 @@ public:
     }
 
 private:
+    bool connected = false;
     std::unique_ptr<armCommunication::Stub> stub;
 
 };

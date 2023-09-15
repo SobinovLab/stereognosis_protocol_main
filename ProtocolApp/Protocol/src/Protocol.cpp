@@ -18,6 +18,7 @@ Protocol::Protocol()
 
 	// test if things can be enabled and then change the variables
 	initDevices();
+	logInfo("Finished with INIT");
 }
 
 Protocol::~Protocol()
@@ -1046,7 +1047,7 @@ void Protocol::initDevices()
 		logWarning("Motor Hub already initialized, cannot init again.");
 	}
 	else {
-		//motorHub = new TeknicMotorApi(params.motors_motors_filename, params.motors_axes_filename);
+		motorHub = new TeknicMotorApi(params.motors_motors_filename, params.motors_axes_filename);
 	}
 
     if(armClient)
@@ -1075,6 +1076,7 @@ void Protocol::initDevices()
 		if (ledStrip->wasInitializedCorrectly() && params.leds_run_test) {
 			logInfo("Starting LED test.");
 			ledStrip->test();
+			logInfo("Finished LED test.");
 		}
 	}
 }

@@ -52,7 +52,7 @@ class KinovaArm(QObject):
     sense, and if there is no special meaning behind the value it defaults to 1
     -PMJ
     '''
-    CONTROLLER_ADDRESS = "169.254.62.10" #This can be set relatively arbitrarily by either the kinova webApp or tablet
+    CONTROLLER_ADDRESS = "169.254.131.10" #This can be set relatively arbitrarily by either the kinova webApp or tablet
     MQTT_PORT = 1883
     UDP_PORT = 10001
 
@@ -217,6 +217,9 @@ class KinovaArm(QObject):
             return
         except Exception as e:
             yield(-13, e)
+
+    def checkArmReady(self):
+        return self.homeSet
     
     def clearFaults(self):
         try:
@@ -320,12 +323,16 @@ class KinovaArm(QObject):
         return self.pluginCommand(action_name, activate_input)
     
     def moveGripper(self, width, velocity=64, force=10):
-        maxWidth = 50
+        maxWidth = 42
         minWidth = 0
-        maxVal = 255 #255 is actually fully closed but the math is easier this way
-        adjustedVal = int(width * maxVal / (maxWidth - minWidth))
-        
-        widthVal = 255 - adjustedVal
+        maxVal = 243 #255 is actually fully closed but the math is easier this way
+
+        if(width > maxWidth):
+            widthVal = 0
+        elif(width < minWidth):
+            widthVal = maxVal
+        else:
+            widthVal = maxVal - int(width * maxVal / (maxWidth - minWidth))
         
         move_input = {
             "position":widthVal,
@@ -364,6 +371,13 @@ class KinovaArm(QObject):
         dy = theta + self.homeCart[4]
         dz = self.homeCart[5]
         return dx, dy, dz
+
+    def translatePosition(self, lateral, depth, height):
+        X = self.homeCart[0] + lateral
+        Y = self.homeCart[1] - depth
+        Z = self.homeCart[2] + height
+        return X, Y, Z
+
         
     def moveHome(self):
         ret, err = self.angularMoveArm(*self.homeAngular)
@@ -377,18 +391,18 @@ class KinovaArm(QObject):
     
     def referencedMoveArmCartesian(self, lateral, depth, height, theta, phi, chi, dur = 0):
         dx, dy, dz = self.translateAngles(theta, chi, phi)
-        return(self.cartesianMoveArm(lateral + self.homeCart[0],
-                                     height - self.homeCart[1], #Arm is centered so that -y is forward
-                                     depth + self.homeCart[2],
+        return(self.cartesianMoveArm(self.homeCart[0] + lateral,
+                                    self.homeCart[1] - depth, #Arm is centered so that -y is forward
+                                    self.homeCart[2] + height,
                                      dx, dy, dz, dur))
     
     def cartesianMoveArm(self, X, Y, Z, xo, yo, zo, dur=0):
-        if not self.xLimits[0] < X < self.xLimits[1]:
-            return (-14, "Commanded X position is not within the box we are operating in")
-        if not self.yLimits[0] < Y < self.yLimits[1]:
-            return (-14, "Commanded Y position is not within the box we are operating in")
-        if not self.zLimits[0] < Z < self.zLimits[1]:
-            return (-14, "Commanded Z position is not within the box we are operating in")
+        if not self.xLimits[0] <= X <= self.xLimits[1]:
+            return (-14, "Commanded X position is not within the box we are operating in, X={}".format(X))
+        if not self.yLimits[1] <= Y <= self.yLimits[0]:
+            return (-14, "Commanded Y position is not within the box we are operating in, Y={}".format(Y))
+        if not self.zLimits[0] <= Z <= self.zLimits[1]:
+            return (-14, "Commanded Z position is not within the box we are operating in, Z={}".format(Z))
         if (X ** 2 + Y ** 2 + Z ** 2)**.5 > .925:
             return(-15, "Commanded position is fully outside of the arms range")
         try:
@@ -484,8 +498,8 @@ class KinovaArm(QObject):
         except Exception as e:
             return (-9, e)
     
-    def inverseKinematics(self, X, Y, Z, tX, tY, tZ, guess=[-91.66485595703125, 3.00946307182312, -99.51344299316406,
-                -10.15340805053711, 77.40167999267578, -79.85208892822266]):
+    def inverseKinematics(self, lateral, depth, height, theta, chi, phi, guess=[-72.9454651, -50.2982483,
+                    -118.821823, -41.3727722, 117.561745, -141.523972]):
         try:
             input_joint_angles = self.base.GetMeasuredJointAngles()
             pose = self.base.GetMeasuredCartesianPose()
@@ -498,6 +512,9 @@ class KinovaArm(QObject):
             )
             print("Caught expected error: {}".format(ex))
             return None
+
+        X, Y, Z = self.translatePosition(lateral, depth, height)
+        tX, tY, tZ = self.translateAngles(theta, chi, phi)
         
         input_IkData = Base_pb2.IKData()
         # Fill the IKData Object with the cartesian coordinates that need to be converted
