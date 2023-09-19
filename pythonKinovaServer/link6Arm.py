@@ -21,6 +21,8 @@ import time
 import numpy as np
 from google.protobuf import json_format
 
+from log import printLog
+
 from PyQt5.QtCore import QObject
 
 waypoint_count = 1
