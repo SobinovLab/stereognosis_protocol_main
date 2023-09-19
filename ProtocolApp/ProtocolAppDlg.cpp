@@ -116,6 +116,7 @@ BEGIN_MESSAGE_MAP(CProtocolAppDlg, CDialogEx)
 	ON_BN_CLICKED(IDC_NEUTRAL_POSITION_BTN, &CProtocolAppDlg::OnBnClickedNeutralPositionBtn)
 	ON_BN_CLICKED(IDC_LEDS_EARLY_TARGET_FORCE_LIGHT_CHK, &CProtocolAppDlg::OnBnClickedLedsEarlyTargetForceLightChk)
     ON_EN_CHANGE(IDC_SESSION_FILE_EDT, &CProtocolAppDlg::OnEnChangeSessionFileEdt)
+    ON_BN_CLICKED(IDC_MOTORS_CHK, &CProtocolAppDlg::OnBnClickedMotorsChk)
 END_MESSAGE_MAP()
 
 // CProtocolAppDlg message handlers
@@ -165,7 +166,7 @@ BOOL CProtocolAppDlg::OnInitDialog()
 
 	// set the visibility of enabled devices on GUI
 	if (m_protocol.isLightSensorsOn()) ((CButton*)GetDlgItem(IDC_LIGHT_SENSORS_CHK))->SetCheck(BST_CHECKED);
-	if (m_protocol.isMotorsOn()) ((CButton*)GetDlgItem(IDC_MOTORS_CHK))->SetCheck(BST_CHECKED);
+	//if (m_protocol.isMotorsOn()) ((CButton*)GetDlgItem(IDC_MOTORS_CHK))->SetCheck(BST_CHECKED);
 	if (m_protocol.isRewardOn()) ((CButton*)GetDlgItem(IDC_REWARD_CHK))->SetCheck(BST_CHECKED);
 	if (m_protocol.isEphysOn()) ((CButton*)GetDlgItem(IDC_EPHYS_CHK))->SetCheck(BST_CHECKED);
 	if (m_protocol.isLedsOn()) ((CButton*)GetDlgItem(IDC_LEDS_CHK))->SetCheck(BST_CHECKED);
@@ -330,6 +331,14 @@ void CProtocolAppDlg::OnStartProtocolBtnClicked()
 			if (!m_protocol.were_motors_homed())
 				AfxMessageBox("Motors were not homed. Please home them prior to starting the trial.");
 		}
+
+        //check if arm homed
+        if (!m_protocol.armHomed)
+        {
+            AfxMessageBox("The arm was not homed, make sure you click the calibrate arm buton");
+            GetDlgItem(IDC_STOP_PROTOCOL_BTN)->EnableWindow(true);
+            return;
+        }
 
 		// in case any parameters were changed
 		UpdateData(FromControlsToVariables);
@@ -588,6 +597,11 @@ void CProtocolAppDlg::toggleTouchServerCtrls(bool disconnected)
 
 void CProtocolAppDlg::OnBnClickedHomeMotorsBtn()
 {
+    if(((CButton*)GetDlgItem(IDC_MOTORS_CHK))->GetCheck() == BST_UNCHECKED)
+    {
+        AfxMessageBox("Initialize the motors by clicking the check button then retry this");
+        return;
+    }
     int ret = m_protocol.armClient->armReady();
     if(ret < 0)
     {
@@ -595,7 +609,8 @@ void CProtocolAppDlg::OnBnClickedHomeMotorsBtn()
     }
     else
     {
-        AfxMessageBox("GOOD JOB");
+        AfxMessageBox("Good Job, we are ready to go");
+        m_protocol.armHomed = true;
         GetDlgItem(IDC_HOME_MOTORS_BTN)->EnableWindow(false);
     }
     return;
@@ -670,4 +685,26 @@ void CProtocolAppDlg::OnEnChangeSessionFileEdt()
     // with the ENM_CHANGE flag ORed into the mask.
 
     // TODO:  Add your control notification handler code here
+}
+
+
+void CProtocolAppDlg::OnBnClickedMotorsChk()
+{
+    int butState = ((CButton*)GetDlgItem(IDC_MOTORS_CHK))->GetCheck();
+    if(butState == BST_UNCHECKED)
+    {
+        m_protocol.armClient->connect();
+        ((CButton*)GetDlgItem(IDC_MOTORS_CHK))->SetCheck(BST_CHECKED);
+        GetDlgItem(IDC_HOME_MOTORS_BTN)->EnableWindow(true);
+    }
+    else if(butState == BST_CHECKED)
+    {
+        m_protocol.armClient->disconnect();
+        m_protocol.armHomed = false;
+        ((CButton*)GetDlgItem(IDC_MOTORS_CHK))->SetCheck(BST_UNCHECKED);
+    }
+    else
+    {
+        AfxMessageBox("UHHH some weird third state has occured, try again maybe?");
+    }
 }

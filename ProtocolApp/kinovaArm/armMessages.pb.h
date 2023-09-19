@@ -46,7 +46,7 @@ struct TableStruct_armMessages_2eproto {
     PROTOBUF_SECTION_VARIABLE(protodesc_cold);
   static const ::PROTOBUF_NAMESPACE_ID::internal::AuxiliaryParseTableField aux[]
     PROTOBUF_SECTION_VARIABLE(protodesc_cold);
-  static const ::PROTOBUF_NAMESPACE_ID::internal::ParseTable schema[9]
+  static const ::PROTOBUF_NAMESPACE_ID::internal::ParseTable schema[11]
     PROTOBUF_SECTION_VARIABLE(protodesc_cold);
   static const ::PROTOBUF_NAMESPACE_ID::internal::FieldMetadata field_metadata[];
   static const ::PROTOBUF_NAMESPACE_ID::internal::SerializationTable serialization_table[];
@@ -65,6 +65,12 @@ extern moveHomeDefaultTypeInternal _moveHome_default_instance_;
 class moveResponse;
 class moveResponseDefaultTypeInternal;
 extern moveResponseDefaultTypeInternal _moveResponse_default_instance_;
+class readyRequest;
+class readyRequestDefaultTypeInternal;
+extern readyRequestDefaultTypeInternal _readyRequest_default_instance_;
+class readyResponse;
+class readyResponseDefaultTypeInternal;
+extern readyResponseDefaultTypeInternal _readyResponse_default_instance_;
 class statusRequest;
 class statusRequestDefaultTypeInternal;
 extern statusRequestDefaultTypeInternal _statusRequest_default_instance_;
@@ -85,6 +91,8 @@ template<> ::gripperRequest* Arena::CreateMaybeMessage<::gripperRequest>(Arena*)
 template<> ::moveArm* Arena::CreateMaybeMessage<::moveArm>(Arena*);
 template<> ::moveHome* Arena::CreateMaybeMessage<::moveHome>(Arena*);
 template<> ::moveResponse* Arena::CreateMaybeMessage<::moveResponse>(Arena*);
+template<> ::readyRequest* Arena::CreateMaybeMessage<::readyRequest>(Arena*);
+template<> ::readyResponse* Arena::CreateMaybeMessage<::readyResponse>(Arena*);
 template<> ::statusRequest* Arena::CreateMaybeMessage<::statusRequest>(Arena*);
 template<> ::statusResponse* Arena::CreateMaybeMessage<::statusResponse>(Arena*);
 template<> ::stopRequest* Arena::CreateMaybeMessage<::stopRequest>(Arena*);
@@ -93,6 +101,265 @@ template<> ::torqueResponse* Arena::CreateMaybeMessage<::torqueResponse>(Arena*)
 PROTOBUF_NAMESPACE_CLOSE
 
 // ===================================================================
+
+class readyRequest PROTOBUF_FINAL :
+    public ::PROTOBUF_NAMESPACE_ID::Message /* @@protoc_insertion_point(class_definition:readyRequest) */ {
+ public:
+  inline readyRequest() : readyRequest(nullptr) {}
+  virtual ~readyRequest();
+
+  readyRequest(const readyRequest& from);
+  readyRequest(readyRequest&& from) noexcept
+    : readyRequest() {
+    *this = ::std::move(from);
+  }
+
+  inline readyRequest& operator=(const readyRequest& from) {
+    CopyFrom(from);
+    return *this;
+  }
+  inline readyRequest& operator=(readyRequest&& from) noexcept {
+    if (GetArena() == from.GetArena()) {
+      if (this != &from) InternalSwap(&from);
+    } else {
+      CopyFrom(from);
+    }
+    return *this;
+  }
+
+  static const ::PROTOBUF_NAMESPACE_ID::Descriptor* descriptor() {
+    return GetDescriptor();
+  }
+  static const ::PROTOBUF_NAMESPACE_ID::Descriptor* GetDescriptor() {
+    return GetMetadataStatic().descriptor;
+  }
+  static const ::PROTOBUF_NAMESPACE_ID::Reflection* GetReflection() {
+    return GetMetadataStatic().reflection;
+  }
+  static const readyRequest& default_instance();
+
+  static inline const readyRequest* internal_default_instance() {
+    return reinterpret_cast<const readyRequest*>(
+               &_readyRequest_default_instance_);
+  }
+  static constexpr int kIndexInFileMessages =
+    0;
+
+  friend void swap(readyRequest& a, readyRequest& b) {
+    a.Swap(&b);
+  }
+  inline void Swap(readyRequest* other) {
+    if (other == this) return;
+    if (GetArena() == other->GetArena()) {
+      InternalSwap(other);
+    } else {
+      ::PROTOBUF_NAMESPACE_ID::internal::GenericSwap(this, other);
+    }
+  }
+  void UnsafeArenaSwap(readyRequest* other) {
+    if (other == this) return;
+    GOOGLE_DCHECK(GetArena() == other->GetArena());
+    InternalSwap(other);
+  }
+
+  // implements Message ----------------------------------------------
+
+  inline readyRequest* New() const final {
+    return CreateMaybeMessage<readyRequest>(nullptr);
+  }
+
+  readyRequest* New(::PROTOBUF_NAMESPACE_ID::Arena* arena) const final {
+    return CreateMaybeMessage<readyRequest>(arena);
+  }
+  void CopyFrom(const ::PROTOBUF_NAMESPACE_ID::Message& from) final;
+  void MergeFrom(const ::PROTOBUF_NAMESPACE_ID::Message& from) final;
+  void CopyFrom(const readyRequest& from);
+  void MergeFrom(const readyRequest& from);
+  PROTOBUF_ATTRIBUTE_REINITIALIZES void Clear() final;
+  bool IsInitialized() const final;
+
+  size_t ByteSizeLong() const final;
+  const char* _InternalParse(const char* ptr, ::PROTOBUF_NAMESPACE_ID::internal::ParseContext* ctx) final;
+  ::PROTOBUF_NAMESPACE_ID::uint8* _InternalSerialize(
+      ::PROTOBUF_NAMESPACE_ID::uint8* target, ::PROTOBUF_NAMESPACE_ID::io::EpsCopyOutputStream* stream) const final;
+  int GetCachedSize() const final { return _cached_size_.Get(); }
+
+  private:
+  inline void SharedCtor();
+  inline void SharedDtor();
+  void SetCachedSize(int size) const final;
+  void InternalSwap(readyRequest* other);
+  friend class ::PROTOBUF_NAMESPACE_ID::internal::AnyMetadata;
+  static ::PROTOBUF_NAMESPACE_ID::StringPiece FullMessageName() {
+    return "readyRequest";
+  }
+  protected:
+  explicit readyRequest(::PROTOBUF_NAMESPACE_ID::Arena* arena);
+  private:
+  static void ArenaDtor(void* object);
+  inline void RegisterArenaDtor(::PROTOBUF_NAMESPACE_ID::Arena* arena);
+  public:
+
+  ::PROTOBUF_NAMESPACE_ID::Metadata GetMetadata() const final;
+  private:
+  static ::PROTOBUF_NAMESPACE_ID::Metadata GetMetadataStatic() {
+    ::PROTOBUF_NAMESPACE_ID::internal::AssignDescriptors(&::descriptor_table_armMessages_2eproto);
+    return ::descriptor_table_armMessages_2eproto.file_level_metadata[kIndexInFileMessages];
+  }
+
+  public:
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  // @@protoc_insertion_point(class_scope:readyRequest)
+ private:
+  class _Internal;
+
+  template <typename T> friend class ::PROTOBUF_NAMESPACE_ID::Arena::InternalHelper;
+  typedef void InternalArenaConstructable_;
+  typedef void DestructorSkippable_;
+  mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
+  friend struct ::TableStruct_armMessages_2eproto;
+};
+// -------------------------------------------------------------------
+
+class readyResponse PROTOBUF_FINAL :
+    public ::PROTOBUF_NAMESPACE_ID::Message /* @@protoc_insertion_point(class_definition:readyResponse) */ {
+ public:
+  inline readyResponse() : readyResponse(nullptr) {}
+  virtual ~readyResponse();
+
+  readyResponse(const readyResponse& from);
+  readyResponse(readyResponse&& from) noexcept
+    : readyResponse() {
+    *this = ::std::move(from);
+  }
+
+  inline readyResponse& operator=(const readyResponse& from) {
+    CopyFrom(from);
+    return *this;
+  }
+  inline readyResponse& operator=(readyResponse&& from) noexcept {
+    if (GetArena() == from.GetArena()) {
+      if (this != &from) InternalSwap(&from);
+    } else {
+      CopyFrom(from);
+    }
+    return *this;
+  }
+
+  static const ::PROTOBUF_NAMESPACE_ID::Descriptor* descriptor() {
+    return GetDescriptor();
+  }
+  static const ::PROTOBUF_NAMESPACE_ID::Descriptor* GetDescriptor() {
+    return GetMetadataStatic().descriptor;
+  }
+  static const ::PROTOBUF_NAMESPACE_ID::Reflection* GetReflection() {
+    return GetMetadataStatic().reflection;
+  }
+  static const readyResponse& default_instance();
+
+  static inline const readyResponse* internal_default_instance() {
+    return reinterpret_cast<const readyResponse*>(
+               &_readyResponse_default_instance_);
+  }
+  static constexpr int kIndexInFileMessages =
+    1;
+
+  friend void swap(readyResponse& a, readyResponse& b) {
+    a.Swap(&b);
+  }
+  inline void Swap(readyResponse* other) {
+    if (other == this) return;
+    if (GetArena() == other->GetArena()) {
+      InternalSwap(other);
+    } else {
+      ::PROTOBUF_NAMESPACE_ID::internal::GenericSwap(this, other);
+    }
+  }
+  void UnsafeArenaSwap(readyResponse* other) {
+    if (other == this) return;
+    GOOGLE_DCHECK(GetArena() == other->GetArena());
+    InternalSwap(other);
+  }
+
+  // implements Message ----------------------------------------------
+
+  inline readyResponse* New() const final {
+    return CreateMaybeMessage<readyResponse>(nullptr);
+  }
+
+  readyResponse* New(::PROTOBUF_NAMESPACE_ID::Arena* arena) const final {
+    return CreateMaybeMessage<readyResponse>(arena);
+  }
+  void CopyFrom(const ::PROTOBUF_NAMESPACE_ID::Message& from) final;
+  void MergeFrom(const ::PROTOBUF_NAMESPACE_ID::Message& from) final;
+  void CopyFrom(const readyResponse& from);
+  void MergeFrom(const readyResponse& from);
+  PROTOBUF_ATTRIBUTE_REINITIALIZES void Clear() final;
+  bool IsInitialized() const final;
+
+  size_t ByteSizeLong() const final;
+  const char* _InternalParse(const char* ptr, ::PROTOBUF_NAMESPACE_ID::internal::ParseContext* ctx) final;
+  ::PROTOBUF_NAMESPACE_ID::uint8* _InternalSerialize(
+      ::PROTOBUF_NAMESPACE_ID::uint8* target, ::PROTOBUF_NAMESPACE_ID::io::EpsCopyOutputStream* stream) const final;
+  int GetCachedSize() const final { return _cached_size_.Get(); }
+
+  private:
+  inline void SharedCtor();
+  inline void SharedDtor();
+  void SetCachedSize(int size) const final;
+  void InternalSwap(readyResponse* other);
+  friend class ::PROTOBUF_NAMESPACE_ID::internal::AnyMetadata;
+  static ::PROTOBUF_NAMESPACE_ID::StringPiece FullMessageName() {
+    return "readyResponse";
+  }
+  protected:
+  explicit readyResponse(::PROTOBUF_NAMESPACE_ID::Arena* arena);
+  private:
+  static void ArenaDtor(void* object);
+  inline void RegisterArenaDtor(::PROTOBUF_NAMESPACE_ID::Arena* arena);
+  public:
+
+  ::PROTOBUF_NAMESPACE_ID::Metadata GetMetadata() const final;
+  private:
+  static ::PROTOBUF_NAMESPACE_ID::Metadata GetMetadataStatic() {
+    ::PROTOBUF_NAMESPACE_ID::internal::AssignDescriptors(&::descriptor_table_armMessages_2eproto);
+    return ::descriptor_table_armMessages_2eproto.file_level_metadata[kIndexInFileMessages];
+  }
+
+  public:
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  enum : int {
+    kFlagFieldNumber = 1,
+  };
+  // int32 flag = 1;
+  void clear_flag();
+  ::PROTOBUF_NAMESPACE_ID::int32 flag() const;
+  void set_flag(::PROTOBUF_NAMESPACE_ID::int32 value);
+  private:
+  ::PROTOBUF_NAMESPACE_ID::int32 _internal_flag() const;
+  void _internal_set_flag(::PROTOBUF_NAMESPACE_ID::int32 value);
+  public:
+
+  // @@protoc_insertion_point(class_scope:readyResponse)
+ private:
+  class _Internal;
+
+  template <typename T> friend class ::PROTOBUF_NAMESPACE_ID::Arena::InternalHelper;
+  typedef void InternalArenaConstructable_;
+  typedef void DestructorSkippable_;
+  ::PROTOBUF_NAMESPACE_ID::int32 flag_;
+  mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
+  friend struct ::TableStruct_armMessages_2eproto;
+};
+// -------------------------------------------------------------------
 
 class statusRequest PROTOBUF_FINAL :
     public ::PROTOBUF_NAMESPACE_ID::Message /* @@protoc_insertion_point(class_definition:statusRequest) */ {
@@ -135,7 +402,7 @@ class statusRequest PROTOBUF_FINAL :
                &_statusRequest_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    0;
+    2;
 
   friend void swap(statusRequest& a, statusRequest& b) {
     a.Swap(&b);
@@ -208,13 +475,13 @@ class statusRequest PROTOBUF_FINAL :
   enum : int {
     kFlagFieldNumber = 1,
   };
-  // uint32 flag = 1;
+  // int32 flag = 1;
   void clear_flag();
-  ::PROTOBUF_NAMESPACE_ID::uint32 flag() const;
-  void set_flag(::PROTOBUF_NAMESPACE_ID::uint32 value);
+  ::PROTOBUF_NAMESPACE_ID::int32 flag() const;
+  void set_flag(::PROTOBUF_NAMESPACE_ID::int32 value);
   private:
-  ::PROTOBUF_NAMESPACE_ID::uint32 _internal_flag() const;
-  void _internal_set_flag(::PROTOBUF_NAMESPACE_ID::uint32 value);
+  ::PROTOBUF_NAMESPACE_ID::int32 _internal_flag() const;
+  void _internal_set_flag(::PROTOBUF_NAMESPACE_ID::int32 value);
   public:
 
   // @@protoc_insertion_point(class_scope:statusRequest)
@@ -224,7 +491,7 @@ class statusRequest PROTOBUF_FINAL :
   template <typename T> friend class ::PROTOBUF_NAMESPACE_ID::Arena::InternalHelper;
   typedef void InternalArenaConstructable_;
   typedef void DestructorSkippable_;
-  ::PROTOBUF_NAMESPACE_ID::uint32 flag_;
+  ::PROTOBUF_NAMESPACE_ID::int32 flag_;
   mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
   friend struct ::TableStruct_armMessages_2eproto;
 };
@@ -271,7 +538,7 @@ class statusResponse PROTOBUF_FINAL :
                &_statusResponse_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    1;
+    3;
 
   friend void swap(statusResponse& a, statusResponse& b) {
     a.Swap(&b);
@@ -344,13 +611,13 @@ class statusResponse PROTOBUF_FINAL :
   enum : int {
     kFlagFieldNumber = 1,
   };
-  // uint32 flag = 1;
+  // int32 flag = 1;
   void clear_flag();
-  ::PROTOBUF_NAMESPACE_ID::uint32 flag() const;
-  void set_flag(::PROTOBUF_NAMESPACE_ID::uint32 value);
+  ::PROTOBUF_NAMESPACE_ID::int32 flag() const;
+  void set_flag(::PROTOBUF_NAMESPACE_ID::int32 value);
   private:
-  ::PROTOBUF_NAMESPACE_ID::uint32 _internal_flag() const;
-  void _internal_set_flag(::PROTOBUF_NAMESPACE_ID::uint32 value);
+  ::PROTOBUF_NAMESPACE_ID::int32 _internal_flag() const;
+  void _internal_set_flag(::PROTOBUF_NAMESPACE_ID::int32 value);
   public:
 
   // @@protoc_insertion_point(class_scope:statusResponse)
@@ -360,7 +627,7 @@ class statusResponse PROTOBUF_FINAL :
   template <typename T> friend class ::PROTOBUF_NAMESPACE_ID::Arena::InternalHelper;
   typedef void InternalArenaConstructable_;
   typedef void DestructorSkippable_;
-  ::PROTOBUF_NAMESPACE_ID::uint32 flag_;
+  ::PROTOBUF_NAMESPACE_ID::int32 flag_;
   mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
   friend struct ::TableStruct_armMessages_2eproto;
 };
@@ -407,7 +674,7 @@ class gripperRequest PROTOBUF_FINAL :
                &_gripperRequest_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    2;
+    4;
 
   friend void swap(gripperRequest& a, gripperRequest& b) {
     a.Swap(&b);
@@ -543,7 +810,7 @@ class stopRequest PROTOBUF_FINAL :
                &_stopRequest_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    3;
+    5;
 
   friend void swap(stopRequest& a, stopRequest& b) {
     a.Swap(&b);
@@ -666,7 +933,7 @@ class moveArm PROTOBUF_FINAL :
                &_moveArm_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    4;
+    6;
 
   friend void swap(moveArm& a, moveArm& b) {
     a.Swap(&b);
@@ -868,7 +1135,7 @@ class moveHome PROTOBUF_FINAL :
                &_moveHome_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    5;
+    7;
 
   friend void swap(moveHome& a, moveHome& b) {
     a.Swap(&b);
@@ -1004,7 +1271,7 @@ class moveResponse PROTOBUF_FINAL :
                &_moveResponse_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    6;
+    8;
 
   friend void swap(moveResponse& a, moveResponse& b) {
     a.Swap(&b);
@@ -1140,7 +1407,7 @@ class torqueRequest PROTOBUF_FINAL :
                &_torqueRequest_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    7;
+    9;
 
   friend void swap(torqueRequest& a, torqueRequest& b) {
     a.Swap(&b);
@@ -1276,7 +1543,7 @@ class torqueResponse PROTOBUF_FINAL :
                &_torqueResponse_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    8;
+    10;
 
   friend void swap(torqueResponse& a, torqueResponse& b) {
     a.Swap(&b);
@@ -1444,24 +1711,52 @@ class torqueResponse PROTOBUF_FINAL :
   #pragma GCC diagnostic push
   #pragma GCC diagnostic ignored "-Wstrict-aliasing"
 #endif  // __GNUC__
-// statusRequest
+// readyRequest
 
-// uint32 flag = 1;
-inline void statusRequest::clear_flag() {
-  flag_ = 0u;
+// -------------------------------------------------------------------
+
+// readyResponse
+
+// int32 flag = 1;
+inline void readyResponse::clear_flag() {
+  flag_ = 0;
 }
-inline ::PROTOBUF_NAMESPACE_ID::uint32 statusRequest::_internal_flag() const {
+inline ::PROTOBUF_NAMESPACE_ID::int32 readyResponse::_internal_flag() const {
   return flag_;
 }
-inline ::PROTOBUF_NAMESPACE_ID::uint32 statusRequest::flag() const {
-  // @@protoc_insertion_point(field_get:statusRequest.flag)
+inline ::PROTOBUF_NAMESPACE_ID::int32 readyResponse::flag() const {
+  // @@protoc_insertion_point(field_get:readyResponse.flag)
   return _internal_flag();
 }
-inline void statusRequest::_internal_set_flag(::PROTOBUF_NAMESPACE_ID::uint32 value) {
+inline void readyResponse::_internal_set_flag(::PROTOBUF_NAMESPACE_ID::int32 value) {
   
   flag_ = value;
 }
-inline void statusRequest::set_flag(::PROTOBUF_NAMESPACE_ID::uint32 value) {
+inline void readyResponse::set_flag(::PROTOBUF_NAMESPACE_ID::int32 value) {
+  _internal_set_flag(value);
+  // @@protoc_insertion_point(field_set:readyResponse.flag)
+}
+
+// -------------------------------------------------------------------
+
+// statusRequest
+
+// int32 flag = 1;
+inline void statusRequest::clear_flag() {
+  flag_ = 0;
+}
+inline ::PROTOBUF_NAMESPACE_ID::int32 statusRequest::_internal_flag() const {
+  return flag_;
+}
+inline ::PROTOBUF_NAMESPACE_ID::int32 statusRequest::flag() const {
+  // @@protoc_insertion_point(field_get:statusRequest.flag)
+  return _internal_flag();
+}
+inline void statusRequest::_internal_set_flag(::PROTOBUF_NAMESPACE_ID::int32 value) {
+  
+  flag_ = value;
+}
+inline void statusRequest::set_flag(::PROTOBUF_NAMESPACE_ID::int32 value) {
   _internal_set_flag(value);
   // @@protoc_insertion_point(field_set:statusRequest.flag)
 }
@@ -1470,22 +1765,22 @@ inline void statusRequest::set_flag(::PROTOBUF_NAMESPACE_ID::uint32 value) {
 
 // statusResponse
 
-// uint32 flag = 1;
+// int32 flag = 1;
 inline void statusResponse::clear_flag() {
-  flag_ = 0u;
+  flag_ = 0;
 }
-inline ::PROTOBUF_NAMESPACE_ID::uint32 statusResponse::_internal_flag() const {
+inline ::PROTOBUF_NAMESPACE_ID::int32 statusResponse::_internal_flag() const {
   return flag_;
 }
-inline ::PROTOBUF_NAMESPACE_ID::uint32 statusResponse::flag() const {
+inline ::PROTOBUF_NAMESPACE_ID::int32 statusResponse::flag() const {
   // @@protoc_insertion_point(field_get:statusResponse.flag)
   return _internal_flag();
 }
-inline void statusResponse::_internal_set_flag(::PROTOBUF_NAMESPACE_ID::uint32 value) {
+inline void statusResponse::_internal_set_flag(::PROTOBUF_NAMESPACE_ID::int32 value) {
   
   flag_ = value;
 }
-inline void statusResponse::set_flag(::PROTOBUF_NAMESPACE_ID::uint32 value) {
+inline void statusResponse::set_flag(::PROTOBUF_NAMESPACE_ID::int32 value) {
   _internal_set_flag(value);
   // @@protoc_insertion_point(field_set:statusResponse.flag)
 }
@@ -1881,6 +2176,10 @@ inline void torqueResponse::set_endpoint(double value) {
 #ifdef __GNUC__
   #pragma GCC diagnostic pop
 #endif  // __GNUC__
+// -------------------------------------------------------------------
+
+// -------------------------------------------------------------------
+
 // -------------------------------------------------------------------
 
 // -------------------------------------------------------------------

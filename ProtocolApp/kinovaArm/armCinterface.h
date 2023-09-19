@@ -24,9 +24,20 @@ public:
     {
         stub = armCommunication::NewStub(grpc::CreateChannel(DEFAULT_IP, grpc::InsecureChannelCredentials()));
     }
-    KinovaArmClient(std::string IP)
+
+    void connect()
+    {
+        stub = armCommunication::NewStub(grpc::CreateChannel(DEFAULT_IP, grpc::InsecureChannelCredentials()));
+    }
+
+    void connect(std::string IP)
     {
         stub = armCommunication::NewStub(grpc::CreateChannel(IP, grpc::InsecureChannelCredentials()));
+    }
+
+    void disconnect()
+    {
+        stub.reset();
     }
 
     int armReady()

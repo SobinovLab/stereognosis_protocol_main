@@ -21,6 +21,7 @@
 #include <grpcpp/impl/codegen/sync_stream.h>
 
 static const char* armCommunication_method_names[] = {
+  "/armCommunication/armReady",
   "/armCommunication/armStatus",
   "/armCommunication/armControl",
   "/armCommunication/gripperOpen",
@@ -36,13 +37,37 @@ std::unique_ptr< armCommunication::Stub> armCommunication::NewStub(const std::sh
 }
 
 armCommunication::Stub::Stub(const std::shared_ptr< ::grpc::ChannelInterface>& channel)
-  : channel_(channel), rpcmethod_armStatus_(armCommunication_method_names[0], ::grpc::internal::RpcMethod::NORMAL_RPC, channel)
-  , rpcmethod_armControl_(armCommunication_method_names[1], ::grpc::internal::RpcMethod::NORMAL_RPC, channel)
-  , rpcmethod_gripperOpen_(armCommunication_method_names[2], ::grpc::internal::RpcMethod::NORMAL_RPC, channel)
-  , rpcmethod_stopArm_(armCommunication_method_names[3], ::grpc::internal::RpcMethod::NORMAL_RPC, channel)
-  , rpcmethod_armHome_(armCommunication_method_names[4], ::grpc::internal::RpcMethod::NORMAL_RPC, channel)
-  , rpcmethod_armFeedback_(armCommunication_method_names[5], ::grpc::internal::RpcMethod::SERVER_STREAMING, channel)
+  : channel_(channel), rpcmethod_armReady_(armCommunication_method_names[0], ::grpc::internal::RpcMethod::NORMAL_RPC, channel)
+  , rpcmethod_armStatus_(armCommunication_method_names[1], ::grpc::internal::RpcMethod::NORMAL_RPC, channel)
+  , rpcmethod_armControl_(armCommunication_method_names[2], ::grpc::internal::RpcMethod::NORMAL_RPC, channel)
+  , rpcmethod_gripperOpen_(armCommunication_method_names[3], ::grpc::internal::RpcMethod::NORMAL_RPC, channel)
+  , rpcmethod_stopArm_(armCommunication_method_names[4], ::grpc::internal::RpcMethod::NORMAL_RPC, channel)
+  , rpcmethod_armHome_(armCommunication_method_names[5], ::grpc::internal::RpcMethod::NORMAL_RPC, channel)
+  , rpcmethod_armFeedback_(armCommunication_method_names[6], ::grpc::internal::RpcMethod::SERVER_STREAMING, channel)
   {}
+
+::grpc::Status armCommunication::Stub::armReady(::grpc::ClientContext* context, const ::readyRequest& request, ::readyResponse* response) {
+  return ::grpc::internal::BlockingUnaryCall(channel_.get(), rpcmethod_armReady_, context, request, response);
+}
+
+void armCommunication::Stub::experimental_async::armReady(::grpc::ClientContext* context, const ::readyRequest* request, ::readyResponse* response, std::function<void(::grpc::Status)> f) {
+  ::grpc::internal::CallbackUnaryCall(stub_->channel_.get(), stub_->rpcmethod_armReady_, context, request, response, std::move(f));
+}
+
+void armCommunication::Stub::experimental_async::armReady(::grpc::ClientContext* context, const ::readyRequest* request, ::readyResponse* response, ::grpc::experimental::ClientUnaryReactor* reactor) {
+  ::grpc::internal::ClientCallbackUnaryFactory::Create(stub_->channel_.get(), stub_->rpcmethod_armReady_, context, request, response, reactor);
+}
+
+::grpc::ClientAsyncResponseReader< ::readyResponse>* armCommunication::Stub::PrepareAsyncarmReadyRaw(::grpc::ClientContext* context, const ::readyRequest& request, ::grpc::CompletionQueue* cq) {
+  return ::grpc::internal::ClientAsyncResponseReaderFactory< ::readyResponse>::Create(channel_.get(), cq, rpcmethod_armReady_, context, request, false);
+}
+
+::grpc::ClientAsyncResponseReader< ::readyResponse>* armCommunication::Stub::AsyncarmReadyRaw(::grpc::ClientContext* context, const ::readyRequest& request, ::grpc::CompletionQueue* cq) {
+  auto* result =
+    this->PrepareAsyncarmReadyRaw(context, request, cq);
+  result->StartCall();
+  return result;
+}
 
 ::grpc::Status armCommunication::Stub::armStatus(::grpc::ClientContext* context, const ::statusRequest& request, ::statusResponse* response) {
   return ::grpc::internal::BlockingUnaryCall(channel_.get(), rpcmethod_armStatus_, context, request, response);
@@ -179,6 +204,16 @@ armCommunication::Service::Service() {
   AddMethod(new ::grpc::internal::RpcServiceMethod(
       armCommunication_method_names[0],
       ::grpc::internal::RpcMethod::NORMAL_RPC,
+      new ::grpc::internal::RpcMethodHandler< armCommunication::Service, ::readyRequest, ::readyResponse>(
+          [](armCommunication::Service* service,
+             ::grpc::ServerContext* ctx,
+             const ::readyRequest* req,
+             ::readyResponse* resp) {
+               return service->armReady(ctx, req, resp);
+             }, this)));
+  AddMethod(new ::grpc::internal::RpcServiceMethod(
+      armCommunication_method_names[1],
+      ::grpc::internal::RpcMethod::NORMAL_RPC,
       new ::grpc::internal::RpcMethodHandler< armCommunication::Service, ::statusRequest, ::statusResponse>(
           [](armCommunication::Service* service,
              ::grpc::ServerContext* ctx,
@@ -187,7 +222,7 @@ armCommunication::Service::Service() {
                return service->armStatus(ctx, req, resp);
              }, this)));
   AddMethod(new ::grpc::internal::RpcServiceMethod(
-      armCommunication_method_names[1],
+      armCommunication_method_names[2],
       ::grpc::internal::RpcMethod::NORMAL_RPC,
       new ::grpc::internal::RpcMethodHandler< armCommunication::Service, ::moveArm, ::moveResponse>(
           [](armCommunication::Service* service,
@@ -197,7 +232,7 @@ armCommunication::Service::Service() {
                return service->armControl(ctx, req, resp);
              }, this)));
   AddMethod(new ::grpc::internal::RpcServiceMethod(
-      armCommunication_method_names[2],
+      armCommunication_method_names[3],
       ::grpc::internal::RpcMethod::NORMAL_RPC,
       new ::grpc::internal::RpcMethodHandler< armCommunication::Service, ::gripperRequest, ::moveResponse>(
           [](armCommunication::Service* service,
@@ -207,7 +242,7 @@ armCommunication::Service::Service() {
                return service->gripperOpen(ctx, req, resp);
              }, this)));
   AddMethod(new ::grpc::internal::RpcServiceMethod(
-      armCommunication_method_names[3],
+      armCommunication_method_names[4],
       ::grpc::internal::RpcMethod::NORMAL_RPC,
       new ::grpc::internal::RpcMethodHandler< armCommunication::Service, ::stopRequest, ::moveResponse>(
           [](armCommunication::Service* service,
@@ -217,7 +252,7 @@ armCommunication::Service::Service() {
                return service->stopArm(ctx, req, resp);
              }, this)));
   AddMethod(new ::grpc::internal::RpcServiceMethod(
-      armCommunication_method_names[4],
+      armCommunication_method_names[5],
       ::grpc::internal::RpcMethod::NORMAL_RPC,
       new ::grpc::internal::RpcMethodHandler< armCommunication::Service, ::moveHome, ::moveResponse>(
           [](armCommunication::Service* service,
@@ -227,7 +262,7 @@ armCommunication::Service::Service() {
                return service->armHome(ctx, req, resp);
              }, this)));
   AddMethod(new ::grpc::internal::RpcServiceMethod(
-      armCommunication_method_names[5],
+      armCommunication_method_names[6],
       ::grpc::internal::RpcMethod::SERVER_STREAMING,
       new ::grpc::internal::ServerStreamingHandler< armCommunication::Service, ::torqueRequest, ::torqueResponse>(
           [](armCommunication::Service* service,
@@ -239,6 +274,13 @@ armCommunication::Service::Service() {
 }
 
 armCommunication::Service::~Service() {
+}
+
+::grpc::Status armCommunication::Service::armReady(::grpc::ServerContext* context, const ::readyRequest* request, ::readyResponse* response) {
+  (void) context;
+  (void) request;
+  (void) response;
+  return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
 }
 
 ::grpc::Status armCommunication::Service::armStatus(::grpc::ServerContext* context, const ::statusRequest* request, ::statusResponse* response) {

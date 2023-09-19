@@ -87,18 +87,18 @@ class KinovaArm(QObject):
             session_info.connection_inactivity_timeout = 2000 # (milliseconds)
 
             self.transport = MqttTransport()
-            errorCallback = lambda kException: print("____CallBack Error____: {}".format(kException))
+            errorCallback = lambda kException: printLog("____CallBack Error____: {}".format(kException))
             
             router = RouterClient(self.transport, errorCallback)
             self.transport.connect(self.CONTROLLER_ADDRESS, self.MQTT_PORT)
 
-            print("Creating Session")
+            printLog("Creating Session")
             self.session_client = SessionClient(router)
             self.session_client.CreateSession(session_info)
-            print("Session Created")
+            printLog("Session Created")
 
             self.base = BaseClient(router)
-            print("Connected to the Base")
+            printLog("Connected to the Base")
             
             plugin_name = "robotiq_plugin"
             
@@ -106,23 +106,23 @@ class KinovaArm(QObject):
             plugin_list = plugin_manager.GetPluginsList()
             for plugin in plugin_list.plugin_info_list:
                 if plugin.handle.identifier == plugin_name:
-                    print(plugin.handle.identifier)
-                    print(plugin.plugin_state.state)
+                    printLog(plugin.handle.identifier)
+                    printLog(plugin.plugin_state.state)
             
             self.gripper_plugin = PluginClient(router, plugin_name)
-            print("Connected to gripper plugin")
+            printLog("Connected to gripper plugin")
             
             return (1, None)
             
         except Exception as e:
-            print("Failed to connect to base; Error: ", e)
+            printLog("Failed to connect to base; Error: ", e)
             return (-1, e)
 
     def disconnectBase(self):
         try:
             self.session_client.CloseSession()
             self.transport.disconnect()
-            print("Disconnected from base")
+            printLog("Disconnected from base")
             return (1, None)
         except Exception as e:
             return (-2, e)
@@ -157,16 +157,16 @@ class KinovaArm(QObject):
         
     def powerArmOn(self):
         try:
-            print("Attmepting to turn the arm on")
+            printLog("Attmepting to turn the arm on")
             self.base.ActivateRobot()
-            print("Turned on Arm, may take a minute")
+            printLog("Turned on Arm, may take a minute")
             return(1, None)
         except Exception as e:
             return(-10, e)
                 
     def powerArmOff(self):
         try:
-            print("Turning arm off")
+            printLog("Turning arm off")
             self.base.DeactivateRobot()
             return(1,None)
         except Exception as e:
@@ -188,31 +188,31 @@ class KinovaArm(QObject):
         try:
             secs = 0
             state = self.base.GetArmState()
-            print("Started Wait function")
+            printLog("Started Wait function")
             while state.active_state != Base_pb2.ARMSTATE_ARM_OPERATIONAL:
-                print("Top of loop")
+                printLog("Top of loop")
                 if secs > timeout:
-                    print("Timed Out")
+                    printLog("Timed Out")
                     yield (-12, "Failed to turn arm on within the timeout window (it may still yet turn on if timeout was short)")
                     return
                 if(state.active_state == Base_pb2.ARMSTATE_INITIALIZATION):
-                    print("Yeilding 30+")
+                    printLog("Yeilding 30+")
                     yield (30 + secs, None)
                 elif(state.active_state == Base_pb2.ARMSTATE_BRAKE_RELEASING):
-                    print("Yeilding 90")
+                    printLog("Yeilding 90")
                     yield(90, None)
                 
-                print("Before Sleep")
+                printLog("Before Sleep")
                 #Doing Psuedo Sleep
                 tic = time.time()
                 while(time.time() - tic < 1.0):
                     continue
                 #time.sleep(1)
-                print("Post Sleep")
+                printLog("Post Sleep")
                 secs += 1
                 state = self.base.GetArmState()
-                print("Bottom Loop")
-            print("Out of Loop")
+                printLog("Bottom Loop")
+            printLog("Out of Loop")
             yield (100, None)
             return
         except Exception as e:
@@ -242,11 +242,11 @@ class KinovaArm(QObject):
             if data["actionEvent"] == "ACTION_FEEDBACK":
                 return
             if data["actionEvent"].strip(" ") == "ACTION_END" and self.actionStarted:
-                print("Got inside correctly, calling func")
+                printLog("Got inside correctly, calling func")
                 self.actionStarted = False
                 func(True)
             elif data["actionEvent"].strip(" ") == "ACTION_START":
-                print("Setting started")
+                printLog("Setting started")
                 self.actionStarted = True
                 return
             elif data["actionEvent"].strip(" ") == "ACTION_ABORT":
@@ -255,7 +255,7 @@ class KinovaArm(QObject):
                 else:
                     func(False)
             else:
-                print("Got a different callback function: ", data["actionEvent"])
+                printLog("Got a different callback function: ", data["actionEvent"])
                 return
         self.base.OnNotificationActionTopic(logicWrapper, Base_pb2.NotificationOptions())
         return
@@ -265,7 +265,7 @@ class KinovaArm(QObject):
         def logicWrapper(data):
             data = json_format.MessageToDict(data)
             if data["actionEvent"].strip(" ") == "ACTION_END":
-                print("Gripper action finished")
+                printLog("Gripper action finished")
                 func(True)
             elif data["actionEvent"].strip(" ") == "ACTION_ABORT":
                 if self.gripper_plugin.GetStatus().state == Plugin_pb2.STATE_ERROR:   
@@ -273,7 +273,7 @@ class KinovaArm(QObject):
                 else:
                     func(True)
             else:
-                print("Got a different callback function: ", data["actionEvent"])
+                printLog("Got a different callback function: ", data["actionEvent"])
                 return
             return
         self.gripper_plugin.OnNotificationActionTopic(logicWrapper, Plugin_pb2.NotificationOptions())
@@ -285,7 +285,7 @@ class KinovaArm(QObject):
         try:
             self.base.Unsubscribe(notif_handle)
         except:
-            print("Failed to unsub from notif handle")
+            printLog("Failed to unsub from notif handle")
         return
     
     def change_operating_mode(self, operating_mode_type : str):
@@ -444,12 +444,12 @@ class KinovaArm(QObject):
             result = self.base.ValidateWaypointList(wptlist)
 
             if len(result.trajectory_error_report.trajectory_error_elements) == 0:
-                print("Reaching cartesian pose trajectory...")
+                printLog("Reaching cartesian pose trajectory...")
                 self.base.ExecuteWaypointTrajectory(wptlist)
 
             else:
-                print("Error found in trajectory")
-                print(result.trajectory_error_report)
+                printLog("Error found in trajectory")
+                printLog(result.trajectory_error_report)
                 return (-6, result.trajectory_error_report)
             return (1, None)
         except Exception as e:
@@ -488,11 +488,11 @@ class KinovaArm(QObject):
             result = self.base.ValidateWaypointList(wptlist)
 
             if len(result.trajectory_error_report.trajectory_error_elements) == 0:
-                print("Reaching angular pose trajectory...")
+                printLog("Reaching angular pose trajectory...")
                 self.base.ExecuteWaypointTrajectory(wptlist)
             else:
-                print("Error found in trajectory")
-                print(result.trajectory_error_report)
+                printLog("Error found in trajectory")
+                printLog(result.trajectory_error_report)
                 return (-8, result.trajectory_error_report)
             return (1, None)
         except Exception as e:
@@ -504,13 +504,13 @@ class KinovaArm(QObject):
             input_joint_angles = self.base.GetMeasuredJointAngles()
             pose = self.base.GetMeasuredCartesianPose()
         except KServerException as ex:
-            print("Unable to get current robot pose")
-            print(
+            printLog("Unable to get current robot pose")
+            printLog(
                 "Error_code:{} , Sub_error_code:{} ".format(
                     ex.get_error_code(), ex.get_error_sub_code()
                 )
             )
-            print("Caught expected error: {}".format(ex))
+            printLog("Caught expected error: {}".format(ex))
             return None
 
         X, Y, Z = self.translatePosition(lateral, depth, height)
@@ -531,22 +531,22 @@ class KinovaArm(QObject):
             # '- 1' to generate an actual "guess" for current joint angles
             jAngle.value = joint_angle.value - 10
         try:
-            print("Computing Inverse Kinematics using joint angles and pose...")
+            printLog("Computing Inverse Kinematics using joint angles and pose...")
             computed_joint_angles = self.base.ComputeInverseKinematics(input_IkData)
         except KServerException as ex:
-            print("Unable to compute inverse kinematics")
-            print(
+            printLog("Unable to compute inverse kinematics")
+            printLog(
                 "Error_code:{} , Sub_error_code:{} ".format(
                     ex.get_error_code(), ex.get_error_sub_code()
                 )
             )
-            print("Caught expected error: {}".format(ex))
+            printLog("Caught expected error: {}".format(ex))
             return None
 
-        print("Joint ID : Joint Angle")
+        printLog("Joint ID : Joint Angle")
         joint_identifier = 0
         for joint_angle in computed_joint_angles.joint_angles:
-            print(joint_identifier, " : ", joint_angle.value)
+            printLog(joint_identifier, " : ", joint_angle.value)
             joint_identifier += 1
 
         return computed_joint_angles

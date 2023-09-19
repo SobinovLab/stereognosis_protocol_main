@@ -74,6 +74,7 @@ class Protocol
 
         // arm (replacing motorHub)
         KinovaArmClient* armClient = nullptr;
+        bool armHomed = false;
 
 		// current state of the protocol/trial
 		void setCurrentState(ProtocolState state);

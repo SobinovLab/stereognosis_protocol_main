@@ -15,6 +15,7 @@ from PyQt5.QtWidgets import QApplication, QMainWindow
 from PyQt5.QtCore import QObject, QThread, pyqtSignal
 
 from link6Arm import KinovaArm
+from log import setLogFileName, printLog
 
 
 textRed = "ad1010"
@@ -75,21 +76,21 @@ class KinovaServer(QObject):
         return
 
     def armNotificationCallback(self, completed):
-        print("In Arm Notif Callback")
+        printLog("In Arm Notif Callback")
         if completed:
             self.isInFault = False
         else:
-            print("Action failed, likely due to singularity")
+            printLog("Action failed, likely due to singularity")
             self.isInFault = True
         self.movementEvent.set()
         return
     
     def gripperNotificationCallback(self, completed):
-        print("In Gripper Notif Callback")
+        printLog("In Gripper Notif Callback")
         if completed:
             self.isInFault = False
         else:
-            print("FUCK")
+            printLog("FUCK")
             self.isInFault = True
         self.gripperEvent.set()
         return
@@ -116,67 +117,67 @@ class KinovaServer(QObject):
         return ret
 
     def moveArmHome(self, wait=False):
-        print("Attempting to get movement lock")
+        printLog("Attempting to get movement lock")
         self.movementLock.acquire()
-        print("Got movement lock")
+        printLog("Got movement lock")
         self.movementEvent.clear()
-        print("Cleared event doing move")
+        printLog("Cleared event doing move")
         ret, err = self.arm.moveHome()
         if ret < 0:
-            print("Got error in movement")
+            printLog("Got error in movement")
             self.movementLock.release()
             errText = "Error in moving the arm to home position: \n" + str(err)
             self.changeErrorBoxText(errText, 12, textRed)
             return ret
         if(wait):
-            print("Waiting for movement to finish")
+            printLog("Waiting for movement to finish")
             self.movementEvent.wait()
-        print("Releasing Lock")
+        printLog("Releasing Lock")
         self.movementLock.release()
         if self.isInFault:
-            print("Fault has occured during movement")
+            printLog("Fault has occured during movement")
             errText = ("Arm has encountered a problem during movement. Likely a" 
             "singularity. Faults need to be cleared to continue. \n"
             "<<----------- Use the clear button to clear faults")
             self.changeErrorBoxText(errText, 12, textRed)
             ret = -16
-        print("Done")
+        printLog("Done")
         return ret
 
     def openGripper(self, width, wait=False):
-        print("Attempting to get movement lock")
+        printLog("Attempting to get movement lock")
         self.movementLock.acquire()
         self.gripperEvent.clear()
-        print("Got movement lock")
+        printLog("Got movement lock")
         self.movementEvent.clear()
-        print("Cleared event doing gripper move")
+        printLog("Cleared event doing gripper move")
         ret, err = self.arm.moveGripper(width) 
         if ret < 0:
             errText = "Error in moving the gripper to a width: \n" + str(err)
             self.changeErrorBoxText(errText, 12, textRed)
 
         if wait:
-            print("Waiting for gripper event")
+            printLog("Waiting for gripper event")
             self.gripperEvent.wait()
-            print("Finished waiting for event")
+            printLog("Finished waiting for event")
         self.movementLock.release()
-        print("Finished with openGripper")
+        printLog("Finished with openGripper")
         return ret
 
     def moveArmToPosition(self, x, y, z, theta, phi, chi, width):
-        print("Attempting to get movement lock")
+        printLog("Attempting to get movement lock")
         self.movementLock.acquire()
-        print("Got movement lock")
+        printLog("Got movement lock")
         self.movementEvent.clear()
         '''
-        print("Cleared event doing gripper move")
+        printLog("Cleared event doing gripper move")
         ret, err = self.arm.moveGripper(width) 
         if ret < 0:
             self.movementLock.release()
             errText = "Error in moving the gripper to a width: \n" + str(err)
             self.changeErrorBoxText(errText, 12, textRed)
             return ret
-        print("Doing normal move")
+        printLog("Doing normal move")
         '''
         ret, err = self.arm.referencedMoveArmCartesian(x, y, z, theta, phi, chi)
         if ret < 0:
@@ -184,12 +185,12 @@ class KinovaServer(QObject):
             errText = "Error in moving the arm to a position: \n" + str(err)
             self.changeErrorBoxText(errText, 12, textRed)
             return ret
-        print("Waiting on event")
+        printLog("Waiting on event")
         self.movementEvent.wait()
-        print("Event done, releasing lock")
+        printLog("Event done, releasing lock")
         self.movementLock.release()
         if self.isInFault:
-            print("Fault has occured during movement")
+            printLog("Fault has occured during movement")
             errText = ("Arm has encountered a problem during movement. Likely a" 
             "singularity. Faults need to be cleared to continue. \n"
             "<<----------- Use the clear button to clear faults")
@@ -211,7 +212,7 @@ class KinovaServer(QObject):
     ###############################################
     '''
     def armReady(self, request, context):
-        print("Ready Request recieved")
+        printLog("Ready Request recieved")
         ret = self.arm.checkArmReady()
         if not ret:
             self.moveArmHome(wait = True)
@@ -223,28 +224,28 @@ class KinovaServer(QObject):
         return armMessages_pb2.readyResponse(flag=ret)
 
     def armStatus(self, request, context):
-        print("Status Request: ", request.flag)
+        printLog("Status Request: ", request.flag)
         comString = "Req: status"
         self.addCommandToList(comString)
         ret = self.getArmStatus()
         return armMessages_pb2.statusResponse(flag=ret)
     
     def gripperOpen(self, request, context):
-        print("Gripper open: ", request.width)
+        printLog("Gripper open: ", request.width)
         comString = "Opn: {}".format(request.width)
         self.addCommandToList(comString)
         ret = self.openGripper(request.width, wait=True)
         return armMessages_pb2.moveResponse(responseCode=ret)
 
     def armControl(self, request, context):
-        print("Arm Control: ", request.lateral, request.depth, request.height)
+        printLog("Arm Control: ", request.lateral, request.depth, request.height)
         comString = "Mov: {} {} {} :: {} {} {} :: {}".format(request.lateral, request.depth, request.height, request.theta, request.phi, request.chi, request.width)
         self.addCommandToList(comString)
         ret = self.moveArmToPosition(request.lateral, request.depth, request.height, request.theta, request.phi, request.chi, request.width)
         return armMessages_pb2.moveResponse(responseCode=ret)
 
     def armHome(self, request, context):
-        print("Arm Home: ", request.flag)
+        printLog("Arm Home: ", request.flag)
         comString = "Mov: home"
         self.addCommandToList(comString)
         ret = self.moveArmHome(wait=True)
@@ -252,14 +253,14 @@ class KinovaServer(QObject):
     
     def stopArm(self, request, context):
         ret = self.emergencyStop()
-        print("STOP ARM")
+        printLog("STOP ARM")
         comString = "STOP ARM"
         self.addCommandToList(comString)
         return armMessages_pb2.moveResponse(responseCode=ret)
 
     def armFeedback(self, request, context):
         #This is future direction where we output the torques of the arm as well, so this is nonFunctioning right now
-        print("WHY THE FUCK ARE WE HERE")
+        printLog("WHY THE FUCK ARE WE HERE")
         comString = "Req: forces"
         self.addCommandToList(comString)
         return armMessages_pb2.torqueResponse(joint1=1, joint2=2, joint3=3, joint4=4, joint5=5, joint6=6, endpoint=7)
@@ -382,21 +383,21 @@ class KinovaServer(QObject):
                 self.changeErrorBoxText(errText, 12, textRed)
                 return
             def waitForPower():
-                print("Started the async shit")
+                printLog("Started the async shit")
                 self.enableSignal.emit(False)
                 self.ui.armButton.setStyleSheet("background-color : lightblue")
-                print("Begun the crash shit")
+                printLog("Begun the crash shit")
                 for ret, err in self.arm.waitForPowerOn():
-                    print("in loop: ", ret)
+                    printLog("in loop: ", ret)
                     if ret < 0:
                         errText = "Error in turning on the arm: \n" + str(err)
-                        print("Failing out??") 
+                        printLog("Failing out??") 
                         self.changeErrorBoxText(errText, 12, textRed)
                         self.enableSignal.emit(True)
                         return
                     self.progressSignal.emit(ret)
-                    print("Bottom Loop")
-                print("out of loop")
+                    printLog("Bottom Loop")
+                printLog("out of loop")
                 self.ui.armButton.setStyleSheet("background-color : green")
                 self.enableSignal.emit(True)
             #waitForPower()
@@ -428,14 +429,14 @@ class KinovaServer(QObject):
             self.safteyCount += 1
             return
         self.safteyCount = 0
-        print("DEVELOPER MODE, enter command, enter \"cancel\" to cancel")
+        printLog("DEVELOPER MODE, enter command, enter \"cancel\" to cancel")
         code = input()
         if code == "cancel":
             return
         try:
             eval(code)
         except Exception as e:
-            print(e)
+            printLog(e)
             errText = "JESUS FUCK WHAT DID YOU DO IN DEV MODE: \n" + str(e)
             self.changeErrorBoxText(errText, 12, textRed)
         return
@@ -470,7 +471,7 @@ class KinovaServer(QObject):
 
 class TestServer:
     def __init__(self):
-        print("In init")
+        printLog("In init")
     def additionalshit(self):
         return
     def additionalshit1(self):
@@ -480,19 +481,19 @@ class TestServer:
     def additionalshit3(self):
         return
     def armStatus(self, request, context):
-        print("Status Request: ", request.flag)
+        printLog("Status Request: ", request.flag)
         return armMessages_pb2.statusResponse(flag=13)
 
     def armControl(self, request, context):
-        print("Arm Control: ", request.X, request.Y, request.Z)
+        printLog("Arm Control: ", request.X, request.Y, request.Z)
         return armMessages_pb2.moveResponse(responseCode=6)
 
     def armHome(self, request, context):
-        print("Arm Home: ", request.flag)
+        printLog("Arm Home: ", request.flag)
         return armMessages_pb2.moveResponse(responseCode=7)
 
     def armFeedback(self, request, context):
-        print("WHY THE FUCK ARE WE HERE")
+        printLog("WHY THE FUCK ARE WE HERE")
         return armMessages_pb2.torqueResponse(joint1=1, joint2=2, joint3=3, joint4=4, joint5=5, joint6=6, endpoint=7)
 
 
@@ -504,13 +505,14 @@ def serve(service=None):
     armMessages_pb2_grpc.add_armCommunicationServicer_to_server(service, server)
     server.add_insecure_port('[::]:50051')
     server.start()
-    print("GRPC Server started")
+    printLog("GRPC Server started")
     kService.GRPCserver = server
 
 
 
 if __name__ == "__main__":
     os.system("title KinovaServer")
+    setLogFileName()
     arm = KinovaArm()
     kService = KinovaServer(arm)
     #serve()

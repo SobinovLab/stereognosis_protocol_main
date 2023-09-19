@@ -40,6 +40,16 @@ class moveResponse(_message.Message):
     responseCode: int
     def __init__(self, responseCode: _Optional[int] = ...) -> None: ...
 
+class readyRequest(_message.Message):
+    __slots__ = []
+    def __init__(self) -> None: ...
+
+class readyResponse(_message.Message):
+    __slots__ = ["flag"]
+    FLAG_FIELD_NUMBER: _ClassVar[int]
+    flag: int
+    def __init__(self, flag: _Optional[int] = ...) -> None: ...
+
 class statusRequest(_message.Message):
     __slots__ = ["flag"]
     FLAG_FIELD_NUMBER: _ClassVar[int]
