@@ -243,7 +243,9 @@ class KinovaArm(QObject):
             data = json_format.MessageToDict(data)
             if data["actionEvent"] == "ACTION_FEEDBACK":
                 return
-            if data["actionEvent"].strip(" ") == "ACTION_END" and self.actionStarted:
+            if data["actionEvent"].strip(" ") == "ACTION_END":
+                if not self.actionStarted:
+                    return
                 printLog("Got inside correctly, calling func")
                 self.actionStarted = False
                 func(True)
@@ -252,10 +254,25 @@ class KinovaArm(QObject):
                 self.actionStarted = True
                 return
             elif data["actionEvent"].strip(" ") == "ACTION_ABORT":
-                if self.base.GetArmState().active_state == Base_pb2.ARMSTATE_ARM_OPERATIONAL:
+                self.actionStarted = False
+                printLog("In action abort, either a stop or a fault")
+                st = None
+                try:
+                    #self.connectToBase()
+                    #st = self.base.GetArmState().active_state
+                    pliasd = 1
+                except Exception as e:
+                    printLog("Some shit is real fucked, failed to get base state")
+                    printLog(e)
+                    func(False)
+                    return
+                if st == Base_pb2.ARMSTATE_ARM_OPERATIONAL or True:
+                    printLog("Action Abort was just a stop")
                     func(True)
                 else:
+                    printLog("Action Abort was a fault")
                     func(False)
+
             else:
                 printLog("Got a different callback function: ", data["actionEvent"])
                 return
@@ -270,9 +287,12 @@ class KinovaArm(QObject):
                 printLog("Gripper action finished")
                 func(True)
             elif data["actionEvent"].strip(" ") == "ACTION_ABORT":
-                if self.gripper_plugin.GetStatus().state == Plugin_pb2.STATE_ERROR:   
+                printLog("In Gripper Action Abort")
+                if self.gripper_plugin.GetStatus().state == Plugin_pb2.STATE_ERROR:
+                    printLog("Gripper action abort was an actual error")   
                     func(False)
                 else:
+                    printLog("Gripper Action abort was likely just a stop")
                     func(True)
             else:
                 printLog("Got a different callback function: ", data["actionEvent"])
@@ -533,22 +553,24 @@ class KinovaArm(QObject):
             # '- 1' to generate an actual "guess" for current joint angles
             jAngle.value = joint_angle.value - 10
         try:
-            printLog("Computing Inverse Kinematics using joint angles and pose...")
+            #printLog("Computing Inverse Kinematics using joint angles and pose...")
             computed_joint_angles = self.base.ComputeInverseKinematics(input_IkData)
         except KServerException as ex:
-            printLog("Unable to compute inverse kinematics")
+            #printLog("Unable to compute inverse kinematics")
+            '''
             printLog(
                 "Error_code:{} , Sub_error_code:{} ".format(
                     ex.get_error_code(), ex.get_error_sub_code()
                 )
             )
             printLog("Caught expected error: {}".format(ex))
+            '''
             return None
-
+        '''
         printLog("Joint ID : Joint Angle")
         joint_identifier = 0
         for joint_angle in computed_joint_angles.joint_angles:
             printLog(joint_identifier, " : ", joint_angle.value)
             joint_identifier += 1
-
+        '''
         return computed_joint_angles

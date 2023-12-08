@@ -174,7 +174,7 @@ BOOL CProtocolAppDlg::OnInitDialog()
 	/////// Control what is enabled and initialized
 	// protocol
 	toggleProtocolCtrls(true);
-	GetDlgItem(IDC_HOME_MOTORS_BTN)->EnableWindow(m_protocol.isMotorsOn());
+	//GetDlgItem(IDC_HOME_MOTORS_BTN)->EnableWindow(m_protocol.isMotorsOn());
 	GetDlgItem(IDC_NEUTRAL_POSITION_BTN)->EnableWindow(m_protocol.isMotorsOn());
 	GetDlgItem(IDC_STOP_MOTORS_BTN)->EnableWindow(m_protocol.isMotorsOn());
 
@@ -701,6 +701,7 @@ void CProtocolAppDlg::OnBnClickedMotorsChk()
     {
         m_protocol.armClient->disconnect();
         m_protocol.armHomed = false;
+		GetDlgItem(IDC_HOME_MOTORS_BTN)->EnableWindow(false);
         ((CButton*)GetDlgItem(IDC_MOTORS_CHK))->SetCheck(BST_UNCHECKED);
     }
     else

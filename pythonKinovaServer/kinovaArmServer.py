@@ -106,6 +106,7 @@ class KinovaServer(QObject):
         ret, err = self.arm.getArmStatus()
         if ret < 0:
             errText = "Error in getting arm status: \n" + str(err)
+            printLog(errText)
             self.changeErrorBoxText(errText, 12, textRed)
         return ret
 
@@ -113,6 +114,7 @@ class KinovaServer(QObject):
         ret, err = self.arm.activateGripper()
         if ret < 0:
             errText = "Error in activating the gripper: \n" + str(err)
+            printLog(errText)
             self.changeErrorBoxText(errText, 12, textRed)
         return ret
 
@@ -127,6 +129,7 @@ class KinovaServer(QObject):
             printLog("Got error in movement")
             self.movementLock.release()
             errText = "Error in moving the arm to home position: \n" + str(err)
+            printLog(errText)
             self.changeErrorBoxText(errText, 12, textRed)
             return ret
         if(wait):
@@ -139,7 +142,9 @@ class KinovaServer(QObject):
             errText = ("Arm has encountered a problem during movement. Likely a" 
             "singularity. Faults need to be cleared to continue. \n"
             "<<----------- Use the clear button to clear faults")
+            printLog(errText)
             self.changeErrorBoxText(errText, 12, textRed)
+
             ret = -16
         printLog("Done")
         return ret
@@ -154,6 +159,7 @@ class KinovaServer(QObject):
         ret, err = self.arm.moveGripper(width) 
         if ret < 0:
             errText = "Error in moving the gripper to a width: \n" + str(err)
+            printLog(errText)
             self.changeErrorBoxText(errText, 12, textRed)
 
         if wait:
@@ -183,6 +189,7 @@ class KinovaServer(QObject):
         if ret < 0:
             self.movementLock.release()
             errText = "Error in moving the arm to a position: \n" + str(err)
+            printLog(errText)
             self.changeErrorBoxText(errText, 12, textRed)
             return ret
         printLog("Waiting on event")
@@ -194,6 +201,7 @@ class KinovaServer(QObject):
             errText = ("Arm has encountered a problem during movement. Likely a" 
             "singularity. Faults need to be cleared to continue. \n"
             "<<----------- Use the clear button to clear faults")
+            printLog(errText)
             self.changeErrorBoxText(errText, 12, textRed)
             ret = -16
         return ret
@@ -202,6 +210,7 @@ class KinovaServer(QObject):
         ret, err = self.arm.stop()
         if ret < 0:
             errText = "THIS IS BAD\nError in emergency stop: \n" + str(err)
+            printLog(errText)
             self.changeErrorBoxText(errText, 18, textRed)
         return ret
 
@@ -253,7 +262,7 @@ class KinovaServer(QObject):
     
     def stopArm(self, request, context):
         ret = self.emergencyStop()
-        printLog("STOP ARM")
+        printLog("STOP ARM message")
         comString = "STOP ARM"
         self.addCommandToList(comString)
         return armMessages_pb2.moveResponse(responseCode=ret)
@@ -286,6 +295,7 @@ class KinovaServer(QObject):
             ret, err = self.arm.clearFaults()
             if(ret < 0):
                 errText = "ERROR WHILE CLEARING FAULTS REALLY BAD:\n " + str(err)
+                printLog(errText)
                 self.changeErrorBoxText(errText, 12, textRed)
                 return
             time.sleep(.5)
@@ -336,6 +346,7 @@ class KinovaServer(QObject):
             ret, err = self.arm.connectToBase()
             if ret < 0:
                 errText = "Error in connecting to the arm: \n" + str(err) 
+                printLog(errText)
                 self.changeErrorBoxText(errText, 12, textRed)
                 self.setConnectProgress(0)
                 return
@@ -353,7 +364,8 @@ class KinovaServer(QObject):
             self.notifHandle2 = None
             ret, err = self.arm.disconnectBase()
             if ret < 0:
-                errText = "Error in disconnecting to the arm: \n" + str(err) 
+                errText = "Error in disconnecting to the arm: \n" + str(err)
+                printLog(errText) 
                 self.changeErrorBoxText(errText, 12, textRed)
                 return
             self.setConnectProgress(0)
@@ -363,13 +375,15 @@ class KinovaServer(QObject):
     def intermediatePower(self):
         if(not self.arm.checkArmConnection()):
             errText = "Cannot turn arm on without connecting first!"
+            printLog(errText)
             self.changeErrorBoxText(errText, 12, textRed)
             return
         if(self.arm.checkArmPowered()):
             #Arm is already on
             ret, err = self.arm.powerArmOff()
             if ret < 0:
-                errText = "Error in turning off the arm: \n" + str(err) 
+                errText = "Error in turning off the arm: \n" + str(err)
+                printLog(errText) 
                 self.changeErrorBoxText(errText, 12, textRed)
                 return
             self.setPowerProgress(0)
@@ -379,7 +393,8 @@ class KinovaServer(QObject):
             #Arm is already off
             ret, err = self.arm.powerArmOn()
             if ret < 0:
-                errText = "Error in turning on the arm: \n" + str(err) 
+                errText = "Error in turning on the arm: \n" + str(err)
+                printLog(errText) 
                 self.changeErrorBoxText(errText, 12, textRed)
                 return
             def waitForPower():
@@ -391,7 +406,7 @@ class KinovaServer(QObject):
                     printLog("in loop: ", ret)
                     if ret < 0:
                         errText = "Error in turning on the arm: \n" + str(err)
-                        printLog("Failing out??") 
+                        printLog(errText)
                         self.changeErrorBoxText(errText, 12, textRed)
                         self.enableSignal.emit(True)
                         return
@@ -422,6 +437,7 @@ class KinovaServer(QObject):
             self.shoulder_offset = mult * distance
         except Exception as e:
             errText = "Unable to load the file selected, likely the wrong format: \n" + str(e)
+            printLog(errText)
             self.changeErrorBoxText(errText, 12, textRed)
 
     def developerInput(self):
@@ -438,6 +454,7 @@ class KinovaServer(QObject):
         except Exception as e:
             printLog(e)
             errText = "JESUS FUCK WHAT DID YOU DO IN DEV MODE: \n" + str(e)
+            printLog(errText)
             self.changeErrorBoxText(errText, 12, textRed)
         return
         
