@@ -13,7 +13,7 @@
 #include <chrono>
 #include <atomic>
 #include <fstream>
-
+#include <string>
 #include "Logger.h"
 #include "Sounds.h"
 #include "Times.h"
@@ -185,8 +185,7 @@ class Protocol
 		CameraClient m_cameraClient1;
 		CameraClient m_cameraClient2;
 		void prepare_camera_recording();  // TODO future - cameras prepare capture
-		int start_camera_recording();
-		int start_camera_recording(long trial_number);
+		int start_camera_recording(long trial_number, int timestamp);
 		void break_camera_recording();
 		bool did_cameras_finish_saving();
 		int wait_for_cameras_finish_saving();

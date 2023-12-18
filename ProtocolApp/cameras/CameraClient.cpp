@@ -124,11 +124,32 @@ void CameraClient::prepareRecording()
 	}
 }
 
-bool CameraClient::startRecording(int trialNumber, int* success)
-{
-	appendClientLog(_T("Starting recording. "));
+/*
+bool CameraClient::startRecordingWithTimestamp(int trialNumber, int* success, std::time_t timestamp) {
+	appendClientLog(_T("Starting recoding with timestamp!"));
 	if (ccsc) {
-		if (ccsc->startRecording(trialNumber, success)) {
+		if (ccsc->startRecordingWithTimestamp(trialNumber, success, timestamp)) {
+			appendClientLog(_T("Success.\n"));
+			return true;
+		}
+		else {
+			lastErrorCode = 2;
+			appendClientLog(_T("Failure.\n"));
+		}
+	}
+	else {
+		lastErrorCode = 1;
+		appendClientLog(_T("Not connected.\n "));
+	}
+	return false;
+}*/
+
+
+bool CameraClient::startRecording(int trialNumber, int* success, int timestamp)
+{
+	appendClientLog(_T("Starting recording. CR "));
+	if (ccsc) {
+		if (ccsc->startRecording(trialNumber, success, timestamp)) {
 			appendClientLog(_T("Success.\n"));
 			return true;
 		}
@@ -375,14 +396,38 @@ bool CameraCommunicatorSClient::prepareRecording()
 	return true;
 }
 
-bool CameraCommunicatorSClient::startRecording(int trialNumber, int* success)
+/*
+bool CameraCommunicatorSClient::startRecordingWithTimestamp(int trialNumber, int* success, std::time_t timestamp) {
+	InitTimestampRequest itrq;
+	itrq.set_timestamp(152.01);//static_cast<double>(timestamp));
+	SimpleResponse sr; 
+	ClientContext context;
+
+	Status status = stub_->InitTimestamp(&context, itrq, &sr);
+	if (!status.ok()) {
+		return false;
+	}
+
+	*success = sr.code();
+	lastCode = sr.code();
+	lastDescritpion = new CString(sr.description().c_str());
+
+	return true;
+}*/
+
+
+bool CameraCommunicatorSClient::startRecording(int trialNumber, int* success, int timestamp)
 {
-	SimpleRequest srq;
-	srq.set_code(trialNumber);
+
+	StartRecordingRequest srrq;
+	// Set fields
+	srrq.set_timestamp(timestamp);
+	srrq.set_trialnumber(trialNumber);
+
 	SimpleResponse sr;
 	ClientContext context;
 
-	Status status = stub_->StartRecording(&context, srq, &sr);
+	Status status = stub_->StartRecording(&context, srrq, &sr);
 	if (!status.ok()) {
 		return false;
 	}

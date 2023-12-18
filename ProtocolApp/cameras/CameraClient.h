@@ -27,7 +27,7 @@ public:
 	bool sendExposure(const CString exposure);
 
 	bool prepareRecording();
-	bool startRecording(int trialNumber, int* success);
+	bool startRecording(int trialNumber, int* success, int timestamp);
 	bool captureSingleFrame(int* success);
 	bool breakRecording();
 	bool areYouDoneSaving(int *success);
@@ -59,7 +59,7 @@ public:
 	void sendExposure(const CString exposure);
 
 	void prepareRecording();
-	bool startRecording(int trialNumber, int* success);
+	bool startRecording(int trialNumber, int* success, int timestamp);
 	bool captureSingleFrame(int* success);
 	void breakRecording();
 	bool areYouDoneSaving(int* success);  // return true on successful request
