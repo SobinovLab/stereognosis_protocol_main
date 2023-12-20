@@ -1,0 +1,24 @@
+Log file created 2023_12_18
+
+421393963[INFO]: Loading protocol parameters JSON file: ./configuration/protocol_parameters.json.
+421393964[WARNING]: Found no CSV files with datetimes in ./session_configs/.
+421394076[ERROR]: NIUsb6001card: Device identifier is invalid.
+Device Specified: Dev1
+
+Task Name: AI_task
+
+Status Code: -200220
+421394083[ERROR]: TeknicMotorApi Error: No SC Hubs found! Motors not enabled.
+421394084[INFO]: Searching for Arduino COM port.
+421394086[INFO]: Found COM ports:
+421394086[INFO]: 	\\.\COM1: Communications Port.
+421394086[ERROR]: Could not find COM port with friendly name Arduino Uno. Aborting LED setup.
+421394087[ERROR]: LEDs not connected.
+421462383[INFO]: Upcoming position 150.000000 0.000000 0.000000
+421508192[INFO]: Upcoming position 157.500000 0.000000 0.000000
+421593476[INFO]: Upcoming position 157.500000 0.000000 0.000000
+421597157[ERROR]: Server error during start camera recording. Code 1
+421602274[INFO]: Teknic shutting down.
+421602274[INFO]: Teknic Shutdown.
+
+

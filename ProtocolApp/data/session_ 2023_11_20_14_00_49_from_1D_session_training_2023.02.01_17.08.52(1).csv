@@ -1,0 +1,6 @@
+trial_num,repeating_trial,reward,trial_start_time(ms),log_sent_config_to_cameras(ms),object_in_position_time(ms),arm_liftoff_time(ms),log_started_camera_recording(ms),log_started_ps_recording(ms),log_started_ephys_recording(ms),log_sent_start_sync_messages(ms),log_started_monitoring_ps(ms),started_touching_time(ms),trial_end_time(ms),log_starting_finishing_recordings(ms),log_sent_end_sync_messages(ms),log_stopped_camera_recordings(ms),log_stopped_ps_recordings(ms),trial_finished_time(ms),pos_translation_z(mm),pos_tilt(deg),pos_aperture(mm),targetForce(N),targetForceRelRangeMin(N),targetForceRelRangeMax(N),
+0,0,0,333448,333448,333448,333450,333448,333448,333448,333448,333450,0,352959,353960,353960,353960,353960,353960,150,0,0,1,-0.25,100,
+1,0,0,468771,468771,468773,468774,468773,468773,468771,468771,468774,0,473422,474423,474423,474423,474423,474423,157.5,0,0,1,-0.25,100,
+0,0,0,539032,539032,539032,539034,539032,539032,539032,539032,539034,0,541902,542902,542902,542902,542902,542902,150,0,0,1,-0.25,100,
+1,0,0,545872,545872,545872,545873,545872,545872,545872,545872,545873,0,546975,547976,547976,547976,547976,547976,157.5,0,0,1,-0.25,100,
+2,0,0,549719,549719,549719,549721,549719,549719,549719,549719,549721,0,550725,551726,551726,551726,551726,551726,157.5,0,0,1,-0.25,100,

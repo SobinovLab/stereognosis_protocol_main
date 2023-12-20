@@ -1,0 +1,36 @@
+Log file created 2023_12_04
+
+13373434[INFO]: Loading protocol parameters JSON file: ./configuration/protocol_parameters.json.
+13373435[WARNING]: Found no CSV files with datetimes in ./session_configs/.
+13373543[ERROR]: NIUsb6001card: Device identifier is invalid.
+Device Specified: Dev1
+
+Task Name: AI_task
+
+Status Code: -200220
+13373548[ERROR]: TeknicMotorApi Error: No SC Hubs found! Motors not enabled.
+13373548[INFO]: Searching for Arduino COM port.
+13373549[INFO]: Found COM ports:
+13373549[INFO]: 	\\.\COM1: Communications Port.
+13373549[ERROR]: Could not find COM port with friendly name Arduino Uno. Aborting LED setup.
+13373549[ERROR]: LEDs not connected.
+13457082[INFO]: Upcoming position 150.000000 0.000000 0.000000
+13579213[INFO]: Upcoming position 157.500000 0.000000 0.000000
+13603579[INFO]: Upcoming position 157.500000 0.000000 0.000000
+13605463[INFO]: Retreat button clicked.
+13847298[INFO]: Upcoming position 150.000000 0.000000 0.000000
+13880859[INFO]: Upcoming position 157.500000 0.000000 0.000000
+13929205[INFO]: Upcoming position 157.500000 0.000000 0.000000
+13952275[INFO]: Upcoming position 165.000000 0.000000 0.000000
+13975340[INFO]: Upcoming position 165.000000 0.000000 0.000000
+13988487[INFO]: Retreat button clicked.
+14037843[INFO]: Upcoming position 150.000000 0.000000 0.000000
+14060918[INFO]: Upcoming position 157.500000 0.000000 0.000000
+14083997[INFO]: Upcoming position 157.500000 0.000000 0.000000
+14107098[INFO]: Upcoming position 165.000000 0.000000 0.000000
+14129749[INFO]: Upcoming position 165.000000 0.000000 0.000000
+14130776[INFO]: Retreat button clicked.
+15984606[INFO]: Teknic shutting down.
+15984607[INFO]: Teknic Shutdown.
+
+
