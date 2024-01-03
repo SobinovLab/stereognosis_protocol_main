@@ -339,4 +339,4 @@ ASALocalRun/
 .mfractor/
 
 # Added by CR to avoid adding text log file
-.ProtocolApp\data
+.ProtocolApp/data
