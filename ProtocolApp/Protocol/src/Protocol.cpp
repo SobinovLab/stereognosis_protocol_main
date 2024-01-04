@@ -157,11 +157,6 @@ void Protocol::prepare_camera_recording()
 	}
 }
 
-/*int Protocol::start_camera_recording(string directory)
-{
-	return start_camera_recording(params.trial_number, directory);
-}*/
-
 
 int Protocol::start_camera_recording(long trial_number, int timestamp)
 {
@@ -191,37 +186,6 @@ int Protocol::start_camera_recording(long trial_number, int timestamp)
 	}
 	return answ;
 }
-
-// CR edit to send timestamp
-/*
-int Protocol::start_camera_recording(long trial_number)
-{
-	// NB config is sent separately in the main loop
-
-	int success = 0;
-	int answ = 0;  // cameras not connected is not an error
-	string buf;
-
-	if (m_cameraClient1.isConnected()) {
-		if (!m_cameraClient1.startRecordingWithTimestamp(trial_number, &success, std::time(nullptr)))
-			answ = 1;  // to not mistake with the errors from success
-	}
-	if (m_cameraClient2.isConnected()) {
-		if (!m_cameraClient2.startRecordingWithTimestamp(trial_number, &success, std::time(nullptr)))
-			answ = 1;  // to not mistake with the errors from success
-	}
-	if (answ) {
-		buf = "Server error during start camera recording (w timestamp). Code " + to_string(answ);
-		logError(buf.c_str());
-	}
-	if (success) {
-		buf = "Error during start camera recording (w timestamp). Code " + to_string(success);
-		logError(buf.c_str());
-		answ = success;
-	}
-	return answ;
-}*/
-
 
 void Protocol::break_camera_recording()
 {
@@ -331,6 +295,15 @@ void Protocol::start_pressure_sensor_recording(long trial_number)
 	}
 }
 
+// CR: added to send the timestamp so that we can update the output directory name in the pressure server
+void Protocol::send_pressure_sensor_timestamp(int timestamp)
+{
+	// Follow the logic of above to check that we have connected to the ps server
+	if (m_touchSensorClient.isConnected()) {
+		m_touchSensorClient.setTimestamp(timestamp);
+	}
+}
+
 /// <summary>
 /// Stops the recording of the pressure sensor
 /// </summary>
@@ -373,6 +346,8 @@ void Protocol::playStartTaskTone()
 		Sounds::playStartTaskTone();
 }
 
+
+// This is what is run on Start Protocol Button
 void Protocol::run()
 {
 	this->stopProtocol.store(false);
@@ -380,14 +355,11 @@ void Protocol::run()
 	int rets = 0;
 	TEKNIC_MOTOR_API_CODE motor_rets = TEKNIC_MOTOR_API_CODE::OK;
 
-	// TODO build time directory here
-	////
-	////
+	// CR: this is the timestamp we want to send from the main protocol to the pressure and cameras server
 	// Convert the time point to a time_t object
 	// Get the current time point
 	auto currentTimePoint = std::chrono::system_clock::now();
 	std::time_t currentTime = std::chrono::system_clock::to_time_t(currentTimePoint);
-	// Convert time_t to an int representing seconds since 1970
 	int currentTimeInSeconds = static_cast<int>(currentTime);
 
 	// Load all trials from session config file (BL code)
@@ -440,6 +412,9 @@ void Protocol::run()
 	int preset_trial_number;
 	auto intertrialWaitStartTime = Times::getCurrentTime();  // set at the end of the previous iteration
 	auto trialStartTime = Times::getCurrentTime();  // set when the object is in position
+
+	// Send ps server timestamp
+	send_pressure_sensor_timestamp(currentTimeInSeconds);
 
 	// Run the protocol loop
 	while (!this->stopProtocol.load())
@@ -613,7 +588,7 @@ void Protocol::run()
 		// start recordings
 		start_camera_recording(params.trial_number, currentTimeInSeconds);  // TODO process it?
 		log_started_camera_recording = Times::getCurrentTimeInMilliSecs();
-		start_pressure_sensor_recording();
+		start_pressure_sensor_recording(params.trial_number);
 		log_started_ps_recording = Times::getCurrentTimeInMilliSecs();
 
 		// approach

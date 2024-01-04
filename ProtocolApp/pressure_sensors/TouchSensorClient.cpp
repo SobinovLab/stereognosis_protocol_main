@@ -21,6 +21,28 @@ bool TouchSensorSClient::startRecording(int trialnum)
 	return true;
 }
 
+
+bool TouchSensorSClient::setTimestamp(int timestamp)
+{
+	SetTimestampRequest strq;
+	strq.set_timestamp(timestamp);
+	SimpleResponse sr;
+	ClientContext context;
+
+	Status status = stub_->SetTimestamp(&context, strq, &sr);
+	if (!status.ok()) {
+		return false;
+	}
+
+	lastCode = sr.code();
+	lastDescritpion = new CString(sr.description().c_str());
+
+	return true;
+
+}
+
+
+
 bool TouchSensorSClient::breakRecording(std::atomic<int>* result)
 {
 	result->store(-1);
@@ -130,9 +152,26 @@ bool TouchSensorClient::isConnected()
 	return false;
 }
 
+
+void TouchSensorClient::setTimestamp(int timestamp)
+{
+	appendClientLog(_T("Setting timestamp from main protoc."));
+	if (tssc) {
+		if (tssc->setTimestamp(timestamp)) {
+			appendClientLog(_T("Success.\n"));
+		}
+		else
+			appendClientLog(_T("Failure.\n"));
+	}
+	else {
+		appendClientLog(_T("Not connected.\n "));
+	}
+}
+
+
 void TouchSensorClient::startRecording(int trialnum)
 {
-	appendClientLog(_T("Starting recording. "));
+	appendClientLog(_T("Starting recording w timestamp "));
 	if (tssc) {
 		if (tssc->startRecording(trialnum)) {
 			appendClientLog(_T("Success.\n"));

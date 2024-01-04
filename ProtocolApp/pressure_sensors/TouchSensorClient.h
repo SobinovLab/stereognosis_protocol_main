@@ -29,6 +29,7 @@ public:
 	}
 
 	bool startRecording(int trialnum);
+	bool setTimestamp(int timestamp);
 	bool breakRecording(std::atomic<int>* result);
 	bool getForce(std::atomic<double>* leftForce, std::atomic<double>* rightForce);
 
@@ -52,7 +53,8 @@ public:
 	virtual void disconnect_f();
 	virtual bool isConnected();
 
-	virtual void startRecording(int trialnum);
+	void setTimestamp(int timestamp);
+	void startRecording(int trialnum);
 	virtual void breakRecording(std::atomic<int>* result);
 	virtual void getForce(std::atomic<double>* leftForce, std::atomic<double>* rightForce);
 
