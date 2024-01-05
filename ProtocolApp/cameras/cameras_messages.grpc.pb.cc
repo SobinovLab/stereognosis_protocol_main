@@ -21,6 +21,7 @@
 #include <grpcpp/impl/codegen/sync_stream.h>
 
 static const char* CameraCommunicatorS_method_names[] = {
+  "/CameraCommunicatorS/SetTimestamp",
   "/CameraCommunicatorS/SetFramerate",
   "/CameraCommunicatorS/SetRecordingPeriod",
   "/CameraCommunicatorS/SetReferenceCamera",
@@ -43,20 +44,44 @@ std::unique_ptr< CameraCommunicatorS::Stub> CameraCommunicatorS::NewStub(const s
 }
 
 CameraCommunicatorS::Stub::Stub(const std::shared_ptr< ::grpc::ChannelInterface>& channel)
-  : channel_(channel), rpcmethod_SetFramerate_(CameraCommunicatorS_method_names[0], ::grpc::internal::RpcMethod::NORMAL_RPC, channel)
-  , rpcmethod_SetRecordingPeriod_(CameraCommunicatorS_method_names[1], ::grpc::internal::RpcMethod::NORMAL_RPC, channel)
-  , rpcmethod_SetReferenceCamera_(CameraCommunicatorS_method_names[2], ::grpc::internal::RpcMethod::NORMAL_RPC, channel)
-  , rpcmethod_PrepareRecording_(CameraCommunicatorS_method_names[3], ::grpc::internal::RpcMethod::NORMAL_RPC, channel)
-  , rpcmethod_StartRecording_(CameraCommunicatorS_method_names[4], ::grpc::internal::RpcMethod::NORMAL_RPC, channel)
-  , rpcmethod_CaptureSingleImage_(CameraCommunicatorS_method_names[5], ::grpc::internal::RpcMethod::NORMAL_RPC, channel)
-  , rpcmethod_SetDirectory_(CameraCommunicatorS_method_names[6], ::grpc::internal::RpcMethod::NORMAL_RPC, channel)
-  , rpcmethod_SetGain_(CameraCommunicatorS_method_names[7], ::grpc::internal::RpcMethod::NORMAL_RPC, channel)
-  , rpcmethod_SetExposure_(CameraCommunicatorS_method_names[8], ::grpc::internal::RpcMethod::NORMAL_RPC, channel)
-  , rpcmethod_BreakRecording_(CameraCommunicatorS_method_names[9], ::grpc::internal::RpcMethod::NORMAL_RPC, channel)
-  , rpcmethod_AreYouDoneSaving_(CameraCommunicatorS_method_names[10], ::grpc::internal::RpcMethod::NORMAL_RPC, channel)
-  , rpcmethod_SyncMessageTrialStart_(CameraCommunicatorS_method_names[11], ::grpc::internal::RpcMethod::NORMAL_RPC, channel)
-  , rpcmethod_SyncMessageTrialEnd_(CameraCommunicatorS_method_names[12], ::grpc::internal::RpcMethod::NORMAL_RPC, channel)
+  : channel_(channel), rpcmethod_SetTimestamp_(CameraCommunicatorS_method_names[0], ::grpc::internal::RpcMethod::NORMAL_RPC, channel)
+  , rpcmethod_SetFramerate_(CameraCommunicatorS_method_names[1], ::grpc::internal::RpcMethod::NORMAL_RPC, channel)
+  , rpcmethod_SetRecordingPeriod_(CameraCommunicatorS_method_names[2], ::grpc::internal::RpcMethod::NORMAL_RPC, channel)
+  , rpcmethod_SetReferenceCamera_(CameraCommunicatorS_method_names[3], ::grpc::internal::RpcMethod::NORMAL_RPC, channel)
+  , rpcmethod_PrepareRecording_(CameraCommunicatorS_method_names[4], ::grpc::internal::RpcMethod::NORMAL_RPC, channel)
+  , rpcmethod_StartRecording_(CameraCommunicatorS_method_names[5], ::grpc::internal::RpcMethod::NORMAL_RPC, channel)
+  , rpcmethod_CaptureSingleImage_(CameraCommunicatorS_method_names[6], ::grpc::internal::RpcMethod::NORMAL_RPC, channel)
+  , rpcmethod_SetDirectory_(CameraCommunicatorS_method_names[7], ::grpc::internal::RpcMethod::NORMAL_RPC, channel)
+  , rpcmethod_SetGain_(CameraCommunicatorS_method_names[8], ::grpc::internal::RpcMethod::NORMAL_RPC, channel)
+  , rpcmethod_SetExposure_(CameraCommunicatorS_method_names[9], ::grpc::internal::RpcMethod::NORMAL_RPC, channel)
+  , rpcmethod_BreakRecording_(CameraCommunicatorS_method_names[10], ::grpc::internal::RpcMethod::NORMAL_RPC, channel)
+  , rpcmethod_AreYouDoneSaving_(CameraCommunicatorS_method_names[11], ::grpc::internal::RpcMethod::NORMAL_RPC, channel)
+  , rpcmethod_SyncMessageTrialStart_(CameraCommunicatorS_method_names[12], ::grpc::internal::RpcMethod::NORMAL_RPC, channel)
+  , rpcmethod_SyncMessageTrialEnd_(CameraCommunicatorS_method_names[13], ::grpc::internal::RpcMethod::NORMAL_RPC, channel)
   {}
+
+::grpc::Status CameraCommunicatorS::Stub::SetTimestamp(::grpc::ClientContext* context, const ::SetTimestampRequest& request, ::SimpleResponse* response) {
+  return ::grpc::internal::BlockingUnaryCall(channel_.get(), rpcmethod_SetTimestamp_, context, request, response);
+}
+
+void CameraCommunicatorS::Stub::experimental_async::SetTimestamp(::grpc::ClientContext* context, const ::SetTimestampRequest* request, ::SimpleResponse* response, std::function<void(::grpc::Status)> f) {
+  ::grpc::internal::CallbackUnaryCall(stub_->channel_.get(), stub_->rpcmethod_SetTimestamp_, context, request, response, std::move(f));
+}
+
+void CameraCommunicatorS::Stub::experimental_async::SetTimestamp(::grpc::ClientContext* context, const ::SetTimestampRequest* request, ::SimpleResponse* response, ::grpc::experimental::ClientUnaryReactor* reactor) {
+  ::grpc::internal::ClientCallbackUnaryFactory::Create(stub_->channel_.get(), stub_->rpcmethod_SetTimestamp_, context, request, response, reactor);
+}
+
+::grpc::ClientAsyncResponseReader< ::SimpleResponse>* CameraCommunicatorS::Stub::PrepareAsyncSetTimestampRaw(::grpc::ClientContext* context, const ::SetTimestampRequest& request, ::grpc::CompletionQueue* cq) {
+  return ::grpc::internal::ClientAsyncResponseReaderFactory< ::SimpleResponse>::Create(channel_.get(), cq, rpcmethod_SetTimestamp_, context, request, false);
+}
+
+::grpc::ClientAsyncResponseReader< ::SimpleResponse>* CameraCommunicatorS::Stub::AsyncSetTimestampRaw(::grpc::ClientContext* context, const ::SetTimestampRequest& request, ::grpc::CompletionQueue* cq) {
+  auto* result =
+    this->PrepareAsyncSetTimestampRaw(context, request, cq);
+  result->StartCall();
+  return result;
+}
 
 ::grpc::Status CameraCommunicatorS::Stub::SetFramerate(::grpc::ClientContext* context, const ::SetFramerateRequest& request, ::SimpleResponse* response) {
   return ::grpc::internal::BlockingUnaryCall(channel_.get(), rpcmethod_SetFramerate_, context, request, response);
@@ -361,6 +386,16 @@ CameraCommunicatorS::Service::Service() {
   AddMethod(new ::grpc::internal::RpcServiceMethod(
       CameraCommunicatorS_method_names[0],
       ::grpc::internal::RpcMethod::NORMAL_RPC,
+      new ::grpc::internal::RpcMethodHandler< CameraCommunicatorS::Service, ::SetTimestampRequest, ::SimpleResponse>(
+          [](CameraCommunicatorS::Service* service,
+             ::grpc::ServerContext* ctx,
+             const ::SetTimestampRequest* req,
+             ::SimpleResponse* resp) {
+               return service->SetTimestamp(ctx, req, resp);
+             }, this)));
+  AddMethod(new ::grpc::internal::RpcServiceMethod(
+      CameraCommunicatorS_method_names[1],
+      ::grpc::internal::RpcMethod::NORMAL_RPC,
       new ::grpc::internal::RpcMethodHandler< CameraCommunicatorS::Service, ::SetFramerateRequest, ::SimpleResponse>(
           [](CameraCommunicatorS::Service* service,
              ::grpc::ServerContext* ctx,
@@ -369,7 +404,7 @@ CameraCommunicatorS::Service::Service() {
                return service->SetFramerate(ctx, req, resp);
              }, this)));
   AddMethod(new ::grpc::internal::RpcServiceMethod(
-      CameraCommunicatorS_method_names[1],
+      CameraCommunicatorS_method_names[2],
       ::grpc::internal::RpcMethod::NORMAL_RPC,
       new ::grpc::internal::RpcMethodHandler< CameraCommunicatorS::Service, ::SetRecordingPeriodRequest, ::SimpleResponse>(
           [](CameraCommunicatorS::Service* service,
@@ -379,7 +414,7 @@ CameraCommunicatorS::Service::Service() {
                return service->SetRecordingPeriod(ctx, req, resp);
              }, this)));
   AddMethod(new ::grpc::internal::RpcServiceMethod(
-      CameraCommunicatorS_method_names[2],
+      CameraCommunicatorS_method_names[3],
       ::grpc::internal::RpcMethod::NORMAL_RPC,
       new ::grpc::internal::RpcMethodHandler< CameraCommunicatorS::Service, ::SetReferenceCameraRequest, ::SimpleResponse>(
           [](CameraCommunicatorS::Service* service,
@@ -389,7 +424,7 @@ CameraCommunicatorS::Service::Service() {
                return service->SetReferenceCamera(ctx, req, resp);
              }, this)));
   AddMethod(new ::grpc::internal::RpcServiceMethod(
-      CameraCommunicatorS_method_names[3],
+      CameraCommunicatorS_method_names[4],
       ::grpc::internal::RpcMethod::NORMAL_RPC,
       new ::grpc::internal::RpcMethodHandler< CameraCommunicatorS::Service, ::SimpleRequest, ::SimpleResponse>(
           [](CameraCommunicatorS::Service* service,
@@ -399,7 +434,7 @@ CameraCommunicatorS::Service::Service() {
                return service->PrepareRecording(ctx, req, resp);
              }, this)));
   AddMethod(new ::grpc::internal::RpcServiceMethod(
-      CameraCommunicatorS_method_names[4],
+      CameraCommunicatorS_method_names[5],
       ::grpc::internal::RpcMethod::NORMAL_RPC,
       new ::grpc::internal::RpcMethodHandler< CameraCommunicatorS::Service, ::StartRecordingRequest, ::SimpleResponse>(
           [](CameraCommunicatorS::Service* service,
@@ -409,7 +444,7 @@ CameraCommunicatorS::Service::Service() {
                return service->StartRecording(ctx, req, resp);
              }, this)));
   AddMethod(new ::grpc::internal::RpcServiceMethod(
-      CameraCommunicatorS_method_names[5],
+      CameraCommunicatorS_method_names[6],
       ::grpc::internal::RpcMethod::NORMAL_RPC,
       new ::grpc::internal::RpcMethodHandler< CameraCommunicatorS::Service, ::SimpleRequest, ::SimpleResponse>(
           [](CameraCommunicatorS::Service* service,
@@ -419,7 +454,7 @@ CameraCommunicatorS::Service::Service() {
                return service->CaptureSingleImage(ctx, req, resp);
              }, this)));
   AddMethod(new ::grpc::internal::RpcServiceMethod(
-      CameraCommunicatorS_method_names[6],
+      CameraCommunicatorS_method_names[7],
       ::grpc::internal::RpcMethod::NORMAL_RPC,
       new ::grpc::internal::RpcMethodHandler< CameraCommunicatorS::Service, ::SetDirectoryRequest, ::SimpleResponse>(
           [](CameraCommunicatorS::Service* service,
@@ -429,7 +464,7 @@ CameraCommunicatorS::Service::Service() {
                return service->SetDirectory(ctx, req, resp);
              }, this)));
   AddMethod(new ::grpc::internal::RpcServiceMethod(
-      CameraCommunicatorS_method_names[7],
+      CameraCommunicatorS_method_names[8],
       ::grpc::internal::RpcMethod::NORMAL_RPC,
       new ::grpc::internal::RpcMethodHandler< CameraCommunicatorS::Service, ::SetGainRequest, ::SimpleResponse>(
           [](CameraCommunicatorS::Service* service,
@@ -439,7 +474,7 @@ CameraCommunicatorS::Service::Service() {
                return service->SetGain(ctx, req, resp);
              }, this)));
   AddMethod(new ::grpc::internal::RpcServiceMethod(
-      CameraCommunicatorS_method_names[8],
+      CameraCommunicatorS_method_names[9],
       ::grpc::internal::RpcMethod::NORMAL_RPC,
       new ::grpc::internal::RpcMethodHandler< CameraCommunicatorS::Service, ::SetExposureRequest, ::SimpleResponse>(
           [](CameraCommunicatorS::Service* service,
@@ -449,7 +484,7 @@ CameraCommunicatorS::Service::Service() {
                return service->SetExposure(ctx, req, resp);
              }, this)));
   AddMethod(new ::grpc::internal::RpcServiceMethod(
-      CameraCommunicatorS_method_names[9],
+      CameraCommunicatorS_method_names[10],
       ::grpc::internal::RpcMethod::NORMAL_RPC,
       new ::grpc::internal::RpcMethodHandler< CameraCommunicatorS::Service, ::SimpleRequest, ::SimpleResponse>(
           [](CameraCommunicatorS::Service* service,
@@ -459,7 +494,7 @@ CameraCommunicatorS::Service::Service() {
                return service->BreakRecording(ctx, req, resp);
              }, this)));
   AddMethod(new ::grpc::internal::RpcServiceMethod(
-      CameraCommunicatorS_method_names[10],
+      CameraCommunicatorS_method_names[11],
       ::grpc::internal::RpcMethod::NORMAL_RPC,
       new ::grpc::internal::RpcMethodHandler< CameraCommunicatorS::Service, ::SimpleRequest, ::SimpleResponse>(
           [](CameraCommunicatorS::Service* service,
@@ -469,7 +504,7 @@ CameraCommunicatorS::Service::Service() {
                return service->AreYouDoneSaving(ctx, req, resp);
              }, this)));
   AddMethod(new ::grpc::internal::RpcServiceMethod(
-      CameraCommunicatorS_method_names[11],
+      CameraCommunicatorS_method_names[12],
       ::grpc::internal::RpcMethod::NORMAL_RPC,
       new ::grpc::internal::RpcMethodHandler< CameraCommunicatorS::Service, ::Empty, ::Empty>(
           [](CameraCommunicatorS::Service* service,
@@ -479,7 +514,7 @@ CameraCommunicatorS::Service::Service() {
                return service->SyncMessageTrialStart(ctx, req, resp);
              }, this)));
   AddMethod(new ::grpc::internal::RpcServiceMethod(
-      CameraCommunicatorS_method_names[12],
+      CameraCommunicatorS_method_names[13],
       ::grpc::internal::RpcMethod::NORMAL_RPC,
       new ::grpc::internal::RpcMethodHandler< CameraCommunicatorS::Service, ::Empty, ::Empty>(
           [](CameraCommunicatorS::Service* service,
@@ -491,6 +526,13 @@ CameraCommunicatorS::Service::Service() {
 }
 
 CameraCommunicatorS::Service::~Service() {
+}
+
+::grpc::Status CameraCommunicatorS::Service::SetTimestamp(::grpc::ServerContext* context, const ::SetTimestampRequest* request, ::SimpleResponse* response) {
+  (void) context;
+  (void) request;
+  (void) response;
+  return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
 }
 
 ::grpc::Status CameraCommunicatorS::Service::SetFramerate(::grpc::ServerContext* context, const ::SetFramerateRequest* request, ::SimpleResponse* response) {

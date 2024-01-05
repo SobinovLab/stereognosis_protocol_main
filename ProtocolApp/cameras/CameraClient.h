@@ -19,6 +19,8 @@ public:
 	CameraCommunicatorSClient(std::shared_ptr<grpc::Channel> channel) : stub_(CameraCommunicatorS::NewStub(channel)) {
 	}
 
+	bool setTimestamp(int timestamp);
+
 	bool sendFramerate(const double framerate);
 	bool sendRecordingPeriod(const double recordingPeriod);
 	bool sendReferenceCamera(const int serial);
@@ -27,7 +29,7 @@ public:
 	bool sendExposure(const CString exposure);
 
 	bool prepareRecording();
-	bool startRecording(int trialNumber, int* success, int timestamp);
+	bool startRecording(int trialNumber, int* success);
 	bool captureSingleFrame(int* success);
 	bool breakRecording();
 	bool areYouDoneSaving(int *success);
@@ -50,6 +52,8 @@ public:
 
 	void connect_f();
 	void disconnect_f();
+
+	void setTimestamp(int timestamp);
 
 	void sendFramerate(const double framerate);
 	void sendRecordingPeriod(const double recordingPeriod);

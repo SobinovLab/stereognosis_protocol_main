@@ -295,12 +295,22 @@ void Protocol::start_pressure_sensor_recording(long trial_number)
 	}
 }
 
+
 // CR: added to send the timestamp so that we can update the output directory name in the pressure server
 void Protocol::send_pressure_sensor_timestamp(int timestamp)
 {
 	// Follow the logic of above to check that we have connected to the ps server
 	if (m_touchSensorClient.isConnected()) {
 		m_touchSensorClient.setTimestamp(timestamp);
+	}
+}
+
+void Protocol::send_camera_timestamp(int timestamp) {
+	if(m_cameraClient1.isConnected()) {
+		m_cameraClient1.setTimestamp(timestamp);
+	}
+	if (m_cameraClient2.isConnected()) {
+		m_cameraClient2.setTimestamp(timestamp);
 	}
 }
 
@@ -361,6 +371,9 @@ void Protocol::run()
 	auto currentTimePoint = std::chrono::system_clock::now();
 	std::time_t currentTime = std::chrono::system_clock::to_time_t(currentTimePoint);
 	int currentTimeInSeconds = static_cast<int>(currentTime);
+	// Send ps and cam server timestamp
+	send_pressure_sensor_timestamp(currentTimeInSeconds);
+	send_camera_timestamp(currentTimeInSeconds);
 
 	// Load all trials from session config file (BL code)
 	vector<string> session_line1;
@@ -412,9 +425,6 @@ void Protocol::run()
 	int preset_trial_number;
 	auto intertrialWaitStartTime = Times::getCurrentTime();  // set at the end of the previous iteration
 	auto trialStartTime = Times::getCurrentTime();  // set when the object is in position
-
-	// Send ps server timestamp
-	send_pressure_sensor_timestamp(currentTimeInSeconds);
 
 	// Run the protocol loop
 	while (!this->stopProtocol.load())

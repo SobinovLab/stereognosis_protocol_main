@@ -46,7 +46,7 @@ struct TableStruct_cameras_5fmessages_2eproto {
     PROTOBUF_SECTION_VARIABLE(protodesc_cold);
   static const ::PROTOBUF_NAMESPACE_ID::internal::AuxiliaryParseTableField aux[]
     PROTOBUF_SECTION_VARIABLE(protodesc_cold);
-  static const ::PROTOBUF_NAMESPACE_ID::internal::ParseTable schema[10]
+  static const ::PROTOBUF_NAMESPACE_ID::internal::ParseTable schema[11]
     PROTOBUF_SECTION_VARIABLE(protodesc_cold);
   static const ::PROTOBUF_NAMESPACE_ID::internal::FieldMetadata field_metadata[];
   static const ::PROTOBUF_NAMESPACE_ID::internal::SerializationTable serialization_table[];
@@ -74,6 +74,9 @@ extern SetRecordingPeriodRequestDefaultTypeInternal _SetRecordingPeriodRequest_d
 class SetReferenceCameraRequest;
 class SetReferenceCameraRequestDefaultTypeInternal;
 extern SetReferenceCameraRequestDefaultTypeInternal _SetReferenceCameraRequest_default_instance_;
+class SetTimestampRequest;
+class SetTimestampRequestDefaultTypeInternal;
+extern SetTimestampRequestDefaultTypeInternal _SetTimestampRequest_default_instance_;
 class SimpleRequest;
 class SimpleRequestDefaultTypeInternal;
 extern SimpleRequestDefaultTypeInternal _SimpleRequest_default_instance_;
@@ -91,6 +94,7 @@ template<> ::SetFramerateRequest* Arena::CreateMaybeMessage<::SetFramerateReques
 template<> ::SetGainRequest* Arena::CreateMaybeMessage<::SetGainRequest>(Arena*);
 template<> ::SetRecordingPeriodRequest* Arena::CreateMaybeMessage<::SetRecordingPeriodRequest>(Arena*);
 template<> ::SetReferenceCameraRequest* Arena::CreateMaybeMessage<::SetReferenceCameraRequest>(Arena*);
+template<> ::SetTimestampRequest* Arena::CreateMaybeMessage<::SetTimestampRequest>(Arena*);
 template<> ::SimpleRequest* Arena::CreateMaybeMessage<::SimpleRequest>(Arena*);
 template<> ::SimpleResponse* Arena::CreateMaybeMessage<::SimpleResponse>(Arena*);
 template<> ::StartRecordingRequest* Arena::CreateMaybeMessage<::StartRecordingRequest>(Arena*);
@@ -211,7 +215,6 @@ class StartRecordingRequest PROTOBUF_FINAL :
 
   enum : int {
     kTrialNumberFieldNumber = 1,
-    kTimestampFieldNumber = 2,
   };
   // int32 trialNumber = 1;
   void clear_trialnumber();
@@ -222,15 +225,6 @@ class StartRecordingRequest PROTOBUF_FINAL :
   void _internal_set_trialnumber(::PROTOBUF_NAMESPACE_ID::int32 value);
   public:
 
-  // int32 timestamp = 2;
-  void clear_timestamp();
-  ::PROTOBUF_NAMESPACE_ID::int32 timestamp() const;
-  void set_timestamp(::PROTOBUF_NAMESPACE_ID::int32 value);
-  private:
-  ::PROTOBUF_NAMESPACE_ID::int32 _internal_timestamp() const;
-  void _internal_set_timestamp(::PROTOBUF_NAMESPACE_ID::int32 value);
-  public:
-
   // @@protoc_insertion_point(class_scope:StartRecordingRequest)
  private:
   class _Internal;
@@ -239,6 +233,141 @@ class StartRecordingRequest PROTOBUF_FINAL :
   typedef void InternalArenaConstructable_;
   typedef void DestructorSkippable_;
   ::PROTOBUF_NAMESPACE_ID::int32 trialnumber_;
+  mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
+  friend struct ::TableStruct_cameras_5fmessages_2eproto;
+};
+// -------------------------------------------------------------------
+
+class SetTimestampRequest PROTOBUF_FINAL :
+    public ::PROTOBUF_NAMESPACE_ID::Message /* @@protoc_insertion_point(class_definition:SetTimestampRequest) */ {
+ public:
+  inline SetTimestampRequest() : SetTimestampRequest(nullptr) {}
+  virtual ~SetTimestampRequest();
+
+  SetTimestampRequest(const SetTimestampRequest& from);
+  SetTimestampRequest(SetTimestampRequest&& from) noexcept
+    : SetTimestampRequest() {
+    *this = ::std::move(from);
+  }
+
+  inline SetTimestampRequest& operator=(const SetTimestampRequest& from) {
+    CopyFrom(from);
+    return *this;
+  }
+  inline SetTimestampRequest& operator=(SetTimestampRequest&& from) noexcept {
+    if (GetArena() == from.GetArena()) {
+      if (this != &from) InternalSwap(&from);
+    } else {
+      CopyFrom(from);
+    }
+    return *this;
+  }
+
+  static const ::PROTOBUF_NAMESPACE_ID::Descriptor* descriptor() {
+    return GetDescriptor();
+  }
+  static const ::PROTOBUF_NAMESPACE_ID::Descriptor* GetDescriptor() {
+    return GetMetadataStatic().descriptor;
+  }
+  static const ::PROTOBUF_NAMESPACE_ID::Reflection* GetReflection() {
+    return GetMetadataStatic().reflection;
+  }
+  static const SetTimestampRequest& default_instance();
+
+  static inline const SetTimestampRequest* internal_default_instance() {
+    return reinterpret_cast<const SetTimestampRequest*>(
+               &_SetTimestampRequest_default_instance_);
+  }
+  static constexpr int kIndexInFileMessages =
+    1;
+
+  friend void swap(SetTimestampRequest& a, SetTimestampRequest& b) {
+    a.Swap(&b);
+  }
+  inline void Swap(SetTimestampRequest* other) {
+    if (other == this) return;
+    if (GetArena() == other->GetArena()) {
+      InternalSwap(other);
+    } else {
+      ::PROTOBUF_NAMESPACE_ID::internal::GenericSwap(this, other);
+    }
+  }
+  void UnsafeArenaSwap(SetTimestampRequest* other) {
+    if (other == this) return;
+    GOOGLE_DCHECK(GetArena() == other->GetArena());
+    InternalSwap(other);
+  }
+
+  // implements Message ----------------------------------------------
+
+  inline SetTimestampRequest* New() const final {
+    return CreateMaybeMessage<SetTimestampRequest>(nullptr);
+  }
+
+  SetTimestampRequest* New(::PROTOBUF_NAMESPACE_ID::Arena* arena) const final {
+    return CreateMaybeMessage<SetTimestampRequest>(arena);
+  }
+  void CopyFrom(const ::PROTOBUF_NAMESPACE_ID::Message& from) final;
+  void MergeFrom(const ::PROTOBUF_NAMESPACE_ID::Message& from) final;
+  void CopyFrom(const SetTimestampRequest& from);
+  void MergeFrom(const SetTimestampRequest& from);
+  PROTOBUF_ATTRIBUTE_REINITIALIZES void Clear() final;
+  bool IsInitialized() const final;
+
+  size_t ByteSizeLong() const final;
+  const char* _InternalParse(const char* ptr, ::PROTOBUF_NAMESPACE_ID::internal::ParseContext* ctx) final;
+  ::PROTOBUF_NAMESPACE_ID::uint8* _InternalSerialize(
+      ::PROTOBUF_NAMESPACE_ID::uint8* target, ::PROTOBUF_NAMESPACE_ID::io::EpsCopyOutputStream* stream) const final;
+  int GetCachedSize() const final { return _cached_size_.Get(); }
+
+  private:
+  inline void SharedCtor();
+  inline void SharedDtor();
+  void SetCachedSize(int size) const final;
+  void InternalSwap(SetTimestampRequest* other);
+  friend class ::PROTOBUF_NAMESPACE_ID::internal::AnyMetadata;
+  static ::PROTOBUF_NAMESPACE_ID::StringPiece FullMessageName() {
+    return "SetTimestampRequest";
+  }
+  protected:
+  explicit SetTimestampRequest(::PROTOBUF_NAMESPACE_ID::Arena* arena);
+  private:
+  static void ArenaDtor(void* object);
+  inline void RegisterArenaDtor(::PROTOBUF_NAMESPACE_ID::Arena* arena);
+  public:
+
+  ::PROTOBUF_NAMESPACE_ID::Metadata GetMetadata() const final;
+  private:
+  static ::PROTOBUF_NAMESPACE_ID::Metadata GetMetadataStatic() {
+    ::PROTOBUF_NAMESPACE_ID::internal::AssignDescriptors(&::descriptor_table_cameras_5fmessages_2eproto);
+    return ::descriptor_table_cameras_5fmessages_2eproto.file_level_metadata[kIndexInFileMessages];
+  }
+
+  public:
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  enum : int {
+    kTimestampFieldNumber = 1,
+  };
+  // int32 timestamp = 1;
+  void clear_timestamp();
+  ::PROTOBUF_NAMESPACE_ID::int32 timestamp() const;
+  void set_timestamp(::PROTOBUF_NAMESPACE_ID::int32 value);
+  private:
+  ::PROTOBUF_NAMESPACE_ID::int32 _internal_timestamp() const;
+  void _internal_set_timestamp(::PROTOBUF_NAMESPACE_ID::int32 value);
+  public:
+
+  // @@protoc_insertion_point(class_scope:SetTimestampRequest)
+ private:
+  class _Internal;
+
+  template <typename T> friend class ::PROTOBUF_NAMESPACE_ID::Arena::InternalHelper;
+  typedef void InternalArenaConstructable_;
+  typedef void DestructorSkippable_;
   ::PROTOBUF_NAMESPACE_ID::int32 timestamp_;
   mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
   friend struct ::TableStruct_cameras_5fmessages_2eproto;
@@ -286,7 +415,7 @@ class SimpleRequest PROTOBUF_FINAL :
                &_SimpleRequest_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    1;
+    2;
 
   friend void swap(SimpleRequest& a, SimpleRequest& b) {
     a.Swap(&b);
@@ -422,7 +551,7 @@ class SimpleResponse PROTOBUF_FINAL :
                &_SimpleResponse_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    2;
+    3;
 
   friend void swap(SimpleResponse& a, SimpleResponse& b) {
     a.Swap(&b);
@@ -576,7 +705,7 @@ class SetFramerateRequest PROTOBUF_FINAL :
                &_SetFramerateRequest_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    3;
+    4;
 
   friend void swap(SetFramerateRequest& a, SetFramerateRequest& b) {
     a.Swap(&b);
@@ -730,7 +859,7 @@ class SetRecordingPeriodRequest PROTOBUF_FINAL :
                &_SetRecordingPeriodRequest_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    4;
+    5;
 
   friend void swap(SetRecordingPeriodRequest& a, SetRecordingPeriodRequest& b) {
     a.Swap(&b);
@@ -866,7 +995,7 @@ class SetReferenceCameraRequest PROTOBUF_FINAL :
                &_SetReferenceCameraRequest_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    5;
+    6;
 
   friend void swap(SetReferenceCameraRequest& a, SetReferenceCameraRequest& b) {
     a.Swap(&b);
@@ -1002,7 +1131,7 @@ class SetDirectoryRequest PROTOBUF_FINAL :
                &_SetDirectoryRequest_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    6;
+    7;
 
   friend void swap(SetDirectoryRequest& a, SetDirectoryRequest& b) {
     a.Swap(&b);
@@ -1145,7 +1274,7 @@ class SetGainRequest PROTOBUF_FINAL :
                &_SetGainRequest_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    7;
+    8;
 
   friend void swap(SetGainRequest& a, SetGainRequest& b) {
     a.Swap(&b);
@@ -1292,7 +1421,7 @@ class SetExposureRequest PROTOBUF_FINAL :
                &_SetExposureRequest_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    8;
+    9;
 
   friend void swap(SetExposureRequest& a, SetExposureRequest& b) {
     a.Swap(&b);
@@ -1439,7 +1568,7 @@ class Empty PROTOBUF_FINAL :
                &_Empty_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    9;
+    10;
 
   friend void swap(Empty& a, Empty& b) {
     a.Swap(&b);
@@ -1550,24 +1679,28 @@ inline void StartRecordingRequest::set_trialnumber(::PROTOBUF_NAMESPACE_ID::int3
   // @@protoc_insertion_point(field_set:StartRecordingRequest.trialNumber)
 }
 
-// int32 timestamp = 2;
-inline void StartRecordingRequest::clear_timestamp() {
+// -------------------------------------------------------------------
+
+// SetTimestampRequest
+
+// int32 timestamp = 1;
+inline void SetTimestampRequest::clear_timestamp() {
   timestamp_ = 0;
 }
-inline ::PROTOBUF_NAMESPACE_ID::int32 StartRecordingRequest::_internal_timestamp() const {
+inline ::PROTOBUF_NAMESPACE_ID::int32 SetTimestampRequest::_internal_timestamp() const {
   return timestamp_;
 }
-inline ::PROTOBUF_NAMESPACE_ID::int32 StartRecordingRequest::timestamp() const {
-  // @@protoc_insertion_point(field_get:StartRecordingRequest.timestamp)
+inline ::PROTOBUF_NAMESPACE_ID::int32 SetTimestampRequest::timestamp() const {
+  // @@protoc_insertion_point(field_get:SetTimestampRequest.timestamp)
   return _internal_timestamp();
 }
-inline void StartRecordingRequest::_internal_set_timestamp(::PROTOBUF_NAMESPACE_ID::int32 value) {
+inline void SetTimestampRequest::_internal_set_timestamp(::PROTOBUF_NAMESPACE_ID::int32 value) {
   
   timestamp_ = value;
 }
-inline void StartRecordingRequest::set_timestamp(::PROTOBUF_NAMESPACE_ID::int32 value) {
+inline void SetTimestampRequest::set_timestamp(::PROTOBUF_NAMESPACE_ID::int32 value) {
   _internal_set_timestamp(value);
-  // @@protoc_insertion_point(field_set:StartRecordingRequest.timestamp)
+  // @@protoc_insertion_point(field_set:SetTimestampRequest.timestamp)
 }
 
 // -------------------------------------------------------------------
@@ -1972,6 +2105,8 @@ inline void SetExposureRequest::set_exposure_type(::PROTOBUF_NAMESPACE_ID::int32
 #ifdef __GNUC__
   #pragma GCC diagnostic pop
 #endif  // __GNUC__
+// -------------------------------------------------------------------
+
 // -------------------------------------------------------------------
 
 // -------------------------------------------------------------------
