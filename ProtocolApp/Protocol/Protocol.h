@@ -184,6 +184,7 @@ class Protocol
 		CameraClient m_cameraClient1;
 		CameraClient m_cameraClient2;
 		void prepare_camera_recording();  // TODO future - cameras prepare capture
+		int start_camera_recording();
 		int start_camera_recording(long trial_number);
 		void break_camera_recording();
 		bool did_cameras_finish_saving();

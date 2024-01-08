@@ -157,6 +157,11 @@ void Protocol::prepare_camera_recording()
 	}
 }
 
+int Protocol::start_camera_recording()
+{
+	return start_camera_recording(params.trial_number);
+}
+
 int Protocol::start_camera_recording(long trial_number)
 {
 	// NB config is sent separately in the main loop
