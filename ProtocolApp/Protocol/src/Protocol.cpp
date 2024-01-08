@@ -157,22 +157,20 @@ void Protocol::prepare_camera_recording()
 	}
 }
 
-
-int Protocol::start_camera_recording(long trial_number, int timestamp)
+int Protocol::start_camera_recording(long trial_number)
 {
 	// NB config is sent separately in the main loop
 
 	int success = 0;
 	int answ = 0;  // cameras not connected is not an error
 	string buf;
-	
 
 	if (m_cameraClient1.isConnected()) {
-		if (!m_cameraClient1.startRecording(trial_number, &success, timestamp))
+		if (!m_cameraClient1.startRecording(trial_number, &success))
 			answ = 1;  // to not mistake with the errors from success
 	}
 	if (m_cameraClient2.isConnected()) {
-		if (!m_cameraClient2.startRecording(trial_number, &success, timestamp))
+		if (!m_cameraClient2.startRecording(trial_number, &success))
 			answ = 1;  // to not mistake with the errors from success
 	}
 	if (answ) {
@@ -596,7 +594,7 @@ void Protocol::run()
 		thread watchThread(&Protocol::watch_early_grab, this);
 
 		// start recordings
-		start_camera_recording(params.trial_number, currentTimeInSeconds);  // TODO process it?
+		start_camera_recording(params.trial_number);  // TODO process it?
 		log_started_camera_recording = Times::getCurrentTimeInMilliSecs();
 		start_pressure_sensor_recording(params.trial_number);
 		log_started_ps_recording = Times::getCurrentTimeInMilliSecs();
