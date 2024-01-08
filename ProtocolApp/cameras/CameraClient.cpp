@@ -139,7 +139,7 @@ void CameraClient::prepareRecording()
 
 bool CameraClient::startRecording(int trialNumber, int* success)
 {
-	appendClientLog(_T("Starting recording. CR "));
+	appendClientLog(_T("Starting recording"));
 	if (ccsc) {
 		if (ccsc->startRecording(trialNumber, success)) {
 			appendClientLog(_T("Success.\n"));
