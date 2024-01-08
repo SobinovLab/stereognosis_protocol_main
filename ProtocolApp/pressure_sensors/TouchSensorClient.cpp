@@ -171,7 +171,7 @@ void TouchSensorClient::setTimestamp(int timestamp)
 
 void TouchSensorClient::startRecording(int trialnum)
 {
-	appendClientLog(_T("Starting recording w timestamp "));
+	appendClientLog(_T("Starting recording. "));
 	if (tssc) {
 		if (tssc->startRecording(trialnum)) {
 			appendClientLog(_T("Success.\n"));
