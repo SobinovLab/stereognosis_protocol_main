@@ -86,7 +86,7 @@ class Protocol
 		// sets of gui variables
 		CEdit* m_trialStatus;
 		CButton* loopChk;
-		void set_photoresistor_monitors(CStaticColor* front, CStaticColor* rear);
+		void set_photoresistor_monitors(CStaticColor* front, CStaticColor* rear, CStaticColor* left, CStaticColor* right);
 		void set_camera1_gui_controls(CEdit* serverLogCtrl);
 		void set_camera2_gui_controls(CEdit* serverLogCtrl);
 		void set_pressure_sensors_gui_controls(CEdit* serverLogCtrl);
@@ -100,6 +100,11 @@ class Protocol
 		// light sensors
 		std::atomic<bool> use_front_light_sensor = false;
 		std::atomic<bool> use_rear_light_sensor = false;
+        std::atomic<bool> use_left_arm_touch = false;
+        std::atomic<bool> use_right_arm_touch = false;
+        std::atomic<bool> reward_on_return = false;
+        std::atomic<bool> monitor_passive_arm = false;
+        int which_passive_arm = -1;
 
 		// motors
 		bool were_motors_homed();
@@ -152,7 +157,8 @@ class Protocol
 			const long long trial_end_time,
 			const long long log_starting_finishing_recordings, const long long log_sent_end_sync_messages,
 			const long long log_stopped_camera_recordings, const long long log_stopped_ps_recordings,
-			const long long trial_finished_time);
+			const long long trial_finished_time,
+            const long long arm_return_time);
 		void closeCsvLog();
 
 		//////// local devices
@@ -176,6 +182,11 @@ class Protocol
 		int wait_until_arm_at_rest();
 		// DEPRECATED and is not used
 		int wait_until_arm_liftoff();
+
+        //Watching arm lift off in a thread
+        void armMonitoringThread();
+        atomic<bool> allowInterupt;
+        atomic<bool> monitoringThreadAlive = false;
 
 		// ephys
 		void start_ephys_recording();

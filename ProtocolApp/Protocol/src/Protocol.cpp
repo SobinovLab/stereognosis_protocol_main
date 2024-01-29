@@ -392,6 +392,7 @@ void Protocol::run()
 	long long log_sent_start_sync_messages;
     long long log_started_monitoring_ps;
 	long long trial_end_time;
+    long long arm_return_time;
     long long log_starting_finishing_recordings;
 	long long log_sent_end_sync_messages;
     long long log_stopped_camera_recordings;
@@ -567,6 +568,9 @@ void Protocol::run()
 		stopWatch = false;
 		thread watchThread(&Protocol::watch_early_grab, this);
 
+        allowInterupt.store(true);
+        thread passiveArmThread(&Protocol::armMonitoringThread, this);
+
 		// start recordings
 		start_camera_recording();  // TODO process it?
 		log_started_camera_recording = Times::getCurrentTimeInMilliSecs();
@@ -630,6 +634,9 @@ void Protocol::run()
 			}
 		}
 
+        allowInterupt.store(false);
+        passiveArmThread.join();
+
 		// turn off leds whether they were on or not
 		if (isLedsOn()) {
 			ledStrip->turn_off_both_stripe_lights();
@@ -647,11 +654,22 @@ void Protocol::run()
 		// Give the reward or not
 		if (m_earnedReward || deservesReward) {
 			reward();
+            if(reward_on_return.load())
+            {
+                prepare_to_monitor_arm_at_rest();
+		        while (!this->stopTrial.load() && !is_arm_at_rest()) {
+			        //TODO maybe add timeout here
+                    //This waits for monkey to put both arms back and then rewards again
+		        }
+                arm_return_time = Times::getCurrentTimeInMilliSecs();
+                reward();
+            }
 		}
 		else {
 			Sounds::playErrorTone();
 
 			// append the failed trial to the end
+            arm_return_time = -1;
 			if (usingLoadedSession) {
 				session_values.push_back(session_values[params.trial_number]);
 				repeating_trial.push_back(true);
@@ -688,7 +706,7 @@ void Protocol::run()
             trial_end_time,
             log_starting_finishing_recordings, log_sent_end_sync_messages,
 			log_stopped_camera_recordings, log_stopped_ps_recordings,
-            trial_finished_time);
+            trial_finished_time, arm_return_time);
 
 
 		// wait for the signal from recording devices that the data has been saved - is Ready
@@ -716,11 +734,12 @@ void Protocol::run()
 	setCurrentState(ProtocolState::shutdown);
 }
 
-void Protocol::set_photoresistor_monitors(CStaticColor* front, CStaticColor* rear)
+void Protocol::set_photoresistor_monitors(CStaticColor* front, CStaticColor* rear, CStaticColor* left, CStaticColor* right)
 {
 	// does not care if the card is there or whatever
 	m_NIUsb6001card.setFrontPhotoresistorMonitor(front);
 	m_NIUsb6001card.setRearPhotoresistorMonitor(rear);
+    m_NIUsb6001card.setArmTouchSensors(left, right);
 }
 
 void Protocol::set_camera1_gui_controls(CEdit* serverLogCtrl)
@@ -907,6 +926,7 @@ void Protocol::openCsvLog()
 	{
 		trialLogCsv << "force_target_start_time_" << i_force + 1 << "(ms), ";
 	}
+    trialLogCsv << "arm_return_time(ms),";
     trialLogCsv << "trial_end_time(ms),";
     trialLogCsv << "log_starting_finishing_recordings(ms),";
 	trialLogCsv << "log_sent_end_sync_messages(ms),";
@@ -917,6 +937,9 @@ void Protocol::openCsvLog()
 	trialLogCsv << "pos_tilt(deg),";
 	trialLogCsv << "pos_aperture(mm),";
 	trialLogCsv << "targetForce(N),";
+    trialLogCsv << "waterDuration(ms),";
+    trialLogCsv << "holdDuratation(ms),";
+    trialLogCsv << "rewardOnReturn,";
 	for (size_t i_force = 1; i_force < forceTargetIds.size(); i_force++)
 	{
 		trialLogCsv << "targetForce_" << i_force + 1 << "(N), ";
@@ -936,7 +959,8 @@ void Protocol::addLineToCsvLog(const bool got_reward, const bool repeating,
 	const long long trial_end_time,
     const long long log_starting_finishing_recordings, const long long log_sent_end_sync_messages,
 	const long long log_stopped_camera_recordings, const long long log_stopped_ps_recordings,
-    const long long trial_finished_time)
+    const long long trial_finished_time,
+    const long long arm_return_time)
 {
 	if (!trialLogCsv.is_open()) {
 		logError("Trying to write into a closed log.");
@@ -978,6 +1002,7 @@ void Protocol::addLineToCsvLog(const bool got_reward, const bool repeating,
 			trialLogCsv << "0,";
 	}
 
+    trialLogCsv << arm_return_time << ",";                     // "arm_return_time(ms),";
 	trialLogCsv << trial_end_time << ",";			           // "trial_end_time(ms),";
     trialLogCsv << log_starting_finishing_recordings << ",";   // "log_starting_finishing_recordings(ms),";
 	trialLogCsv << log_sent_end_sync_messages << ",";		   // "log_sent_end_sync_messages(ms),";
@@ -988,6 +1013,10 @@ void Protocol::addLineToCsvLog(const bool got_reward, const bool repeating,
 	trialLogCsv << params.pos_tilt << ",";			           // "pos_tilt(deg),";
 	trialLogCsv << params.pos_aperture << ",";		           // "pos_aperture(mm),";
 	trialLogCsv << params.targetForce << ",";		           // "targetForce(N),";
+    trialLogCsv << params.rewardDuration << ",";               //  "waterDuration(ms),";
+    trialLogCsv << params.thresholdPeriod * 1000 << ",";       //  "holdDuratation(ms),";
+    trialLogCsv << reward_on_return.load() << ",";             //  "rewardOnReturn,";
+
 	for (size_t i_force = 1; i_force < forceTargets.size(); i_force++)
 	{
 		trialLogCsv << forceTargets[i_force] << ",";
@@ -1177,18 +1206,21 @@ void Protocol::watch_early_grab()
 bool Protocol::is_arm_at_rest()
 {
 	// sensors not found, or ignore them both - skip this whole function
-	if (!isLightSensorsOn() || !(use_front_light_sensor.load() || use_rear_light_sensor.load())) {
+	if (!isLightSensorsOn() || !(use_front_light_sensor.load() || use_rear_light_sensor.load() )) {
 		return true;
 	}
 
 	if ((use_front_light_sensor.load() && !IS_FRONT_PHOTORESISTOR_COVERED) ||
-		(use_rear_light_sensor.load() && !IS_REAR_PHOTORESISTOR_COVERED)) {
-		// uncovered
-		if (_arm_at_rest_start_time) {
-			delete _arm_at_rest_start_time;
-			_arm_at_rest_start_time = nullptr;
-		}
-	}
+		(use_rear_light_sensor.load() && !IS_REAR_PHOTORESISTOR_COVERED) ||
+        (use_right_arm_touch.load() && !IS_RIGHT_ARMSENSOR_TOUCHED) || 
+        (use_left_arm_touch.load() && !IS_LEFT_ARMSENSOR_TOUCHED ))
+        {
+		    // uncovered
+		    if (_arm_at_rest_start_time) {
+			    delete _arm_at_rest_start_time;
+			    _arm_at_rest_start_time = nullptr;
+		    }
+	    }
 	else {
 		// just started covering
 		if (!_arm_at_rest_start_time)
@@ -1287,6 +1319,28 @@ int Protocol::wait_until_arm_liftoff()
 		}
 	}
 	return flag;
+}
+
+
+void Protocol::armMonitoringThread()
+{
+    int offCounter;
+    while(allowInterupt.load() && monitor_passive_arm.load())
+    {
+        if(!IS_LEFT_ARMSENSOR_TOUCHED && which_passive_arm == -1)
+            offCounter += 1;
+        else if(!IS_RIGHT_ARMSENSOR_TOUCHED && which_passive_arm == 1)
+            offCounter += 1;
+        else
+            offCounter = 0;
+        if(offCounter >= 25)
+            stop_motors();
+            stopTrial.store(true);
+            offCounter = 0;
+            allowInterupt.store(false);
+            
+    }
+    return;
 }
 
 void Protocol::start_ephys_recording()

@@ -9,7 +9,7 @@ using namespace std;
 int32 CVICALLBACK EveryNCallback(TaskHandle taskHandle, int32 everyNsamplesEventType, uInt32 nSamples, void* callbackData);
 int32 CVICALLBACK DoneCallback(TaskHandle taskHandle, int32 status, void* callbackData);
 
-enum PhotoResistor { FRONT = 0, REAR };
+enum PhotoResistor { FRONT = 0, REAR, LEFTTOUCH, RIGHTTOUCH };
 
 // TODO because of tons of global variables, these are here. Should be rewritten in the future
 void stopTask(TaskHandle& taskHandle);
@@ -35,15 +35,20 @@ int32   N_SAMPLES = 1;
 
 uInt8 ACTIVATE_REWARD_BITS_MAP[1] = { 1 };
 uInt8 DEACTIVATE_REWARD_BITS_MAP[1] = { 0 };
-uInt8 PHOTORESISTORS_STATUS[2] = { 0, 0 }; // monitor buffer 0 covered 1 uncovered
-int32 N_PHOTORESISTORS = 2;
+uInt8 PHOTORESISTORS_STATUS[4] = { 0, 0, 0, 0 }; // monitor buffer 0 covered 1 uncovered
+int32 N_PHOTORESISTORS = 4;
 static TaskHandle  AItaskHandle = 0, PhotoResistorStatus_taskHandle = 0, RewardSystem_taskHandle = 0, ephysSync_taskHandle = 0;
 
 atomic<bool> IS_REAR_PHOTORESISTOR_COVERED;
 atomic<bool> IS_FRONT_PHOTORESISTOR_COVERED;
+atomic<bool> IS_LEFT_ARMSENSOR_TOUCHED;
+atomic<bool> IS_RIGHT_ARMSENSOR_TOUCHED;
 
 CStaticColor * FRONT_PHOTORESISTOR_GUI_MONITOR;
 CStaticColor * REAR_PHOTORESISTOR_GUI_MONITOR;
+CStaticColor * LEFT_TOUCH_GUI_MONITOR;
+CStaticColor * RIGHT_TOUCH_GUI_MONITOR;
+
 COLORREF white = RGB(255, 255, 255);
 COLORREF black = RGB(0, 0, 0);
 DWORD sysColor = GetSysColor(COLOR_BTNFACE);
@@ -62,6 +67,7 @@ int NIUsb6001card::config() {
 	float64 TIMEOUT = 10.0;
 	// m_physicalChanAI is used only for the continuous reading of the photoresistors status
 	string m_physicalChanAI, m_physicalChanRewardSystem, m_physicalChanPhotoresistors, m_physicalChanEphysSync;
+    string m_leftArmChannel, m_rightArmChannel;
 	TCHAR value[32];
 
 	// read default values from the .ini file
@@ -92,6 +98,20 @@ int NIUsb6001card::config() {
 		TEXT("Error loading ephysSync channel"), 
 		value, 32, TEXT(USB6001_CFG_FILE));
 	m_physicalChanEphysSync = string(value);
+
+    GetPrivateProfileString(
+		TEXT("MakeyMakey"),      
+		TEXT("physicalDigitalChannelLeft"),   
+		TEXT("Error loading left MakeyMakey channel"), 
+		value, 32, TEXT(USB6001_CFG_FILE));
+	m_leftArmChannel = string(value);
+
+    GetPrivateProfileString(
+		TEXT("MakeyMakey"),      
+		TEXT("physicalDigitalChannelRight"),   
+		TEXT("Error loading right MakeyMakey channel"), 
+		value, 32, TEXT(USB6001_CFG_FILE));
+	m_rightArmChannel = string(value);
 
 
 	/*********************************************/
@@ -137,6 +157,20 @@ int NIUsb6001card::config() {
 		return errorNumber;
 	}
 	errorNumber = DAQmxCreateDIChan(PhotoResistorStatus_taskHandle, m_physicalChanPhotoresistors.c_str(), "", 
+		DAQmx_Val_ChanForAllLines);
+	if (DAQmxFailed(errorNumber)) {
+		logErrMsg(errorNumber);
+		return errorNumber;
+	}
+
+    errorNumber = DAQmxCreateDIChan(PhotoResistorStatus_taskHandle, m_leftArmChannel.c_str(), "", 
+		DAQmx_Val_ChanForAllLines);
+	if (DAQmxFailed(errorNumber)) {
+		logErrMsg(errorNumber);
+		return errorNumber;
+	}
+
+    errorNumber = DAQmxCreateDIChan(PhotoResistorStatus_taskHandle, m_rightArmChannel.c_str(), "", 
 		DAQmx_Val_ChanForAllLines);
 	if (DAQmxFailed(errorNumber)) {
 		logErrMsg(errorNumber);
@@ -314,9 +348,15 @@ void NIUsb6001card::setRearPhotoresistorMonitor(CStaticColor* gui_monitor)
 	REAR_PHOTORESISTOR_GUI_MONITOR = gui_monitor;
 }
 
+void NIUsb6001card::setArmTouchSensors(CStaticColor* left, CStaticColor* right)
+{
+    LEFT_TOUCH_GUI_MONITOR = left;
+    RIGHT_TOUCH_GUI_MONITOR = right;
+}
+
 int32 CVICALLBACK EveryNCallback(TaskHandle taskHandle, int32 everyNsamplesEventType, uInt32 nSamples, void *callbackData)
 {
-	int32   readDI, errorNumber = 0, nBytesBufferSize = 2 * N_SAMPLES;
+	int32   readDI, errorNumber = 0, nBytesBufferSize = 4 * N_SAMPLES;
 	float64 TIMEOUT = 10.0;
 
 	/*********************************************/
@@ -332,8 +372,14 @@ int32 CVICALLBACK EveryNCallback(TaskHandle taskHandle, int32 everyNsamplesEvent
 	updatePhotoresistorGuiMonitor(REAR_PHOTORESISTOR_GUI_MONITOR, REAR);
 	updatePhotoresistorGuiMonitor(FRONT_PHOTORESISTOR_GUI_MONITOR, FRONT);
 
+    updatePhotoresistorGuiMonitor(LEFT_TOUCH_GUI_MONITOR, LEFTTOUCH);
+	updatePhotoresistorGuiMonitor(RIGHT_TOUCH_GUI_MONITOR, RIGHTTOUCH);
+
 	IS_REAR_PHOTORESISTOR_COVERED.store(PHOTORESISTORS_STATUS[REAR] == 0);
 	IS_FRONT_PHOTORESISTOR_COVERED.store(PHOTORESISTORS_STATUS[FRONT] == 0);
+
+    IS_LEFT_ARMSENSOR_TOUCHED.store(PHOTORESISTORS_STATUS[LEFTTOUCH]);
+    IS_RIGHT_ARMSENSOR_TOUCHED.store(PHOTORESISTORS_STATUS[RIGHTTOUCH]);
 
 	return 0;
 }

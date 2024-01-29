@@ -145,4 +145,11 @@ public:
 	afx_msg void OnBnClickedLedsEarlyTargetForceLightChk();
     afx_msg void OnEnChangeSessionFileEdt();
     afx_msg void OnBnClickedMotorsChk();
+
+
+    afx_msg void OnBnClickedLeftMain();
+    afx_msg void OnBnClickedLeftSecond();
+    afx_msg void OnBnClickedRightMain();
+    afx_msg void OnBnClickedRightSecond();
+    afx_msg void OnBnClickedSplitReward();
 };
