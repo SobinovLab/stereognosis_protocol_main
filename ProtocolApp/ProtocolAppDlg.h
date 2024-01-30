@@ -74,6 +74,8 @@ public:
 	// light sensors
 	CStaticColor m_frontPhotoresistorCtrl;
 	CStaticColor m_rearPhotoresistorCtrl;
+	CStaticColor m_leftArmSensorCtrl;
+	CStaticColor m_rightArmSensorCtrl;
 
 	//////// Trial
 	// buttons

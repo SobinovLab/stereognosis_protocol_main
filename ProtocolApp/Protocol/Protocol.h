@@ -185,8 +185,8 @@ class Protocol
 
         //Watching arm lift off in a thread
         void armMonitoringThread();
-        atomic<bool> allowInterupt;
-        atomic<bool> monitoringThreadAlive = false;
+        std::atomic<bool> allowInterupt;
+        std::atomic<bool> monitoringThreadAlive = false;
 
 		// ephys
 		void start_ephys_recording();

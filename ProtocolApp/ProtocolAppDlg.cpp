@@ -23,6 +23,8 @@ void CProtocolAppDlg::DoDataExchange(CDataExchange* pDX)
 	// protocol
 	DDX_Control(pDX, IDC_PHOTORES_FRONT_LBL, m_frontPhotoresistorCtrl);
 	DDX_Control(pDX, IDC_PHOTORES_REAR_LBL, m_rearPhotoresistorCtrl);
+	DDX_Control(pDX, IDC_TOUCH_LEFT, m_leftArmSensorCtrl);
+	DDX_Control(pDX, IDC_TOUCH_RIGHT, m_rightArmSensorCtrl);
 
 	// trial
 	DDX_Control(pDX, IDC_START_TRIAL_BTN, m_startTrialBtn);
@@ -154,7 +156,7 @@ BOOL CProtocolAppDlg::OnInitDialog()
 	setFontGuiTrialsCounter();  // legacy
 	m_protocol.mainWindow = this;
 
-	m_protocol.set_photoresistor_monitors(&m_frontPhotoresistorCtrl, &m_rearPhotoresistorCtrl, );
+	m_protocol.set_photoresistor_monitors(&m_frontPhotoresistorCtrl, &m_rearPhotoresistorCtrl, &m_leftArmSensorCtrl, &m_rightArmSensorCtrl);
 	m_protocol.set_camera1_gui_controls(&m_serverLogCtrl1);
 	m_protocol.set_camera2_gui_controls(&m_serverLogCtrl2);
 	m_protocol.set_pressure_sensors_gui_controls(&m_touchServerLogCtrl);
@@ -723,76 +725,76 @@ void CProtocolAppDlg::OnBnClickedMotorsChk()
 
 void CProtocolAppDlg::OnBnClickedLeftMain()
 {
-    cout<<"Clicked the left main button\n";
+	logInfo("Clicked the left main button");
     CButton* tmpButton = (CButton *)GetDlgItem(IDC_LEFT_MAIN);
     if(tmpButton->GetCheck())
     {
-        cout<<"Left Main Button is checked\n";
+		logInfo("Left Main Button is checked");
     }
     else
     {
-        cout<<"Left Main Button is unchecked\n";
+		logInfo("Left Main Button is unchecked");
     }
 }
 
 
 void CProtocolAppDlg::OnBnClickedLeftSecond()
 {
-    cout<<"Clicked the left second button\n";
+	logInfo("Clicked the left second button");
     CButton* tmpButton = (CButton *)GetDlgItem(IDC_LEFT_SECOND);
     if(tmpButton->GetCheck())
     {
-        cout<<"Left Second Button is checked\n";
+		logInfo("Left Second Button is checked");
     }
     else
     {
-        cout<<"Left Second Button is unchecked\n";
+		logInfo("Left Second Button is unchecked");
     }
 }
 
 
 void CProtocolAppDlg::OnBnClickedRightMain()
 {
-    cout<<"Clicked the right main button\n";
+	logInfo("Clicked the right main button");
     CButton* tmpButton = (CButton *)GetDlgItem(IDC_RIGHT_MAIN);
     if(tmpButton->GetCheck())
     {
-        cout<<"Right Main Button is checked\n";
+		logInfo("Right Main Button is checked");
     }
     else
     {
-        cout<<"Right Main Button is unchecked\n";
+		logInfo("Right Main Button is unchecked");
     }
 }
 
 
 void CProtocolAppDlg::OnBnClickedRightSecond()
 {
-    cout<<"Clicked on the right second button\n";
+	logInfo("Clicked on the right second button");
     CButton* tmpButton = (CButton *)GetDlgItem(IDC_RIGHT_SECOND);
     if(tmpButton->GetCheck())
     {
-        cout<<"Right second Button is checked\n";
+		logInfo("Right second Button is checked");
     }
     else
     {
-        cout<<"Right second Button is unchecked\n";
+		logInfo("Right second Button is unchecked");
     }
 }
 
 
 void CProtocolAppDlg::OnBnClickedSplitReward()
 {
-    cout << "Clicked on the reward on return button\n";
+	logInfo("Clicked on the reward on return button");
     CButton* tmpButton = (CButton *)GetDlgItem(IDC_SPLIT_REWARD);
     if(tmpButton->GetCheck())
     {
-        cout<<"Reward on return Button is checked\n";
+		logInfo("Reward on return Button is checked");
         m_protocol.reward_on_return.store(true);
     }
     else
     {
-        cout<<"Reward on return button is unchecked\n";
+		logInfo("Reward on return button is unchecked");
         m_protocol.reward_on_return.store(false);
     }
 }

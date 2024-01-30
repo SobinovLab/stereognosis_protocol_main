@@ -78,6 +78,7 @@
 #define IDC_SPLIT_REWARD                1111
 #define IDC_SPLIT_REWARD1               1111
 #define IDC_RIGHT_MAIN                  1113
+#define IDC_LEFT_SECOND2                1113
 #define IDC_RIGHT_SECOND                1114
 
 // Next default values for new objects
