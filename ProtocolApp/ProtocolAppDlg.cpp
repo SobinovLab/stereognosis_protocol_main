@@ -641,18 +641,58 @@ void CProtocolAppDlg::OnBnClickedLoopChk()
 void CProtocolAppDlg::OnBnClickedUseFrontLightSensorChk()
 {
 	if (m_useFrontLightSensorChk.GetCheck())
+    {
+        CButton* oButton = (CButton *)GetDlgItem(IDC_RIGHT_MAIN);
+        oButton->SetCheck(false);
+        OnBnClickedRightMain();
+
+        oButton = (CButton *)GetDlgItem(IDC_RIGHT_SECOND);
+        oButton->SetCheck(false);
+        OnBnClickedRightSecond();
+
+        oButton = (CButton *)GetDlgItem(IDC_LEFT_SECOND);
+        oButton->SetCheck(false);
+        OnBnClickedLeftSecond();
+
+        oButton = (CButton *)GetDlgItem(IDC_LEFT_MAIN);
+        oButton->SetCheck(false);
+        OnBnClickedLeftMain();
+
 		m_protocol.use_front_light_sensor = true;
+    }
 	else
+    {
 		m_protocol.use_front_light_sensor = false;
+    }
 }
 
 
 void CProtocolAppDlg::OnBnClickedUseRearLightSensorChk()
 {
 	if (m_useRearLightSensorChk.GetCheck())
+    {
+        CButton* oButton = (CButton *)GetDlgItem(IDC_RIGHT_MAIN);
+        oButton->SetCheck(false);
+        OnBnClickedRightMain();
+
+        oButton = (CButton *)GetDlgItem(IDC_RIGHT_SECOND);
+        oButton->SetCheck(false);
+        OnBnClickedRightSecond();
+
+        oButton = (CButton *)GetDlgItem(IDC_LEFT_SECOND);
+        oButton->SetCheck(false);
+        OnBnClickedLeftSecond();
+
+        oButton = (CButton *)GetDlgItem(IDC_LEFT_MAIN);
+        oButton->SetCheck(false);
+        OnBnClickedLeftMain();
+
 		m_protocol.use_rear_light_sensor = true;
+    }
 	else
+    {
 		m_protocol.use_rear_light_sensor = false;
+    }
 }
 
 
@@ -729,11 +769,30 @@ void CProtocolAppDlg::OnBnClickedLeftMain()
     CButton* tmpButton = (CButton *)GetDlgItem(IDC_LEFT_MAIN);
     if(tmpButton->GetCheck())
     {
+        CButton* oButton = (CButton *)GetDlgItem(IDC_RIGHT_MAIN);
+        oButton->SetCheck(false);
+        OnBnClickedRightMain();
+
+        oButton = (CButton *)GetDlgItem(IDC_LEFT_SECOND);
+        oButton->SetCheck(false);
+        OnBnClickedLeftSecond();
+
+        oButton = (CButton *)GetDlgItem(IDC_USE_FRONT_LIGHT_SENSOR_CHK);
+        oButton->SetCheck(false);
+        OnBnClickedUseFrontLightSensorChk();
+
+        oButton = (CButton *)GetDlgItem(IDC_USE_REAR_LIGHT_SENSOR_CHK);
+        oButton->SetCheck(false);
+        OnBnClickedUseRearLightSensorChk();
+
 		logInfo("Left Main Button is checked");
+        m_protocol.use_left_arm_touch.store(true);
+
     }
     else
     {
 		logInfo("Left Main Button is unchecked");
+        m_protocol.use_left_arm_touch.store(false);
     }
 }
 
@@ -744,11 +803,34 @@ void CProtocolAppDlg::OnBnClickedLeftSecond()
     CButton* tmpButton = (CButton *)GetDlgItem(IDC_LEFT_SECOND);
     if(tmpButton->GetCheck())
     {
+        CButton* oButton = (CButton *)GetDlgItem(IDC_RIGHT_SECOND);
+        oButton->SetCheck(false);
+        OnBnClickedRightSecond();
+
+        oButton = (CButton *)GetDlgItem(IDC_LEFT_MAIN);
+        oButton->SetCheck(false);
+        OnBnClickedLeftMain();
+
+        oButton = (CButton *)GetDlgItem(IDC_USE_FRONT_LIGHT_SENSOR_CHK);
+        oButton->SetCheck(false);
+        OnBnClickedUseFrontLightSensorChk();
+
+        oButton = (CButton *)GetDlgItem(IDC_USE_REAR_LIGHT_SENSOR_CHK);
+        oButton->SetCheck(false);
+        OnBnClickedUseRearLightSensorChk();
+
+
 		logInfo("Left Second Button is checked");
+        m_protocol.use_left_arm_touch.store(true);
+        m_protocol.monitor_passive_arm.store(true);
+        m_protocol.which_passive_arm = -1;
     }
     else
     {
 		logInfo("Left Second Button is unchecked");
+        m_protocol.use_left_arm_touch.store(false);
+        m_protocol.monitor_passive_arm.store(false);
+        m_protocol.which_passive_arm = 0;
     }
 }
 
@@ -759,11 +841,29 @@ void CProtocolAppDlg::OnBnClickedRightMain()
     CButton* tmpButton = (CButton *)GetDlgItem(IDC_RIGHT_MAIN);
     if(tmpButton->GetCheck())
     {
+        CButton* oButton = (CButton *)GetDlgItem(IDC_RIGHT_SECOND);
+        oButton->SetCheck(false);
+        OnBnClickedRightSecond();
+
+        oButton = (CButton *)GetDlgItem(IDC_LEFT_MAIN);
+        oButton->SetCheck(false);
+        OnBnClickedLeftMain();
+
+        oButton = (CButton *)GetDlgItem(IDC_USE_FRONT_LIGHT_SENSOR_CHK);
+        oButton->SetCheck(false);
+        OnBnClickedUseFrontLightSensorChk();
+
+        oButton = (CButton *)GetDlgItem(IDC_USE_REAR_LIGHT_SENSOR_CHK);
+        oButton->SetCheck(false);
+        OnBnClickedUseRearLightSensorChk();
+
 		logInfo("Right Main Button is checked");
+        m_protocol.use_right_arm_touch.store(true);
     }
     else
     {
 		logInfo("Right Main Button is unchecked");
+        m_protocol.use_right_arm_touch.store(false);
     }
 }
 
@@ -774,11 +874,33 @@ void CProtocolAppDlg::OnBnClickedRightSecond()
     CButton* tmpButton = (CButton *)GetDlgItem(IDC_RIGHT_SECOND);
     if(tmpButton->GetCheck())
     {
+        CButton* oButton = (CButton *)GetDlgItem(IDC_RIGHT_MAIN);
+        oButton->SetCheck(false);
+        OnBnClickedRightMain();
+
+        oButton = (CButton *)GetDlgItem(IDC_LEFT_SECOND);
+        oButton->SetCheck(false);
+        OnBnClickedLeftSecond();
+
+        oButton = (CButton *)GetDlgItem(IDC_USE_FRONT_LIGHT_SENSOR_CHK);
+        oButton->SetCheck(false);
+        OnBnClickedUseFrontLightSensorChk();
+
+        oButton = (CButton *)GetDlgItem(IDC_USE_REAR_LIGHT_SENSOR_CHK);
+        oButton->SetCheck(false);
+        OnBnClickedUseRearLightSensorChk();
+
 		logInfo("Right second Button is checked");
+        m_protocol.use_right_arm_touch.store(true);
+        m_protocol.monitor_passive_arm.store(true);
+        m_protocol.which_passive_arm = 1;
     }
     else
     {
 		logInfo("Right second Button is unchecked");
+        m_protocol.use_right_arm_touch.store(false);
+        m_protocol.monitor_passive_arm.store(false);
+        m_protocol.which_passive_arm = 0;
     }
 }
 
