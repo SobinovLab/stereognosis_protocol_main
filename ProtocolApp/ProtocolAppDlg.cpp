@@ -765,7 +765,7 @@ void CProtocolAppDlg::OnBnClickedMotorsChk()
 
 void CProtocolAppDlg::OnBnClickedLeftMain()
 {
-	logInfo("Clicked the left main button");
+	//logInfo("Clicked the left main button");
     CButton* tmpButton = (CButton *)GetDlgItem(IDC_LEFT_MAIN);
     if(tmpButton->GetCheck())
     {
@@ -785,13 +785,13 @@ void CProtocolAppDlg::OnBnClickedLeftMain()
         oButton->SetCheck(false);
         OnBnClickedUseRearLightSensorChk();
 
-		logInfo("Left Main Button is checked");
+		//logInfo("Left Main Button is checked");
         m_protocol.use_left_arm_touch.store(true);
 
     }
     else
     {
-		logInfo("Left Main Button is unchecked");
+		//logInfo("Left Main Button is unchecked");
         m_protocol.use_left_arm_touch.store(false);
     }
 }
@@ -799,7 +799,7 @@ void CProtocolAppDlg::OnBnClickedLeftMain()
 
 void CProtocolAppDlg::OnBnClickedLeftSecond()
 {
-	logInfo("Clicked the left second button");
+	//logInfo("Clicked the left second button");
     CButton* tmpButton = (CButton *)GetDlgItem(IDC_LEFT_SECOND);
     if(tmpButton->GetCheck())
     {
@@ -820,14 +820,14 @@ void CProtocolAppDlg::OnBnClickedLeftSecond()
         OnBnClickedUseRearLightSensorChk();
 
 
-		logInfo("Left Second Button is checked");
+		//logInfo("Left Second Button is checked");
         m_protocol.use_left_arm_touch.store(true);
         m_protocol.monitor_passive_arm.store(true);
         m_protocol.which_passive_arm = -1;
     }
     else
     {
-		logInfo("Left Second Button is unchecked");
+		//logInfo("Left Second Button is unchecked");
         m_protocol.use_left_arm_touch.store(false);
         m_protocol.monitor_passive_arm.store(false);
         m_protocol.which_passive_arm = 0;
@@ -837,7 +837,7 @@ void CProtocolAppDlg::OnBnClickedLeftSecond()
 
 void CProtocolAppDlg::OnBnClickedRightMain()
 {
-	logInfo("Clicked the right main button");
+	//logInfo("Clicked the right main button");
     CButton* tmpButton = (CButton *)GetDlgItem(IDC_RIGHT_MAIN);
     if(tmpButton->GetCheck())
     {
@@ -857,12 +857,12 @@ void CProtocolAppDlg::OnBnClickedRightMain()
         oButton->SetCheck(false);
         OnBnClickedUseRearLightSensorChk();
 
-		logInfo("Right Main Button is checked");
+		//logInfo("Right Main Button is checked");
         m_protocol.use_right_arm_touch.store(true);
     }
     else
     {
-		logInfo("Right Main Button is unchecked");
+		//logInfo("Right Main Button is unchecked");
         m_protocol.use_right_arm_touch.store(false);
     }
 }
@@ -870,7 +870,7 @@ void CProtocolAppDlg::OnBnClickedRightMain()
 
 void CProtocolAppDlg::OnBnClickedRightSecond()
 {
-	logInfo("Clicked on the right second button");
+	//logInfo("Clicked on the right second button");
     CButton* tmpButton = (CButton *)GetDlgItem(IDC_RIGHT_SECOND);
     if(tmpButton->GetCheck())
     {
@@ -890,14 +890,14 @@ void CProtocolAppDlg::OnBnClickedRightSecond()
         oButton->SetCheck(false);
         OnBnClickedUseRearLightSensorChk();
 
-		logInfo("Right second Button is checked");
+		//logInfo("Right second Button is checked");
         m_protocol.use_right_arm_touch.store(true);
         m_protocol.monitor_passive_arm.store(true);
         m_protocol.which_passive_arm = 1;
     }
     else
     {
-		logInfo("Right second Button is unchecked");
+		//logInfo("Right second Button is unchecked");
         m_protocol.use_right_arm_touch.store(false);
         m_protocol.monitor_passive_arm.store(false);
         m_protocol.which_passive_arm = 0;
@@ -907,16 +907,16 @@ void CProtocolAppDlg::OnBnClickedRightSecond()
 
 void CProtocolAppDlg::OnBnClickedSplitReward()
 {
-	logInfo("Clicked on the reward on return button");
+	//logInfo("Clicked on the reward on return button");
     CButton* tmpButton = (CButton *)GetDlgItem(IDC_SPLIT_REWARD);
     if(tmpButton->GetCheck())
     {
-		logInfo("Reward on return Button is checked");
+		//logInfo("Reward on return Button is checked");
         m_protocol.reward_on_return.store(true);
     }
     else
     {
-		logInfo("Reward on return button is unchecked");
+		//logInfo("Reward on return button is unchecked");
         m_protocol.reward_on_return.store(false);
     }
 }

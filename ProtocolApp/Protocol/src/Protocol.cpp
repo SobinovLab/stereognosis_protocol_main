@@ -557,6 +557,7 @@ void Protocol::run()
 
 		// wait until arm at rest
 		prepare_to_monitor_arm_at_rest();
+		logInfo("About to wait for arms to be at rest at top of loop");
 		while (!this->stopTrial.load() && !is_arm_at_rest()) {
 			// waiting for:
 			//	Stop trial button to be pressed
@@ -569,6 +570,7 @@ void Protocol::run()
 		thread watchThread(&Protocol::watch_early_grab, this);
 
         allowInterupt.store(true);
+		logInfo("Starting background thread for passive arm");
         thread passiveArmThread(&Protocol::armMonitoringThread, this);
 
 		// start recordings
@@ -634,7 +636,9 @@ void Protocol::run()
 			}
 		}
 
+		logInfo("Setting interupt to true from main loop");
         allowInterupt.store(false);
+		logInfo("Waiting on background thread");
         passiveArmThread.join();
 
 		// turn off leds whether they were on or not
@@ -657,6 +661,7 @@ void Protocol::run()
             if(reward_on_return.load())
             {
                 prepare_to_monitor_arm_at_rest();
+				logInfo("Waiting for arms to be placed back so that second reward can happen");
 		        while (!this->stopTrial.load() && !is_arm_at_rest()) {
 			        //TODO maybe add timeout here
                     //This waits for monkey to put both arms back and then rewards again
@@ -1325,6 +1330,7 @@ int Protocol::wait_until_arm_liftoff()
 void Protocol::armMonitoringThread()
 {
     int offCounter;
+	logInfo("This is the background thread for passive");
     while(allowInterupt.load() && monitor_passive_arm.load())
     {
         if(!IS_LEFT_ARMSENSOR_TOUCHED && which_passive_arm == -1)
@@ -1333,13 +1339,15 @@ void Protocol::armMonitoringThread()
             offCounter += 1;
         else
             offCounter = 0;
-        if(offCounter >= 25)
+		if (offCounter >= 25)
+			logInfo("Exceeded time off from armrest, arborting trial");
             stop_motors();
             stopTrial.store(true);
             offCounter = 0;
             allowInterupt.store(false);
             
     }
+	logInfo("Finished loop for passive");
     return;
 }
 

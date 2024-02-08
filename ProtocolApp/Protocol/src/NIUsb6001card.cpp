@@ -35,7 +35,7 @@ int32   N_SAMPLES = 1;
 
 uInt8 ACTIVATE_REWARD_BITS_MAP[1] = { 1 };
 uInt8 DEACTIVATE_REWARD_BITS_MAP[1] = { 0 };
-uInt8 PHOTORESISTORS_STATUS[4] = { 0, 0, 0, 0 }; // monitor buffer 0 covered 1 uncovered
+uInt8 *PHOTORESISTORS_STATUS = (uInt8 *)calloc(4, sizeof(uInt8)); // monitor buffer 0 covered 1 uncovered
 int32 N_PHOTORESISTORS = 4;
 static TaskHandle  AItaskHandle = 0, PhotoResistorStatus_taskHandle = 0, RewardSystem_taskHandle = 0, ephysSync_taskHandle = 0;
 
@@ -156,27 +156,28 @@ int NIUsb6001card::config() {
 		logErrMsg(errorNumber);
 		return errorNumber;
 	}
-	errorNumber = DAQmxCreateDIChan(PhotoResistorStatus_taskHandle, m_physicalChanPhotoresistors.c_str(), "", 
+	errorNumber = DAQmxCreateDIChan(PhotoResistorStatus_taskHandle, m_physicalChanPhotoresistors.c_str(), "Photoresistors", 
 		DAQmx_Val_ChanForAllLines);
 	if (DAQmxFailed(errorNumber)) {
 		logErrMsg(errorNumber);
 		return errorNumber;
 	}
 
-    errorNumber = DAQmxCreateDIChan(PhotoResistorStatus_taskHandle, m_leftArmChannel.c_str(), "", 
+	/*
+    errorNumber = DAQmxCreateDIChan(PhotoResistorStatus_taskHandle, m_leftArmChannel.c_str(), "LeftArmHandle", 
 		DAQmx_Val_ChanForAllLines);
 	if (DAQmxFailed(errorNumber)) {
 		logErrMsg(errorNumber);
 		return errorNumber;
 	}
-
-    errorNumber = DAQmxCreateDIChan(PhotoResistorStatus_taskHandle, m_rightArmChannel.c_str(), "", 
+	
+    errorNumber = DAQmxCreateDIChan(PhotoResistorStatus_taskHandle, m_rightArmChannel.c_str(), "RightArmHandle", 
 		DAQmx_Val_ChanForAllLines);
 	if (DAQmxFailed(errorNumber)) {
 		logErrMsg(errorNumber);
 		return errorNumber;
 	}
-
+	*/
 	// reward
 	errorNumber = DAQmxCreateTask(REWARD_SYSTEM_TASK_NAME, &RewardSystem_taskHandle);
 	if (DAQmxFailed(errorNumber)) {
@@ -378,8 +379,8 @@ int32 CVICALLBACK EveryNCallback(TaskHandle taskHandle, int32 everyNsamplesEvent
 	IS_REAR_PHOTORESISTOR_COVERED.store(PHOTORESISTORS_STATUS[REAR] == 0);
 	IS_FRONT_PHOTORESISTOR_COVERED.store(PHOTORESISTORS_STATUS[FRONT] == 0);
 
-    IS_LEFT_ARMSENSOR_TOUCHED.store(PHOTORESISTORS_STATUS[LEFTTOUCH]);
-    IS_RIGHT_ARMSENSOR_TOUCHED.store(PHOTORESISTORS_STATUS[RIGHTTOUCH]);
+    IS_LEFT_ARMSENSOR_TOUCHED.store(PHOTORESISTORS_STATUS[LEFTTOUCH] == 0);
+    IS_RIGHT_ARMSENSOR_TOUCHED.store(PHOTORESISTORS_STATUS[RIGHTTOUCH] == 0);
 
 	return 0;
 }
