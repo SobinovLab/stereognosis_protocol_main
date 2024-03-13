@@ -771,9 +771,10 @@ void CProtocolAppDlg::OnBnClickedLeftMain()
 {
 	//logInfo("Clicked the left main button");
     CButton* tmpButton = (CButton *)GetDlgItem(IDC_LEFT_MAIN);
+	CButton* oButton;
     if(tmpButton->GetCheck())
     {
-        CButton* oButton = (CButton *)GetDlgItem(IDC_RIGHT_MAIN);
+        oButton = (CButton *)GetDlgItem(IDC_RIGHT_MAIN);
         oButton->SetCheck(false);
         OnBnClickedRightMain();
 
@@ -796,7 +797,11 @@ void CProtocolAppDlg::OnBnClickedLeftMain()
     else
     {
 		//logInfo("Left Main Button is unchecked");
-        m_protocol.use_left_arm_touch.store(false);
+		oButton = (CButton*)GetDlgItem(IDC_LEFT_SECOND);
+		if (!oButton->GetCheck())
+		{
+			m_protocol.use_left_arm_touch.store(false);
+		}
     }
 }
 
@@ -805,9 +810,10 @@ void CProtocolAppDlg::OnBnClickedLeftSecond()
 {
 	//logInfo("Clicked the left second button");
     CButton* tmpButton = (CButton *)GetDlgItem(IDC_LEFT_SECOND);
+	CButton* oButton;
     if(tmpButton->GetCheck())
     {
-        CButton* oButton = (CButton *)GetDlgItem(IDC_RIGHT_SECOND);
+        oButton = (CButton *)GetDlgItem(IDC_RIGHT_SECOND);
         oButton->SetCheck(false);
         OnBnClickedRightSecond();
 
@@ -832,9 +838,17 @@ void CProtocolAppDlg::OnBnClickedLeftSecond()
     else
     {
 		//logInfo("Left Second Button is unchecked");
-        m_protocol.use_left_arm_touch.store(false);
-        m_protocol.monitor_passive_arm.store(false);
-        m_protocol.which_passive_arm = 0;
+		oButton = (CButton*)GetDlgItem(IDC_LEFT_MAIN);
+		if (!oButton->GetCheck())
+		{
+			m_protocol.use_left_arm_touch.store(false);
+		}
+		oButton = (CButton*)GetDlgItem(IDC_RIGHT_SECOND);
+		if (!oButton->GetCheck())
+		{
+			m_protocol.monitor_passive_arm.store(false);
+			m_protocol.which_passive_arm = 0;
+		}
     }
 }
 
@@ -843,9 +857,10 @@ void CProtocolAppDlg::OnBnClickedRightMain()
 {
 	//logInfo("Clicked the right main button");
     CButton* tmpButton = (CButton *)GetDlgItem(IDC_RIGHT_MAIN);
+	CButton* oButton;
     if(tmpButton->GetCheck())
     {
-        CButton* oButton = (CButton *)GetDlgItem(IDC_RIGHT_SECOND);
+        oButton = (CButton *)GetDlgItem(IDC_RIGHT_SECOND);
         oButton->SetCheck(false);
         OnBnClickedRightSecond();
 
@@ -867,7 +882,11 @@ void CProtocolAppDlg::OnBnClickedRightMain()
     else
     {
 		//logInfo("Right Main Button is unchecked");
-        m_protocol.use_right_arm_touch.store(false);
+		oButton = (CButton*)GetDlgItem(IDC_RIGHT_SECOND);
+		if (!oButton->GetCheck())
+		{
+			m_protocol.use_right_arm_touch.store(false);
+		}
     }
 }
 
