@@ -350,6 +350,7 @@ void CProtocolAppDlg::OnStartProtocolBtnClicked()
         }
 
 		// in case any parameters were changed
+		logInfo("Should be doing the right shit");
 		UpdateData(FromControlsToVariables);
 		protocolThread = new thread(&Protocol::run, &m_protocol);
 
@@ -364,6 +365,7 @@ void CProtocolAppDlg::OnStartProtocolBtnClicked()
 void CProtocolAppDlg::OnStopProtocolBtnClicked()
 {
 	// don't want too many clicks
+	logInfo("HAS THE STOP BUTTON BEEN CLICKED??");
 	GetDlgItem(IDC_STOP_PROTOCOL_BTN)->EnableWindow(false);
 
 	// this will wait until protocol handles the trial end and finishes the run thread
@@ -483,6 +485,7 @@ void CProtocolAppDlg::OnDisconnectTouchSensorBtnClicked()
 void CProtocolAppDlg::stopProtocolThread()
 {
 	if (protocolThread) {
+		logInfo("Protocol thread has done some FUCKY SHIT");
 		m_protocol.stopProtocol.store(true);
 		stopTrial();
 		// joining the thread leads to race for the interface access which is locked in this thread.
@@ -704,6 +707,7 @@ void CProtocolAppDlg::OnBnClickedStopMotorsBtn()
 
 void CProtocolAppDlg::OnBnClickedNeutralPositionBtn()
 {
+	logInfo("NeutralArm pressed");
 	GetDlgItem(IDC_NEUTRAL_POSITION_BTN)->EnableWindow(false);
 
 	if (motorActionInProgress) {
@@ -872,9 +876,10 @@ void CProtocolAppDlg::OnBnClickedRightSecond()
 {
 	//logInfo("Clicked on the right second button");
     CButton* tmpButton = (CButton *)GetDlgItem(IDC_RIGHT_SECOND);
+	CButton* oButton;
     if(tmpButton->GetCheck())
     {
-        CButton* oButton = (CButton *)GetDlgItem(IDC_RIGHT_MAIN);
+        oButton = (CButton *)GetDlgItem(IDC_RIGHT_MAIN);
         oButton->SetCheck(false);
         OnBnClickedRightMain();
 
@@ -898,9 +903,18 @@ void CProtocolAppDlg::OnBnClickedRightSecond()
     else
     {
 		//logInfo("Right second Button is unchecked");
-        m_protocol.use_right_arm_touch.store(false);
-        m_protocol.monitor_passive_arm.store(false);
-        m_protocol.which_passive_arm = 0;
+		oButton = (CButton*)GetDlgItem(IDC_RIGHT_MAIN);
+		if (!oButton->GetCheck())
+		{
+			m_protocol.use_right_arm_touch.store(false);
+		}
+
+		oButton = (CButton*)GetDlgItem(IDC_LEFT_SECOND);
+		if (!oButton->GetCheck())
+		{
+			m_protocol.monitor_passive_arm.store(false);
+			m_protocol.which_passive_arm = 0;
+		}
     }
 }
 

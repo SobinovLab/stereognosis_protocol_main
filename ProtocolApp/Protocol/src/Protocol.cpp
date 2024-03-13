@@ -347,6 +347,7 @@ void Protocol::playStartTaskTone()
 
 void Protocol::run()
 {
+	logInfo("Starting protocol");
 	this->stopProtocol.store(false);
 	setCurrentState(ProtocolState::initializing); // display the state of the trial on the GUI
 	int rets = 0;
@@ -406,6 +407,7 @@ void Protocol::run()
 	auto trialStartTime = Times::getCurrentTime();  // set when the object is in position
 
 	// Run the protocol loop
+	logInfo("About to go into the main loop");
 	while (!this->stopProtocol.load())
 	{
 		// ---------------- Preparing trial
@@ -458,10 +460,13 @@ void Protocol::run()
 		//	stopProtocol = true;
 		//}
 		// instead, now this:
+		logInfo("Resting bullshit");
 		prepare_to_monitor_arm_at_rest();
 		arm_at_rest = false;
 
 		// waiting for the start of the next trial
+		logInfo("Waiting for trial to start");
+		char msg[256];
 		while (!this->startTrial.load() && !this->stopProtocol.load()) {
 			// waiting for:
 			//	Start trial button to be pressed
@@ -473,14 +478,15 @@ void Protocol::run()
 
 			// ony wait for
 			//  if looping is selected, timeout of intertrial time
+			//sprintf(msg, "Loop automatically: %i, Times: %i, arm_at_rest: %i", loopAutomatically.load(), Times::isTimeout(intertrialWaitStartTime, params.intertrialWaitTime), arm_at_rest);
+			//logInfo(msg);
 			if (loopAutomatically.load() && Times::isTimeout(intertrialWaitStartTime, params.intertrialWaitTime) && arm_at_rest)
 				break;
 		}
-
+		logInfo("Got through that wait");
 		// The usual place to exit the protocol, if not at the end of a trial
-		if (stopProtocol)
+		if (stopProtocol.load())
 			break;
-
 		// Default behavior is looping - after the first trial
 		autoLoopToggle(true);
 
@@ -490,14 +496,13 @@ void Protocol::run()
 		// just in case any parameters changed, pull from GUI
 		// might update the first target
 		pull_variables_from_gui();
-
+		
 		// if the trial changed, load it instead
 		if (usingLoadedSession && preset_trial_number != params.trial_number && params.trial_number < params.total_trials) {
 			matchLoadedSessionTrialToParams(session_line1, session_line2, session_values[params.trial_number]);
 			// update the gui if trial was changed
 			push_variables_to_gui();
 		}
-
 		// ---------------- Running trial
 		string buf = "Upcoming position " + to_string(params.pos_translation_x) + " " +
 			to_string(params.pos_tilt) + " " + to_string(params.pos_aperture);
@@ -718,7 +723,7 @@ void Protocol::run()
 		rets = wait_for_cameras_finish_saving();
 		if (rets < 0) {
 			AfxMessageBox("Cameras are taking too long to save the data. Stopping the protocol.");
-			stopTrial = true;
+			stopTrial.store(true);
 			stopProtocol = true;
 		}
 
@@ -1211,14 +1216,26 @@ void Protocol::watch_early_grab()
 bool Protocol::is_arm_at_rest()
 {
 	// sensors not found, or ignore them both - skip this whole function
-	if (!isLightSensorsOn() || !(use_front_light_sensor.load() || use_rear_light_sensor.load() )) {
+	if (!isLightSensorsOn() || !(use_front_light_sensor.load() || use_rear_light_sensor.load() || use_right_arm_touch.load() || use_left_arm_touch.load() )) {
 		return true;
 	}
-
-	if ((use_front_light_sensor.load() && !IS_FRONT_PHOTORESISTOR_COVERED) ||
-		(use_rear_light_sensor.load() && !IS_REAR_PHOTORESISTOR_COVERED) ||
-        (use_right_arm_touch.load() && !IS_RIGHT_ARMSENSOR_TOUCHED) || 
-        (use_left_arm_touch.load() && !IS_LEFT_ARMSENSOR_TOUCHED ))
+	/*
+	char tmp[256];
+	sprintf(tmp, "status of sensors:\n\
+		use left_light: %i ;; is_covered: %i\n\
+		use right_ight : % i;; is_covered: %i\n\
+		use left_touch: %i ;; is_covered: %i\n\
+		use right_touch : % i;; is_covered: %i\n",
+		use_front_light_sensor.load(), IS_FRONT_PHOTORESISTOR_COVERED.load(),
+		use_rear_light_sensor.load(), IS_REAR_PHOTORESISTOR_COVERED.load(),
+		use_right_arm_touch.load(), IS_RIGHT_ARMSENSOR_TOUCHED.load(),
+		use_left_arm_touch.load(), IS_LEFT_ARMSENSOR_TOUCHED.load());
+	logInfo(tmp);
+	*/
+	if ((use_front_light_sensor.load() && !IS_FRONT_PHOTORESISTOR_COVERED.load()) ||
+		(use_rear_light_sensor.load() && !IS_REAR_PHOTORESISTOR_COVERED.load()) ||
+        (use_right_arm_touch.load() && !IS_RIGHT_ARMSENSOR_TOUCHED.load()) ||
+        (use_left_arm_touch.load() && !IS_LEFT_ARMSENSOR_TOUCHED.load()))
         {
 		    // uncovered
 		    if (_arm_at_rest_start_time) {
