@@ -628,6 +628,7 @@ class StartRecordingRequest PROTOBUF_FINAL :
 
   enum : int {
     kTrialNumFieldNumber = 1,
+    kTrialSubNumFieldNumber = 2,
   };
   // int32 trialNum = 1;
   void clear_trialnum();
@@ -638,6 +639,15 @@ class StartRecordingRequest PROTOBUF_FINAL :
   void _internal_set_trialnum(::PROTOBUF_NAMESPACE_ID::int32 value);
   public:
 
+  // int32 trialSubNum = 2;
+  void clear_trialsubnum();
+  ::PROTOBUF_NAMESPACE_ID::int32 trialsubnum() const;
+  void set_trialsubnum(::PROTOBUF_NAMESPACE_ID::int32 value);
+  private:
+  ::PROTOBUF_NAMESPACE_ID::int32 _internal_trialsubnum() const;
+  void _internal_set_trialsubnum(::PROTOBUF_NAMESPACE_ID::int32 value);
+  public:
+
   // @@protoc_insertion_point(class_scope:TekscanServerNamespace.StartRecordingRequest)
  private:
   class _Internal;
@@ -646,6 +656,7 @@ class StartRecordingRequest PROTOBUF_FINAL :
   typedef void InternalArenaConstructable_;
   typedef void DestructorSkippable_;
   ::PROTOBUF_NAMESPACE_ID::int32 trialnum_;
+  ::PROTOBUF_NAMESPACE_ID::int32 trialsubnum_;
   mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
   friend struct ::TableStruct_tekscan_5fserver_2eproto;
 };
@@ -1228,6 +1239,26 @@ inline void StartRecordingRequest::_internal_set_trialnum(::PROTOBUF_NAMESPACE_I
 inline void StartRecordingRequest::set_trialnum(::PROTOBUF_NAMESPACE_ID::int32 value) {
   _internal_set_trialnum(value);
   // @@protoc_insertion_point(field_set:TekscanServerNamespace.StartRecordingRequest.trialNum)
+}
+
+// int32 trialSubNum = 2;
+inline void StartRecordingRequest::clear_trialsubnum() {
+  trialsubnum_ = 0;
+}
+inline ::PROTOBUF_NAMESPACE_ID::int32 StartRecordingRequest::_internal_trialsubnum() const {
+  return trialsubnum_;
+}
+inline ::PROTOBUF_NAMESPACE_ID::int32 StartRecordingRequest::trialsubnum() const {
+  // @@protoc_insertion_point(field_get:TekscanServerNamespace.StartRecordingRequest.trialSubNum)
+  return _internal_trialsubnum();
+}
+inline void StartRecordingRequest::_internal_set_trialsubnum(::PROTOBUF_NAMESPACE_ID::int32 value) {
+  
+  trialsubnum_ = value;
+}
+inline void StartRecordingRequest::set_trialsubnum(::PROTOBUF_NAMESPACE_ID::int32 value) {
+  _internal_set_trialsubnum(value);
+  // @@protoc_insertion_point(field_set:TekscanServerNamespace.StartRecordingRequest.trialSubNum)
 }
 
 // -------------------------------------------------------------------

@@ -212,6 +212,7 @@ const ::PROTOBUF_NAMESPACE_ID::uint32 TableStruct_cameras_5fmessages_2eproto::of
   ~0u,  // no _oneof_case_
   ~0u,  // no _weak_field_map_
   PROTOBUF_FIELD_OFFSET(::StartRecordingRequest, trialnumber_),
+  PROTOBUF_FIELD_OFFSET(::StartRecordingRequest, trialsubnumber_),
   ~0u,  // no _has_bits_
   PROTOBUF_FIELD_OFFSET(::SetTimestampRequest, _internal_metadata_),
   ~0u,  // no _extensions_
@@ -278,16 +279,16 @@ const ::PROTOBUF_NAMESPACE_ID::uint32 TableStruct_cameras_5fmessages_2eproto::of
 };
 static const ::PROTOBUF_NAMESPACE_ID::internal::MigrationSchema schemas[] PROTOBUF_SECTION_VARIABLE(protodesc_cold) = {
   { 0, -1, sizeof(::StartRecordingRequest)},
-  { 6, -1, sizeof(::SetTimestampRequest)},
-  { 12, -1, sizeof(::SimpleRequest)},
-  { 18, -1, sizeof(::SimpleResponse)},
-  { 25, -1, sizeof(::SetFramerateRequest)},
-  { 32, -1, sizeof(::SetRecordingPeriodRequest)},
-  { 38, -1, sizeof(::SetReferenceCameraRequest)},
-  { 44, -1, sizeof(::SetDirectoryRequest)},
-  { 50, -1, sizeof(::SetGainRequest)},
-  { 57, -1, sizeof(::SetExposureRequest)},
-  { 64, -1, sizeof(::Empty)},
+  { 7, -1, sizeof(::SetTimestampRequest)},
+  { 13, -1, sizeof(::SimpleRequest)},
+  { 19, -1, sizeof(::SimpleResponse)},
+  { 26, -1, sizeof(::SetFramerateRequest)},
+  { 33, -1, sizeof(::SetRecordingPeriodRequest)},
+  { 39, -1, sizeof(::SetReferenceCameraRequest)},
+  { 45, -1, sizeof(::SetDirectoryRequest)},
+  { 51, -1, sizeof(::SetGainRequest)},
+  { 58, -1, sizeof(::SetExposureRequest)},
+  { 65, -1, sizeof(::Empty)},
 };
 
 static ::PROTOBUF_NAMESPACE_ID::Message const * const file_default_instances[] = {
@@ -305,39 +306,40 @@ static ::PROTOBUF_NAMESPACE_ID::Message const * const file_default_instances[] =
 };
 
 const char descriptor_table_protodef_cameras_5fmessages_2eproto[] PROTOBUF_SECTION_VARIABLE(protodesc_cold) =
-  "\n\026cameras_messages.proto\",\n\025StartRecordi"
-  "ngRequest\022\023\n\013trialNumber\030\001 \001(\005\"(\n\023SetTim"
-  "estampRequest\022\021\n\ttimestamp\030\001 \001(\005\"\035\n\rSimp"
-  "leRequest\022\014\n\004code\030\001 \001(\005\"3\n\016SimpleRespons"
-  "e\022\014\n\004code\030\001 \001(\005\022\023\n\013description\030\002 \001(\t\"6\n\023"
-  "SetFramerateRequest\022\014\n\004desc\030\001 \001(\t\022\021\n\tfra"
-  "merate\030\002 \001(\001\")\n\031SetRecordingPeriodReques"
-  "t\022\014\n\004time\030\001 \001(\001\"+\n\031SetReferenceCameraReq"
-  "uest\022\016\n\006serial\030\001 \001(\005\"(\n\023SetDirectoryRequ"
-  "est\022\021\n\tdirectory\030\001 \001(\t\"1\n\016SetGainRequest"
-  "\022\014\n\004gain\030\001 \001(\001\022\021\n\tgain_type\030\002 \001(\005\"=\n\022Set"
-  "ExposureRequest\022\020\n\010exposure\030\001 \001(\001\022\025\n\rexp"
-  "osure_type\030\002 \001(\005\"\007\n\005Empty2\235\006\n\023CameraComm"
-  "unicatorS\0227\n\014SetTimestamp\022\024.SetTimestamp"
-  "Request\032\017.SimpleResponse\"\000\0227\n\014SetFramera"
-  "te\022\024.SetFramerateRequest\032\017.SimpleRespons"
-  "e\"\000\022C\n\022SetRecordingPeriod\022\032.SetRecording"
-  "PeriodRequest\032\017.SimpleResponse\"\000\022C\n\022SetR"
-  "eferenceCamera\022\032.SetReferenceCameraReque"
-  "st\032\017.SimpleResponse\"\000\0225\n\020PrepareRecordin"
-  "g\022\016.SimpleRequest\032\017.SimpleResponse\"\000\022;\n\016"
-  "StartRecording\022\026.StartRecordingRequest\032\017"
-  ".SimpleResponse\"\000\0227\n\022CaptureSingleImage\022"
-  "\016.SimpleRequest\032\017.SimpleResponse\"\000\0227\n\014Se"
-  "tDirectory\022\024.SetDirectoryRequest\032\017.Simpl"
-  "eResponse\"\000\022-\n\007SetGain\022\017.SetGainRequest\032"
-  "\017.SimpleResponse\"\000\0225\n\013SetExposure\022\023.SetE"
-  "xposureRequest\032\017.SimpleResponse\"\000\0223\n\016Bre"
-  "akRecording\022\016.SimpleRequest\032\017.SimpleResp"
-  "onse\"\000\0225\n\020AreYouDoneSaving\022\016.SimpleReque"
-  "st\032\017.SimpleResponse\"\000\022)\n\025SyncMessageTria"
-  "lStart\022\006.Empty\032\006.Empty\"\000\022\'\n\023SyncMessageT"
-  "rialEnd\022\006.Empty\032\006.Empty\"\000b\006proto3"
+  "\n\026cameras_messages.proto\"D\n\025StartRecordi"
+  "ngRequest\022\023\n\013trialNumber\030\001 \001(\005\022\026\n\016trialS"
+  "ubNumber\030\002 \001(\005\"(\n\023SetTimestampRequest\022\021\n"
+  "\ttimestamp\030\001 \001(\005\"\035\n\rSimpleRequest\022\014\n\004cod"
+  "e\030\001 \001(\005\"3\n\016SimpleResponse\022\014\n\004code\030\001 \001(\005\022"
+  "\023\n\013description\030\002 \001(\t\"6\n\023SetFramerateRequ"
+  "est\022\014\n\004desc\030\001 \001(\t\022\021\n\tframerate\030\002 \001(\001\")\n\031"
+  "SetRecordingPeriodRequest\022\014\n\004time\030\001 \001(\001\""
+  "+\n\031SetReferenceCameraRequest\022\016\n\006serial\030\001"
+  " \001(\005\"(\n\023SetDirectoryRequest\022\021\n\tdirectory"
+  "\030\001 \001(\t\"1\n\016SetGainRequest\022\014\n\004gain\030\001 \001(\001\022\021"
+  "\n\tgain_type\030\002 \001(\005\"=\n\022SetExposureRequest\022"
+  "\020\n\010exposure\030\001 \001(\001\022\025\n\rexposure_type\030\002 \001(\005"
+  "\"\007\n\005Empty2\235\006\n\023CameraCommunicatorS\0227\n\014Set"
+  "Timestamp\022\024.SetTimestampRequest\032\017.Simple"
+  "Response\"\000\0227\n\014SetFramerate\022\024.SetFramerat"
+  "eRequest\032\017.SimpleResponse\"\000\022C\n\022SetRecord"
+  "ingPeriod\022\032.SetRecordingPeriodRequest\032\017."
+  "SimpleResponse\"\000\022C\n\022SetReferenceCamera\022\032"
+  ".SetReferenceCameraRequest\032\017.SimpleRespo"
+  "nse\"\000\0225\n\020PrepareRecording\022\016.SimpleReques"
+  "t\032\017.SimpleResponse\"\000\022;\n\016StartRecording\022\026"
+  ".StartRecordingRequest\032\017.SimpleResponse\""
+  "\000\0227\n\022CaptureSingleImage\022\016.SimpleRequest\032"
+  "\017.SimpleResponse\"\000\0227\n\014SetDirectory\022\024.Set"
+  "DirectoryRequest\032\017.SimpleResponse\"\000\022-\n\007S"
+  "etGain\022\017.SetGainRequest\032\017.SimpleResponse"
+  "\"\000\0225\n\013SetExposure\022\023.SetExposureRequest\032\017"
+  ".SimpleResponse\"\000\0223\n\016BreakRecording\022\016.Si"
+  "mpleRequest\032\017.SimpleResponse\"\000\0225\n\020AreYou"
+  "DoneSaving\022\016.SimpleRequest\032\017.SimpleRespo"
+  "nse\"\000\022)\n\025SyncMessageTrialStart\022\006.Empty\032\006"
+  ".Empty\"\000\022\'\n\023SyncMessageTrialEnd\022\006.Empty\032"
+  "\006.Empty\"\000b\006proto3"
   ;
 static const ::PROTOBUF_NAMESPACE_ID::internal::DescriptorTable*const descriptor_table_cameras_5fmessages_2eproto_deps[1] = {
 };
@@ -356,7 +358,7 @@ static ::PROTOBUF_NAMESPACE_ID::internal::SCCInfoBase*const descriptor_table_cam
 };
 static ::PROTOBUF_NAMESPACE_ID::internal::once_flag descriptor_table_cameras_5fmessages_2eproto_once;
 const ::PROTOBUF_NAMESPACE_ID::internal::DescriptorTable descriptor_table_cameras_5fmessages_2eproto = {
-  false, false, descriptor_table_protodef_cameras_5fmessages_2eproto, "cameras_messages.proto", 1313,
+  false, false, descriptor_table_protodef_cameras_5fmessages_2eproto, "cameras_messages.proto", 1337,
   &descriptor_table_cameras_5fmessages_2eproto_once, descriptor_table_cameras_5fmessages_2eproto_sccs, descriptor_table_cameras_5fmessages_2eproto_deps, 11, 0,
   schemas, file_default_instances, TableStruct_cameras_5fmessages_2eproto::offsets,
   file_level_metadata_cameras_5fmessages_2eproto, 11, file_level_enum_descriptors_cameras_5fmessages_2eproto, file_level_service_descriptors_cameras_5fmessages_2eproto,
@@ -380,12 +382,17 @@ StartRecordingRequest::StartRecordingRequest(::PROTOBUF_NAMESPACE_ID::Arena* are
 StartRecordingRequest::StartRecordingRequest(const StartRecordingRequest& from)
   : ::PROTOBUF_NAMESPACE_ID::Message() {
   _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
-  trialnumber_ = from.trialnumber_;
+  ::memcpy(&trialnumber_, &from.trialnumber_,
+    static_cast<size_t>(reinterpret_cast<char*>(&trialsubnumber_) -
+    reinterpret_cast<char*>(&trialnumber_)) + sizeof(trialsubnumber_));
   // @@protoc_insertion_point(copy_constructor:StartRecordingRequest)
 }
 
 void StartRecordingRequest::SharedCtor() {
-  trialnumber_ = 0;
+  ::memset(reinterpret_cast<char*>(this) + static_cast<size_t>(
+      reinterpret_cast<char*>(&trialnumber_) - reinterpret_cast<char*>(this)),
+      0, static_cast<size_t>(reinterpret_cast<char*>(&trialsubnumber_) -
+      reinterpret_cast<char*>(&trialnumber_)) + sizeof(trialsubnumber_));
 }
 
 StartRecordingRequest::~StartRecordingRequest() {
@@ -419,7 +426,9 @@ void StartRecordingRequest::Clear() {
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
 
-  trialnumber_ = 0;
+  ::memset(&trialnumber_, 0, static_cast<size_t>(
+      reinterpret_cast<char*>(&trialsubnumber_) -
+      reinterpret_cast<char*>(&trialnumber_)) + sizeof(trialsubnumber_));
   _internal_metadata_.Clear<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>();
 }
 
@@ -434,6 +443,13 @@ const char* StartRecordingRequest::_InternalParse(const char* ptr, ::PROTOBUF_NA
       case 1:
         if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 8)) {
           trialnumber_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
+          CHK_(ptr);
+        } else goto handle_unusual;
+        continue;
+      // int32 trialSubNumber = 2;
+      case 2:
+        if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 16)) {
+          trialsubnumber_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
           CHK_(ptr);
         } else goto handle_unusual;
         continue;
@@ -471,6 +487,12 @@ failure:
     target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteInt32ToArray(1, this->_internal_trialnumber(), target);
   }
 
+  // int32 trialSubNumber = 2;
+  if (this->trialsubnumber() != 0) {
+    target = stream->EnsureSpace(target);
+    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteInt32ToArray(2, this->_internal_trialsubnumber(), target);
+  }
+
   if (PROTOBUF_PREDICT_FALSE(_internal_metadata_.have_unknown_fields())) {
     target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormat::InternalSerializeUnknownFieldsToArray(
         _internal_metadata_.unknown_fields<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(::PROTOBUF_NAMESPACE_ID::UnknownFieldSet::default_instance), target, stream);
@@ -492,6 +514,13 @@ size_t StartRecordingRequest::ByteSizeLong() const {
     total_size += 1 +
       ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::Int32Size(
         this->_internal_trialnumber());
+  }
+
+  // int32 trialSubNumber = 2;
+  if (this->trialsubnumber() != 0) {
+    total_size += 1 +
+      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::Int32Size(
+        this->_internal_trialsubnumber());
   }
 
   if (PROTOBUF_PREDICT_FALSE(_internal_metadata_.have_unknown_fields())) {
@@ -528,6 +557,9 @@ void StartRecordingRequest::MergeFrom(const StartRecordingRequest& from) {
   if (from.trialnumber() != 0) {
     _internal_set_trialnumber(from._internal_trialnumber());
   }
+  if (from.trialsubnumber() != 0) {
+    _internal_set_trialsubnumber(from._internal_trialsubnumber());
+  }
 }
 
 void StartRecordingRequest::CopyFrom(const ::PROTOBUF_NAMESPACE_ID::Message& from) {
@@ -551,7 +583,12 @@ bool StartRecordingRequest::IsInitialized() const {
 void StartRecordingRequest::InternalSwap(StartRecordingRequest* other) {
   using std::swap;
   _internal_metadata_.Swap<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(&other->_internal_metadata_);
-  swap(trialnumber_, other->trialnumber_);
+  ::PROTOBUF_NAMESPACE_ID::internal::memswap<
+      PROTOBUF_FIELD_OFFSET(StartRecordingRequest, trialsubnumber_)
+      + sizeof(StartRecordingRequest::trialsubnumber_)
+      - PROTOBUF_FIELD_OFFSET(StartRecordingRequest, trialnumber_)>(
+          reinterpret_cast<char*>(&trialnumber_),
+          reinterpret_cast<char*>(&other->trialnumber_));
 }
 
 ::PROTOBUF_NAMESPACE_ID::Metadata StartRecordingRequest::GetMetadata() const {

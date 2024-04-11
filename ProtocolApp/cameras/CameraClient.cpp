@@ -137,11 +137,11 @@ void CameraClient::prepareRecording()
 }
 
 
-bool CameraClient::startRecording(int trialNumber, int* success)
+bool CameraClient::startRecording(int trialNumber, int trialSubNumber, int* success)
 {
 	appendClientLog(_T("Starting recording"));
 	if (ccsc) {
-		if (ccsc->startRecording(trialNumber, success)) {
+		if (ccsc->startRecording(trialNumber, trialSubNumber, success)) {
 			appendClientLog(_T("Success.\n"));
 			return true;
 		}
@@ -410,12 +410,13 @@ bool CameraCommunicatorSClient::prepareRecording()
 }
 
 
-bool CameraCommunicatorSClient::startRecording(int trialNumber, int* success)
+bool CameraCommunicatorSClient::startRecording(int trialNumber, int trialSubNumber, int* success)
 {
 
 	StartRecordingRequest srrq;
 	// Set fields
 	srrq.set_trialnumber(trialNumber);
+	srrq.set_trialsubnumber(trialSubNumber);
 
 	SimpleResponse sr;
 	ClientContext context;

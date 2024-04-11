@@ -215,6 +215,7 @@ class StartRecordingRequest PROTOBUF_FINAL :
 
   enum : int {
     kTrialNumberFieldNumber = 1,
+    kTrialSubNumberFieldNumber = 2,
   };
   // int32 trialNumber = 1;
   void clear_trialnumber();
@@ -225,6 +226,15 @@ class StartRecordingRequest PROTOBUF_FINAL :
   void _internal_set_trialnumber(::PROTOBUF_NAMESPACE_ID::int32 value);
   public:
 
+  // int32 trialSubNumber = 2;
+  void clear_trialsubnumber();
+  ::PROTOBUF_NAMESPACE_ID::int32 trialsubnumber() const;
+  void set_trialsubnumber(::PROTOBUF_NAMESPACE_ID::int32 value);
+  private:
+  ::PROTOBUF_NAMESPACE_ID::int32 _internal_trialsubnumber() const;
+  void _internal_set_trialsubnumber(::PROTOBUF_NAMESPACE_ID::int32 value);
+  public:
+
   // @@protoc_insertion_point(class_scope:StartRecordingRequest)
  private:
   class _Internal;
@@ -233,6 +243,7 @@ class StartRecordingRequest PROTOBUF_FINAL :
   typedef void InternalArenaConstructable_;
   typedef void DestructorSkippable_;
   ::PROTOBUF_NAMESPACE_ID::int32 trialnumber_;
+  ::PROTOBUF_NAMESPACE_ID::int32 trialsubnumber_;
   mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
   friend struct ::TableStruct_cameras_5fmessages_2eproto;
 };
@@ -1677,6 +1688,26 @@ inline void StartRecordingRequest::_internal_set_trialnumber(::PROTOBUF_NAMESPAC
 inline void StartRecordingRequest::set_trialnumber(::PROTOBUF_NAMESPACE_ID::int32 value) {
   _internal_set_trialnumber(value);
   // @@protoc_insertion_point(field_set:StartRecordingRequest.trialNumber)
+}
+
+// int32 trialSubNumber = 2;
+inline void StartRecordingRequest::clear_trialsubnumber() {
+  trialsubnumber_ = 0;
+}
+inline ::PROTOBUF_NAMESPACE_ID::int32 StartRecordingRequest::_internal_trialsubnumber() const {
+  return trialsubnumber_;
+}
+inline ::PROTOBUF_NAMESPACE_ID::int32 StartRecordingRequest::trialsubnumber() const {
+  // @@protoc_insertion_point(field_get:StartRecordingRequest.trialSubNumber)
+  return _internal_trialsubnumber();
+}
+inline void StartRecordingRequest::_internal_set_trialsubnumber(::PROTOBUF_NAMESPACE_ID::int32 value) {
+  
+  trialsubnumber_ = value;
+}
+inline void StartRecordingRequest::set_trialsubnumber(::PROTOBUF_NAMESPACE_ID::int32 value) {
+  _internal_set_trialsubnumber(value);
+  // @@protoc_insertion_point(field_set:StartRecordingRequest.trialSubNumber)
 }
 
 // -------------------------------------------------------------------

@@ -159,10 +159,10 @@ void Protocol::prepare_camera_recording()
 
 int Protocol::start_camera_recording()
 {
-	return start_camera_recording(params.trial_number);
+	return start_camera_recording(params.trial_number, params.trial_sub_number);
 }
 
-int Protocol::start_camera_recording(long trial_number)
+int Protocol::start_camera_recording(long trial_number, long trial_sub_number)
 {
 	// NB config is sent separately in the main loop
 
@@ -171,11 +171,11 @@ int Protocol::start_camera_recording(long trial_number)
 	string buf;
 
 	if (m_cameraClient1.isConnected()) {
-		if (!m_cameraClient1.startRecording(trial_number, &success))
+		if (!m_cameraClient1.startRecording(trial_number, trial_sub_number, &success))
 			answ = 1;  // to not mistake with the errors from success
 	}
 	if (m_cameraClient2.isConnected()) {
-		if (!m_cameraClient2.startRecording(trial_number, &success))
+		if (!m_cameraClient2.startRecording(trial_number, trial_sub_number, &success))
 			answ = 1;  // to not mistake with the errors from success
 	}
 	if (answ) {
@@ -288,13 +288,13 @@ void Protocol::pull_variables_from_gui()
 
 void Protocol::start_pressure_sensor_recording()
 {
-	start_pressure_sensor_recording(params.trial_number);
+	start_pressure_sensor_recording(params.trial_number, params.trial_sub_number);
 }
 
-void Protocol::start_pressure_sensor_recording(long trial_number)
+void Protocol::start_pressure_sensor_recording(long trial_number, long trial_sub_number)
 {
 	if (m_touchSensorClient.isConnected()) {
-		m_touchSensorClient.startRecording(trial_number);
+		m_touchSensorClient.startRecording(trial_number, trial_sub_number);
 	}
 }
 
@@ -358,7 +358,6 @@ void Protocol::playStartTaskTone()
 	else
 		Sounds::playStartTaskTone();
 }
-
 
 // This is what is run on Start Protocol Button
 void Protocol::run()
@@ -425,6 +424,8 @@ void Protocol::run()
 
 	// class member variable
 	params.trial_number = 0;
+	std::unordered_map<int, int> trialMap; // Map of trial numbers to repetition counts
+
 	int preset_trial_number;
 	auto intertrialWaitStartTime = Times::getCurrentTime();  // set at the end of the previous iteration
 	auto trialStartTime = Times::getCurrentTime();  // set when the object is in position
@@ -599,9 +600,11 @@ void Protocol::run()
 		thread watchThread(&Protocol::watch_early_grab, this);
 
 		// start recordings
-		start_camera_recording(params.trial_number);  // TODO process it?
+		// Calc trial sub number
+		params.trial_sub_number = trialMap[params.trial_number];
+		start_camera_recording(params.trial_number, params.trial_sub_number);  // TODO process it?
 		log_started_camera_recording = Times::getCurrentTimeInMilliSecs();
-		start_pressure_sensor_recording(params.trial_number);
+		start_pressure_sensor_recording(params.trial_number, params.trial_sub_number);
 		log_started_ps_recording = Times::getCurrentTimeInMilliSecs();
 
 		// approach
@@ -713,7 +716,10 @@ void Protocol::run()
 
 		// log the trial success, target positions and times
 		trial_finished_time = Times::getCurrentTimeInMilliSecs();
-		addLineToCsvLog(m_earnedReward || deservesReward, repeating_trial[params.trial_number],
+
+		addLineToCsvLog(
+			m_earnedReward || deservesReward,
+			repeating_trial[params.trial_number],
 			trial_start_time, log_sent_config_to_cameras, object_in_position_time,
             arm_liftoff_time,
             log_started_camera_recording, log_started_ps_recording,
@@ -733,7 +739,8 @@ void Protocol::run()
 			stopProtocol = true;
 		}
 
-		params.trial_number++;
+		trialMap[params.trial_number]++; // Increment trial sub number
+		params.trial_number++;           // Increment trial number
 	}
 	setCurrentState(ProtocolState::shuttingDown);
 
@@ -748,6 +755,7 @@ void Protocol::run()
 
 	setCurrentState(ProtocolState::shutdown);
 }
+
 
 void Protocol::set_photoresistor_monitors(CStaticColor* front, CStaticColor* rear)
 {
@@ -897,6 +905,7 @@ void Protocol::openCsvLog()
 	// write the first line - header with all exported columns
 	trialLogCsv << "trial_num,";
 	trialLogCsv << "repeating_trial,";
+	trialLogCsv << "trial_sub_num,";
 	trialLogCsv << "reward,";
     trialLogCsv << "trial_start_time(ms),";
 	trialLogCsv << "log_sent_config_to_cameras(ms),";
@@ -936,8 +945,12 @@ void Protocol::openCsvLog()
 
 }
 
-void Protocol::addLineToCsvLog(const bool got_reward, const bool repeating,
-	const long long trial_start_time, const long long log_sent_config_to_cameras, const long long object_in_position_time,
+void Protocol::addLineToCsvLog(
+	const bool got_reward,
+	const bool repeating,
+	const long long trial_start_time, 
+	const long long log_sent_config_to_cameras, 
+	const long long object_in_position_time,
 	const long long arm_liftoff_time,
     const long long log_started_camera_recording, const long long log_started_ps_recording,
     const long long log_started_ephys_recording, const long long log_sent_start_sync_messages,
@@ -955,6 +968,7 @@ void Protocol::addLineToCsvLog(const bool got_reward, const bool repeating,
 	// process multi-grasp data
 	trialLogCsv << params.trial_number << ",";                 // "trial_num,";
 	trialLogCsv << (int)repeating << ",";			           // "repeating_trial,";
+	trialLogCsv << params.trial_sub_number << ",";             // "trial sub number";
 	trialLogCsv << (int)got_reward << ",";			           // "reward,";
 	trialLogCsv << trial_start_time << ",";			           // "trial_start_time(ms),";
     trialLogCsv << log_sent_config_to_cameras << ",";          // "log_sent_config_to_cameras(ms),";
