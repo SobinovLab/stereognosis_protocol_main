@@ -3,11 +3,10 @@
 
 using namespace TekscanServerNamespace;
 
-bool TouchSensorSClient::startRecording(int trialNum, int trialSubNum)
+bool TouchSensorSClient::startRecording(int trialNum)
 {
 	StartRecordingRequest srq;
 	srq.set_trialnum(trialNum);
-	srq.set_trialsubnum(trialSubNum);
 	SimpleResponse sr;
 	ClientContext context;
 
@@ -170,11 +169,11 @@ void TouchSensorClient::setTimestamp(int timestamp)
 }
 
 
-void TouchSensorClient::startRecording(int trialNum, int trialSubNum)
+void TouchSensorClient::startRecording(int trialNum)
 {
 	appendClientLog(_T("Starting recording. "));
 	if (tssc) {
-		if (tssc->startRecording(trialNum, trialSubNum)) {
+		if (tssc->startRecording(trialNum)) {
 			appendClientLog(_T("Success.\n"));
 		}
 		else

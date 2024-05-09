@@ -165,7 +165,6 @@ const ::PROTOBUF_NAMESPACE_ID::uint32 TableStruct_tekscan_5fserver_2eproto::offs
   ~0u,  // no _oneof_case_
   ~0u,  // no _weak_field_map_
   PROTOBUF_FIELD_OFFSET(::TekscanServerNamespace::StartRecordingRequest, trialnum_),
-  PROTOBUF_FIELD_OFFSET(::TekscanServerNamespace::StartRecordingRequest, trialsubnum_),
   ~0u,  // no _has_bits_
   PROTOBUF_FIELD_OFFSET(::TekscanServerNamespace::BreakRecordingResponse, _internal_metadata_),
   ~0u,  // no _extensions_
@@ -191,9 +190,9 @@ static const ::PROTOBUF_NAMESPACE_ID::internal::MigrationSchema schemas[] PROTOB
   { 6, -1, sizeof(::TekscanServerNamespace::SimpleRequest)},
   { 12, -1, sizeof(::TekscanServerNamespace::SimpleResponse)},
   { 19, -1, sizeof(::TekscanServerNamespace::StartRecordingRequest)},
-  { 26, -1, sizeof(::TekscanServerNamespace::BreakRecordingResponse)},
-  { 33, -1, sizeof(::TekscanServerNamespace::ForceResponse)},
-  { 40, -1, sizeof(::TekscanServerNamespace::Empty)},
+  { 25, -1, sizeof(::TekscanServerNamespace::BreakRecordingResponse)},
+  { 32, -1, sizeof(::TekscanServerNamespace::ForceResponse)},
+  { 39, -1, sizeof(::TekscanServerNamespace::Empty)},
 };
 
 static ::PROTOBUF_NAMESPACE_ID::Message const * const file_default_instances[] = {
@@ -211,27 +210,27 @@ const char descriptor_table_protodef_tekscan_5fserver_2eproto[] PROTOBUF_SECTION
   "espace\"(\n\023SetTimestampRequest\022\021\n\ttimesta"
   "mp\030\001 \001(\005\"\035\n\rSimpleRequest\022\014\n\004code\030\001 \001(\005\""
   "3\n\016SimpleResponse\022\014\n\004code\030\001 \001(\005\022\023\n\013descr"
-  "iption\030\002 \001(\t\">\n\025StartRecordingRequest\022\020\n"
-  "\010trialNum\030\001 \001(\005\022\023\n\013trialSubNum\030\002 \001(\005\"B\n\026"
-  "BreakRecordingResponse\022\024\n\014successLevel\030\001"
-  " \001(\005\022\022\n\nforceLevel\030\002 \001(\001\"6\n\rForceRespons"
-  "e\022\021\n\tleftForce\030\001 \001(\001\022\022\n\nrightForce\030\002 \001(\001"
-  "\"\007\n\005Empty2\330\004\n\rTekscanServer\022e\n\014SetTimest"
-  "amp\022+.TekscanServerNamespace.SetTimestam"
-  "pRequest\032&.TekscanServerNamespace.Simple"
-  "Response\"\000\022i\n\016StartRecording\022-.TekscanSe"
-  "rverNamespace.StartRecordingRequest\032&.Te"
-  "kscanServerNamespace.SimpleResponse\"\000\022i\n"
-  "\016BreakRecording\022%.TekscanServerNamespace"
-  ".SimpleRequest\032..TekscanServerNamespace."
-  "BreakRecordingResponse\"\000\022Z\n\010GetForce\022%.T"
-  "ekscanServerNamespace.SimpleRequest\032%.Te"
-  "kscanServerNamespace.ForceResponse\"\000\022W\n\025"
-  "SyncMessageTrialStart\022\035.TekscanServerNam"
-  "espace.Empty\032\035.TekscanServerNamespace.Em"
-  "pty\"\000\022U\n\023SyncMessageTrialEnd\022\035.TekscanSe"
-  "rverNamespace.Empty\032\035.TekscanServerNames"
-  "pace.Empty\"\000B\007\252\002\004TPSSb\006proto3"
+  "iption\030\002 \001(\t\")\n\025StartRecordingRequest\022\020\n"
+  "\010trialNum\030\001 \001(\005\"B\n\026BreakRecordingRespons"
+  "e\022\024\n\014successLevel\030\001 \001(\005\022\022\n\nforceLevel\030\002 "
+  "\001(\001\"6\n\rForceResponse\022\021\n\tleftForce\030\001 \001(\001\022"
+  "\022\n\nrightForce\030\002 \001(\001\"\007\n\005Empty2\330\004\n\rTekscan"
+  "Server\022e\n\014SetTimestamp\022+.TekscanServerNa"
+  "mespace.SetTimestampRequest\032&.TekscanSer"
+  "verNamespace.SimpleResponse\"\000\022i\n\016StartRe"
+  "cording\022-.TekscanServerNamespace.StartRe"
+  "cordingRequest\032&.TekscanServerNamespace."
+  "SimpleResponse\"\000\022i\n\016BreakRecording\022%.Tek"
+  "scanServerNamespace.SimpleRequest\032..Teks"
+  "canServerNamespace.BreakRecordingRespons"
+  "e\"\000\022Z\n\010GetForce\022%.TekscanServerNamespace"
+  ".SimpleRequest\032%.TekscanServerNamespace."
+  "ForceResponse\"\000\022W\n\025SyncMessageTrialStart"
+  "\022\035.TekscanServerNamespace.Empty\032\035.Teksca"
+  "nServerNamespace.Empty\"\000\022U\n\023SyncMessageT"
+  "rialEnd\022\035.TekscanServerNamespace.Empty\032\035"
+  ".TekscanServerNamespace.Empty\"\000B\007\252\002\004TPSS"
+  "b\006proto3"
   ;
 static const ::PROTOBUF_NAMESPACE_ID::internal::DescriptorTable*const descriptor_table_tekscan_5fserver_2eproto_deps[1] = {
 };
@@ -246,7 +245,7 @@ static ::PROTOBUF_NAMESPACE_ID::internal::SCCInfoBase*const descriptor_table_tek
 };
 static ::PROTOBUF_NAMESPACE_ID::internal::once_flag descriptor_table_tekscan_5fserver_2eproto_once;
 const ::PROTOBUF_NAMESPACE_ID::internal::DescriptorTable descriptor_table_tekscan_5fserver_2eproto = {
-  false, false, descriptor_table_protodef_tekscan_5fserver_2eproto, "tekscan_server.proto", 989,
+  false, false, descriptor_table_protodef_tekscan_5fserver_2eproto, "tekscan_server.proto", 968,
   &descriptor_table_tekscan_5fserver_2eproto_once, descriptor_table_tekscan_5fserver_2eproto_sccs, descriptor_table_tekscan_5fserver_2eproto_deps, 7, 0,
   schemas, file_default_instances, TableStruct_tekscan_5fserver_2eproto::offsets,
   file_level_metadata_tekscan_5fserver_2eproto, 7, file_level_enum_descriptors_tekscan_5fserver_2eproto, file_level_service_descriptors_tekscan_5fserver_2eproto,
@@ -892,17 +891,12 @@ StartRecordingRequest::StartRecordingRequest(::PROTOBUF_NAMESPACE_ID::Arena* are
 StartRecordingRequest::StartRecordingRequest(const StartRecordingRequest& from)
   : ::PROTOBUF_NAMESPACE_ID::Message() {
   _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
-  ::memcpy(&trialnum_, &from.trialnum_,
-    static_cast<size_t>(reinterpret_cast<char*>(&trialsubnum_) -
-    reinterpret_cast<char*>(&trialnum_)) + sizeof(trialsubnum_));
+  trialnum_ = from.trialnum_;
   // @@protoc_insertion_point(copy_constructor:TekscanServerNamespace.StartRecordingRequest)
 }
 
 void StartRecordingRequest::SharedCtor() {
-  ::memset(reinterpret_cast<char*>(this) + static_cast<size_t>(
-      reinterpret_cast<char*>(&trialnum_) - reinterpret_cast<char*>(this)),
-      0, static_cast<size_t>(reinterpret_cast<char*>(&trialsubnum_) -
-      reinterpret_cast<char*>(&trialnum_)) + sizeof(trialsubnum_));
+  trialnum_ = 0;
 }
 
 StartRecordingRequest::~StartRecordingRequest() {
@@ -936,9 +930,7 @@ void StartRecordingRequest::Clear() {
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
 
-  ::memset(&trialnum_, 0, static_cast<size_t>(
-      reinterpret_cast<char*>(&trialsubnum_) -
-      reinterpret_cast<char*>(&trialnum_)) + sizeof(trialsubnum_));
+  trialnum_ = 0;
   _internal_metadata_.Clear<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>();
 }
 
@@ -953,13 +945,6 @@ const char* StartRecordingRequest::_InternalParse(const char* ptr, ::PROTOBUF_NA
       case 1:
         if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 8)) {
           trialnum_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
-          CHK_(ptr);
-        } else goto handle_unusual;
-        continue;
-      // int32 trialSubNum = 2;
-      case 2:
-        if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 16)) {
-          trialsubnum_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
           CHK_(ptr);
         } else goto handle_unusual;
         continue;
@@ -997,12 +982,6 @@ failure:
     target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteInt32ToArray(1, this->_internal_trialnum(), target);
   }
 
-  // int32 trialSubNum = 2;
-  if (this->trialsubnum() != 0) {
-    target = stream->EnsureSpace(target);
-    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteInt32ToArray(2, this->_internal_trialsubnum(), target);
-  }
-
   if (PROTOBUF_PREDICT_FALSE(_internal_metadata_.have_unknown_fields())) {
     target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormat::InternalSerializeUnknownFieldsToArray(
         _internal_metadata_.unknown_fields<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(::PROTOBUF_NAMESPACE_ID::UnknownFieldSet::default_instance), target, stream);
@@ -1024,13 +1003,6 @@ size_t StartRecordingRequest::ByteSizeLong() const {
     total_size += 1 +
       ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::Int32Size(
         this->_internal_trialnum());
-  }
-
-  // int32 trialSubNum = 2;
-  if (this->trialsubnum() != 0) {
-    total_size += 1 +
-      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::Int32Size(
-        this->_internal_trialsubnum());
   }
 
   if (PROTOBUF_PREDICT_FALSE(_internal_metadata_.have_unknown_fields())) {
@@ -1067,9 +1039,6 @@ void StartRecordingRequest::MergeFrom(const StartRecordingRequest& from) {
   if (from.trialnum() != 0) {
     _internal_set_trialnum(from._internal_trialnum());
   }
-  if (from.trialsubnum() != 0) {
-    _internal_set_trialsubnum(from._internal_trialsubnum());
-  }
 }
 
 void StartRecordingRequest::CopyFrom(const ::PROTOBUF_NAMESPACE_ID::Message& from) {
@@ -1093,12 +1062,7 @@ bool StartRecordingRequest::IsInitialized() const {
 void StartRecordingRequest::InternalSwap(StartRecordingRequest* other) {
   using std::swap;
   _internal_metadata_.Swap<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(&other->_internal_metadata_);
-  ::PROTOBUF_NAMESPACE_ID::internal::memswap<
-      PROTOBUF_FIELD_OFFSET(StartRecordingRequest, trialsubnum_)
-      + sizeof(StartRecordingRequest::trialsubnum_)
-      - PROTOBUF_FIELD_OFFSET(StartRecordingRequest, trialnum_)>(
-          reinterpret_cast<char*>(&trialnum_),
-          reinterpret_cast<char*>(&other->trialnum_));
+  swap(trialnum_, other->trialnum_);
 }
 
 ::PROTOBUF_NAMESPACE_ID::Metadata StartRecordingRequest::GetMetadata() const {

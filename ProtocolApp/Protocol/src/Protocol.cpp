@@ -159,23 +159,22 @@ void Protocol::prepare_camera_recording()
 
 int Protocol::start_camera_recording()
 {
-	return start_camera_recording(params.trial_number, params.trial_sub_number);
+	return start_camera_recording(params.trial_number);
 }
 
-int Protocol::start_camera_recording(long trial_number, long trial_sub_number)
+int Protocol::start_camera_recording(long trial_number)
 {
 	// NB config is sent separately in the main loop
-
 	int success = 0;
 	int answ = 0;  // cameras not connected is not an error
 	string buf;
 
 	if (m_cameraClient1.isConnected()) {
-		if (!m_cameraClient1.startRecording(trial_number, trial_sub_number, &success))
+		if (!m_cameraClient1.startRecording(trial_number, &success))
 			answ = 1;  // to not mistake with the errors from success
 	}
 	if (m_cameraClient2.isConnected()) {
-		if (!m_cameraClient2.startRecording(trial_number, trial_sub_number, &success))
+		if (!m_cameraClient2.startRecording(trial_number, &success))
 			answ = 1;  // to not mistake with the errors from success
 	}
 	if (answ) {
@@ -294,7 +293,7 @@ void Protocol::start_pressure_sensor_recording()
 void Protocol::start_pressure_sensor_recording(long trial_number, long trial_sub_number)
 {
 	if (m_touchSensorClient.isConnected()) {
-		m_touchSensorClient.startRecording(trial_number, trial_sub_number);
+		m_touchSensorClient.startRecording(trial_number);
 	}
 }
 
@@ -602,7 +601,7 @@ void Protocol::run()
 		// start recordings
 		// Calc trial sub number
 		params.trial_sub_number = trialMap[params.trial_number];
-		start_camera_recording(params.trial_number, params.trial_sub_number);  // TODO process it?
+		start_camera_recording(params.trial_number);  // TODO process it?
 		log_started_camera_recording = Times::getCurrentTimeInMilliSecs();
 		start_pressure_sensor_recording(params.trial_number, params.trial_sub_number);
 		log_started_ps_recording = Times::getCurrentTimeInMilliSecs();
