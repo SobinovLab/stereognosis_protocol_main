@@ -71,6 +71,7 @@
 #define IDC_PS_TOTAL_FORCE_MAX_EDT      1098
 #define IDC_USE_REAR_LIGHT_SENSOR_CHK   1099
 #define IDC_LEDS_EARLY_TARGET_FORCE_LIGHT_CHK 1100
+#define IDC_RO_COUNTER_EDT              1101
 
 // Next default values for new objects
 // 

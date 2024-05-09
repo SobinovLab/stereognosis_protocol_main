@@ -298,7 +298,6 @@ void Protocol::start_pressure_sensor_recording(long trial_number, long trial_sub
 	}
 }
 
-
 // CR: added to send the timestamp so that we can update the output directory name in the pressure server
 void Protocol::send_pressure_sensor_timestamp(int timestamp)
 {
@@ -423,6 +422,7 @@ void Protocol::run()
 	long long trial_finished_time;
 
 	// class member variable
+	params.counter = 0;
 	params.trial_number = 0;
 	std::unordered_map<int, int> trialMap; // Map of trial numbers to repetition counts
 
@@ -741,6 +741,7 @@ void Protocol::run()
 
 		trialMap[params.trial_number]++; // Increment trial sub number
 		params.trial_number++;           // Increment trial number
+		params.counter++;
 	}
 	setCurrentState(ProtocolState::shuttingDown);
 
@@ -903,7 +904,7 @@ void Protocol::openCsvLog()
 	trialLogCsv.open(params.session_log_filename, ofstream::out);
 
 	// write the first line - header with all exported columns
-	trialLogCsv << "trial_num,";
+	trialLogCsv << "trial_num,"; // As of 5/9/24 This is set to zero on start protocol and is incremented with every trial run.
 	trialLogCsv << "repeating_trial,";
 	trialLogCsv << "trial_sub_num,";
 	trialLogCsv << "reward,";
@@ -966,7 +967,7 @@ void Protocol::addLineToCsvLog(
 	}
 
 	// process multi-grasp data
-	trialLogCsv << params.trial_number << ",";                 // "trial_num,";
+	trialLogCsv << params.counter << ",";                      // "counter,";
 	trialLogCsv << (int)repeating << ",";			           // "repeating_trial,";
 	trialLogCsv << params.trial_sub_number << ",";             // "trial sub number";
 	trialLogCsv << (int)got_reward << ",";			           // "reward,";
