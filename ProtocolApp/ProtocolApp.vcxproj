@@ -88,7 +88,6 @@ copy /B /V /Y "$(ProjectDir)..\session_configs\*" "$(OutDir)\session_configs\" &
     </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\cameras_server\protocol buffers\cameras_messages.pb.h" />
     <ClInclude Include="cameras\CameraClient.h" />
     <ClInclude Include="cameras\cameras_messages.grpc.pb.h" />
     <ClInclude Include="cameras\cameras_messages.pb.h" />
@@ -118,7 +117,6 @@ copy /B /V /Y "$(ProjectDir)..\session_configs\*" "$(OutDir)\session_configs\" &
     <ClInclude Include="pressure_sensors\TouchSensorClient.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\cameras_server\protocol buffers\cameras_messages.pb.cc" />
     <ClCompile Include="cameras\CameraClient.cpp" />
     <ClCompile Include="cameras\cameras_messages.grpc.pb.cc" />
     <ClCompile Include="cameras\cameras_messages.pb.cc" />

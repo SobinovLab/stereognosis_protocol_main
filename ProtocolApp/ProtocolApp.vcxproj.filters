@@ -132,10 +132,7 @@
     <ClInclude Include="utilities\Directories.h">
       <Filter>Header Files\utilities</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\cameras_server\protocol buffers\cameras_messages.pb.h">
-      <Filter>Source Files\cameras</Filter>
-    </ClInclude>
-  </ItemGroup>
+      </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
       <Filter>Source Files</Filter>
@@ -211,9 +208,6 @@
     </ClCompile>
     <ClCompile Include="utilities\Directories.cpp">
       <Filter>Source Files\utilities</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\cameras_server\protocol buffers\cameras_messages.pb.cc">
-      <Filter>Source Files\cameras</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

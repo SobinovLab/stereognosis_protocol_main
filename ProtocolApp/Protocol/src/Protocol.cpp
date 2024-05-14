@@ -159,7 +159,7 @@ void Protocol::prepare_camera_recording()
 
 int Protocol::start_camera_recording()
 {
-	return start_camera_recording(params.trial_number);
+	return start_camera_recording(params.counter);
 }
 
 int Protocol::start_camera_recording(long trial_number)
@@ -287,13 +287,13 @@ void Protocol::pull_variables_from_gui()
 
 void Protocol::start_pressure_sensor_recording()
 {
-	start_pressure_sensor_recording(params.trial_number, params.trial_sub_number);
+	start_pressure_sensor_recording(params.counter);
 }
 
-void Protocol::start_pressure_sensor_recording(long trial_number, long trial_sub_number)
+void Protocol::start_pressure_sensor_recording(long counter)
 {
 	if (m_touchSensorClient.isConnected()) {
-		m_touchSensorClient.startRecording(trial_number);
+		m_touchSensorClient.startRecording(counter);
 	}
 }
 
@@ -601,9 +601,9 @@ void Protocol::run()
 		// start recordings
 		// Calc trial sub number
 		params.trial_sub_number = trialMap[params.trial_number];
-		start_camera_recording(params.trial_number);  // TODO process it?
+		start_camera_recording(params.counter);  // TODO process it?
 		log_started_camera_recording = Times::getCurrentTimeInMilliSecs();
-		start_pressure_sensor_recording(params.trial_number, params.trial_sub_number);
+		start_pressure_sensor_recording(params.counter);
 		log_started_ps_recording = Times::getCurrentTimeInMilliSecs();
 
 		// approach

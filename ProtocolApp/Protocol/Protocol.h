@@ -194,7 +194,7 @@ class Protocol
 		TouchSensorClient m_touchSensorClient;
 
 		void start_pressure_sensor_recording();
-		void start_pressure_sensor_recording(long trial_number, long trial_sub_number);
+		void start_pressure_sensor_recording(long trial_number);
 		void send_pressure_sensor_timestamp(int timestamp);
 		void send_camera_timestamp(int timestamp);
 		int break_pressure_sensor_recording();
