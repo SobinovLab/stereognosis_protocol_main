@@ -423,7 +423,6 @@ void Protocol::run()
 	// class member variable
 	params.counter = 0;
 	params.trial_number = 0;
-	std::unordered_map<int, int> trialMap; // Map of trial numbers to repetition counts
 
 	int preset_trial_number;
 	auto intertrialWaitStartTime = Times::getCurrentTime();  // set at the end of the previous iteration
@@ -600,7 +599,6 @@ void Protocol::run()
 
 		// start recordings
 		// Calc trial sub number
-		params.trial_sub_number = trialMap[params.trial_number];
 		start_camera_recording(params.counter);  // TODO process it?
 		log_started_camera_recording = Times::getCurrentTimeInMilliSecs();
 		start_pressure_sensor_recording(params.counter);
@@ -738,7 +736,6 @@ void Protocol::run()
 			stopProtocol = true;
 		}
 
-		trialMap[params.trial_number]++; // Increment trial sub number
 		params.trial_number++;           // Increment trial number
 		params.counter++;
 	}
@@ -905,7 +902,6 @@ void Protocol::openCsvLog()
 	// write the first line - header with all exported columns
 	trialLogCsv << "trial_num,"; // As of 5/9/24 This is set to zero on start protocol and is incremented with every trial run.
 	trialLogCsv << "repeating_trial,";
-	trialLogCsv << "trial_sub_num,";
 	trialLogCsv << "reward,";
     trialLogCsv << "trial_start_time(ms),";
 	trialLogCsv << "log_sent_config_to_cameras(ms),";
@@ -968,7 +964,6 @@ void Protocol::addLineToCsvLog(
 	// process multi-grasp data
 	trialLogCsv << params.counter << ",";                      // "counter,";
 	trialLogCsv << (int)repeating << ",";			           // "repeating_trial,";
-	trialLogCsv << params.trial_sub_number << ",";             // "trial sub number";
 	trialLogCsv << (int)got_reward << ",";			           // "reward,";
 	trialLogCsv << trial_start_time << ",";			           // "trial_start_time(ms),";
     trialLogCsv << log_sent_config_to_cameras << ",";          // "log_sent_config_to_cameras(ms),";
