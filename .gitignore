@@ -337,3 +337,8 @@ ASALocalRun/
 
 # MFractors (Xamarin productivity tool) working folder
 .mfractor/
+
+# Added by CR to avoid adding text log file
+.ProtocolApp/data
+*.txt
+*.csv

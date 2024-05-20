@@ -132,7 +132,7 @@
     <ClInclude Include="utilities\Directories.h">
       <Filter>Header Files\utilities</Filter>
     </ClInclude>
-  </ItemGroup>
+      </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
       <Filter>Source Files</Filter>

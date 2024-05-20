@@ -3,10 +3,10 @@
 
 using namespace TekscanServerNamespace;
 
-bool TouchSensorSClient::startRecording(int trialnum)
+bool TouchSensorSClient::startRecording(int trialNum)
 {
 	StartRecordingRequest srq;
-	srq.set_trialnum(trialnum);
+	srq.set_trialnum(trialNum);
 	SimpleResponse sr;
 	ClientContext context;
 
@@ -20,6 +20,28 @@ bool TouchSensorSClient::startRecording(int trialnum)
 
 	return true;
 }
+
+
+bool TouchSensorSClient::setTimestamp(int timestamp)
+{
+	SetTimestampRequest strq;
+	strq.set_timestamp(timestamp);
+	SimpleResponse sr;
+	ClientContext context;
+
+	Status status = stub_->SetTimestamp(&context, strq, &sr);
+	if (!status.ok()) {
+		return false;
+	}
+
+	lastCode = sr.code();
+	lastDescritpion = new CString(sr.description().c_str());
+
+	return true;
+
+}
+
+
 
 bool TouchSensorSClient::breakRecording(std::atomic<int>* result)
 {
@@ -130,11 +152,28 @@ bool TouchSensorClient::isConnected()
 	return false;
 }
 
-void TouchSensorClient::startRecording(int trialnum)
+
+void TouchSensorClient::setTimestamp(int timestamp)
+{
+	appendClientLog(_T("Setting timestamp from main protoc."));
+	if (tssc) {
+		if (tssc->setTimestamp(timestamp)) {
+			appendClientLog(_T("Success.\n"));
+		}
+		else
+			appendClientLog(_T("Failure.\n"));
+	}
+	else {
+		appendClientLog(_T("Not connected.\n "));
+	}
+}
+
+
+void TouchSensorClient::startRecording(int trialNum)
 {
 	appendClientLog(_T("Starting recording. "));
 	if (tssc) {
-		if (tssc->startRecording(trialnum)) {
+		if (tssc->startRecording(trialNum)) {
 			appendClientLog(_T("Success.\n"));
 		}
 		else

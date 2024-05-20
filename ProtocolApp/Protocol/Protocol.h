@@ -13,7 +13,6 @@
 #include <chrono>
 #include <atomic>
 #include <fstream>
-
 #include "Logger.h"
 #include "Sounds.h"
 #include "Times.h"
@@ -190,12 +189,13 @@ class Protocol
 		void break_camera_recording();
 		bool did_cameras_finish_saving();
 		int wait_for_cameras_finish_saving();
+		void send_camera_timestamp(int timestamp);
 
 		// pressure sensors
 		TouchSensorClient m_touchSensorClient;
-
 		void start_pressure_sensor_recording();
 		void start_pressure_sensor_recording(long trial_number);
+		void send_pressure_sensor_timestamp(int timestamp);
 		int break_pressure_sensor_recording();
 		void wait_until_monkey_release();
 		std::atomic<bool> stopWatch;
