@@ -138,6 +138,7 @@
     <ClInclude Include="utilities\Directories.h">
       <Filter>Header Files\utilities</Filter>
     </ClInclude>
+
     <ClInclude Include="kinovaArm\armCinterface.h">
       <Filter>Header Files\kinovaArm</Filter>
     </ClInclude>
@@ -151,6 +152,7 @@
       <Filter>Header Files\kinovaArm</Filter>
     </ClInclude>
   </ItemGroup>
+
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
       <Filter>Source Files</Filter>

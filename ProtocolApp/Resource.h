@@ -73,6 +73,7 @@
 #define IDC_PS_TOTAL_FORCE_MAX_EDT      1098
 #define IDC_USE_REAR_LIGHT_SENSOR_CHK   1099
 #define IDC_LEDS_EARLY_TARGET_FORCE_LIGHT_CHK 1100
+
 #define IDC_LEFT_MAIN                   1109
 #define IDC_LEFT_SECOND                 1110
 #define IDC_SPLIT_REWARD                1111
@@ -80,6 +81,7 @@
 #define IDC_RIGHT_MAIN                  1113
 #define IDC_LEFT_SECOND2                1113
 #define IDC_RIGHT_SECOND                1114
+
 
 // Next default values for new objects
 // 

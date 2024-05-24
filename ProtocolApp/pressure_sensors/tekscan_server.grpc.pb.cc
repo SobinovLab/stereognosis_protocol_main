@@ -22,6 +22,7 @@
 namespace TekscanServerNamespace {
 
 static const char* TekscanServer_method_names[] = {
+  "/TekscanServerNamespace.TekscanServer/SetTimestamp",
   "/TekscanServerNamespace.TekscanServer/StartRecording",
   "/TekscanServerNamespace.TekscanServer/BreakRecording",
   "/TekscanServerNamespace.TekscanServer/GetForce",
@@ -36,12 +37,36 @@ std::unique_ptr< TekscanServer::Stub> TekscanServer::NewStub(const std::shared_p
 }
 
 TekscanServer::Stub::Stub(const std::shared_ptr< ::grpc::ChannelInterface>& channel)
-  : channel_(channel), rpcmethod_StartRecording_(TekscanServer_method_names[0], ::grpc::internal::RpcMethod::NORMAL_RPC, channel)
-  , rpcmethod_BreakRecording_(TekscanServer_method_names[1], ::grpc::internal::RpcMethod::NORMAL_RPC, channel)
-  , rpcmethod_GetForce_(TekscanServer_method_names[2], ::grpc::internal::RpcMethod::NORMAL_RPC, channel)
-  , rpcmethod_SyncMessageTrialStart_(TekscanServer_method_names[3], ::grpc::internal::RpcMethod::NORMAL_RPC, channel)
-  , rpcmethod_SyncMessageTrialEnd_(TekscanServer_method_names[4], ::grpc::internal::RpcMethod::NORMAL_RPC, channel)
+  : channel_(channel), rpcmethod_SetTimestamp_(TekscanServer_method_names[0], ::grpc::internal::RpcMethod::NORMAL_RPC, channel)
+  , rpcmethod_StartRecording_(TekscanServer_method_names[1], ::grpc::internal::RpcMethod::NORMAL_RPC, channel)
+  , rpcmethod_BreakRecording_(TekscanServer_method_names[2], ::grpc::internal::RpcMethod::NORMAL_RPC, channel)
+  , rpcmethod_GetForce_(TekscanServer_method_names[3], ::grpc::internal::RpcMethod::NORMAL_RPC, channel)
+  , rpcmethod_SyncMessageTrialStart_(TekscanServer_method_names[4], ::grpc::internal::RpcMethod::NORMAL_RPC, channel)
+  , rpcmethod_SyncMessageTrialEnd_(TekscanServer_method_names[5], ::grpc::internal::RpcMethod::NORMAL_RPC, channel)
   {}
+
+::grpc::Status TekscanServer::Stub::SetTimestamp(::grpc::ClientContext* context, const ::TekscanServerNamespace::SetTimestampRequest& request, ::TekscanServerNamespace::SimpleResponse* response) {
+  return ::grpc::internal::BlockingUnaryCall(channel_.get(), rpcmethod_SetTimestamp_, context, request, response);
+}
+
+void TekscanServer::Stub::experimental_async::SetTimestamp(::grpc::ClientContext* context, const ::TekscanServerNamespace::SetTimestampRequest* request, ::TekscanServerNamespace::SimpleResponse* response, std::function<void(::grpc::Status)> f) {
+  ::grpc::internal::CallbackUnaryCall(stub_->channel_.get(), stub_->rpcmethod_SetTimestamp_, context, request, response, std::move(f));
+}
+
+void TekscanServer::Stub::experimental_async::SetTimestamp(::grpc::ClientContext* context, const ::TekscanServerNamespace::SetTimestampRequest* request, ::TekscanServerNamespace::SimpleResponse* response, ::grpc::experimental::ClientUnaryReactor* reactor) {
+  ::grpc::internal::ClientCallbackUnaryFactory::Create(stub_->channel_.get(), stub_->rpcmethod_SetTimestamp_, context, request, response, reactor);
+}
+
+::grpc::ClientAsyncResponseReader< ::TekscanServerNamespace::SimpleResponse>* TekscanServer::Stub::PrepareAsyncSetTimestampRaw(::grpc::ClientContext* context, const ::TekscanServerNamespace::SetTimestampRequest& request, ::grpc::CompletionQueue* cq) {
+  return ::grpc::internal::ClientAsyncResponseReaderFactory< ::TekscanServerNamespace::SimpleResponse>::Create(channel_.get(), cq, rpcmethod_SetTimestamp_, context, request, false);
+}
+
+::grpc::ClientAsyncResponseReader< ::TekscanServerNamespace::SimpleResponse>* TekscanServer::Stub::AsyncSetTimestampRaw(::grpc::ClientContext* context, const ::TekscanServerNamespace::SetTimestampRequest& request, ::grpc::CompletionQueue* cq) {
+  auto* result =
+    this->PrepareAsyncSetTimestampRaw(context, request, cq);
+  result->StartCall();
+  return result;
+}
 
 ::grpc::Status TekscanServer::Stub::StartRecording(::grpc::ClientContext* context, const ::TekscanServerNamespace::StartRecordingRequest& request, ::TekscanServerNamespace::SimpleResponse* response) {
   return ::grpc::internal::BlockingUnaryCall(channel_.get(), rpcmethod_StartRecording_, context, request, response);
@@ -162,6 +187,16 @@ TekscanServer::Service::Service() {
   AddMethod(new ::grpc::internal::RpcServiceMethod(
       TekscanServer_method_names[0],
       ::grpc::internal::RpcMethod::NORMAL_RPC,
+      new ::grpc::internal::RpcMethodHandler< TekscanServer::Service, ::TekscanServerNamespace::SetTimestampRequest, ::TekscanServerNamespace::SimpleResponse>(
+          [](TekscanServer::Service* service,
+             ::grpc::ServerContext* ctx,
+             const ::TekscanServerNamespace::SetTimestampRequest* req,
+             ::TekscanServerNamespace::SimpleResponse* resp) {
+               return service->SetTimestamp(ctx, req, resp);
+             }, this)));
+  AddMethod(new ::grpc::internal::RpcServiceMethod(
+      TekscanServer_method_names[1],
+      ::grpc::internal::RpcMethod::NORMAL_RPC,
       new ::grpc::internal::RpcMethodHandler< TekscanServer::Service, ::TekscanServerNamespace::StartRecordingRequest, ::TekscanServerNamespace::SimpleResponse>(
           [](TekscanServer::Service* service,
              ::grpc::ServerContext* ctx,
@@ -170,7 +205,7 @@ TekscanServer::Service::Service() {
                return service->StartRecording(ctx, req, resp);
              }, this)));
   AddMethod(new ::grpc::internal::RpcServiceMethod(
-      TekscanServer_method_names[1],
+      TekscanServer_method_names[2],
       ::grpc::internal::RpcMethod::NORMAL_RPC,
       new ::grpc::internal::RpcMethodHandler< TekscanServer::Service, ::TekscanServerNamespace::SimpleRequest, ::TekscanServerNamespace::BreakRecordingResponse>(
           [](TekscanServer::Service* service,
@@ -180,7 +215,7 @@ TekscanServer::Service::Service() {
                return service->BreakRecording(ctx, req, resp);
              }, this)));
   AddMethod(new ::grpc::internal::RpcServiceMethod(
-      TekscanServer_method_names[2],
+      TekscanServer_method_names[3],
       ::grpc::internal::RpcMethod::NORMAL_RPC,
       new ::grpc::internal::RpcMethodHandler< TekscanServer::Service, ::TekscanServerNamespace::SimpleRequest, ::TekscanServerNamespace::ForceResponse>(
           [](TekscanServer::Service* service,
@@ -190,7 +225,7 @@ TekscanServer::Service::Service() {
                return service->GetForce(ctx, req, resp);
              }, this)));
   AddMethod(new ::grpc::internal::RpcServiceMethod(
-      TekscanServer_method_names[3],
+      TekscanServer_method_names[4],
       ::grpc::internal::RpcMethod::NORMAL_RPC,
       new ::grpc::internal::RpcMethodHandler< TekscanServer::Service, ::TekscanServerNamespace::Empty, ::TekscanServerNamespace::Empty>(
           [](TekscanServer::Service* service,
@@ -200,7 +235,7 @@ TekscanServer::Service::Service() {
                return service->SyncMessageTrialStart(ctx, req, resp);
              }, this)));
   AddMethod(new ::grpc::internal::RpcServiceMethod(
-      TekscanServer_method_names[4],
+      TekscanServer_method_names[5],
       ::grpc::internal::RpcMethod::NORMAL_RPC,
       new ::grpc::internal::RpcMethodHandler< TekscanServer::Service, ::TekscanServerNamespace::Empty, ::TekscanServerNamespace::Empty>(
           [](TekscanServer::Service* service,
@@ -212,6 +247,13 @@ TekscanServer::Service::Service() {
 }
 
 TekscanServer::Service::~Service() {
+}
+
+::grpc::Status TekscanServer::Service::SetTimestamp(::grpc::ServerContext* context, const ::TekscanServerNamespace::SetTimestampRequest* request, ::TekscanServerNamespace::SimpleResponse* response) {
+  (void) context;
+  (void) request;
+  (void) response;
+  return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
 }
 
 ::grpc::Status TekscanServer::Service::StartRecording(::grpc::ServerContext* context, const ::TekscanServerNamespace::StartRecordingRequest* request, ::TekscanServerNamespace::SimpleResponse* response) {
