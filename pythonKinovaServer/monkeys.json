@@ -1,0 +1,10 @@
+{
+    "daquiri" : {
+      "side" : "right",
+      "distance" : 10  
+    },
+    "pimms" : {
+        "side" : "left",
+        "distance" : 10
+    }
+}

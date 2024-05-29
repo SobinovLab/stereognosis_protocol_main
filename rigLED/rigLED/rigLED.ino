@@ -6,7 +6,7 @@
 #define LED_BOTTOM 2
 #define LED_BOTH 3
 #define TEST_MSG 4
-#define MAX_LEDS 60
+#define MAX_LEDS 40
 
 #define TOP_PIN 6
 #define BOTTOM_PIN 9

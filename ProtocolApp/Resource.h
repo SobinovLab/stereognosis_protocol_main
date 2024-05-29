@@ -14,7 +14,9 @@
 #define IDC_FLUSH_WATER_BTN             1025
 #define IDC_PHOTORES_REAR_LBL           1028
 #define IDC_PHOTORES_FRONT_LBL          1029
+#define IDC_TOUCH_RIGHT                 1030
 #define IDC_CURRENT_TRIAL_EDT           1031
+#define IDC_TOUCH_LEFT                  1032
 #define IDC_MAX_WAIT_EDT_BOX            1034
 #define IDC_START_TRIAL_BTN             1035
 #define IDC_RETREAT_FLUSH_WATER_BTN     1036
@@ -72,6 +74,13 @@
 #define IDC_USE_REAR_LIGHT_SENSOR_CHK   1099
 #define IDC_LEDS_EARLY_TARGET_FORCE_LIGHT_CHK 1100
 #define IDC_RO_COUNTER_EDT              1101
+#define IDC_LEFT_MAIN                   1109
+#define IDC_LEFT_SECOND                 1110
+#define IDC_SPLIT_REWARD                1111
+#define IDC_SPLIT_REWARD1               1111
+#define IDC_RIGHT_MAIN                  1113
+#define IDC_LEFT_SECOND2                1113
+#define IDC_RIGHT_SECOND                1114
 
 // Next default values for new objects
 // 
@@ -79,7 +88,7 @@
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        130
 #define _APS_NEXT_COMMAND_VALUE         32771
-#define _APS_NEXT_CONTROL_VALUE         1101
+#define _APS_NEXT_CONTROL_VALUE         1112
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif
