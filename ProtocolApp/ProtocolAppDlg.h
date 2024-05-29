@@ -74,6 +74,8 @@ public:
 	// light sensors
 	CStaticColor m_frontPhotoresistorCtrl;
 	CStaticColor m_rearPhotoresistorCtrl;
+	CStaticColor m_leftArmSensorCtrl;
+	CStaticColor m_rightArmSensorCtrl;
 
 	//////// Trial
 	// buttons
@@ -143,4 +145,13 @@ public:
 	afx_msg void OnBnClickedStopMotorsBtn();
 	afx_msg void OnBnClickedNeutralPositionBtn();
 	afx_msg void OnBnClickedLedsEarlyTargetForceLightChk();
+    afx_msg void OnEnChangeSessionFileEdt();
+    afx_msg void OnBnClickedMotorsChk();
+
+
+    afx_msg void OnBnClickedLeftMain();
+    afx_msg void OnBnClickedLeftSecond();
+    afx_msg void OnBnClickedRightMain();
+    afx_msg void OnBnClickedRightSecond();
+    afx_msg void OnBnClickedSplitReward();
 };

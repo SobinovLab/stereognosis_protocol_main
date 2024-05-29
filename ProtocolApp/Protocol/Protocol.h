@@ -23,6 +23,8 @@
 #include "CameraClient.h"
 #include "TouchSensorClient.h"
 #include "LedStrip.h"
+#include "armCinterface.h"
+#include "kinovaErrCode.h"
 
 
 enum class ProtocolState
@@ -66,6 +68,13 @@ class Protocol
 		// main loop that is run in a thread when StartProtocol is clicked
 		virtual void run();
 
+        // motor
+		TeknicMotorApi* motorHub = nullptr;
+
+        // arm (replacing motorHub)
+        KinovaArmClient* armClient = nullptr;
+        bool armHomed = false;
+
 		// current state of the protocol/trial
 		void setCurrentState(ProtocolState state);
 		ProtocolState getCurrentState();
@@ -76,7 +85,7 @@ class Protocol
 		// sets of gui variables
 		CEdit* m_trialStatus;
 		CButton* loopChk;
-		void set_photoresistor_monitors(CStaticColor* front, CStaticColor* rear);
+		void set_photoresistor_monitors(CStaticColor* front, CStaticColor* rear, CStaticColor* left, CStaticColor* right);
 		void set_camera1_gui_controls(CEdit* serverLogCtrl);
 		void set_camera2_gui_controls(CEdit* serverLogCtrl);
 		void set_pressure_sensors_gui_controls(CEdit* serverLogCtrl);
@@ -90,12 +99,17 @@ class Protocol
 		// light sensors
 		std::atomic<bool> use_front_light_sensor = false;
 		std::atomic<bool> use_rear_light_sensor = false;
+        std::atomic<bool> use_left_arm_touch = false;
+        std::atomic<bool> use_right_arm_touch = false;
+        std::atomic<bool> reward_on_return = false;
+        std::atomic<bool> monitor_passive_arm = false;
+        int which_passive_arm = -1;
 
 		// motors
 		bool were_motors_homed();
-		TEKNIC_MOTOR_API_CODE home_motors();
+		int home_motors();
 		void stop_motors();
-		TEKNIC_MOTOR_API_CODE motors_neutral_position();
+		int motors_neutral_position();
 
 		//////// connected devices
 		// cameras
@@ -142,7 +156,8 @@ class Protocol
 			const long long trial_end_time,
 			const long long log_starting_finishing_recordings, const long long log_sent_end_sync_messages,
 			const long long log_stopped_camera_recordings, const long long log_stopped_ps_recordings,
-			const long long trial_finished_time);
+			const long long trial_finished_time,
+            const long long arm_return_time);
 		void closeCsvLog();
 
 		//////// local devices
@@ -167,12 +182,15 @@ class Protocol
 		// DEPRECATED and is not used
 		int wait_until_arm_liftoff();
 
+        //Watching arm lift off in a thread
+        void armMonitoringThread();
+        std::atomic<bool> allowInterupt;
+        std::atomic<bool> monitoringThreadAlive = false;
+
 		// ephys
 		void start_ephys_recording();
 		void break_ephys_recording();
 
-		// motor
-		TeknicMotorApi* motorHub = nullptr;
 
 		// LEDs
 		LedStrip* ledStrip = nullptr;

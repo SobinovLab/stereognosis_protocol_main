@@ -1285,7 +1285,8 @@ void Axis::propagateConfig()
 TeknicMotorApi::TeknicMotorApi(const std::string motor_config_filename, const std::string axes_config_filename) {
     // this flag is set to true at the end of constructor. 
     // If the constructor did not make it there, API behavior is upredictable
-    initializedCorrectly = false;
+    initializedCorrectly = true;
+    return;
 
     // buffer for error and warning reports
     string buf;

@@ -49,6 +49,12 @@
     <Filter Include="Header Files\LEDs">
       <UniqueIdentifier>{3778db03-8312-458a-979c-67c153e77548}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\kinovaArm">
+      <UniqueIdentifier>{20995043-1c26-440f-803e-0b4986358034}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\kinovaArm">
+      <UniqueIdentifier>{b545c5ba-681f-4c07-9d16-c3ce612670c3}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h">
@@ -132,7 +138,21 @@
     <ClInclude Include="utilities\Directories.h">
       <Filter>Header Files\utilities</Filter>
     </ClInclude>
-      </ItemGroup>
+
+    <ClInclude Include="kinovaArm\armCinterface.h">
+      <Filter>Header Files\kinovaArm</Filter>
+    </ClInclude>
+    <ClInclude Include="kinovaArm\armMessages.grpc.pb.h">
+      <Filter>Header Files\kinovaArm</Filter>
+    </ClInclude>
+    <ClInclude Include="kinovaArm\armMessages.pb.h">
+      <Filter>Header Files\kinovaArm</Filter>
+    </ClInclude>
+    <ClInclude Include="kinovaArm\kinovaErrCode.h">
+      <Filter>Header Files\kinovaArm</Filter>
+    </ClInclude>
+  </ItemGroup>
+  
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
       <Filter>Source Files</Filter>
@@ -208,6 +228,15 @@
     </ClCompile>
     <ClCompile Include="utilities\Directories.cpp">
       <Filter>Source Files\utilities</Filter>
+    </ClCompile>
+    <ClCompile Include="kinovaArm\armMessages.grpc.pb.cc">
+      <Filter>Source Files\kinovaArm</Filter>
+    </ClCompile>
+    <ClCompile Include="kinovaArm\armMessages.pb.cc">
+      <Filter>Source Files\kinovaArm</Filter>
+    </ClCompile>
+    <ClCompile Include="kinovaErrCode.cpp">
+      <Filter>Source Files\kinovaArm</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
