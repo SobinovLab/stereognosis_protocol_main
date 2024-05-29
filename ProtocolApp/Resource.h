@@ -80,6 +80,7 @@
 #define IDC_RIGHT_MAIN                  1113
 #define IDC_LEFT_SECOND2                1113
 #define IDC_RIGHT_SECOND                1114
+#define IDC_RO_COUNTER_EDT				1115
 
 // Next default values for new objects
 // 
