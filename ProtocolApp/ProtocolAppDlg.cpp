@@ -58,6 +58,9 @@ void CProtocolAppDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Text(pDX, IDC_CURRENT_TRIAL_EDT, m_protocol.params.trial_number);
 	DDX_Text(pDX, IDC_TOTAL_TRIALS_EDT, m_protocol.params.total_trials);
 
+	// Set total counter
+	DDX_Text(pDX, IDC_RO_COUNTER_EDT, m_protocol.params.counter);
+
 	DDX_Text(pDX, IDC_POS_TRANSLATION_X_EDT, m_protocol.params.pos_translation_x);
 	DDX_Text(pDX, IDC_POS_TILT_EDT, m_protocol.params.pos_tilt);
 	DDX_Text(pDX, IDC_POS_APERTURE_EDT, m_protocol.params.pos_aperture);
@@ -319,6 +322,7 @@ void CProtocolAppDlg::setFontGuiTrialsCounter()
 	cEditControlFont->CreateFont(30, 0, 0, 0, FW_HEAVY, true, false, 0, ANSI_CHARSET, OUT_DEFAULT_PRECIS, CLIP_DEFAULT_PRECIS, DEFAULT_QUALITY, FIXED_PITCH | FF_MODERN, _T(FONT_TYPE));
 	((CEdit*)GetDlgItem(IDC_CURRENT_TRIAL_EDT))->SetFont(cEditControlFont);
 	((CEdit*)GetDlgItem(IDC_TOTAL_TRIALS_EDT))->SetFont(cEditControlFont);
+	((CEdit*)GetDlgItem(IDC_RO_COUNTER_EDT))->SetFont(cEditControlFont);
 }
 
 // The system calls this function to obtain the cursor to display while the user drags

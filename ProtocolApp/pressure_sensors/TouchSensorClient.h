@@ -27,8 +27,8 @@ class TouchSensorSClient
 public:
 	TouchSensorSClient(std::shared_ptr<Channel> channel) : stub_(TekscanServerNamespace::TekscanServer::NewStub(channel)), lastDescritpion(new CString("")){
 	}
-
-	bool startRecording(int trialnum);
+	bool startRecording(int trialNum);
+	bool setTimestamp(int timestamp);
 	bool breakRecording(std::atomic<int>* result);
 	bool getForce(std::atomic<double>* leftForce, std::atomic<double>* rightForce);
 
@@ -52,7 +52,8 @@ public:
 	virtual void disconnect_f();
 	virtual bool isConnected();
 
-	virtual void startRecording(int trialnum);
+	void setTimestamp(int timestamp);
+	void startRecording(int trialNum);
 	virtual void breakRecording(std::atomic<int>* result);
 	virtual void getForce(std::atomic<double>* leftForce, std::atomic<double>* rightForce);
 

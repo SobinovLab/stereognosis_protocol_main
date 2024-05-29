@@ -164,13 +164,12 @@ void Protocol::prepare_camera_recording()
 
 int Protocol::start_camera_recording()
 {
-	return start_camera_recording(params.trial_number);
+	return start_camera_recording(params.counter);
 }
 
 int Protocol::start_camera_recording(long trial_number)
 {
 	// NB config is sent separately in the main loop
-
 	int success = 0;
 	int answ = 0;  // cameras not connected is not an error
 	string buf;
@@ -293,13 +292,31 @@ void Protocol::pull_variables_from_gui()
 
 void Protocol::start_pressure_sensor_recording()
 {
-	start_pressure_sensor_recording(params.trial_number);
+	start_pressure_sensor_recording(params.counter);
 }
 
-void Protocol::start_pressure_sensor_recording(long trial_number)
+void Protocol::start_pressure_sensor_recording(long counter)
 {
 	if (m_touchSensorClient.isConnected()) {
-		m_touchSensorClient.startRecording(trial_number);
+		m_touchSensorClient.startRecording(counter);
+	}
+}
+
+// CR: added to send the timestamp so that we can update the output directory name in the pressure server
+void Protocol::send_pressure_sensor_timestamp(int timestamp)
+{
+	// Follow the logic of above to check that we have connected to the ps server
+	if (m_touchSensorClient.isConnected()) {
+		m_touchSensorClient.setTimestamp(timestamp);
+	}
+}
+
+void Protocol::send_camera_timestamp(int timestamp) {
+	if(m_cameraClient1.isConnected()) {
+		m_cameraClient1.setTimestamp(timestamp);
+	}
+	if (m_cameraClient2.isConnected()) {
+		m_cameraClient2.setTimestamp(timestamp);
 	}
 }
 
@@ -345,6 +362,7 @@ void Protocol::playStartTaskTone()
 		Sounds::playStartTaskTone();
 }
 
+// This is what is run on Start Protocol Button
 void Protocol::run()
 {
 	logInfo("Starting protocol");
@@ -353,6 +371,16 @@ void Protocol::run()
 	int rets = 0;
 	TEKNIC_MOTOR_API_CODE motor_rets = TEKNIC_MOTOR_API_CODE::OK;
     int motorRet;
+
+	// CR: this is the timestamp we want to send from the main protocol to the pressure and cameras server
+	// Convert the time point to a time_t object
+	// Get the current time point
+	auto currentTimePoint = std::chrono::system_clock::now();
+	std::time_t currentTime = std::chrono::system_clock::to_time_t(currentTimePoint);
+	int currentTimeInSeconds = static_cast<int>(currentTime);
+	// Send ps and cam server timestamp
+	send_pressure_sensor_timestamp(currentTimeInSeconds);
+	send_camera_timestamp(currentTimeInSeconds);
 
 	// Load all trials from session config file (BL code)
 	vector<string> session_line1;
@@ -401,7 +429,9 @@ void Protocol::run()
 	long long trial_finished_time;
 
 	// class member variable
+	params.counter = 0;
 	params.trial_number = 0;
+
 	int preset_trial_number;
 	auto intertrialWaitStartTime = Times::getCurrentTime();  // set at the end of the previous iteration
 	auto trialStartTime = Times::getCurrentTime();  // set when the object is in position
@@ -579,9 +609,10 @@ void Protocol::run()
         thread passiveArmThread(&Protocol::armMonitoringThread, this);
 
 		// start recordings
-		start_camera_recording();  // TODO process it?
+		// Calc trial sub number
+		start_camera_recording(params.counter);  // TODO process it?
 		log_started_camera_recording = Times::getCurrentTimeInMilliSecs();
-		start_pressure_sensor_recording();
+		start_pressure_sensor_recording(params.counter);
 		log_started_ps_recording = Times::getCurrentTimeInMilliSecs();
 
 		// approach
@@ -707,7 +738,10 @@ void Protocol::run()
 
 		// log the trial success, target positions and times
 		trial_finished_time = Times::getCurrentTimeInMilliSecs();
-		addLineToCsvLog(m_earnedReward || deservesReward, repeating_trial[params.trial_number],
+
+		addLineToCsvLog(
+			m_earnedReward || deservesReward,
+			repeating_trial[params.trial_number],
 			trial_start_time, log_sent_config_to_cameras, object_in_position_time,
             arm_liftoff_time,
             log_started_camera_recording, log_started_ps_recording,
@@ -727,7 +761,8 @@ void Protocol::run()
 			stopProtocol = true;
 		}
 
-		params.trial_number++;
+		params.trial_number++;           // Increment trial number
+		params.counter++;
 	}
 	setCurrentState(ProtocolState::shuttingDown);
 
@@ -915,7 +950,7 @@ void Protocol::openCsvLog()
 	trialLogCsv.open(params.session_log_filename, ofstream::out);
 
 	// write the first line - header with all exported columns
-	trialLogCsv << "trial_num,";
+	trialLogCsv << "trial_num,"; // As of 5/9/24 This is set to zero on start protocol and is incremented with every trial run.
 	trialLogCsv << "repeating_trial,";
 	trialLogCsv << "reward,";
     trialLogCsv << "trial_start_time(ms),";
@@ -960,8 +995,12 @@ void Protocol::openCsvLog()
 
 }
 
-void Protocol::addLineToCsvLog(const bool got_reward, const bool repeating,
-	const long long trial_start_time, const long long log_sent_config_to_cameras, const long long object_in_position_time,
+void Protocol::addLineToCsvLog(
+	const bool got_reward,
+	const bool repeating,
+	const long long trial_start_time, 
+	const long long log_sent_config_to_cameras, 
+	const long long object_in_position_time,
 	const long long arm_liftoff_time,
     const long long log_started_camera_recording, const long long log_started_ps_recording,
     const long long log_started_ephys_recording, const long long log_sent_start_sync_messages,
@@ -978,7 +1017,7 @@ void Protocol::addLineToCsvLog(const bool got_reward, const bool repeating,
 	}
 
 	// process multi-grasp data
-	trialLogCsv << params.trial_number << ",";                 // "trial_num,";
+	trialLogCsv << params.counter << ",";                      // "counter,";
 	trialLogCsv << (int)repeating << ",";			           // "repeating_trial,";
 	trialLogCsv << (int)got_reward << ",";			           // "reward,";
 	trialLogCsv << trial_start_time << ",";			           // "trial_start_time(ms),";
@@ -1304,8 +1343,6 @@ int Protocol::wait_until_arm_at_rest()
 	}
 	return flag;
 }
-
-
 
 int Protocol::wait_until_arm_liftoff()
 {
