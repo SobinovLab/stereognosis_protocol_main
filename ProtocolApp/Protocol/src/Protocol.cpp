@@ -414,7 +414,7 @@ void Protocol::run()
 		trial_start_time = 0;
         log_sent_config_to_cameras = 0;
 		object_in_position_time = 0;
-		arm_liftoff_time = 0;
+		arm_liftoff_time = -1;
         log_started_camera_recording = 0;
         log_started_ps_recording = 0;
         log_started_ephys_recording = 0;
@@ -538,7 +538,7 @@ void Protocol::run()
 		//vector<double> positions = { params.pos_translation_x, params.pos_tilt, params.pos_aperture };
 		rets = 0;
 		motorRet = 1;
-		if (!stopTrial)
+		if (!stopTrial.load())
 			motorRet = armClient->preshape(params.pos_aperture);
 		if (motorRet < 0)
 		{
@@ -562,6 +562,7 @@ void Protocol::run()
 
 		// wait until arm at rest
 		prepare_to_monitor_arm_at_rest();
+
 		logInfo("About to wait for arms to be at rest at top of loop");
 		while (!this->stopTrial.load() && !is_arm_at_rest()) {
 			// waiting for:
@@ -585,7 +586,7 @@ void Protocol::run()
 		log_started_ps_recording = Times::getCurrentTimeInMilliSecs();
 
 		// approach
-		if (!rets && !stopTrial) {
+		if (!rets && !stopTrial.load()) {
 			//motor_rets = motorHub->approach(axes, positions);
             motorRet = armClient->moveToPosition(params.pos_translation_x, params.pos_translation_depth, params.pos_translation_height, params.pos_tilt, 0, 0, params.pos_aperture);
 			if (motorRet < 0)
@@ -597,7 +598,7 @@ void Protocol::run()
 		}
 
 		// log
-		if (!stopTrial) 
+		if (!stopTrial.load()) 
 			object_in_position_time = Times::getCurrentTimeInMilliSecs();
 
 		// stop the watch thread
@@ -605,19 +606,20 @@ void Protocol::run()
 		watchThread.join();
 
 		// if the trial was not interrupted, wait for the hand liftoff
-		if (!stopTrial && !rets) {
+		if (!stopTrial.load() && !rets) {
 			// TODO in the current structure does not make sense
 			//rets = wait_until_arm_liftoff();
 
-			arm_liftoff_time = Times::getCurrentTimeInMilliSecs();
+			//arm_liftoff_time = Times::getCurrentTimeInMilliSecs();
 		}
+		
 
 		// if the motors made it successfully to the final position and the animal has lifted the arm
-		if (!stopTrial && rets >= 0) {
+		if (!stopTrial.load() && rets >= 0) {
+			bool animalLifted = false;
 			// spawn the process that monitors the async stopping conditions
 			m_asyncTrialSuccessMonitorThread = new thread(&Protocol::m_asyncTrialConditionMonitor, this);
             log_started_monitoring_ps = Times::getCurrentTimeInMilliSecs();
-
 			trialStartTime = Times::getCurrentTime();
 			playStartTaskTone();
 
@@ -625,8 +627,13 @@ void Protocol::run()
 			while (!this->stopTrial.load() &&
 				!this->m_earnedReward.load() &&
 				!Times::isTimeout(trialStartTime, params.maxWaitTime)) {
-			}
 
+				if(!animalLifted && ( (use_left_arm_touch && (which_active_arm==-1) && !IS_LEFT_ARMSENSOR_TOUCHED ) || (use_right_arm_touch && (which_active_arm == 1) && !IS_RIGHT_ARMSENSOR_TOUCHED)))
+				{
+					animalLifted = true;
+					arm_liftoff_time = Times::getCurrentTimeInMilliSecs();
+				}
+			}
 			// if stop trial button was pressed, turn off the loop - it is reenable automatically in the beginning of trial
 			if (this->stopTrial.load() && params.disable_looping_on_manual_retreat)
 				autoLoopToggle(false);  // want to stop only for one trial
@@ -641,7 +648,7 @@ void Protocol::run()
 			}
 		}
 
-		logInfo("Setting interupt to true from main loop");
+		logInfo("Setting interupt from main loop");
         allowInterupt.store(false);
 		logInfo("Waiting on background thread");
         passiveArmThread.join();
@@ -1180,8 +1187,10 @@ void Protocol::watch_early_grab()
 		// see if monkey lifted arm
 		// if (isLightSensorsOn() && !isArmAtRest()) {
 		if (isLightSensorsOn()) {
-			if ((use_front_light_sensor.load() && !IS_FRONT_PHOTORESISTOR_COVERED) || (
-				use_rear_light_sensor.load() && !IS_REAR_PHOTORESISTOR_COVERED)) {
+			if ((use_front_light_sensor.load() && !IS_FRONT_PHOTORESISTOR_COVERED.load()) ||
+				(use_rear_light_sensor.load() && !IS_REAR_PHOTORESISTOR_COVERED.load()) ||
+				(use_right_arm_touch.load() && !IS_RIGHT_ARMSENSOR_TOUCHED.load()) ||
+				(use_left_arm_touch.load() && !IS_LEFT_ARMSENSOR_TOUCHED.load())) {
 
 				if (!startTime) {
 					// jsut started
@@ -1195,7 +1204,7 @@ void Protocol::watch_early_grab()
 		}
 
 		if (startTime && Times::isTimeout(*startTime, params.photoresistor_status_switch_delay / 1000)) {
-			stopTrial = true;
+			stopTrial.store(true);
 			stop_motors();
 			break;
 		}
@@ -1205,7 +1214,7 @@ void Protocol::watch_early_grab()
 			m_touchSensorClient.getForce(&leftForce, &rightForce);
 
 			if (leftForce + rightForce > params.minimalTouchForce) {
-				stopTrial = true;
+				stopTrial.store(true);
 				stop_motors();
 				break;
 			}
@@ -1346,10 +1355,14 @@ int Protocol::wait_until_arm_liftoff()
 
 void Protocol::armMonitoringThread()
 {
-    int offCounter;
-	logInfo("This is the background thread for passive");
+    int offCounter = 0;
+	char msg[256];
+	sprintf(msg, "This is the background thread for passive, allowInterupt: %i, monitorPassive: %i", allowInterupt.load() == true, monitor_passive_arm.load() == true);
+	logInfo(msg);
+	int totCount = 0;
     while(allowInterupt.load() && monitor_passive_arm.load())
     {
+		totCount++;
         if(!IS_LEFT_ARMSENSOR_TOUCHED && which_passive_arm == -1)
             offCounter += 1;
         else if(!IS_RIGHT_ARMSENSOR_TOUCHED && which_passive_arm == 1)
@@ -1357,14 +1370,17 @@ void Protocol::armMonitoringThread()
         else
             offCounter = 0;
 		if (offCounter >= 25)
+		{
 			logInfo("Exceeded time off from armrest, arborting trial");
-            stop_motors();
-            stopTrial.store(true);
-            offCounter = 0;
-            allowInterupt.store(false);
+			stop_motors();
+			stopTrial.store(true);
+			offCounter = 0;
+			allowInterupt.store(false);
+		}
             
     }
-	logInfo("Finished loop for passive");
+	sprintf(msg, "Finished loop for passive, totcount: %i, allowInterupt: %i, monitorPassive: %i", totCount, allowInterupt.load() == true, monitor_passive_arm.load() == true);
+	logInfo(msg);
     return;
 }
 

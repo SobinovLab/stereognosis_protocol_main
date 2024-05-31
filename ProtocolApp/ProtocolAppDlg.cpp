@@ -502,6 +502,7 @@ void CProtocolAppDlg::stopTrial()
 	// the retreat
 	m_protocol.stop_motors();
 	// stop trial
+	logInfo("STOpPING TRIAL FROM BUTTON WTF??");
 	m_protocol.stopTrial.store(true);
 }
 
@@ -792,6 +793,7 @@ void CProtocolAppDlg::OnBnClickedLeftMain()
 
 		//logInfo("Left Main Button is checked");
         m_protocol.use_left_arm_touch.store(true);
+		m_protocol.which_active_arm = 1;
 
     }
     else
@@ -801,6 +803,7 @@ void CProtocolAppDlg::OnBnClickedLeftMain()
 		if (!oButton->GetCheck())
 		{
 			m_protocol.use_left_arm_touch.store(false);
+			m_protocol.which_active_arm = 0;
 		}
     }
 }
@@ -878,6 +881,7 @@ void CProtocolAppDlg::OnBnClickedRightMain()
 
 		//logInfo("Right Main Button is checked");
         m_protocol.use_right_arm_touch.store(true);
+		m_protocol.which_active_arm = 1;
     }
     else
     {
@@ -886,6 +890,7 @@ void CProtocolAppDlg::OnBnClickedRightMain()
 		if (!oButton->GetCheck())
 		{
 			m_protocol.use_right_arm_touch.store(false);
+			m_protocol.which_active_arm = 0;
 		}
     }
 }

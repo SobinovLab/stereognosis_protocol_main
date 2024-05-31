@@ -104,7 +104,8 @@ class Protocol
         std::atomic<bool> use_right_arm_touch = false;
         std::atomic<bool> reward_on_return = false;
         std::atomic<bool> monitor_passive_arm = false;
-        int which_passive_arm = -1;
+		int which_active_arm = 0; //negative for left, positive for right, 0 for unused
+        int which_passive_arm = 0; //negative for left, positive for right, 0 for unused
 
 		// motors
 		bool were_motors_homed();
