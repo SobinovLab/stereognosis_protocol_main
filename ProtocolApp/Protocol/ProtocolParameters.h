@@ -66,6 +66,7 @@ public:
 
 	// trial
 	int trial_number = 0;
+	int counter = 0; // This always increments
 	int total_trials = 0;
 	double pos_translation_x = 0;
     double pos_translation_height = 0;

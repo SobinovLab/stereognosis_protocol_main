@@ -40,6 +40,13 @@ class TekscanServer final {
   class StubInterface {
    public:
     virtual ~StubInterface() {}
+    virtual ::grpc::Status SetTimestamp(::grpc::ClientContext* context, const ::TekscanServerNamespace::SetTimestampRequest& request, ::TekscanServerNamespace::SimpleResponse* response) = 0;
+    std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::TekscanServerNamespace::SimpleResponse>> AsyncSetTimestamp(::grpc::ClientContext* context, const ::TekscanServerNamespace::SetTimestampRequest& request, ::grpc::CompletionQueue* cq) {
+      return std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::TekscanServerNamespace::SimpleResponse>>(AsyncSetTimestampRaw(context, request, cq));
+    }
+    std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::TekscanServerNamespace::SimpleResponse>> PrepareAsyncSetTimestamp(::grpc::ClientContext* context, const ::TekscanServerNamespace::SetTimestampRequest& request, ::grpc::CompletionQueue* cq) {
+      return std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::TekscanServerNamespace::SimpleResponse>>(PrepareAsyncSetTimestampRaw(context, request, cq));
+    }
     virtual ::grpc::Status StartRecording(::grpc::ClientContext* context, const ::TekscanServerNamespace::StartRecordingRequest& request, ::TekscanServerNamespace::SimpleResponse* response) = 0;
     std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::TekscanServerNamespace::SimpleResponse>> AsyncStartRecording(::grpc::ClientContext* context, const ::TekscanServerNamespace::StartRecordingRequest& request, ::grpc::CompletionQueue* cq) {
       return std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::TekscanServerNamespace::SimpleResponse>>(AsyncStartRecordingRaw(context, request, cq));
@@ -78,6 +85,12 @@ class TekscanServer final {
     class experimental_async_interface {
      public:
       virtual ~experimental_async_interface() {}
+      virtual void SetTimestamp(::grpc::ClientContext* context, const ::TekscanServerNamespace::SetTimestampRequest* request, ::TekscanServerNamespace::SimpleResponse* response, std::function<void(::grpc::Status)>) = 0;
+      #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
+      virtual void SetTimestamp(::grpc::ClientContext* context, const ::TekscanServerNamespace::SetTimestampRequest* request, ::TekscanServerNamespace::SimpleResponse* response, ::grpc::ClientUnaryReactor* reactor) = 0;
+      #else
+      virtual void SetTimestamp(::grpc::ClientContext* context, const ::TekscanServerNamespace::SetTimestampRequest* request, ::TekscanServerNamespace::SimpleResponse* response, ::grpc::experimental::ClientUnaryReactor* reactor) = 0;
+      #endif
       virtual void StartRecording(::grpc::ClientContext* context, const ::TekscanServerNamespace::StartRecordingRequest* request, ::TekscanServerNamespace::SimpleResponse* response, std::function<void(::grpc::Status)>) = 0;
       #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
       virtual void StartRecording(::grpc::ClientContext* context, const ::TekscanServerNamespace::StartRecordingRequest* request, ::TekscanServerNamespace::SimpleResponse* response, ::grpc::ClientUnaryReactor* reactor) = 0;
@@ -117,6 +130,8 @@ class TekscanServer final {
     #endif
     virtual class experimental_async_interface* experimental_async() { return nullptr; }
   private:
+    virtual ::grpc::ClientAsyncResponseReaderInterface< ::TekscanServerNamespace::SimpleResponse>* AsyncSetTimestampRaw(::grpc::ClientContext* context, const ::TekscanServerNamespace::SetTimestampRequest& request, ::grpc::CompletionQueue* cq) = 0;
+    virtual ::grpc::ClientAsyncResponseReaderInterface< ::TekscanServerNamespace::SimpleResponse>* PrepareAsyncSetTimestampRaw(::grpc::ClientContext* context, const ::TekscanServerNamespace::SetTimestampRequest& request, ::grpc::CompletionQueue* cq) = 0;
     virtual ::grpc::ClientAsyncResponseReaderInterface< ::TekscanServerNamespace::SimpleResponse>* AsyncStartRecordingRaw(::grpc::ClientContext* context, const ::TekscanServerNamespace::StartRecordingRequest& request, ::grpc::CompletionQueue* cq) = 0;
     virtual ::grpc::ClientAsyncResponseReaderInterface< ::TekscanServerNamespace::SimpleResponse>* PrepareAsyncStartRecordingRaw(::grpc::ClientContext* context, const ::TekscanServerNamespace::StartRecordingRequest& request, ::grpc::CompletionQueue* cq) = 0;
     virtual ::grpc::ClientAsyncResponseReaderInterface< ::TekscanServerNamespace::BreakRecordingResponse>* AsyncBreakRecordingRaw(::grpc::ClientContext* context, const ::TekscanServerNamespace::SimpleRequest& request, ::grpc::CompletionQueue* cq) = 0;
@@ -131,6 +146,13 @@ class TekscanServer final {
   class Stub final : public StubInterface {
    public:
     Stub(const std::shared_ptr< ::grpc::ChannelInterface>& channel);
+    ::grpc::Status SetTimestamp(::grpc::ClientContext* context, const ::TekscanServerNamespace::SetTimestampRequest& request, ::TekscanServerNamespace::SimpleResponse* response) override;
+    std::unique_ptr< ::grpc::ClientAsyncResponseReader< ::TekscanServerNamespace::SimpleResponse>> AsyncSetTimestamp(::grpc::ClientContext* context, const ::TekscanServerNamespace::SetTimestampRequest& request, ::grpc::CompletionQueue* cq) {
+      return std::unique_ptr< ::grpc::ClientAsyncResponseReader< ::TekscanServerNamespace::SimpleResponse>>(AsyncSetTimestampRaw(context, request, cq));
+    }
+    std::unique_ptr< ::grpc::ClientAsyncResponseReader< ::TekscanServerNamespace::SimpleResponse>> PrepareAsyncSetTimestamp(::grpc::ClientContext* context, const ::TekscanServerNamespace::SetTimestampRequest& request, ::grpc::CompletionQueue* cq) {
+      return std::unique_ptr< ::grpc::ClientAsyncResponseReader< ::TekscanServerNamespace::SimpleResponse>>(PrepareAsyncSetTimestampRaw(context, request, cq));
+    }
     ::grpc::Status StartRecording(::grpc::ClientContext* context, const ::TekscanServerNamespace::StartRecordingRequest& request, ::TekscanServerNamespace::SimpleResponse* response) override;
     std::unique_ptr< ::grpc::ClientAsyncResponseReader< ::TekscanServerNamespace::SimpleResponse>> AsyncStartRecording(::grpc::ClientContext* context, const ::TekscanServerNamespace::StartRecordingRequest& request, ::grpc::CompletionQueue* cq) {
       return std::unique_ptr< ::grpc::ClientAsyncResponseReader< ::TekscanServerNamespace::SimpleResponse>>(AsyncStartRecordingRaw(context, request, cq));
@@ -169,6 +191,12 @@ class TekscanServer final {
     class experimental_async final :
       public StubInterface::experimental_async_interface {
      public:
+      void SetTimestamp(::grpc::ClientContext* context, const ::TekscanServerNamespace::SetTimestampRequest* request, ::TekscanServerNamespace::SimpleResponse* response, std::function<void(::grpc::Status)>) override;
+      #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
+      void SetTimestamp(::grpc::ClientContext* context, const ::TekscanServerNamespace::SetTimestampRequest* request, ::TekscanServerNamespace::SimpleResponse* response, ::grpc::ClientUnaryReactor* reactor) override;
+      #else
+      void SetTimestamp(::grpc::ClientContext* context, const ::TekscanServerNamespace::SetTimestampRequest* request, ::TekscanServerNamespace::SimpleResponse* response, ::grpc::experimental::ClientUnaryReactor* reactor) override;
+      #endif
       void StartRecording(::grpc::ClientContext* context, const ::TekscanServerNamespace::StartRecordingRequest* request, ::TekscanServerNamespace::SimpleResponse* response, std::function<void(::grpc::Status)>) override;
       #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
       void StartRecording(::grpc::ClientContext* context, const ::TekscanServerNamespace::StartRecordingRequest* request, ::TekscanServerNamespace::SimpleResponse* response, ::grpc::ClientUnaryReactor* reactor) override;
@@ -210,6 +238,8 @@ class TekscanServer final {
    private:
     std::shared_ptr< ::grpc::ChannelInterface> channel_;
     class experimental_async async_stub_{this};
+    ::grpc::ClientAsyncResponseReader< ::TekscanServerNamespace::SimpleResponse>* AsyncSetTimestampRaw(::grpc::ClientContext* context, const ::TekscanServerNamespace::SetTimestampRequest& request, ::grpc::CompletionQueue* cq) override;
+    ::grpc::ClientAsyncResponseReader< ::TekscanServerNamespace::SimpleResponse>* PrepareAsyncSetTimestampRaw(::grpc::ClientContext* context, const ::TekscanServerNamespace::SetTimestampRequest& request, ::grpc::CompletionQueue* cq) override;
     ::grpc::ClientAsyncResponseReader< ::TekscanServerNamespace::SimpleResponse>* AsyncStartRecordingRaw(::grpc::ClientContext* context, const ::TekscanServerNamespace::StartRecordingRequest& request, ::grpc::CompletionQueue* cq) override;
     ::grpc::ClientAsyncResponseReader< ::TekscanServerNamespace::SimpleResponse>* PrepareAsyncStartRecordingRaw(::grpc::ClientContext* context, const ::TekscanServerNamespace::StartRecordingRequest& request, ::grpc::CompletionQueue* cq) override;
     ::grpc::ClientAsyncResponseReader< ::TekscanServerNamespace::BreakRecordingResponse>* AsyncBreakRecordingRaw(::grpc::ClientContext* context, const ::TekscanServerNamespace::SimpleRequest& request, ::grpc::CompletionQueue* cq) override;
@@ -220,6 +250,7 @@ class TekscanServer final {
     ::grpc::ClientAsyncResponseReader< ::TekscanServerNamespace::Empty>* PrepareAsyncSyncMessageTrialStartRaw(::grpc::ClientContext* context, const ::TekscanServerNamespace::Empty& request, ::grpc::CompletionQueue* cq) override;
     ::grpc::ClientAsyncResponseReader< ::TekscanServerNamespace::Empty>* AsyncSyncMessageTrialEndRaw(::grpc::ClientContext* context, const ::TekscanServerNamespace::Empty& request, ::grpc::CompletionQueue* cq) override;
     ::grpc::ClientAsyncResponseReader< ::TekscanServerNamespace::Empty>* PrepareAsyncSyncMessageTrialEndRaw(::grpc::ClientContext* context, const ::TekscanServerNamespace::Empty& request, ::grpc::CompletionQueue* cq) override;
+    const ::grpc::internal::RpcMethod rpcmethod_SetTimestamp_;
     const ::grpc::internal::RpcMethod rpcmethod_StartRecording_;
     const ::grpc::internal::RpcMethod rpcmethod_BreakRecording_;
     const ::grpc::internal::RpcMethod rpcmethod_GetForce_;
@@ -232,6 +263,7 @@ class TekscanServer final {
    public:
     Service();
     virtual ~Service();
+    virtual ::grpc::Status SetTimestamp(::grpc::ServerContext* context, const ::TekscanServerNamespace::SetTimestampRequest* request, ::TekscanServerNamespace::SimpleResponse* response);
     virtual ::grpc::Status StartRecording(::grpc::ServerContext* context, const ::TekscanServerNamespace::StartRecordingRequest* request, ::TekscanServerNamespace::SimpleResponse* response);
     virtual ::grpc::Status BreakRecording(::grpc::ServerContext* context, const ::TekscanServerNamespace::SimpleRequest* request, ::TekscanServerNamespace::BreakRecordingResponse* response);
     virtual ::grpc::Status GetForce(::grpc::ServerContext* context, const ::TekscanServerNamespace::SimpleRequest* request, ::TekscanServerNamespace::ForceResponse* response);
@@ -239,12 +271,32 @@ class TekscanServer final {
     virtual ::grpc::Status SyncMessageTrialEnd(::grpc::ServerContext* context, const ::TekscanServerNamespace::Empty* request, ::TekscanServerNamespace::Empty* response);
   };
   template <class BaseClass>
+  class WithAsyncMethod_SetTimestamp : public BaseClass {
+   private:
+    void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
+   public:
+    WithAsyncMethod_SetTimestamp() {
+      ::grpc::Service::MarkMethodAsync(0);
+    }
+    ~WithAsyncMethod_SetTimestamp() override {
+      BaseClassMustBeDerivedFromService(this);
+    }
+    // disable synchronous version of this method
+    ::grpc::Status SetTimestamp(::grpc::ServerContext* /*context*/, const ::TekscanServerNamespace::SetTimestampRequest* /*request*/, ::TekscanServerNamespace::SimpleResponse* /*response*/) override {
+      abort();
+      return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
+    }
+    void RequestSetTimestamp(::grpc::ServerContext* context, ::TekscanServerNamespace::SetTimestampRequest* request, ::grpc::ServerAsyncResponseWriter< ::TekscanServerNamespace::SimpleResponse>* response, ::grpc::CompletionQueue* new_call_cq, ::grpc::ServerCompletionQueue* notification_cq, void *tag) {
+      ::grpc::Service::RequestAsyncUnary(0, context, request, response, new_call_cq, notification_cq, tag);
+    }
+  };
+  template <class BaseClass>
   class WithAsyncMethod_StartRecording : public BaseClass {
    private:
     void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
    public:
     WithAsyncMethod_StartRecording() {
-      ::grpc::Service::MarkMethodAsync(0);
+      ::grpc::Service::MarkMethodAsync(1);
     }
     ~WithAsyncMethod_StartRecording() override {
       BaseClassMustBeDerivedFromService(this);
@@ -255,7 +307,7 @@ class TekscanServer final {
       return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
     }
     void RequestStartRecording(::grpc::ServerContext* context, ::TekscanServerNamespace::StartRecordingRequest* request, ::grpc::ServerAsyncResponseWriter< ::TekscanServerNamespace::SimpleResponse>* response, ::grpc::CompletionQueue* new_call_cq, ::grpc::ServerCompletionQueue* notification_cq, void *tag) {
-      ::grpc::Service::RequestAsyncUnary(0, context, request, response, new_call_cq, notification_cq, tag);
+      ::grpc::Service::RequestAsyncUnary(1, context, request, response, new_call_cq, notification_cq, tag);
     }
   };
   template <class BaseClass>
@@ -264,7 +316,7 @@ class TekscanServer final {
     void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
    public:
     WithAsyncMethod_BreakRecording() {
-      ::grpc::Service::MarkMethodAsync(1);
+      ::grpc::Service::MarkMethodAsync(2);
     }
     ~WithAsyncMethod_BreakRecording() override {
       BaseClassMustBeDerivedFromService(this);
@@ -275,7 +327,7 @@ class TekscanServer final {
       return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
     }
     void RequestBreakRecording(::grpc::ServerContext* context, ::TekscanServerNamespace::SimpleRequest* request, ::grpc::ServerAsyncResponseWriter< ::TekscanServerNamespace::BreakRecordingResponse>* response, ::grpc::CompletionQueue* new_call_cq, ::grpc::ServerCompletionQueue* notification_cq, void *tag) {
-      ::grpc::Service::RequestAsyncUnary(1, context, request, response, new_call_cq, notification_cq, tag);
+      ::grpc::Service::RequestAsyncUnary(2, context, request, response, new_call_cq, notification_cq, tag);
     }
   };
   template <class BaseClass>
@@ -284,7 +336,7 @@ class TekscanServer final {
     void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
    public:
     WithAsyncMethod_GetForce() {
-      ::grpc::Service::MarkMethodAsync(2);
+      ::grpc::Service::MarkMethodAsync(3);
     }
     ~WithAsyncMethod_GetForce() override {
       BaseClassMustBeDerivedFromService(this);
@@ -295,7 +347,7 @@ class TekscanServer final {
       return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
     }
     void RequestGetForce(::grpc::ServerContext* context, ::TekscanServerNamespace::SimpleRequest* request, ::grpc::ServerAsyncResponseWriter< ::TekscanServerNamespace::ForceResponse>* response, ::grpc::CompletionQueue* new_call_cq, ::grpc::ServerCompletionQueue* notification_cq, void *tag) {
-      ::grpc::Service::RequestAsyncUnary(2, context, request, response, new_call_cq, notification_cq, tag);
+      ::grpc::Service::RequestAsyncUnary(3, context, request, response, new_call_cq, notification_cq, tag);
     }
   };
   template <class BaseClass>
@@ -304,7 +356,7 @@ class TekscanServer final {
     void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
    public:
     WithAsyncMethod_SyncMessageTrialStart() {
-      ::grpc::Service::MarkMethodAsync(3);
+      ::grpc::Service::MarkMethodAsync(4);
     }
     ~WithAsyncMethod_SyncMessageTrialStart() override {
       BaseClassMustBeDerivedFromService(this);
@@ -315,7 +367,7 @@ class TekscanServer final {
       return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
     }
     void RequestSyncMessageTrialStart(::grpc::ServerContext* context, ::TekscanServerNamespace::Empty* request, ::grpc::ServerAsyncResponseWriter< ::TekscanServerNamespace::Empty>* response, ::grpc::CompletionQueue* new_call_cq, ::grpc::ServerCompletionQueue* notification_cq, void *tag) {
-      ::grpc::Service::RequestAsyncUnary(3, context, request, response, new_call_cq, notification_cq, tag);
+      ::grpc::Service::RequestAsyncUnary(4, context, request, response, new_call_cq, notification_cq, tag);
     }
   };
   template <class BaseClass>
@@ -324,7 +376,7 @@ class TekscanServer final {
     void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
    public:
     WithAsyncMethod_SyncMessageTrialEnd() {
-      ::grpc::Service::MarkMethodAsync(4);
+      ::grpc::Service::MarkMethodAsync(5);
     }
     ~WithAsyncMethod_SyncMessageTrialEnd() override {
       BaseClassMustBeDerivedFromService(this);
@@ -335,10 +387,57 @@ class TekscanServer final {
       return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
     }
     void RequestSyncMessageTrialEnd(::grpc::ServerContext* context, ::TekscanServerNamespace::Empty* request, ::grpc::ServerAsyncResponseWriter< ::TekscanServerNamespace::Empty>* response, ::grpc::CompletionQueue* new_call_cq, ::grpc::ServerCompletionQueue* notification_cq, void *tag) {
-      ::grpc::Service::RequestAsyncUnary(4, context, request, response, new_call_cq, notification_cq, tag);
+      ::grpc::Service::RequestAsyncUnary(5, context, request, response, new_call_cq, notification_cq, tag);
     }
   };
-  typedef WithAsyncMethod_StartRecording<WithAsyncMethod_BreakRecording<WithAsyncMethod_GetForce<WithAsyncMethod_SyncMessageTrialStart<WithAsyncMethod_SyncMessageTrialEnd<Service > > > > > AsyncService;
+  typedef WithAsyncMethod_SetTimestamp<WithAsyncMethod_StartRecording<WithAsyncMethod_BreakRecording<WithAsyncMethod_GetForce<WithAsyncMethod_SyncMessageTrialStart<WithAsyncMethod_SyncMessageTrialEnd<Service > > > > > > AsyncService;
+  template <class BaseClass>
+  class ExperimentalWithCallbackMethod_SetTimestamp : public BaseClass {
+   private:
+    void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
+   public:
+    ExperimentalWithCallbackMethod_SetTimestamp() {
+    #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
+      ::grpc::Service::
+    #else
+      ::grpc::Service::experimental().
+    #endif
+        MarkMethodCallback(0,
+          new ::grpc::internal::CallbackUnaryHandler< ::TekscanServerNamespace::SetTimestampRequest, ::TekscanServerNamespace::SimpleResponse>(
+            [this](
+    #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
+                   ::grpc::CallbackServerContext*
+    #else
+                   ::grpc::experimental::CallbackServerContext*
+    #endif
+                     context, const ::TekscanServerNamespace::SetTimestampRequest* request, ::TekscanServerNamespace::SimpleResponse* response) { return this->SetTimestamp(context, request, response); }));}
+    void SetMessageAllocatorFor_SetTimestamp(
+        ::grpc::experimental::MessageAllocator< ::TekscanServerNamespace::SetTimestampRequest, ::TekscanServerNamespace::SimpleResponse>* allocator) {
+    #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
+      ::grpc::internal::MethodHandler* const handler = ::grpc::Service::GetHandler(0);
+    #else
+      ::grpc::internal::MethodHandler* const handler = ::grpc::Service::experimental().GetHandler(0);
+    #endif
+      static_cast<::grpc::internal::CallbackUnaryHandler< ::TekscanServerNamespace::SetTimestampRequest, ::TekscanServerNamespace::SimpleResponse>*>(handler)
+              ->SetMessageAllocator(allocator);
+    }
+    ~ExperimentalWithCallbackMethod_SetTimestamp() override {
+      BaseClassMustBeDerivedFromService(this);
+    }
+    // disable synchronous version of this method
+    ::grpc::Status SetTimestamp(::grpc::ServerContext* /*context*/, const ::TekscanServerNamespace::SetTimestampRequest* /*request*/, ::TekscanServerNamespace::SimpleResponse* /*response*/) override {
+      abort();
+      return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
+    }
+    #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
+    virtual ::grpc::ServerUnaryReactor* SetTimestamp(
+      ::grpc::CallbackServerContext* /*context*/, const ::TekscanServerNamespace::SetTimestampRequest* /*request*/, ::TekscanServerNamespace::SimpleResponse* /*response*/)
+    #else
+    virtual ::grpc::experimental::ServerUnaryReactor* SetTimestamp(
+      ::grpc::experimental::CallbackServerContext* /*context*/, const ::TekscanServerNamespace::SetTimestampRequest* /*request*/, ::TekscanServerNamespace::SimpleResponse* /*response*/)
+    #endif
+      { return nullptr; }
+  };
   template <class BaseClass>
   class ExperimentalWithCallbackMethod_StartRecording : public BaseClass {
    private:
@@ -350,7 +449,7 @@ class TekscanServer final {
     #else
       ::grpc::Service::experimental().
     #endif
-        MarkMethodCallback(0,
+        MarkMethodCallback(1,
           new ::grpc::internal::CallbackUnaryHandler< ::TekscanServerNamespace::StartRecordingRequest, ::TekscanServerNamespace::SimpleResponse>(
             [this](
     #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
@@ -362,9 +461,9 @@ class TekscanServer final {
     void SetMessageAllocatorFor_StartRecording(
         ::grpc::experimental::MessageAllocator< ::TekscanServerNamespace::StartRecordingRequest, ::TekscanServerNamespace::SimpleResponse>* allocator) {
     #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
-      ::grpc::internal::MethodHandler* const handler = ::grpc::Service::GetHandler(0);
+      ::grpc::internal::MethodHandler* const handler = ::grpc::Service::GetHandler(1);
     #else
-      ::grpc::internal::MethodHandler* const handler = ::grpc::Service::experimental().GetHandler(0);
+      ::grpc::internal::MethodHandler* const handler = ::grpc::Service::experimental().GetHandler(1);
     #endif
       static_cast<::grpc::internal::CallbackUnaryHandler< ::TekscanServerNamespace::StartRecordingRequest, ::TekscanServerNamespace::SimpleResponse>*>(handler)
               ->SetMessageAllocator(allocator);
@@ -397,7 +496,7 @@ class TekscanServer final {
     #else
       ::grpc::Service::experimental().
     #endif
-        MarkMethodCallback(1,
+        MarkMethodCallback(2,
           new ::grpc::internal::CallbackUnaryHandler< ::TekscanServerNamespace::SimpleRequest, ::TekscanServerNamespace::BreakRecordingResponse>(
             [this](
     #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
@@ -409,9 +508,9 @@ class TekscanServer final {
     void SetMessageAllocatorFor_BreakRecording(
         ::grpc::experimental::MessageAllocator< ::TekscanServerNamespace::SimpleRequest, ::TekscanServerNamespace::BreakRecordingResponse>* allocator) {
     #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
-      ::grpc::internal::MethodHandler* const handler = ::grpc::Service::GetHandler(1);
+      ::grpc::internal::MethodHandler* const handler = ::grpc::Service::GetHandler(2);
     #else
-      ::grpc::internal::MethodHandler* const handler = ::grpc::Service::experimental().GetHandler(1);
+      ::grpc::internal::MethodHandler* const handler = ::grpc::Service::experimental().GetHandler(2);
     #endif
       static_cast<::grpc::internal::CallbackUnaryHandler< ::TekscanServerNamespace::SimpleRequest, ::TekscanServerNamespace::BreakRecordingResponse>*>(handler)
               ->SetMessageAllocator(allocator);
@@ -444,7 +543,7 @@ class TekscanServer final {
     #else
       ::grpc::Service::experimental().
     #endif
-        MarkMethodCallback(2,
+        MarkMethodCallback(3,
           new ::grpc::internal::CallbackUnaryHandler< ::TekscanServerNamespace::SimpleRequest, ::TekscanServerNamespace::ForceResponse>(
             [this](
     #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
@@ -456,9 +555,9 @@ class TekscanServer final {
     void SetMessageAllocatorFor_GetForce(
         ::grpc::experimental::MessageAllocator< ::TekscanServerNamespace::SimpleRequest, ::TekscanServerNamespace::ForceResponse>* allocator) {
     #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
-      ::grpc::internal::MethodHandler* const handler = ::grpc::Service::GetHandler(2);
+      ::grpc::internal::MethodHandler* const handler = ::grpc::Service::GetHandler(3);
     #else
-      ::grpc::internal::MethodHandler* const handler = ::grpc::Service::experimental().GetHandler(2);
+      ::grpc::internal::MethodHandler* const handler = ::grpc::Service::experimental().GetHandler(3);
     #endif
       static_cast<::grpc::internal::CallbackUnaryHandler< ::TekscanServerNamespace::SimpleRequest, ::TekscanServerNamespace::ForceResponse>*>(handler)
               ->SetMessageAllocator(allocator);
@@ -491,7 +590,7 @@ class TekscanServer final {
     #else
       ::grpc::Service::experimental().
     #endif
-        MarkMethodCallback(3,
+        MarkMethodCallback(4,
           new ::grpc::internal::CallbackUnaryHandler< ::TekscanServerNamespace::Empty, ::TekscanServerNamespace::Empty>(
             [this](
     #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
@@ -503,9 +602,9 @@ class TekscanServer final {
     void SetMessageAllocatorFor_SyncMessageTrialStart(
         ::grpc::experimental::MessageAllocator< ::TekscanServerNamespace::Empty, ::TekscanServerNamespace::Empty>* allocator) {
     #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
-      ::grpc::internal::MethodHandler* const handler = ::grpc::Service::GetHandler(3);
+      ::grpc::internal::MethodHandler* const handler = ::grpc::Service::GetHandler(4);
     #else
-      ::grpc::internal::MethodHandler* const handler = ::grpc::Service::experimental().GetHandler(3);
+      ::grpc::internal::MethodHandler* const handler = ::grpc::Service::experimental().GetHandler(4);
     #endif
       static_cast<::grpc::internal::CallbackUnaryHandler< ::TekscanServerNamespace::Empty, ::TekscanServerNamespace::Empty>*>(handler)
               ->SetMessageAllocator(allocator);
@@ -538,7 +637,7 @@ class TekscanServer final {
     #else
       ::grpc::Service::experimental().
     #endif
-        MarkMethodCallback(4,
+        MarkMethodCallback(5,
           new ::grpc::internal::CallbackUnaryHandler< ::TekscanServerNamespace::Empty, ::TekscanServerNamespace::Empty>(
             [this](
     #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
@@ -550,9 +649,9 @@ class TekscanServer final {
     void SetMessageAllocatorFor_SyncMessageTrialEnd(
         ::grpc::experimental::MessageAllocator< ::TekscanServerNamespace::Empty, ::TekscanServerNamespace::Empty>* allocator) {
     #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
-      ::grpc::internal::MethodHandler* const handler = ::grpc::Service::GetHandler(4);
+      ::grpc::internal::MethodHandler* const handler = ::grpc::Service::GetHandler(5);
     #else
-      ::grpc::internal::MethodHandler* const handler = ::grpc::Service::experimental().GetHandler(4);
+      ::grpc::internal::MethodHandler* const handler = ::grpc::Service::experimental().GetHandler(5);
     #endif
       static_cast<::grpc::internal::CallbackUnaryHandler< ::TekscanServerNamespace::Empty, ::TekscanServerNamespace::Empty>*>(handler)
               ->SetMessageAllocator(allocator);
@@ -575,17 +674,34 @@ class TekscanServer final {
       { return nullptr; }
   };
   #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
-  typedef ExperimentalWithCallbackMethod_StartRecording<ExperimentalWithCallbackMethod_BreakRecording<ExperimentalWithCallbackMethod_GetForce<ExperimentalWithCallbackMethod_SyncMessageTrialStart<ExperimentalWithCallbackMethod_SyncMessageTrialEnd<Service > > > > > CallbackService;
+  typedef ExperimentalWithCallbackMethod_SetTimestamp<ExperimentalWithCallbackMethod_StartRecording<ExperimentalWithCallbackMethod_BreakRecording<ExperimentalWithCallbackMethod_GetForce<ExperimentalWithCallbackMethod_SyncMessageTrialStart<ExperimentalWithCallbackMethod_SyncMessageTrialEnd<Service > > > > > > CallbackService;
   #endif
 
-  typedef ExperimentalWithCallbackMethod_StartRecording<ExperimentalWithCallbackMethod_BreakRecording<ExperimentalWithCallbackMethod_GetForce<ExperimentalWithCallbackMethod_SyncMessageTrialStart<ExperimentalWithCallbackMethod_SyncMessageTrialEnd<Service > > > > > ExperimentalCallbackService;
+  typedef ExperimentalWithCallbackMethod_SetTimestamp<ExperimentalWithCallbackMethod_StartRecording<ExperimentalWithCallbackMethod_BreakRecording<ExperimentalWithCallbackMethod_GetForce<ExperimentalWithCallbackMethod_SyncMessageTrialStart<ExperimentalWithCallbackMethod_SyncMessageTrialEnd<Service > > > > > > ExperimentalCallbackService;
+  template <class BaseClass>
+  class WithGenericMethod_SetTimestamp : public BaseClass {
+   private:
+    void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
+   public:
+    WithGenericMethod_SetTimestamp() {
+      ::grpc::Service::MarkMethodGeneric(0);
+    }
+    ~WithGenericMethod_SetTimestamp() override {
+      BaseClassMustBeDerivedFromService(this);
+    }
+    // disable synchronous version of this method
+    ::grpc::Status SetTimestamp(::grpc::ServerContext* /*context*/, const ::TekscanServerNamespace::SetTimestampRequest* /*request*/, ::TekscanServerNamespace::SimpleResponse* /*response*/) override {
+      abort();
+      return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
+    }
+  };
   template <class BaseClass>
   class WithGenericMethod_StartRecording : public BaseClass {
    private:
     void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
    public:
     WithGenericMethod_StartRecording() {
-      ::grpc::Service::MarkMethodGeneric(0);
+      ::grpc::Service::MarkMethodGeneric(1);
     }
     ~WithGenericMethod_StartRecording() override {
       BaseClassMustBeDerivedFromService(this);
@@ -602,7 +718,7 @@ class TekscanServer final {
     void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
    public:
     WithGenericMethod_BreakRecording() {
-      ::grpc::Service::MarkMethodGeneric(1);
+      ::grpc::Service::MarkMethodGeneric(2);
     }
     ~WithGenericMethod_BreakRecording() override {
       BaseClassMustBeDerivedFromService(this);
@@ -619,7 +735,7 @@ class TekscanServer final {
     void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
    public:
     WithGenericMethod_GetForce() {
-      ::grpc::Service::MarkMethodGeneric(2);
+      ::grpc::Service::MarkMethodGeneric(3);
     }
     ~WithGenericMethod_GetForce() override {
       BaseClassMustBeDerivedFromService(this);
@@ -636,7 +752,7 @@ class TekscanServer final {
     void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
    public:
     WithGenericMethod_SyncMessageTrialStart() {
-      ::grpc::Service::MarkMethodGeneric(3);
+      ::grpc::Service::MarkMethodGeneric(4);
     }
     ~WithGenericMethod_SyncMessageTrialStart() override {
       BaseClassMustBeDerivedFromService(this);
@@ -653,7 +769,7 @@ class TekscanServer final {
     void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
    public:
     WithGenericMethod_SyncMessageTrialEnd() {
-      ::grpc::Service::MarkMethodGeneric(4);
+      ::grpc::Service::MarkMethodGeneric(5);
     }
     ~WithGenericMethod_SyncMessageTrialEnd() override {
       BaseClassMustBeDerivedFromService(this);
@@ -665,12 +781,32 @@ class TekscanServer final {
     }
   };
   template <class BaseClass>
+  class WithRawMethod_SetTimestamp : public BaseClass {
+   private:
+    void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
+   public:
+    WithRawMethod_SetTimestamp() {
+      ::grpc::Service::MarkMethodRaw(0);
+    }
+    ~WithRawMethod_SetTimestamp() override {
+      BaseClassMustBeDerivedFromService(this);
+    }
+    // disable synchronous version of this method
+    ::grpc::Status SetTimestamp(::grpc::ServerContext* /*context*/, const ::TekscanServerNamespace::SetTimestampRequest* /*request*/, ::TekscanServerNamespace::SimpleResponse* /*response*/) override {
+      abort();
+      return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
+    }
+    void RequestSetTimestamp(::grpc::ServerContext* context, ::grpc::ByteBuffer* request, ::grpc::ServerAsyncResponseWriter< ::grpc::ByteBuffer>* response, ::grpc::CompletionQueue* new_call_cq, ::grpc::ServerCompletionQueue* notification_cq, void *tag) {
+      ::grpc::Service::RequestAsyncUnary(0, context, request, response, new_call_cq, notification_cq, tag);
+    }
+  };
+  template <class BaseClass>
   class WithRawMethod_StartRecording : public BaseClass {
    private:
     void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
    public:
     WithRawMethod_StartRecording() {
-      ::grpc::Service::MarkMethodRaw(0);
+      ::grpc::Service::MarkMethodRaw(1);
     }
     ~WithRawMethod_StartRecording() override {
       BaseClassMustBeDerivedFromService(this);
@@ -681,7 +817,7 @@ class TekscanServer final {
       return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
     }
     void RequestStartRecording(::grpc::ServerContext* context, ::grpc::ByteBuffer* request, ::grpc::ServerAsyncResponseWriter< ::grpc::ByteBuffer>* response, ::grpc::CompletionQueue* new_call_cq, ::grpc::ServerCompletionQueue* notification_cq, void *tag) {
-      ::grpc::Service::RequestAsyncUnary(0, context, request, response, new_call_cq, notification_cq, tag);
+      ::grpc::Service::RequestAsyncUnary(1, context, request, response, new_call_cq, notification_cq, tag);
     }
   };
   template <class BaseClass>
@@ -690,7 +826,7 @@ class TekscanServer final {
     void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
    public:
     WithRawMethod_BreakRecording() {
-      ::grpc::Service::MarkMethodRaw(1);
+      ::grpc::Service::MarkMethodRaw(2);
     }
     ~WithRawMethod_BreakRecording() override {
       BaseClassMustBeDerivedFromService(this);
@@ -701,7 +837,7 @@ class TekscanServer final {
       return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
     }
     void RequestBreakRecording(::grpc::ServerContext* context, ::grpc::ByteBuffer* request, ::grpc::ServerAsyncResponseWriter< ::grpc::ByteBuffer>* response, ::grpc::CompletionQueue* new_call_cq, ::grpc::ServerCompletionQueue* notification_cq, void *tag) {
-      ::grpc::Service::RequestAsyncUnary(1, context, request, response, new_call_cq, notification_cq, tag);
+      ::grpc::Service::RequestAsyncUnary(2, context, request, response, new_call_cq, notification_cq, tag);
     }
   };
   template <class BaseClass>
@@ -710,7 +846,7 @@ class TekscanServer final {
     void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
    public:
     WithRawMethod_GetForce() {
-      ::grpc::Service::MarkMethodRaw(2);
+      ::grpc::Service::MarkMethodRaw(3);
     }
     ~WithRawMethod_GetForce() override {
       BaseClassMustBeDerivedFromService(this);
@@ -721,7 +857,7 @@ class TekscanServer final {
       return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
     }
     void RequestGetForce(::grpc::ServerContext* context, ::grpc::ByteBuffer* request, ::grpc::ServerAsyncResponseWriter< ::grpc::ByteBuffer>* response, ::grpc::CompletionQueue* new_call_cq, ::grpc::ServerCompletionQueue* notification_cq, void *tag) {
-      ::grpc::Service::RequestAsyncUnary(2, context, request, response, new_call_cq, notification_cq, tag);
+      ::grpc::Service::RequestAsyncUnary(3, context, request, response, new_call_cq, notification_cq, tag);
     }
   };
   template <class BaseClass>
@@ -730,7 +866,7 @@ class TekscanServer final {
     void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
    public:
     WithRawMethod_SyncMessageTrialStart() {
-      ::grpc::Service::MarkMethodRaw(3);
+      ::grpc::Service::MarkMethodRaw(4);
     }
     ~WithRawMethod_SyncMessageTrialStart() override {
       BaseClassMustBeDerivedFromService(this);
@@ -741,7 +877,7 @@ class TekscanServer final {
       return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
     }
     void RequestSyncMessageTrialStart(::grpc::ServerContext* context, ::grpc::ByteBuffer* request, ::grpc::ServerAsyncResponseWriter< ::grpc::ByteBuffer>* response, ::grpc::CompletionQueue* new_call_cq, ::grpc::ServerCompletionQueue* notification_cq, void *tag) {
-      ::grpc::Service::RequestAsyncUnary(3, context, request, response, new_call_cq, notification_cq, tag);
+      ::grpc::Service::RequestAsyncUnary(4, context, request, response, new_call_cq, notification_cq, tag);
     }
   };
   template <class BaseClass>
@@ -750,7 +886,7 @@ class TekscanServer final {
     void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
    public:
     WithRawMethod_SyncMessageTrialEnd() {
-      ::grpc::Service::MarkMethodRaw(4);
+      ::grpc::Service::MarkMethodRaw(5);
     }
     ~WithRawMethod_SyncMessageTrialEnd() override {
       BaseClassMustBeDerivedFromService(this);
@@ -761,8 +897,46 @@ class TekscanServer final {
       return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
     }
     void RequestSyncMessageTrialEnd(::grpc::ServerContext* context, ::grpc::ByteBuffer* request, ::grpc::ServerAsyncResponseWriter< ::grpc::ByteBuffer>* response, ::grpc::CompletionQueue* new_call_cq, ::grpc::ServerCompletionQueue* notification_cq, void *tag) {
-      ::grpc::Service::RequestAsyncUnary(4, context, request, response, new_call_cq, notification_cq, tag);
+      ::grpc::Service::RequestAsyncUnary(5, context, request, response, new_call_cq, notification_cq, tag);
     }
+  };
+  template <class BaseClass>
+  class ExperimentalWithRawCallbackMethod_SetTimestamp : public BaseClass {
+   private:
+    void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
+   public:
+    ExperimentalWithRawCallbackMethod_SetTimestamp() {
+    #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
+      ::grpc::Service::
+    #else
+      ::grpc::Service::experimental().
+    #endif
+        MarkMethodRawCallback(0,
+          new ::grpc::internal::CallbackUnaryHandler< ::grpc::ByteBuffer, ::grpc::ByteBuffer>(
+            [this](
+    #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
+                   ::grpc::CallbackServerContext*
+    #else
+                   ::grpc::experimental::CallbackServerContext*
+    #endif
+                     context, const ::grpc::ByteBuffer* request, ::grpc::ByteBuffer* response) { return this->SetTimestamp(context, request, response); }));
+    }
+    ~ExperimentalWithRawCallbackMethod_SetTimestamp() override {
+      BaseClassMustBeDerivedFromService(this);
+    }
+    // disable synchronous version of this method
+    ::grpc::Status SetTimestamp(::grpc::ServerContext* /*context*/, const ::TekscanServerNamespace::SetTimestampRequest* /*request*/, ::TekscanServerNamespace::SimpleResponse* /*response*/) override {
+      abort();
+      return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
+    }
+    #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
+    virtual ::grpc::ServerUnaryReactor* SetTimestamp(
+      ::grpc::CallbackServerContext* /*context*/, const ::grpc::ByteBuffer* /*request*/, ::grpc::ByteBuffer* /*response*/)
+    #else
+    virtual ::grpc::experimental::ServerUnaryReactor* SetTimestamp(
+      ::grpc::experimental::CallbackServerContext* /*context*/, const ::grpc::ByteBuffer* /*request*/, ::grpc::ByteBuffer* /*response*/)
+    #endif
+      { return nullptr; }
   };
   template <class BaseClass>
   class ExperimentalWithRawCallbackMethod_StartRecording : public BaseClass {
@@ -775,7 +949,7 @@ class TekscanServer final {
     #else
       ::grpc::Service::experimental().
     #endif
-        MarkMethodRawCallback(0,
+        MarkMethodRawCallback(1,
           new ::grpc::internal::CallbackUnaryHandler< ::grpc::ByteBuffer, ::grpc::ByteBuffer>(
             [this](
     #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
@@ -813,7 +987,7 @@ class TekscanServer final {
     #else
       ::grpc::Service::experimental().
     #endif
-        MarkMethodRawCallback(1,
+        MarkMethodRawCallback(2,
           new ::grpc::internal::CallbackUnaryHandler< ::grpc::ByteBuffer, ::grpc::ByteBuffer>(
             [this](
     #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
@@ -851,7 +1025,7 @@ class TekscanServer final {
     #else
       ::grpc::Service::experimental().
     #endif
-        MarkMethodRawCallback(2,
+        MarkMethodRawCallback(3,
           new ::grpc::internal::CallbackUnaryHandler< ::grpc::ByteBuffer, ::grpc::ByteBuffer>(
             [this](
     #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
@@ -889,7 +1063,7 @@ class TekscanServer final {
     #else
       ::grpc::Service::experimental().
     #endif
-        MarkMethodRawCallback(3,
+        MarkMethodRawCallback(4,
           new ::grpc::internal::CallbackUnaryHandler< ::grpc::ByteBuffer, ::grpc::ByteBuffer>(
             [this](
     #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
@@ -927,7 +1101,7 @@ class TekscanServer final {
     #else
       ::grpc::Service::experimental().
     #endif
-        MarkMethodRawCallback(4,
+        MarkMethodRawCallback(5,
           new ::grpc::internal::CallbackUnaryHandler< ::grpc::ByteBuffer, ::grpc::ByteBuffer>(
             [this](
     #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
@@ -955,12 +1129,39 @@ class TekscanServer final {
       { return nullptr; }
   };
   template <class BaseClass>
+  class WithStreamedUnaryMethod_SetTimestamp : public BaseClass {
+   private:
+    void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
+   public:
+    WithStreamedUnaryMethod_SetTimestamp() {
+      ::grpc::Service::MarkMethodStreamed(0,
+        new ::grpc::internal::StreamedUnaryHandler<
+          ::TekscanServerNamespace::SetTimestampRequest, ::TekscanServerNamespace::SimpleResponse>(
+            [this](::grpc::ServerContext* context,
+                   ::grpc::ServerUnaryStreamer<
+                     ::TekscanServerNamespace::SetTimestampRequest, ::TekscanServerNamespace::SimpleResponse>* streamer) {
+                       return this->StreamedSetTimestamp(context,
+                         streamer);
+                  }));
+    }
+    ~WithStreamedUnaryMethod_SetTimestamp() override {
+      BaseClassMustBeDerivedFromService(this);
+    }
+    // disable regular version of this method
+    ::grpc::Status SetTimestamp(::grpc::ServerContext* /*context*/, const ::TekscanServerNamespace::SetTimestampRequest* /*request*/, ::TekscanServerNamespace::SimpleResponse* /*response*/) override {
+      abort();
+      return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
+    }
+    // replace default version of method with streamed unary
+    virtual ::grpc::Status StreamedSetTimestamp(::grpc::ServerContext* context, ::grpc::ServerUnaryStreamer< ::TekscanServerNamespace::SetTimestampRequest,::TekscanServerNamespace::SimpleResponse>* server_unary_streamer) = 0;
+  };
+  template <class BaseClass>
   class WithStreamedUnaryMethod_StartRecording : public BaseClass {
    private:
     void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
    public:
     WithStreamedUnaryMethod_StartRecording() {
-      ::grpc::Service::MarkMethodStreamed(0,
+      ::grpc::Service::MarkMethodStreamed(1,
         new ::grpc::internal::StreamedUnaryHandler<
           ::TekscanServerNamespace::StartRecordingRequest, ::TekscanServerNamespace::SimpleResponse>(
             [this](::grpc::ServerContext* context,
@@ -987,7 +1188,7 @@ class TekscanServer final {
     void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
    public:
     WithStreamedUnaryMethod_BreakRecording() {
-      ::grpc::Service::MarkMethodStreamed(1,
+      ::grpc::Service::MarkMethodStreamed(2,
         new ::grpc::internal::StreamedUnaryHandler<
           ::TekscanServerNamespace::SimpleRequest, ::TekscanServerNamespace::BreakRecordingResponse>(
             [this](::grpc::ServerContext* context,
@@ -1014,7 +1215,7 @@ class TekscanServer final {
     void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
    public:
     WithStreamedUnaryMethod_GetForce() {
-      ::grpc::Service::MarkMethodStreamed(2,
+      ::grpc::Service::MarkMethodStreamed(3,
         new ::grpc::internal::StreamedUnaryHandler<
           ::TekscanServerNamespace::SimpleRequest, ::TekscanServerNamespace::ForceResponse>(
             [this](::grpc::ServerContext* context,
@@ -1041,7 +1242,7 @@ class TekscanServer final {
     void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
    public:
     WithStreamedUnaryMethod_SyncMessageTrialStart() {
-      ::grpc::Service::MarkMethodStreamed(3,
+      ::grpc::Service::MarkMethodStreamed(4,
         new ::grpc::internal::StreamedUnaryHandler<
           ::TekscanServerNamespace::Empty, ::TekscanServerNamespace::Empty>(
             [this](::grpc::ServerContext* context,
@@ -1068,7 +1269,7 @@ class TekscanServer final {
     void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
    public:
     WithStreamedUnaryMethod_SyncMessageTrialEnd() {
-      ::grpc::Service::MarkMethodStreamed(4,
+      ::grpc::Service::MarkMethodStreamed(5,
         new ::grpc::internal::StreamedUnaryHandler<
           ::TekscanServerNamespace::Empty, ::TekscanServerNamespace::Empty>(
             [this](::grpc::ServerContext* context,
@@ -1089,9 +1290,9 @@ class TekscanServer final {
     // replace default version of method with streamed unary
     virtual ::grpc::Status StreamedSyncMessageTrialEnd(::grpc::ServerContext* context, ::grpc::ServerUnaryStreamer< ::TekscanServerNamespace::Empty,::TekscanServerNamespace::Empty>* server_unary_streamer) = 0;
   };
-  typedef WithStreamedUnaryMethod_StartRecording<WithStreamedUnaryMethod_BreakRecording<WithStreamedUnaryMethod_GetForce<WithStreamedUnaryMethod_SyncMessageTrialStart<WithStreamedUnaryMethod_SyncMessageTrialEnd<Service > > > > > StreamedUnaryService;
+  typedef WithStreamedUnaryMethod_SetTimestamp<WithStreamedUnaryMethod_StartRecording<WithStreamedUnaryMethod_BreakRecording<WithStreamedUnaryMethod_GetForce<WithStreamedUnaryMethod_SyncMessageTrialStart<WithStreamedUnaryMethod_SyncMessageTrialEnd<Service > > > > > > StreamedUnaryService;
   typedef Service SplitStreamedService;
-  typedef WithStreamedUnaryMethod_StartRecording<WithStreamedUnaryMethod_BreakRecording<WithStreamedUnaryMethod_GetForce<WithStreamedUnaryMethod_SyncMessageTrialStart<WithStreamedUnaryMethod_SyncMessageTrialEnd<Service > > > > > StreamedService;
+  typedef WithStreamedUnaryMethod_SetTimestamp<WithStreamedUnaryMethod_StartRecording<WithStreamedUnaryMethod_BreakRecording<WithStreamedUnaryMethod_GetForce<WithStreamedUnaryMethod_SyncMessageTrialStart<WithStreamedUnaryMethod_SyncMessageTrialEnd<Service > > > > > > StreamedService;
 };
 
 }  // namespace TekscanServerNamespace

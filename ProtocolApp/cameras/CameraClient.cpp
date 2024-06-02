@@ -20,6 +20,7 @@ CameraClient::~CameraClient()
 }
 
 
+
 void CameraClient::connect_f()
 {
 	CString serverAddress;
@@ -40,6 +41,17 @@ void CameraClient::disconnect_f()
 	delete ccsc;	ccsc = nullptr;
 
 	appendClientLog(_T("Disconnected from server.\n"));
+}
+
+void CameraClient::setTimestamp(int timestamp)
+{
+	appendClientLog(_T("Sending timestamp. "));
+	if (ccsc) {
+		if (ccsc->setTimestamp(timestamp))
+			appendClientLog(_T("Success.\n"));
+		else
+			appendClientLog(_T("Failure.\n"));
+	}
 }
 
 void CameraClient::sendFramerate(const double framerate)
@@ -124,9 +136,10 @@ void CameraClient::prepareRecording()
 	}
 }
 
+
 bool CameraClient::startRecording(int trialNumber, int* success)
 {
-	appendClientLog(_T("Starting recording. "));
+	appendClientLog(_T("Starting recording"));
 	if (ccsc) {
 		if (ccsc->startRecording(trialNumber, success)) {
 			appendClientLog(_T("Success.\n"));
@@ -227,6 +240,27 @@ void CameraClient::appendClientLog(CString text)
 		SendMessage(*clientLogGuiEdt, EM_REPLACESEL, 0, (LPARAM)ascii.m_psz);
 	}
 }
+
+bool CameraCommunicatorSClient::setTimestamp(int timestamp)
+{
+	SetTimestampRequest strq;
+	strq.set_timestamp(timestamp);
+	SimpleResponse sr;
+	ClientContext context;
+
+	Status status = stub_->SetTimestamp(&context, strq, &sr);
+	if (!status.ok()) {
+		return false;
+	}
+
+	lastCode = sr.code();
+	lastDescritpion = new CString(sr.description().c_str());
+
+	return true;
+
+}
+
+
 
 bool CameraCommunicatorSClient::sendFramerate(const double framerate)
 {
@@ -375,14 +409,18 @@ bool CameraCommunicatorSClient::prepareRecording()
 	return true;
 }
 
+
 bool CameraCommunicatorSClient::startRecording(int trialNumber, int* success)
 {
-	SimpleRequest srq;
-	srq.set_code(trialNumber);
+
+	StartRecordingRequest srrq;
+	// Set fields
+	srrq.set_trialnumber(trialNumber);
+
 	SimpleResponse sr;
 	ClientContext context;
 
-	Status status = stub_->StartRecording(&context, srq, &sr);
+	Status status = stub_->StartRecording(&context, srrq, &sr);
 	if (!status.ok()) {
 		return false;
 	}

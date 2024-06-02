@@ -38,6 +38,13 @@ class CameraCommunicatorS final {
   class StubInterface {
    public:
     virtual ~StubInterface() {}
+    virtual ::grpc::Status SetTimestamp(::grpc::ClientContext* context, const ::SetTimestampRequest& request, ::SimpleResponse* response) = 0;
+    std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::SimpleResponse>> AsyncSetTimestamp(::grpc::ClientContext* context, const ::SetTimestampRequest& request, ::grpc::CompletionQueue* cq) {
+      return std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::SimpleResponse>>(AsyncSetTimestampRaw(context, request, cq));
+    }
+    std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::SimpleResponse>> PrepareAsyncSetTimestamp(::grpc::ClientContext* context, const ::SetTimestampRequest& request, ::grpc::CompletionQueue* cq) {
+      return std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::SimpleResponse>>(PrepareAsyncSetTimestampRaw(context, request, cq));
+    }
     virtual ::grpc::Status SetFramerate(::grpc::ClientContext* context, const ::SetFramerateRequest& request, ::SimpleResponse* response) = 0;
     std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::SimpleResponse>> AsyncSetFramerate(::grpc::ClientContext* context, const ::SetFramerateRequest& request, ::grpc::CompletionQueue* cq) {
       return std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::SimpleResponse>>(AsyncSetFramerateRaw(context, request, cq));
@@ -66,11 +73,11 @@ class CameraCommunicatorS final {
     std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::SimpleResponse>> PrepareAsyncPrepareRecording(::grpc::ClientContext* context, const ::SimpleRequest& request, ::grpc::CompletionQueue* cq) {
       return std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::SimpleResponse>>(PrepareAsyncPrepareRecordingRaw(context, request, cq));
     }
-    virtual ::grpc::Status StartRecording(::grpc::ClientContext* context, const ::SimpleRequest& request, ::SimpleResponse* response) = 0;
-    std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::SimpleResponse>> AsyncStartRecording(::grpc::ClientContext* context, const ::SimpleRequest& request, ::grpc::CompletionQueue* cq) {
+    virtual ::grpc::Status StartRecording(::grpc::ClientContext* context, const ::StartRecordingRequest& request, ::SimpleResponse* response) = 0;
+    std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::SimpleResponse>> AsyncStartRecording(::grpc::ClientContext* context, const ::StartRecordingRequest& request, ::grpc::CompletionQueue* cq) {
       return std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::SimpleResponse>>(AsyncStartRecordingRaw(context, request, cq));
     }
-    std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::SimpleResponse>> PrepareAsyncStartRecording(::grpc::ClientContext* context, const ::SimpleRequest& request, ::grpc::CompletionQueue* cq) {
+    std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::SimpleResponse>> PrepareAsyncStartRecording(::grpc::ClientContext* context, const ::StartRecordingRequest& request, ::grpc::CompletionQueue* cq) {
       return std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::SimpleResponse>>(PrepareAsyncStartRecordingRaw(context, request, cq));
     }
     virtual ::grpc::Status CaptureSingleImage(::grpc::ClientContext* context, const ::SimpleRequest& request, ::SimpleResponse* response) = 0;
@@ -132,6 +139,12 @@ class CameraCommunicatorS final {
     class experimental_async_interface {
      public:
       virtual ~experimental_async_interface() {}
+      virtual void SetTimestamp(::grpc::ClientContext* context, const ::SetTimestampRequest* request, ::SimpleResponse* response, std::function<void(::grpc::Status)>) = 0;
+      #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
+      virtual void SetTimestamp(::grpc::ClientContext* context, const ::SetTimestampRequest* request, ::SimpleResponse* response, ::grpc::ClientUnaryReactor* reactor) = 0;
+      #else
+      virtual void SetTimestamp(::grpc::ClientContext* context, const ::SetTimestampRequest* request, ::SimpleResponse* response, ::grpc::experimental::ClientUnaryReactor* reactor) = 0;
+      #endif
       virtual void SetFramerate(::grpc::ClientContext* context, const ::SetFramerateRequest* request, ::SimpleResponse* response, std::function<void(::grpc::Status)>) = 0;
       #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
       virtual void SetFramerate(::grpc::ClientContext* context, const ::SetFramerateRequest* request, ::SimpleResponse* response, ::grpc::ClientUnaryReactor* reactor) = 0;
@@ -156,11 +169,11 @@ class CameraCommunicatorS final {
       #else
       virtual void PrepareRecording(::grpc::ClientContext* context, const ::SimpleRequest* request, ::SimpleResponse* response, ::grpc::experimental::ClientUnaryReactor* reactor) = 0;
       #endif
-      virtual void StartRecording(::grpc::ClientContext* context, const ::SimpleRequest* request, ::SimpleResponse* response, std::function<void(::grpc::Status)>) = 0;
+      virtual void StartRecording(::grpc::ClientContext* context, const ::StartRecordingRequest* request, ::SimpleResponse* response, std::function<void(::grpc::Status)>) = 0;
       #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
-      virtual void StartRecording(::grpc::ClientContext* context, const ::SimpleRequest* request, ::SimpleResponse* response, ::grpc::ClientUnaryReactor* reactor) = 0;
+      virtual void StartRecording(::grpc::ClientContext* context, const ::StartRecordingRequest* request, ::SimpleResponse* response, ::grpc::ClientUnaryReactor* reactor) = 0;
       #else
-      virtual void StartRecording(::grpc::ClientContext* context, const ::SimpleRequest* request, ::SimpleResponse* response, ::grpc::experimental::ClientUnaryReactor* reactor) = 0;
+      virtual void StartRecording(::grpc::ClientContext* context, const ::StartRecordingRequest* request, ::SimpleResponse* response, ::grpc::experimental::ClientUnaryReactor* reactor) = 0;
       #endif
       virtual void CaptureSingleImage(::grpc::ClientContext* context, const ::SimpleRequest* request, ::SimpleResponse* response, std::function<void(::grpc::Status)>) = 0;
       #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
@@ -219,6 +232,8 @@ class CameraCommunicatorS final {
     #endif
     virtual class experimental_async_interface* experimental_async() { return nullptr; }
   private:
+    virtual ::grpc::ClientAsyncResponseReaderInterface< ::SimpleResponse>* AsyncSetTimestampRaw(::grpc::ClientContext* context, const ::SetTimestampRequest& request, ::grpc::CompletionQueue* cq) = 0;
+    virtual ::grpc::ClientAsyncResponseReaderInterface< ::SimpleResponse>* PrepareAsyncSetTimestampRaw(::grpc::ClientContext* context, const ::SetTimestampRequest& request, ::grpc::CompletionQueue* cq) = 0;
     virtual ::grpc::ClientAsyncResponseReaderInterface< ::SimpleResponse>* AsyncSetFramerateRaw(::grpc::ClientContext* context, const ::SetFramerateRequest& request, ::grpc::CompletionQueue* cq) = 0;
     virtual ::grpc::ClientAsyncResponseReaderInterface< ::SimpleResponse>* PrepareAsyncSetFramerateRaw(::grpc::ClientContext* context, const ::SetFramerateRequest& request, ::grpc::CompletionQueue* cq) = 0;
     virtual ::grpc::ClientAsyncResponseReaderInterface< ::SimpleResponse>* AsyncSetRecordingPeriodRaw(::grpc::ClientContext* context, const ::SetRecordingPeriodRequest& request, ::grpc::CompletionQueue* cq) = 0;
@@ -227,8 +242,8 @@ class CameraCommunicatorS final {
     virtual ::grpc::ClientAsyncResponseReaderInterface< ::SimpleResponse>* PrepareAsyncSetReferenceCameraRaw(::grpc::ClientContext* context, const ::SetReferenceCameraRequest& request, ::grpc::CompletionQueue* cq) = 0;
     virtual ::grpc::ClientAsyncResponseReaderInterface< ::SimpleResponse>* AsyncPrepareRecordingRaw(::grpc::ClientContext* context, const ::SimpleRequest& request, ::grpc::CompletionQueue* cq) = 0;
     virtual ::grpc::ClientAsyncResponseReaderInterface< ::SimpleResponse>* PrepareAsyncPrepareRecordingRaw(::grpc::ClientContext* context, const ::SimpleRequest& request, ::grpc::CompletionQueue* cq) = 0;
-    virtual ::grpc::ClientAsyncResponseReaderInterface< ::SimpleResponse>* AsyncStartRecordingRaw(::grpc::ClientContext* context, const ::SimpleRequest& request, ::grpc::CompletionQueue* cq) = 0;
-    virtual ::grpc::ClientAsyncResponseReaderInterface< ::SimpleResponse>* PrepareAsyncStartRecordingRaw(::grpc::ClientContext* context, const ::SimpleRequest& request, ::grpc::CompletionQueue* cq) = 0;
+    virtual ::grpc::ClientAsyncResponseReaderInterface< ::SimpleResponse>* AsyncStartRecordingRaw(::grpc::ClientContext* context, const ::StartRecordingRequest& request, ::grpc::CompletionQueue* cq) = 0;
+    virtual ::grpc::ClientAsyncResponseReaderInterface< ::SimpleResponse>* PrepareAsyncStartRecordingRaw(::grpc::ClientContext* context, const ::StartRecordingRequest& request, ::grpc::CompletionQueue* cq) = 0;
     virtual ::grpc::ClientAsyncResponseReaderInterface< ::SimpleResponse>* AsyncCaptureSingleImageRaw(::grpc::ClientContext* context, const ::SimpleRequest& request, ::grpc::CompletionQueue* cq) = 0;
     virtual ::grpc::ClientAsyncResponseReaderInterface< ::SimpleResponse>* PrepareAsyncCaptureSingleImageRaw(::grpc::ClientContext* context, const ::SimpleRequest& request, ::grpc::CompletionQueue* cq) = 0;
     virtual ::grpc::ClientAsyncResponseReaderInterface< ::SimpleResponse>* AsyncSetDirectoryRaw(::grpc::ClientContext* context, const ::SetDirectoryRequest& request, ::grpc::CompletionQueue* cq) = 0;
@@ -249,6 +264,13 @@ class CameraCommunicatorS final {
   class Stub final : public StubInterface {
    public:
     Stub(const std::shared_ptr< ::grpc::ChannelInterface>& channel);
+    ::grpc::Status SetTimestamp(::grpc::ClientContext* context, const ::SetTimestampRequest& request, ::SimpleResponse* response) override;
+    std::unique_ptr< ::grpc::ClientAsyncResponseReader< ::SimpleResponse>> AsyncSetTimestamp(::grpc::ClientContext* context, const ::SetTimestampRequest& request, ::grpc::CompletionQueue* cq) {
+      return std::unique_ptr< ::grpc::ClientAsyncResponseReader< ::SimpleResponse>>(AsyncSetTimestampRaw(context, request, cq));
+    }
+    std::unique_ptr< ::grpc::ClientAsyncResponseReader< ::SimpleResponse>> PrepareAsyncSetTimestamp(::grpc::ClientContext* context, const ::SetTimestampRequest& request, ::grpc::CompletionQueue* cq) {
+      return std::unique_ptr< ::grpc::ClientAsyncResponseReader< ::SimpleResponse>>(PrepareAsyncSetTimestampRaw(context, request, cq));
+    }
     ::grpc::Status SetFramerate(::grpc::ClientContext* context, const ::SetFramerateRequest& request, ::SimpleResponse* response) override;
     std::unique_ptr< ::grpc::ClientAsyncResponseReader< ::SimpleResponse>> AsyncSetFramerate(::grpc::ClientContext* context, const ::SetFramerateRequest& request, ::grpc::CompletionQueue* cq) {
       return std::unique_ptr< ::grpc::ClientAsyncResponseReader< ::SimpleResponse>>(AsyncSetFramerateRaw(context, request, cq));
@@ -277,11 +299,11 @@ class CameraCommunicatorS final {
     std::unique_ptr< ::grpc::ClientAsyncResponseReader< ::SimpleResponse>> PrepareAsyncPrepareRecording(::grpc::ClientContext* context, const ::SimpleRequest& request, ::grpc::CompletionQueue* cq) {
       return std::unique_ptr< ::grpc::ClientAsyncResponseReader< ::SimpleResponse>>(PrepareAsyncPrepareRecordingRaw(context, request, cq));
     }
-    ::grpc::Status StartRecording(::grpc::ClientContext* context, const ::SimpleRequest& request, ::SimpleResponse* response) override;
-    std::unique_ptr< ::grpc::ClientAsyncResponseReader< ::SimpleResponse>> AsyncStartRecording(::grpc::ClientContext* context, const ::SimpleRequest& request, ::grpc::CompletionQueue* cq) {
+    ::grpc::Status StartRecording(::grpc::ClientContext* context, const ::StartRecordingRequest& request, ::SimpleResponse* response) override;
+    std::unique_ptr< ::grpc::ClientAsyncResponseReader< ::SimpleResponse>> AsyncStartRecording(::grpc::ClientContext* context, const ::StartRecordingRequest& request, ::grpc::CompletionQueue* cq) {
       return std::unique_ptr< ::grpc::ClientAsyncResponseReader< ::SimpleResponse>>(AsyncStartRecordingRaw(context, request, cq));
     }
-    std::unique_ptr< ::grpc::ClientAsyncResponseReader< ::SimpleResponse>> PrepareAsyncStartRecording(::grpc::ClientContext* context, const ::SimpleRequest& request, ::grpc::CompletionQueue* cq) {
+    std::unique_ptr< ::grpc::ClientAsyncResponseReader< ::SimpleResponse>> PrepareAsyncStartRecording(::grpc::ClientContext* context, const ::StartRecordingRequest& request, ::grpc::CompletionQueue* cq) {
       return std::unique_ptr< ::grpc::ClientAsyncResponseReader< ::SimpleResponse>>(PrepareAsyncStartRecordingRaw(context, request, cq));
     }
     ::grpc::Status CaptureSingleImage(::grpc::ClientContext* context, const ::SimpleRequest& request, ::SimpleResponse* response) override;
@@ -343,6 +365,12 @@ class CameraCommunicatorS final {
     class experimental_async final :
       public StubInterface::experimental_async_interface {
      public:
+      void SetTimestamp(::grpc::ClientContext* context, const ::SetTimestampRequest* request, ::SimpleResponse* response, std::function<void(::grpc::Status)>) override;
+      #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
+      void SetTimestamp(::grpc::ClientContext* context, const ::SetTimestampRequest* request, ::SimpleResponse* response, ::grpc::ClientUnaryReactor* reactor) override;
+      #else
+      void SetTimestamp(::grpc::ClientContext* context, const ::SetTimestampRequest* request, ::SimpleResponse* response, ::grpc::experimental::ClientUnaryReactor* reactor) override;
+      #endif
       void SetFramerate(::grpc::ClientContext* context, const ::SetFramerateRequest* request, ::SimpleResponse* response, std::function<void(::grpc::Status)>) override;
       #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
       void SetFramerate(::grpc::ClientContext* context, const ::SetFramerateRequest* request, ::SimpleResponse* response, ::grpc::ClientUnaryReactor* reactor) override;
@@ -367,11 +395,11 @@ class CameraCommunicatorS final {
       #else
       void PrepareRecording(::grpc::ClientContext* context, const ::SimpleRequest* request, ::SimpleResponse* response, ::grpc::experimental::ClientUnaryReactor* reactor) override;
       #endif
-      void StartRecording(::grpc::ClientContext* context, const ::SimpleRequest* request, ::SimpleResponse* response, std::function<void(::grpc::Status)>) override;
+      void StartRecording(::grpc::ClientContext* context, const ::StartRecordingRequest* request, ::SimpleResponse* response, std::function<void(::grpc::Status)>) override;
       #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
-      void StartRecording(::grpc::ClientContext* context, const ::SimpleRequest* request, ::SimpleResponse* response, ::grpc::ClientUnaryReactor* reactor) override;
+      void StartRecording(::grpc::ClientContext* context, const ::StartRecordingRequest* request, ::SimpleResponse* response, ::grpc::ClientUnaryReactor* reactor) override;
       #else
-      void StartRecording(::grpc::ClientContext* context, const ::SimpleRequest* request, ::SimpleResponse* response, ::grpc::experimental::ClientUnaryReactor* reactor) override;
+      void StartRecording(::grpc::ClientContext* context, const ::StartRecordingRequest* request, ::SimpleResponse* response, ::grpc::experimental::ClientUnaryReactor* reactor) override;
       #endif
       void CaptureSingleImage(::grpc::ClientContext* context, const ::SimpleRequest* request, ::SimpleResponse* response, std::function<void(::grpc::Status)>) override;
       #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
@@ -432,6 +460,8 @@ class CameraCommunicatorS final {
    private:
     std::shared_ptr< ::grpc::ChannelInterface> channel_;
     class experimental_async async_stub_{this};
+    ::grpc::ClientAsyncResponseReader< ::SimpleResponse>* AsyncSetTimestampRaw(::grpc::ClientContext* context, const ::SetTimestampRequest& request, ::grpc::CompletionQueue* cq) override;
+    ::grpc::ClientAsyncResponseReader< ::SimpleResponse>* PrepareAsyncSetTimestampRaw(::grpc::ClientContext* context, const ::SetTimestampRequest& request, ::grpc::CompletionQueue* cq) override;
     ::grpc::ClientAsyncResponseReader< ::SimpleResponse>* AsyncSetFramerateRaw(::grpc::ClientContext* context, const ::SetFramerateRequest& request, ::grpc::CompletionQueue* cq) override;
     ::grpc::ClientAsyncResponseReader< ::SimpleResponse>* PrepareAsyncSetFramerateRaw(::grpc::ClientContext* context, const ::SetFramerateRequest& request, ::grpc::CompletionQueue* cq) override;
     ::grpc::ClientAsyncResponseReader< ::SimpleResponse>* AsyncSetRecordingPeriodRaw(::grpc::ClientContext* context, const ::SetRecordingPeriodRequest& request, ::grpc::CompletionQueue* cq) override;
@@ -440,8 +470,8 @@ class CameraCommunicatorS final {
     ::grpc::ClientAsyncResponseReader< ::SimpleResponse>* PrepareAsyncSetReferenceCameraRaw(::grpc::ClientContext* context, const ::SetReferenceCameraRequest& request, ::grpc::CompletionQueue* cq) override;
     ::grpc::ClientAsyncResponseReader< ::SimpleResponse>* AsyncPrepareRecordingRaw(::grpc::ClientContext* context, const ::SimpleRequest& request, ::grpc::CompletionQueue* cq) override;
     ::grpc::ClientAsyncResponseReader< ::SimpleResponse>* PrepareAsyncPrepareRecordingRaw(::grpc::ClientContext* context, const ::SimpleRequest& request, ::grpc::CompletionQueue* cq) override;
-    ::grpc::ClientAsyncResponseReader< ::SimpleResponse>* AsyncStartRecordingRaw(::grpc::ClientContext* context, const ::SimpleRequest& request, ::grpc::CompletionQueue* cq) override;
-    ::grpc::ClientAsyncResponseReader< ::SimpleResponse>* PrepareAsyncStartRecordingRaw(::grpc::ClientContext* context, const ::SimpleRequest& request, ::grpc::CompletionQueue* cq) override;
+    ::grpc::ClientAsyncResponseReader< ::SimpleResponse>* AsyncStartRecordingRaw(::grpc::ClientContext* context, const ::StartRecordingRequest& request, ::grpc::CompletionQueue* cq) override;
+    ::grpc::ClientAsyncResponseReader< ::SimpleResponse>* PrepareAsyncStartRecordingRaw(::grpc::ClientContext* context, const ::StartRecordingRequest& request, ::grpc::CompletionQueue* cq) override;
     ::grpc::ClientAsyncResponseReader< ::SimpleResponse>* AsyncCaptureSingleImageRaw(::grpc::ClientContext* context, const ::SimpleRequest& request, ::grpc::CompletionQueue* cq) override;
     ::grpc::ClientAsyncResponseReader< ::SimpleResponse>* PrepareAsyncCaptureSingleImageRaw(::grpc::ClientContext* context, const ::SimpleRequest& request, ::grpc::CompletionQueue* cq) override;
     ::grpc::ClientAsyncResponseReader< ::SimpleResponse>* AsyncSetDirectoryRaw(::grpc::ClientContext* context, const ::SetDirectoryRequest& request, ::grpc::CompletionQueue* cq) override;
@@ -458,6 +488,7 @@ class CameraCommunicatorS final {
     ::grpc::ClientAsyncResponseReader< ::Empty>* PrepareAsyncSyncMessageTrialStartRaw(::grpc::ClientContext* context, const ::Empty& request, ::grpc::CompletionQueue* cq) override;
     ::grpc::ClientAsyncResponseReader< ::Empty>* AsyncSyncMessageTrialEndRaw(::grpc::ClientContext* context, const ::Empty& request, ::grpc::CompletionQueue* cq) override;
     ::grpc::ClientAsyncResponseReader< ::Empty>* PrepareAsyncSyncMessageTrialEndRaw(::grpc::ClientContext* context, const ::Empty& request, ::grpc::CompletionQueue* cq) override;
+    const ::grpc::internal::RpcMethod rpcmethod_SetTimestamp_;
     const ::grpc::internal::RpcMethod rpcmethod_SetFramerate_;
     const ::grpc::internal::RpcMethod rpcmethod_SetRecordingPeriod_;
     const ::grpc::internal::RpcMethod rpcmethod_SetReferenceCamera_;
@@ -478,11 +509,12 @@ class CameraCommunicatorS final {
    public:
     Service();
     virtual ~Service();
+    virtual ::grpc::Status SetTimestamp(::grpc::ServerContext* context, const ::SetTimestampRequest* request, ::SimpleResponse* response);
     virtual ::grpc::Status SetFramerate(::grpc::ServerContext* context, const ::SetFramerateRequest* request, ::SimpleResponse* response);
     virtual ::grpc::Status SetRecordingPeriod(::grpc::ServerContext* context, const ::SetRecordingPeriodRequest* request, ::SimpleResponse* response);
     virtual ::grpc::Status SetReferenceCamera(::grpc::ServerContext* context, const ::SetReferenceCameraRequest* request, ::SimpleResponse* response);
     virtual ::grpc::Status PrepareRecording(::grpc::ServerContext* context, const ::SimpleRequest* request, ::SimpleResponse* response);
-    virtual ::grpc::Status StartRecording(::grpc::ServerContext* context, const ::SimpleRequest* request, ::SimpleResponse* response);
+    virtual ::grpc::Status StartRecording(::grpc::ServerContext* context, const ::StartRecordingRequest* request, ::SimpleResponse* response);
     virtual ::grpc::Status CaptureSingleImage(::grpc::ServerContext* context, const ::SimpleRequest* request, ::SimpleResponse* response);
     virtual ::grpc::Status SetDirectory(::grpc::ServerContext* context, const ::SetDirectoryRequest* request, ::SimpleResponse* response);
     virtual ::grpc::Status SetGain(::grpc::ServerContext* context, const ::SetGainRequest* request, ::SimpleResponse* response);
@@ -493,12 +525,32 @@ class CameraCommunicatorS final {
     virtual ::grpc::Status SyncMessageTrialEnd(::grpc::ServerContext* context, const ::Empty* request, ::Empty* response);
   };
   template <class BaseClass>
+  class WithAsyncMethod_SetTimestamp : public BaseClass {
+   private:
+    void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
+   public:
+    WithAsyncMethod_SetTimestamp() {
+      ::grpc::Service::MarkMethodAsync(0);
+    }
+    ~WithAsyncMethod_SetTimestamp() override {
+      BaseClassMustBeDerivedFromService(this);
+    }
+    // disable synchronous version of this method
+    ::grpc::Status SetTimestamp(::grpc::ServerContext* /*context*/, const ::SetTimestampRequest* /*request*/, ::SimpleResponse* /*response*/) override {
+      abort();
+      return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
+    }
+    void RequestSetTimestamp(::grpc::ServerContext* context, ::SetTimestampRequest* request, ::grpc::ServerAsyncResponseWriter< ::SimpleResponse>* response, ::grpc::CompletionQueue* new_call_cq, ::grpc::ServerCompletionQueue* notification_cq, void *tag) {
+      ::grpc::Service::RequestAsyncUnary(0, context, request, response, new_call_cq, notification_cq, tag);
+    }
+  };
+  template <class BaseClass>
   class WithAsyncMethod_SetFramerate : public BaseClass {
    private:
     void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
    public:
     WithAsyncMethod_SetFramerate() {
-      ::grpc::Service::MarkMethodAsync(0);
+      ::grpc::Service::MarkMethodAsync(1);
     }
     ~WithAsyncMethod_SetFramerate() override {
       BaseClassMustBeDerivedFromService(this);
@@ -509,7 +561,7 @@ class CameraCommunicatorS final {
       return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
     }
     void RequestSetFramerate(::grpc::ServerContext* context, ::SetFramerateRequest* request, ::grpc::ServerAsyncResponseWriter< ::SimpleResponse>* response, ::grpc::CompletionQueue* new_call_cq, ::grpc::ServerCompletionQueue* notification_cq, void *tag) {
-      ::grpc::Service::RequestAsyncUnary(0, context, request, response, new_call_cq, notification_cq, tag);
+      ::grpc::Service::RequestAsyncUnary(1, context, request, response, new_call_cq, notification_cq, tag);
     }
   };
   template <class BaseClass>
@@ -518,7 +570,7 @@ class CameraCommunicatorS final {
     void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
    public:
     WithAsyncMethod_SetRecordingPeriod() {
-      ::grpc::Service::MarkMethodAsync(1);
+      ::grpc::Service::MarkMethodAsync(2);
     }
     ~WithAsyncMethod_SetRecordingPeriod() override {
       BaseClassMustBeDerivedFromService(this);
@@ -529,7 +581,7 @@ class CameraCommunicatorS final {
       return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
     }
     void RequestSetRecordingPeriod(::grpc::ServerContext* context, ::SetRecordingPeriodRequest* request, ::grpc::ServerAsyncResponseWriter< ::SimpleResponse>* response, ::grpc::CompletionQueue* new_call_cq, ::grpc::ServerCompletionQueue* notification_cq, void *tag) {
-      ::grpc::Service::RequestAsyncUnary(1, context, request, response, new_call_cq, notification_cq, tag);
+      ::grpc::Service::RequestAsyncUnary(2, context, request, response, new_call_cq, notification_cq, tag);
     }
   };
   template <class BaseClass>
@@ -538,7 +590,7 @@ class CameraCommunicatorS final {
     void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
    public:
     WithAsyncMethod_SetReferenceCamera() {
-      ::grpc::Service::MarkMethodAsync(2);
+      ::grpc::Service::MarkMethodAsync(3);
     }
     ~WithAsyncMethod_SetReferenceCamera() override {
       BaseClassMustBeDerivedFromService(this);
@@ -549,7 +601,7 @@ class CameraCommunicatorS final {
       return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
     }
     void RequestSetReferenceCamera(::grpc::ServerContext* context, ::SetReferenceCameraRequest* request, ::grpc::ServerAsyncResponseWriter< ::SimpleResponse>* response, ::grpc::CompletionQueue* new_call_cq, ::grpc::ServerCompletionQueue* notification_cq, void *tag) {
-      ::grpc::Service::RequestAsyncUnary(2, context, request, response, new_call_cq, notification_cq, tag);
+      ::grpc::Service::RequestAsyncUnary(3, context, request, response, new_call_cq, notification_cq, tag);
     }
   };
   template <class BaseClass>
@@ -558,7 +610,7 @@ class CameraCommunicatorS final {
     void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
    public:
     WithAsyncMethod_PrepareRecording() {
-      ::grpc::Service::MarkMethodAsync(3);
+      ::grpc::Service::MarkMethodAsync(4);
     }
     ~WithAsyncMethod_PrepareRecording() override {
       BaseClassMustBeDerivedFromService(this);
@@ -569,7 +621,7 @@ class CameraCommunicatorS final {
       return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
     }
     void RequestPrepareRecording(::grpc::ServerContext* context, ::SimpleRequest* request, ::grpc::ServerAsyncResponseWriter< ::SimpleResponse>* response, ::grpc::CompletionQueue* new_call_cq, ::grpc::ServerCompletionQueue* notification_cq, void *tag) {
-      ::grpc::Service::RequestAsyncUnary(3, context, request, response, new_call_cq, notification_cq, tag);
+      ::grpc::Service::RequestAsyncUnary(4, context, request, response, new_call_cq, notification_cq, tag);
     }
   };
   template <class BaseClass>
@@ -578,18 +630,18 @@ class CameraCommunicatorS final {
     void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
    public:
     WithAsyncMethod_StartRecording() {
-      ::grpc::Service::MarkMethodAsync(4);
+      ::grpc::Service::MarkMethodAsync(5);
     }
     ~WithAsyncMethod_StartRecording() override {
       BaseClassMustBeDerivedFromService(this);
     }
     // disable synchronous version of this method
-    ::grpc::Status StartRecording(::grpc::ServerContext* /*context*/, const ::SimpleRequest* /*request*/, ::SimpleResponse* /*response*/) override {
+    ::grpc::Status StartRecording(::grpc::ServerContext* /*context*/, const ::StartRecordingRequest* /*request*/, ::SimpleResponse* /*response*/) override {
       abort();
       return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
     }
-    void RequestStartRecording(::grpc::ServerContext* context, ::SimpleRequest* request, ::grpc::ServerAsyncResponseWriter< ::SimpleResponse>* response, ::grpc::CompletionQueue* new_call_cq, ::grpc::ServerCompletionQueue* notification_cq, void *tag) {
-      ::grpc::Service::RequestAsyncUnary(4, context, request, response, new_call_cq, notification_cq, tag);
+    void RequestStartRecording(::grpc::ServerContext* context, ::StartRecordingRequest* request, ::grpc::ServerAsyncResponseWriter< ::SimpleResponse>* response, ::grpc::CompletionQueue* new_call_cq, ::grpc::ServerCompletionQueue* notification_cq, void *tag) {
+      ::grpc::Service::RequestAsyncUnary(5, context, request, response, new_call_cq, notification_cq, tag);
     }
   };
   template <class BaseClass>
@@ -598,7 +650,7 @@ class CameraCommunicatorS final {
     void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
    public:
     WithAsyncMethod_CaptureSingleImage() {
-      ::grpc::Service::MarkMethodAsync(5);
+      ::grpc::Service::MarkMethodAsync(6);
     }
     ~WithAsyncMethod_CaptureSingleImage() override {
       BaseClassMustBeDerivedFromService(this);
@@ -609,7 +661,7 @@ class CameraCommunicatorS final {
       return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
     }
     void RequestCaptureSingleImage(::grpc::ServerContext* context, ::SimpleRequest* request, ::grpc::ServerAsyncResponseWriter< ::SimpleResponse>* response, ::grpc::CompletionQueue* new_call_cq, ::grpc::ServerCompletionQueue* notification_cq, void *tag) {
-      ::grpc::Service::RequestAsyncUnary(5, context, request, response, new_call_cq, notification_cq, tag);
+      ::grpc::Service::RequestAsyncUnary(6, context, request, response, new_call_cq, notification_cq, tag);
     }
   };
   template <class BaseClass>
@@ -618,7 +670,7 @@ class CameraCommunicatorS final {
     void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
    public:
     WithAsyncMethod_SetDirectory() {
-      ::grpc::Service::MarkMethodAsync(6);
+      ::grpc::Service::MarkMethodAsync(7);
     }
     ~WithAsyncMethod_SetDirectory() override {
       BaseClassMustBeDerivedFromService(this);
@@ -629,7 +681,7 @@ class CameraCommunicatorS final {
       return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
     }
     void RequestSetDirectory(::grpc::ServerContext* context, ::SetDirectoryRequest* request, ::grpc::ServerAsyncResponseWriter< ::SimpleResponse>* response, ::grpc::CompletionQueue* new_call_cq, ::grpc::ServerCompletionQueue* notification_cq, void *tag) {
-      ::grpc::Service::RequestAsyncUnary(6, context, request, response, new_call_cq, notification_cq, tag);
+      ::grpc::Service::RequestAsyncUnary(7, context, request, response, new_call_cq, notification_cq, tag);
     }
   };
   template <class BaseClass>
@@ -638,7 +690,7 @@ class CameraCommunicatorS final {
     void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
    public:
     WithAsyncMethod_SetGain() {
-      ::grpc::Service::MarkMethodAsync(7);
+      ::grpc::Service::MarkMethodAsync(8);
     }
     ~WithAsyncMethod_SetGain() override {
       BaseClassMustBeDerivedFromService(this);
@@ -649,7 +701,7 @@ class CameraCommunicatorS final {
       return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
     }
     void RequestSetGain(::grpc::ServerContext* context, ::SetGainRequest* request, ::grpc::ServerAsyncResponseWriter< ::SimpleResponse>* response, ::grpc::CompletionQueue* new_call_cq, ::grpc::ServerCompletionQueue* notification_cq, void *tag) {
-      ::grpc::Service::RequestAsyncUnary(7, context, request, response, new_call_cq, notification_cq, tag);
+      ::grpc::Service::RequestAsyncUnary(8, context, request, response, new_call_cq, notification_cq, tag);
     }
   };
   template <class BaseClass>
@@ -658,7 +710,7 @@ class CameraCommunicatorS final {
     void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
    public:
     WithAsyncMethod_SetExposure() {
-      ::grpc::Service::MarkMethodAsync(8);
+      ::grpc::Service::MarkMethodAsync(9);
     }
     ~WithAsyncMethod_SetExposure() override {
       BaseClassMustBeDerivedFromService(this);
@@ -669,7 +721,7 @@ class CameraCommunicatorS final {
       return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
     }
     void RequestSetExposure(::grpc::ServerContext* context, ::SetExposureRequest* request, ::grpc::ServerAsyncResponseWriter< ::SimpleResponse>* response, ::grpc::CompletionQueue* new_call_cq, ::grpc::ServerCompletionQueue* notification_cq, void *tag) {
-      ::grpc::Service::RequestAsyncUnary(8, context, request, response, new_call_cq, notification_cq, tag);
+      ::grpc::Service::RequestAsyncUnary(9, context, request, response, new_call_cq, notification_cq, tag);
     }
   };
   template <class BaseClass>
@@ -678,7 +730,7 @@ class CameraCommunicatorS final {
     void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
    public:
     WithAsyncMethod_BreakRecording() {
-      ::grpc::Service::MarkMethodAsync(9);
+      ::grpc::Service::MarkMethodAsync(10);
     }
     ~WithAsyncMethod_BreakRecording() override {
       BaseClassMustBeDerivedFromService(this);
@@ -689,7 +741,7 @@ class CameraCommunicatorS final {
       return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
     }
     void RequestBreakRecording(::grpc::ServerContext* context, ::SimpleRequest* request, ::grpc::ServerAsyncResponseWriter< ::SimpleResponse>* response, ::grpc::CompletionQueue* new_call_cq, ::grpc::ServerCompletionQueue* notification_cq, void *tag) {
-      ::grpc::Service::RequestAsyncUnary(9, context, request, response, new_call_cq, notification_cq, tag);
+      ::grpc::Service::RequestAsyncUnary(10, context, request, response, new_call_cq, notification_cq, tag);
     }
   };
   template <class BaseClass>
@@ -698,7 +750,7 @@ class CameraCommunicatorS final {
     void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
    public:
     WithAsyncMethod_AreYouDoneSaving() {
-      ::grpc::Service::MarkMethodAsync(10);
+      ::grpc::Service::MarkMethodAsync(11);
     }
     ~WithAsyncMethod_AreYouDoneSaving() override {
       BaseClassMustBeDerivedFromService(this);
@@ -709,7 +761,7 @@ class CameraCommunicatorS final {
       return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
     }
     void RequestAreYouDoneSaving(::grpc::ServerContext* context, ::SimpleRequest* request, ::grpc::ServerAsyncResponseWriter< ::SimpleResponse>* response, ::grpc::CompletionQueue* new_call_cq, ::grpc::ServerCompletionQueue* notification_cq, void *tag) {
-      ::grpc::Service::RequestAsyncUnary(10, context, request, response, new_call_cq, notification_cq, tag);
+      ::grpc::Service::RequestAsyncUnary(11, context, request, response, new_call_cq, notification_cq, tag);
     }
   };
   template <class BaseClass>
@@ -718,7 +770,7 @@ class CameraCommunicatorS final {
     void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
    public:
     WithAsyncMethod_SyncMessageTrialStart() {
-      ::grpc::Service::MarkMethodAsync(11);
+      ::grpc::Service::MarkMethodAsync(12);
     }
     ~WithAsyncMethod_SyncMessageTrialStart() override {
       BaseClassMustBeDerivedFromService(this);
@@ -729,7 +781,7 @@ class CameraCommunicatorS final {
       return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
     }
     void RequestSyncMessageTrialStart(::grpc::ServerContext* context, ::Empty* request, ::grpc::ServerAsyncResponseWriter< ::Empty>* response, ::grpc::CompletionQueue* new_call_cq, ::grpc::ServerCompletionQueue* notification_cq, void *tag) {
-      ::grpc::Service::RequestAsyncUnary(11, context, request, response, new_call_cq, notification_cq, tag);
+      ::grpc::Service::RequestAsyncUnary(12, context, request, response, new_call_cq, notification_cq, tag);
     }
   };
   template <class BaseClass>
@@ -738,7 +790,7 @@ class CameraCommunicatorS final {
     void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
    public:
     WithAsyncMethod_SyncMessageTrialEnd() {
-      ::grpc::Service::MarkMethodAsync(12);
+      ::grpc::Service::MarkMethodAsync(13);
     }
     ~WithAsyncMethod_SyncMessageTrialEnd() override {
       BaseClassMustBeDerivedFromService(this);
@@ -749,10 +801,57 @@ class CameraCommunicatorS final {
       return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
     }
     void RequestSyncMessageTrialEnd(::grpc::ServerContext* context, ::Empty* request, ::grpc::ServerAsyncResponseWriter< ::Empty>* response, ::grpc::CompletionQueue* new_call_cq, ::grpc::ServerCompletionQueue* notification_cq, void *tag) {
-      ::grpc::Service::RequestAsyncUnary(12, context, request, response, new_call_cq, notification_cq, tag);
+      ::grpc::Service::RequestAsyncUnary(13, context, request, response, new_call_cq, notification_cq, tag);
     }
   };
-  typedef WithAsyncMethod_SetFramerate<WithAsyncMethod_SetRecordingPeriod<WithAsyncMethod_SetReferenceCamera<WithAsyncMethod_PrepareRecording<WithAsyncMethod_StartRecording<WithAsyncMethod_CaptureSingleImage<WithAsyncMethod_SetDirectory<WithAsyncMethod_SetGain<WithAsyncMethod_SetExposure<WithAsyncMethod_BreakRecording<WithAsyncMethod_AreYouDoneSaving<WithAsyncMethod_SyncMessageTrialStart<WithAsyncMethod_SyncMessageTrialEnd<Service > > > > > > > > > > > > > AsyncService;
+  typedef WithAsyncMethod_SetTimestamp<WithAsyncMethod_SetFramerate<WithAsyncMethod_SetRecordingPeriod<WithAsyncMethod_SetReferenceCamera<WithAsyncMethod_PrepareRecording<WithAsyncMethod_StartRecording<WithAsyncMethod_CaptureSingleImage<WithAsyncMethod_SetDirectory<WithAsyncMethod_SetGain<WithAsyncMethod_SetExposure<WithAsyncMethod_BreakRecording<WithAsyncMethod_AreYouDoneSaving<WithAsyncMethod_SyncMessageTrialStart<WithAsyncMethod_SyncMessageTrialEnd<Service > > > > > > > > > > > > > > AsyncService;
+  template <class BaseClass>
+  class ExperimentalWithCallbackMethod_SetTimestamp : public BaseClass {
+   private:
+    void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
+   public:
+    ExperimentalWithCallbackMethod_SetTimestamp() {
+    #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
+      ::grpc::Service::
+    #else
+      ::grpc::Service::experimental().
+    #endif
+        MarkMethodCallback(0,
+          new ::grpc::internal::CallbackUnaryHandler< ::SetTimestampRequest, ::SimpleResponse>(
+            [this](
+    #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
+                   ::grpc::CallbackServerContext*
+    #else
+                   ::grpc::experimental::CallbackServerContext*
+    #endif
+                     context, const ::SetTimestampRequest* request, ::SimpleResponse* response) { return this->SetTimestamp(context, request, response); }));}
+    void SetMessageAllocatorFor_SetTimestamp(
+        ::grpc::experimental::MessageAllocator< ::SetTimestampRequest, ::SimpleResponse>* allocator) {
+    #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
+      ::grpc::internal::MethodHandler* const handler = ::grpc::Service::GetHandler(0);
+    #else
+      ::grpc::internal::MethodHandler* const handler = ::grpc::Service::experimental().GetHandler(0);
+    #endif
+      static_cast<::grpc::internal::CallbackUnaryHandler< ::SetTimestampRequest, ::SimpleResponse>*>(handler)
+              ->SetMessageAllocator(allocator);
+    }
+    ~ExperimentalWithCallbackMethod_SetTimestamp() override {
+      BaseClassMustBeDerivedFromService(this);
+    }
+    // disable synchronous version of this method
+    ::grpc::Status SetTimestamp(::grpc::ServerContext* /*context*/, const ::SetTimestampRequest* /*request*/, ::SimpleResponse* /*response*/) override {
+      abort();
+      return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
+    }
+    #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
+    virtual ::grpc::ServerUnaryReactor* SetTimestamp(
+      ::grpc::CallbackServerContext* /*context*/, const ::SetTimestampRequest* /*request*/, ::SimpleResponse* /*response*/)
+    #else
+    virtual ::grpc::experimental::ServerUnaryReactor* SetTimestamp(
+      ::grpc::experimental::CallbackServerContext* /*context*/, const ::SetTimestampRequest* /*request*/, ::SimpleResponse* /*response*/)
+    #endif
+      { return nullptr; }
+  };
   template <class BaseClass>
   class ExperimentalWithCallbackMethod_SetFramerate : public BaseClass {
    private:
@@ -764,7 +863,7 @@ class CameraCommunicatorS final {
     #else
       ::grpc::Service::experimental().
     #endif
-        MarkMethodCallback(0,
+        MarkMethodCallback(1,
           new ::grpc::internal::CallbackUnaryHandler< ::SetFramerateRequest, ::SimpleResponse>(
             [this](
     #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
@@ -776,9 +875,9 @@ class CameraCommunicatorS final {
     void SetMessageAllocatorFor_SetFramerate(
         ::grpc::experimental::MessageAllocator< ::SetFramerateRequest, ::SimpleResponse>* allocator) {
     #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
-      ::grpc::internal::MethodHandler* const handler = ::grpc::Service::GetHandler(0);
+      ::grpc::internal::MethodHandler* const handler = ::grpc::Service::GetHandler(1);
     #else
-      ::grpc::internal::MethodHandler* const handler = ::grpc::Service::experimental().GetHandler(0);
+      ::grpc::internal::MethodHandler* const handler = ::grpc::Service::experimental().GetHandler(1);
     #endif
       static_cast<::grpc::internal::CallbackUnaryHandler< ::SetFramerateRequest, ::SimpleResponse>*>(handler)
               ->SetMessageAllocator(allocator);
@@ -811,7 +910,7 @@ class CameraCommunicatorS final {
     #else
       ::grpc::Service::experimental().
     #endif
-        MarkMethodCallback(1,
+        MarkMethodCallback(2,
           new ::grpc::internal::CallbackUnaryHandler< ::SetRecordingPeriodRequest, ::SimpleResponse>(
             [this](
     #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
@@ -823,9 +922,9 @@ class CameraCommunicatorS final {
     void SetMessageAllocatorFor_SetRecordingPeriod(
         ::grpc::experimental::MessageAllocator< ::SetRecordingPeriodRequest, ::SimpleResponse>* allocator) {
     #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
-      ::grpc::internal::MethodHandler* const handler = ::grpc::Service::GetHandler(1);
+      ::grpc::internal::MethodHandler* const handler = ::grpc::Service::GetHandler(2);
     #else
-      ::grpc::internal::MethodHandler* const handler = ::grpc::Service::experimental().GetHandler(1);
+      ::grpc::internal::MethodHandler* const handler = ::grpc::Service::experimental().GetHandler(2);
     #endif
       static_cast<::grpc::internal::CallbackUnaryHandler< ::SetRecordingPeriodRequest, ::SimpleResponse>*>(handler)
               ->SetMessageAllocator(allocator);
@@ -858,7 +957,7 @@ class CameraCommunicatorS final {
     #else
       ::grpc::Service::experimental().
     #endif
-        MarkMethodCallback(2,
+        MarkMethodCallback(3,
           new ::grpc::internal::CallbackUnaryHandler< ::SetReferenceCameraRequest, ::SimpleResponse>(
             [this](
     #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
@@ -870,9 +969,9 @@ class CameraCommunicatorS final {
     void SetMessageAllocatorFor_SetReferenceCamera(
         ::grpc::experimental::MessageAllocator< ::SetReferenceCameraRequest, ::SimpleResponse>* allocator) {
     #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
-      ::grpc::internal::MethodHandler* const handler = ::grpc::Service::GetHandler(2);
+      ::grpc::internal::MethodHandler* const handler = ::grpc::Service::GetHandler(3);
     #else
-      ::grpc::internal::MethodHandler* const handler = ::grpc::Service::experimental().GetHandler(2);
+      ::grpc::internal::MethodHandler* const handler = ::grpc::Service::experimental().GetHandler(3);
     #endif
       static_cast<::grpc::internal::CallbackUnaryHandler< ::SetReferenceCameraRequest, ::SimpleResponse>*>(handler)
               ->SetMessageAllocator(allocator);
@@ -905,7 +1004,7 @@ class CameraCommunicatorS final {
     #else
       ::grpc::Service::experimental().
     #endif
-        MarkMethodCallback(3,
+        MarkMethodCallback(4,
           new ::grpc::internal::CallbackUnaryHandler< ::SimpleRequest, ::SimpleResponse>(
             [this](
     #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
@@ -917,9 +1016,9 @@ class CameraCommunicatorS final {
     void SetMessageAllocatorFor_PrepareRecording(
         ::grpc::experimental::MessageAllocator< ::SimpleRequest, ::SimpleResponse>* allocator) {
     #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
-      ::grpc::internal::MethodHandler* const handler = ::grpc::Service::GetHandler(3);
+      ::grpc::internal::MethodHandler* const handler = ::grpc::Service::GetHandler(4);
     #else
-      ::grpc::internal::MethodHandler* const handler = ::grpc::Service::experimental().GetHandler(3);
+      ::grpc::internal::MethodHandler* const handler = ::grpc::Service::experimental().GetHandler(4);
     #endif
       static_cast<::grpc::internal::CallbackUnaryHandler< ::SimpleRequest, ::SimpleResponse>*>(handler)
               ->SetMessageAllocator(allocator);
@@ -952,39 +1051,39 @@ class CameraCommunicatorS final {
     #else
       ::grpc::Service::experimental().
     #endif
-        MarkMethodCallback(4,
-          new ::grpc::internal::CallbackUnaryHandler< ::SimpleRequest, ::SimpleResponse>(
+        MarkMethodCallback(5,
+          new ::grpc::internal::CallbackUnaryHandler< ::StartRecordingRequest, ::SimpleResponse>(
             [this](
     #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
                    ::grpc::CallbackServerContext*
     #else
                    ::grpc::experimental::CallbackServerContext*
     #endif
-                     context, const ::SimpleRequest* request, ::SimpleResponse* response) { return this->StartRecording(context, request, response); }));}
+                     context, const ::StartRecordingRequest* request, ::SimpleResponse* response) { return this->StartRecording(context, request, response); }));}
     void SetMessageAllocatorFor_StartRecording(
-        ::grpc::experimental::MessageAllocator< ::SimpleRequest, ::SimpleResponse>* allocator) {
+        ::grpc::experimental::MessageAllocator< ::StartRecordingRequest, ::SimpleResponse>* allocator) {
     #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
-      ::grpc::internal::MethodHandler* const handler = ::grpc::Service::GetHandler(4);
+      ::grpc::internal::MethodHandler* const handler = ::grpc::Service::GetHandler(5);
     #else
-      ::grpc::internal::MethodHandler* const handler = ::grpc::Service::experimental().GetHandler(4);
+      ::grpc::internal::MethodHandler* const handler = ::grpc::Service::experimental().GetHandler(5);
     #endif
-      static_cast<::grpc::internal::CallbackUnaryHandler< ::SimpleRequest, ::SimpleResponse>*>(handler)
+      static_cast<::grpc::internal::CallbackUnaryHandler< ::StartRecordingRequest, ::SimpleResponse>*>(handler)
               ->SetMessageAllocator(allocator);
     }
     ~ExperimentalWithCallbackMethod_StartRecording() override {
       BaseClassMustBeDerivedFromService(this);
     }
     // disable synchronous version of this method
-    ::grpc::Status StartRecording(::grpc::ServerContext* /*context*/, const ::SimpleRequest* /*request*/, ::SimpleResponse* /*response*/) override {
+    ::grpc::Status StartRecording(::grpc::ServerContext* /*context*/, const ::StartRecordingRequest* /*request*/, ::SimpleResponse* /*response*/) override {
       abort();
       return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
     }
     #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
     virtual ::grpc::ServerUnaryReactor* StartRecording(
-      ::grpc::CallbackServerContext* /*context*/, const ::SimpleRequest* /*request*/, ::SimpleResponse* /*response*/)
+      ::grpc::CallbackServerContext* /*context*/, const ::StartRecordingRequest* /*request*/, ::SimpleResponse* /*response*/)
     #else
     virtual ::grpc::experimental::ServerUnaryReactor* StartRecording(
-      ::grpc::experimental::CallbackServerContext* /*context*/, const ::SimpleRequest* /*request*/, ::SimpleResponse* /*response*/)
+      ::grpc::experimental::CallbackServerContext* /*context*/, const ::StartRecordingRequest* /*request*/, ::SimpleResponse* /*response*/)
     #endif
       { return nullptr; }
   };
@@ -999,7 +1098,7 @@ class CameraCommunicatorS final {
     #else
       ::grpc::Service::experimental().
     #endif
-        MarkMethodCallback(5,
+        MarkMethodCallback(6,
           new ::grpc::internal::CallbackUnaryHandler< ::SimpleRequest, ::SimpleResponse>(
             [this](
     #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
@@ -1011,9 +1110,9 @@ class CameraCommunicatorS final {
     void SetMessageAllocatorFor_CaptureSingleImage(
         ::grpc::experimental::MessageAllocator< ::SimpleRequest, ::SimpleResponse>* allocator) {
     #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
-      ::grpc::internal::MethodHandler* const handler = ::grpc::Service::GetHandler(5);
+      ::grpc::internal::MethodHandler* const handler = ::grpc::Service::GetHandler(6);
     #else
-      ::grpc::internal::MethodHandler* const handler = ::grpc::Service::experimental().GetHandler(5);
+      ::grpc::internal::MethodHandler* const handler = ::grpc::Service::experimental().GetHandler(6);
     #endif
       static_cast<::grpc::internal::CallbackUnaryHandler< ::SimpleRequest, ::SimpleResponse>*>(handler)
               ->SetMessageAllocator(allocator);
@@ -1046,7 +1145,7 @@ class CameraCommunicatorS final {
     #else
       ::grpc::Service::experimental().
     #endif
-        MarkMethodCallback(6,
+        MarkMethodCallback(7,
           new ::grpc::internal::CallbackUnaryHandler< ::SetDirectoryRequest, ::SimpleResponse>(
             [this](
     #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
@@ -1058,9 +1157,9 @@ class CameraCommunicatorS final {
     void SetMessageAllocatorFor_SetDirectory(
         ::grpc::experimental::MessageAllocator< ::SetDirectoryRequest, ::SimpleResponse>* allocator) {
     #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
-      ::grpc::internal::MethodHandler* const handler = ::grpc::Service::GetHandler(6);
+      ::grpc::internal::MethodHandler* const handler = ::grpc::Service::GetHandler(7);
     #else
-      ::grpc::internal::MethodHandler* const handler = ::grpc::Service::experimental().GetHandler(6);
+      ::grpc::internal::MethodHandler* const handler = ::grpc::Service::experimental().GetHandler(7);
     #endif
       static_cast<::grpc::internal::CallbackUnaryHandler< ::SetDirectoryRequest, ::SimpleResponse>*>(handler)
               ->SetMessageAllocator(allocator);
@@ -1093,7 +1192,7 @@ class CameraCommunicatorS final {
     #else
       ::grpc::Service::experimental().
     #endif
-        MarkMethodCallback(7,
+        MarkMethodCallback(8,
           new ::grpc::internal::CallbackUnaryHandler< ::SetGainRequest, ::SimpleResponse>(
             [this](
     #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
@@ -1105,9 +1204,9 @@ class CameraCommunicatorS final {
     void SetMessageAllocatorFor_SetGain(
         ::grpc::experimental::MessageAllocator< ::SetGainRequest, ::SimpleResponse>* allocator) {
     #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
-      ::grpc::internal::MethodHandler* const handler = ::grpc::Service::GetHandler(7);
+      ::grpc::internal::MethodHandler* const handler = ::grpc::Service::GetHandler(8);
     #else
-      ::grpc::internal::MethodHandler* const handler = ::grpc::Service::experimental().GetHandler(7);
+      ::grpc::internal::MethodHandler* const handler = ::grpc::Service::experimental().GetHandler(8);
     #endif
       static_cast<::grpc::internal::CallbackUnaryHandler< ::SetGainRequest, ::SimpleResponse>*>(handler)
               ->SetMessageAllocator(allocator);
@@ -1140,7 +1239,7 @@ class CameraCommunicatorS final {
     #else
       ::grpc::Service::experimental().
     #endif
-        MarkMethodCallback(8,
+        MarkMethodCallback(9,
           new ::grpc::internal::CallbackUnaryHandler< ::SetExposureRequest, ::SimpleResponse>(
             [this](
     #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
@@ -1152,9 +1251,9 @@ class CameraCommunicatorS final {
     void SetMessageAllocatorFor_SetExposure(
         ::grpc::experimental::MessageAllocator< ::SetExposureRequest, ::SimpleResponse>* allocator) {
     #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
-      ::grpc::internal::MethodHandler* const handler = ::grpc::Service::GetHandler(8);
+      ::grpc::internal::MethodHandler* const handler = ::grpc::Service::GetHandler(9);
     #else
-      ::grpc::internal::MethodHandler* const handler = ::grpc::Service::experimental().GetHandler(8);
+      ::grpc::internal::MethodHandler* const handler = ::grpc::Service::experimental().GetHandler(9);
     #endif
       static_cast<::grpc::internal::CallbackUnaryHandler< ::SetExposureRequest, ::SimpleResponse>*>(handler)
               ->SetMessageAllocator(allocator);
@@ -1187,7 +1286,7 @@ class CameraCommunicatorS final {
     #else
       ::grpc::Service::experimental().
     #endif
-        MarkMethodCallback(9,
+        MarkMethodCallback(10,
           new ::grpc::internal::CallbackUnaryHandler< ::SimpleRequest, ::SimpleResponse>(
             [this](
     #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
@@ -1199,9 +1298,9 @@ class CameraCommunicatorS final {
     void SetMessageAllocatorFor_BreakRecording(
         ::grpc::experimental::MessageAllocator< ::SimpleRequest, ::SimpleResponse>* allocator) {
     #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
-      ::grpc::internal::MethodHandler* const handler = ::grpc::Service::GetHandler(9);
+      ::grpc::internal::MethodHandler* const handler = ::grpc::Service::GetHandler(10);
     #else
-      ::grpc::internal::MethodHandler* const handler = ::grpc::Service::experimental().GetHandler(9);
+      ::grpc::internal::MethodHandler* const handler = ::grpc::Service::experimental().GetHandler(10);
     #endif
       static_cast<::grpc::internal::CallbackUnaryHandler< ::SimpleRequest, ::SimpleResponse>*>(handler)
               ->SetMessageAllocator(allocator);
@@ -1234,7 +1333,7 @@ class CameraCommunicatorS final {
     #else
       ::grpc::Service::experimental().
     #endif
-        MarkMethodCallback(10,
+        MarkMethodCallback(11,
           new ::grpc::internal::CallbackUnaryHandler< ::SimpleRequest, ::SimpleResponse>(
             [this](
     #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
@@ -1246,9 +1345,9 @@ class CameraCommunicatorS final {
     void SetMessageAllocatorFor_AreYouDoneSaving(
         ::grpc::experimental::MessageAllocator< ::SimpleRequest, ::SimpleResponse>* allocator) {
     #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
-      ::grpc::internal::MethodHandler* const handler = ::grpc::Service::GetHandler(10);
+      ::grpc::internal::MethodHandler* const handler = ::grpc::Service::GetHandler(11);
     #else
-      ::grpc::internal::MethodHandler* const handler = ::grpc::Service::experimental().GetHandler(10);
+      ::grpc::internal::MethodHandler* const handler = ::grpc::Service::experimental().GetHandler(11);
     #endif
       static_cast<::grpc::internal::CallbackUnaryHandler< ::SimpleRequest, ::SimpleResponse>*>(handler)
               ->SetMessageAllocator(allocator);
@@ -1281,7 +1380,7 @@ class CameraCommunicatorS final {
     #else
       ::grpc::Service::experimental().
     #endif
-        MarkMethodCallback(11,
+        MarkMethodCallback(12,
           new ::grpc::internal::CallbackUnaryHandler< ::Empty, ::Empty>(
             [this](
     #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
@@ -1293,9 +1392,9 @@ class CameraCommunicatorS final {
     void SetMessageAllocatorFor_SyncMessageTrialStart(
         ::grpc::experimental::MessageAllocator< ::Empty, ::Empty>* allocator) {
     #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
-      ::grpc::internal::MethodHandler* const handler = ::grpc::Service::GetHandler(11);
+      ::grpc::internal::MethodHandler* const handler = ::grpc::Service::GetHandler(12);
     #else
-      ::grpc::internal::MethodHandler* const handler = ::grpc::Service::experimental().GetHandler(11);
+      ::grpc::internal::MethodHandler* const handler = ::grpc::Service::experimental().GetHandler(12);
     #endif
       static_cast<::grpc::internal::CallbackUnaryHandler< ::Empty, ::Empty>*>(handler)
               ->SetMessageAllocator(allocator);
@@ -1328,7 +1427,7 @@ class CameraCommunicatorS final {
     #else
       ::grpc::Service::experimental().
     #endif
-        MarkMethodCallback(12,
+        MarkMethodCallback(13,
           new ::grpc::internal::CallbackUnaryHandler< ::Empty, ::Empty>(
             [this](
     #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
@@ -1340,9 +1439,9 @@ class CameraCommunicatorS final {
     void SetMessageAllocatorFor_SyncMessageTrialEnd(
         ::grpc::experimental::MessageAllocator< ::Empty, ::Empty>* allocator) {
     #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
-      ::grpc::internal::MethodHandler* const handler = ::grpc::Service::GetHandler(12);
+      ::grpc::internal::MethodHandler* const handler = ::grpc::Service::GetHandler(13);
     #else
-      ::grpc::internal::MethodHandler* const handler = ::grpc::Service::experimental().GetHandler(12);
+      ::grpc::internal::MethodHandler* const handler = ::grpc::Service::experimental().GetHandler(13);
     #endif
       static_cast<::grpc::internal::CallbackUnaryHandler< ::Empty, ::Empty>*>(handler)
               ->SetMessageAllocator(allocator);
@@ -1365,17 +1464,34 @@ class CameraCommunicatorS final {
       { return nullptr; }
   };
   #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
-  typedef ExperimentalWithCallbackMethod_SetFramerate<ExperimentalWithCallbackMethod_SetRecordingPeriod<ExperimentalWithCallbackMethod_SetReferenceCamera<ExperimentalWithCallbackMethod_PrepareRecording<ExperimentalWithCallbackMethod_StartRecording<ExperimentalWithCallbackMethod_CaptureSingleImage<ExperimentalWithCallbackMethod_SetDirectory<ExperimentalWithCallbackMethod_SetGain<ExperimentalWithCallbackMethod_SetExposure<ExperimentalWithCallbackMethod_BreakRecording<ExperimentalWithCallbackMethod_AreYouDoneSaving<ExperimentalWithCallbackMethod_SyncMessageTrialStart<ExperimentalWithCallbackMethod_SyncMessageTrialEnd<Service > > > > > > > > > > > > > CallbackService;
+  typedef ExperimentalWithCallbackMethod_SetTimestamp<ExperimentalWithCallbackMethod_SetFramerate<ExperimentalWithCallbackMethod_SetRecordingPeriod<ExperimentalWithCallbackMethod_SetReferenceCamera<ExperimentalWithCallbackMethod_PrepareRecording<ExperimentalWithCallbackMethod_StartRecording<ExperimentalWithCallbackMethod_CaptureSingleImage<ExperimentalWithCallbackMethod_SetDirectory<ExperimentalWithCallbackMethod_SetGain<ExperimentalWithCallbackMethod_SetExposure<ExperimentalWithCallbackMethod_BreakRecording<ExperimentalWithCallbackMethod_AreYouDoneSaving<ExperimentalWithCallbackMethod_SyncMessageTrialStart<ExperimentalWithCallbackMethod_SyncMessageTrialEnd<Service > > > > > > > > > > > > > > CallbackService;
   #endif
 
-  typedef ExperimentalWithCallbackMethod_SetFramerate<ExperimentalWithCallbackMethod_SetRecordingPeriod<ExperimentalWithCallbackMethod_SetReferenceCamera<ExperimentalWithCallbackMethod_PrepareRecording<ExperimentalWithCallbackMethod_StartRecording<ExperimentalWithCallbackMethod_CaptureSingleImage<ExperimentalWithCallbackMethod_SetDirectory<ExperimentalWithCallbackMethod_SetGain<ExperimentalWithCallbackMethod_SetExposure<ExperimentalWithCallbackMethod_BreakRecording<ExperimentalWithCallbackMethod_AreYouDoneSaving<ExperimentalWithCallbackMethod_SyncMessageTrialStart<ExperimentalWithCallbackMethod_SyncMessageTrialEnd<Service > > > > > > > > > > > > > ExperimentalCallbackService;
+  typedef ExperimentalWithCallbackMethod_SetTimestamp<ExperimentalWithCallbackMethod_SetFramerate<ExperimentalWithCallbackMethod_SetRecordingPeriod<ExperimentalWithCallbackMethod_SetReferenceCamera<ExperimentalWithCallbackMethod_PrepareRecording<ExperimentalWithCallbackMethod_StartRecording<ExperimentalWithCallbackMethod_CaptureSingleImage<ExperimentalWithCallbackMethod_SetDirectory<ExperimentalWithCallbackMethod_SetGain<ExperimentalWithCallbackMethod_SetExposure<ExperimentalWithCallbackMethod_BreakRecording<ExperimentalWithCallbackMethod_AreYouDoneSaving<ExperimentalWithCallbackMethod_SyncMessageTrialStart<ExperimentalWithCallbackMethod_SyncMessageTrialEnd<Service > > > > > > > > > > > > > > ExperimentalCallbackService;
+  template <class BaseClass>
+  class WithGenericMethod_SetTimestamp : public BaseClass {
+   private:
+    void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
+   public:
+    WithGenericMethod_SetTimestamp() {
+      ::grpc::Service::MarkMethodGeneric(0);
+    }
+    ~WithGenericMethod_SetTimestamp() override {
+      BaseClassMustBeDerivedFromService(this);
+    }
+    // disable synchronous version of this method
+    ::grpc::Status SetTimestamp(::grpc::ServerContext* /*context*/, const ::SetTimestampRequest* /*request*/, ::SimpleResponse* /*response*/) override {
+      abort();
+      return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
+    }
+  };
   template <class BaseClass>
   class WithGenericMethod_SetFramerate : public BaseClass {
    private:
     void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
    public:
     WithGenericMethod_SetFramerate() {
-      ::grpc::Service::MarkMethodGeneric(0);
+      ::grpc::Service::MarkMethodGeneric(1);
     }
     ~WithGenericMethod_SetFramerate() override {
       BaseClassMustBeDerivedFromService(this);
@@ -1392,7 +1508,7 @@ class CameraCommunicatorS final {
     void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
    public:
     WithGenericMethod_SetRecordingPeriod() {
-      ::grpc::Service::MarkMethodGeneric(1);
+      ::grpc::Service::MarkMethodGeneric(2);
     }
     ~WithGenericMethod_SetRecordingPeriod() override {
       BaseClassMustBeDerivedFromService(this);
@@ -1409,7 +1525,7 @@ class CameraCommunicatorS final {
     void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
    public:
     WithGenericMethod_SetReferenceCamera() {
-      ::grpc::Service::MarkMethodGeneric(2);
+      ::grpc::Service::MarkMethodGeneric(3);
     }
     ~WithGenericMethod_SetReferenceCamera() override {
       BaseClassMustBeDerivedFromService(this);
@@ -1426,7 +1542,7 @@ class CameraCommunicatorS final {
     void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
    public:
     WithGenericMethod_PrepareRecording() {
-      ::grpc::Service::MarkMethodGeneric(3);
+      ::grpc::Service::MarkMethodGeneric(4);
     }
     ~WithGenericMethod_PrepareRecording() override {
       BaseClassMustBeDerivedFromService(this);
@@ -1443,13 +1559,13 @@ class CameraCommunicatorS final {
     void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
    public:
     WithGenericMethod_StartRecording() {
-      ::grpc::Service::MarkMethodGeneric(4);
+      ::grpc::Service::MarkMethodGeneric(5);
     }
     ~WithGenericMethod_StartRecording() override {
       BaseClassMustBeDerivedFromService(this);
     }
     // disable synchronous version of this method
-    ::grpc::Status StartRecording(::grpc::ServerContext* /*context*/, const ::SimpleRequest* /*request*/, ::SimpleResponse* /*response*/) override {
+    ::grpc::Status StartRecording(::grpc::ServerContext* /*context*/, const ::StartRecordingRequest* /*request*/, ::SimpleResponse* /*response*/) override {
       abort();
       return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
     }
@@ -1460,7 +1576,7 @@ class CameraCommunicatorS final {
     void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
    public:
     WithGenericMethod_CaptureSingleImage() {
-      ::grpc::Service::MarkMethodGeneric(5);
+      ::grpc::Service::MarkMethodGeneric(6);
     }
     ~WithGenericMethod_CaptureSingleImage() override {
       BaseClassMustBeDerivedFromService(this);
@@ -1477,7 +1593,7 @@ class CameraCommunicatorS final {
     void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
    public:
     WithGenericMethod_SetDirectory() {
-      ::grpc::Service::MarkMethodGeneric(6);
+      ::grpc::Service::MarkMethodGeneric(7);
     }
     ~WithGenericMethod_SetDirectory() override {
       BaseClassMustBeDerivedFromService(this);
@@ -1494,7 +1610,7 @@ class CameraCommunicatorS final {
     void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
    public:
     WithGenericMethod_SetGain() {
-      ::grpc::Service::MarkMethodGeneric(7);
+      ::grpc::Service::MarkMethodGeneric(8);
     }
     ~WithGenericMethod_SetGain() override {
       BaseClassMustBeDerivedFromService(this);
@@ -1511,7 +1627,7 @@ class CameraCommunicatorS final {
     void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
    public:
     WithGenericMethod_SetExposure() {
-      ::grpc::Service::MarkMethodGeneric(8);
+      ::grpc::Service::MarkMethodGeneric(9);
     }
     ~WithGenericMethod_SetExposure() override {
       BaseClassMustBeDerivedFromService(this);
@@ -1528,7 +1644,7 @@ class CameraCommunicatorS final {
     void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
    public:
     WithGenericMethod_BreakRecording() {
-      ::grpc::Service::MarkMethodGeneric(9);
+      ::grpc::Service::MarkMethodGeneric(10);
     }
     ~WithGenericMethod_BreakRecording() override {
       BaseClassMustBeDerivedFromService(this);
@@ -1545,7 +1661,7 @@ class CameraCommunicatorS final {
     void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
    public:
     WithGenericMethod_AreYouDoneSaving() {
-      ::grpc::Service::MarkMethodGeneric(10);
+      ::grpc::Service::MarkMethodGeneric(11);
     }
     ~WithGenericMethod_AreYouDoneSaving() override {
       BaseClassMustBeDerivedFromService(this);
@@ -1562,7 +1678,7 @@ class CameraCommunicatorS final {
     void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
    public:
     WithGenericMethod_SyncMessageTrialStart() {
-      ::grpc::Service::MarkMethodGeneric(11);
+      ::grpc::Service::MarkMethodGeneric(12);
     }
     ~WithGenericMethod_SyncMessageTrialStart() override {
       BaseClassMustBeDerivedFromService(this);
@@ -1579,7 +1695,7 @@ class CameraCommunicatorS final {
     void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
    public:
     WithGenericMethod_SyncMessageTrialEnd() {
-      ::grpc::Service::MarkMethodGeneric(12);
+      ::grpc::Service::MarkMethodGeneric(13);
     }
     ~WithGenericMethod_SyncMessageTrialEnd() override {
       BaseClassMustBeDerivedFromService(this);
@@ -1591,12 +1707,32 @@ class CameraCommunicatorS final {
     }
   };
   template <class BaseClass>
+  class WithRawMethod_SetTimestamp : public BaseClass {
+   private:
+    void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
+   public:
+    WithRawMethod_SetTimestamp() {
+      ::grpc::Service::MarkMethodRaw(0);
+    }
+    ~WithRawMethod_SetTimestamp() override {
+      BaseClassMustBeDerivedFromService(this);
+    }
+    // disable synchronous version of this method
+    ::grpc::Status SetTimestamp(::grpc::ServerContext* /*context*/, const ::SetTimestampRequest* /*request*/, ::SimpleResponse* /*response*/) override {
+      abort();
+      return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
+    }
+    void RequestSetTimestamp(::grpc::ServerContext* context, ::grpc::ByteBuffer* request, ::grpc::ServerAsyncResponseWriter< ::grpc::ByteBuffer>* response, ::grpc::CompletionQueue* new_call_cq, ::grpc::ServerCompletionQueue* notification_cq, void *tag) {
+      ::grpc::Service::RequestAsyncUnary(0, context, request, response, new_call_cq, notification_cq, tag);
+    }
+  };
+  template <class BaseClass>
   class WithRawMethod_SetFramerate : public BaseClass {
    private:
     void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
    public:
     WithRawMethod_SetFramerate() {
-      ::grpc::Service::MarkMethodRaw(0);
+      ::grpc::Service::MarkMethodRaw(1);
     }
     ~WithRawMethod_SetFramerate() override {
       BaseClassMustBeDerivedFromService(this);
@@ -1607,7 +1743,7 @@ class CameraCommunicatorS final {
       return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
     }
     void RequestSetFramerate(::grpc::ServerContext* context, ::grpc::ByteBuffer* request, ::grpc::ServerAsyncResponseWriter< ::grpc::ByteBuffer>* response, ::grpc::CompletionQueue* new_call_cq, ::grpc::ServerCompletionQueue* notification_cq, void *tag) {
-      ::grpc::Service::RequestAsyncUnary(0, context, request, response, new_call_cq, notification_cq, tag);
+      ::grpc::Service::RequestAsyncUnary(1, context, request, response, new_call_cq, notification_cq, tag);
     }
   };
   template <class BaseClass>
@@ -1616,7 +1752,7 @@ class CameraCommunicatorS final {
     void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
    public:
     WithRawMethod_SetRecordingPeriod() {
-      ::grpc::Service::MarkMethodRaw(1);
+      ::grpc::Service::MarkMethodRaw(2);
     }
     ~WithRawMethod_SetRecordingPeriod() override {
       BaseClassMustBeDerivedFromService(this);
@@ -1627,7 +1763,7 @@ class CameraCommunicatorS final {
       return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
     }
     void RequestSetRecordingPeriod(::grpc::ServerContext* context, ::grpc::ByteBuffer* request, ::grpc::ServerAsyncResponseWriter< ::grpc::ByteBuffer>* response, ::grpc::CompletionQueue* new_call_cq, ::grpc::ServerCompletionQueue* notification_cq, void *tag) {
-      ::grpc::Service::RequestAsyncUnary(1, context, request, response, new_call_cq, notification_cq, tag);
+      ::grpc::Service::RequestAsyncUnary(2, context, request, response, new_call_cq, notification_cq, tag);
     }
   };
   template <class BaseClass>
@@ -1636,7 +1772,7 @@ class CameraCommunicatorS final {
     void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
    public:
     WithRawMethod_SetReferenceCamera() {
-      ::grpc::Service::MarkMethodRaw(2);
+      ::grpc::Service::MarkMethodRaw(3);
     }
     ~WithRawMethod_SetReferenceCamera() override {
       BaseClassMustBeDerivedFromService(this);
@@ -1647,7 +1783,7 @@ class CameraCommunicatorS final {
       return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
     }
     void RequestSetReferenceCamera(::grpc::ServerContext* context, ::grpc::ByteBuffer* request, ::grpc::ServerAsyncResponseWriter< ::grpc::ByteBuffer>* response, ::grpc::CompletionQueue* new_call_cq, ::grpc::ServerCompletionQueue* notification_cq, void *tag) {
-      ::grpc::Service::RequestAsyncUnary(2, context, request, response, new_call_cq, notification_cq, tag);
+      ::grpc::Service::RequestAsyncUnary(3, context, request, response, new_call_cq, notification_cq, tag);
     }
   };
   template <class BaseClass>
@@ -1656,7 +1792,7 @@ class CameraCommunicatorS final {
     void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
    public:
     WithRawMethod_PrepareRecording() {
-      ::grpc::Service::MarkMethodRaw(3);
+      ::grpc::Service::MarkMethodRaw(4);
     }
     ~WithRawMethod_PrepareRecording() override {
       BaseClassMustBeDerivedFromService(this);
@@ -1667,7 +1803,7 @@ class CameraCommunicatorS final {
       return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
     }
     void RequestPrepareRecording(::grpc::ServerContext* context, ::grpc::ByteBuffer* request, ::grpc::ServerAsyncResponseWriter< ::grpc::ByteBuffer>* response, ::grpc::CompletionQueue* new_call_cq, ::grpc::ServerCompletionQueue* notification_cq, void *tag) {
-      ::grpc::Service::RequestAsyncUnary(3, context, request, response, new_call_cq, notification_cq, tag);
+      ::grpc::Service::RequestAsyncUnary(4, context, request, response, new_call_cq, notification_cq, tag);
     }
   };
   template <class BaseClass>
@@ -1676,18 +1812,18 @@ class CameraCommunicatorS final {
     void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
    public:
     WithRawMethod_StartRecording() {
-      ::grpc::Service::MarkMethodRaw(4);
+      ::grpc::Service::MarkMethodRaw(5);
     }
     ~WithRawMethod_StartRecording() override {
       BaseClassMustBeDerivedFromService(this);
     }
     // disable synchronous version of this method
-    ::grpc::Status StartRecording(::grpc::ServerContext* /*context*/, const ::SimpleRequest* /*request*/, ::SimpleResponse* /*response*/) override {
+    ::grpc::Status StartRecording(::grpc::ServerContext* /*context*/, const ::StartRecordingRequest* /*request*/, ::SimpleResponse* /*response*/) override {
       abort();
       return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
     }
     void RequestStartRecording(::grpc::ServerContext* context, ::grpc::ByteBuffer* request, ::grpc::ServerAsyncResponseWriter< ::grpc::ByteBuffer>* response, ::grpc::CompletionQueue* new_call_cq, ::grpc::ServerCompletionQueue* notification_cq, void *tag) {
-      ::grpc::Service::RequestAsyncUnary(4, context, request, response, new_call_cq, notification_cq, tag);
+      ::grpc::Service::RequestAsyncUnary(5, context, request, response, new_call_cq, notification_cq, tag);
     }
   };
   template <class BaseClass>
@@ -1696,7 +1832,7 @@ class CameraCommunicatorS final {
     void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
    public:
     WithRawMethod_CaptureSingleImage() {
-      ::grpc::Service::MarkMethodRaw(5);
+      ::grpc::Service::MarkMethodRaw(6);
     }
     ~WithRawMethod_CaptureSingleImage() override {
       BaseClassMustBeDerivedFromService(this);
@@ -1707,7 +1843,7 @@ class CameraCommunicatorS final {
       return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
     }
     void RequestCaptureSingleImage(::grpc::ServerContext* context, ::grpc::ByteBuffer* request, ::grpc::ServerAsyncResponseWriter< ::grpc::ByteBuffer>* response, ::grpc::CompletionQueue* new_call_cq, ::grpc::ServerCompletionQueue* notification_cq, void *tag) {
-      ::grpc::Service::RequestAsyncUnary(5, context, request, response, new_call_cq, notification_cq, tag);
+      ::grpc::Service::RequestAsyncUnary(6, context, request, response, new_call_cq, notification_cq, tag);
     }
   };
   template <class BaseClass>
@@ -1716,7 +1852,7 @@ class CameraCommunicatorS final {
     void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
    public:
     WithRawMethod_SetDirectory() {
-      ::grpc::Service::MarkMethodRaw(6);
+      ::grpc::Service::MarkMethodRaw(7);
     }
     ~WithRawMethod_SetDirectory() override {
       BaseClassMustBeDerivedFromService(this);
@@ -1727,7 +1863,7 @@ class CameraCommunicatorS final {
       return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
     }
     void RequestSetDirectory(::grpc::ServerContext* context, ::grpc::ByteBuffer* request, ::grpc::ServerAsyncResponseWriter< ::grpc::ByteBuffer>* response, ::grpc::CompletionQueue* new_call_cq, ::grpc::ServerCompletionQueue* notification_cq, void *tag) {
-      ::grpc::Service::RequestAsyncUnary(6, context, request, response, new_call_cq, notification_cq, tag);
+      ::grpc::Service::RequestAsyncUnary(7, context, request, response, new_call_cq, notification_cq, tag);
     }
   };
   template <class BaseClass>
@@ -1736,7 +1872,7 @@ class CameraCommunicatorS final {
     void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
    public:
     WithRawMethod_SetGain() {
-      ::grpc::Service::MarkMethodRaw(7);
+      ::grpc::Service::MarkMethodRaw(8);
     }
     ~WithRawMethod_SetGain() override {
       BaseClassMustBeDerivedFromService(this);
@@ -1747,7 +1883,7 @@ class CameraCommunicatorS final {
       return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
     }
     void RequestSetGain(::grpc::ServerContext* context, ::grpc::ByteBuffer* request, ::grpc::ServerAsyncResponseWriter< ::grpc::ByteBuffer>* response, ::grpc::CompletionQueue* new_call_cq, ::grpc::ServerCompletionQueue* notification_cq, void *tag) {
-      ::grpc::Service::RequestAsyncUnary(7, context, request, response, new_call_cq, notification_cq, tag);
+      ::grpc::Service::RequestAsyncUnary(8, context, request, response, new_call_cq, notification_cq, tag);
     }
   };
   template <class BaseClass>
@@ -1756,7 +1892,7 @@ class CameraCommunicatorS final {
     void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
    public:
     WithRawMethod_SetExposure() {
-      ::grpc::Service::MarkMethodRaw(8);
+      ::grpc::Service::MarkMethodRaw(9);
     }
     ~WithRawMethod_SetExposure() override {
       BaseClassMustBeDerivedFromService(this);
@@ -1767,7 +1903,7 @@ class CameraCommunicatorS final {
       return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
     }
     void RequestSetExposure(::grpc::ServerContext* context, ::grpc::ByteBuffer* request, ::grpc::ServerAsyncResponseWriter< ::grpc::ByteBuffer>* response, ::grpc::CompletionQueue* new_call_cq, ::grpc::ServerCompletionQueue* notification_cq, void *tag) {
-      ::grpc::Service::RequestAsyncUnary(8, context, request, response, new_call_cq, notification_cq, tag);
+      ::grpc::Service::RequestAsyncUnary(9, context, request, response, new_call_cq, notification_cq, tag);
     }
   };
   template <class BaseClass>
@@ -1776,7 +1912,7 @@ class CameraCommunicatorS final {
     void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
    public:
     WithRawMethod_BreakRecording() {
-      ::grpc::Service::MarkMethodRaw(9);
+      ::grpc::Service::MarkMethodRaw(10);
     }
     ~WithRawMethod_BreakRecording() override {
       BaseClassMustBeDerivedFromService(this);
@@ -1787,7 +1923,7 @@ class CameraCommunicatorS final {
       return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
     }
     void RequestBreakRecording(::grpc::ServerContext* context, ::grpc::ByteBuffer* request, ::grpc::ServerAsyncResponseWriter< ::grpc::ByteBuffer>* response, ::grpc::CompletionQueue* new_call_cq, ::grpc::ServerCompletionQueue* notification_cq, void *tag) {
-      ::grpc::Service::RequestAsyncUnary(9, context, request, response, new_call_cq, notification_cq, tag);
+      ::grpc::Service::RequestAsyncUnary(10, context, request, response, new_call_cq, notification_cq, tag);
     }
   };
   template <class BaseClass>
@@ -1796,7 +1932,7 @@ class CameraCommunicatorS final {
     void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
    public:
     WithRawMethod_AreYouDoneSaving() {
-      ::grpc::Service::MarkMethodRaw(10);
+      ::grpc::Service::MarkMethodRaw(11);
     }
     ~WithRawMethod_AreYouDoneSaving() override {
       BaseClassMustBeDerivedFromService(this);
@@ -1807,7 +1943,7 @@ class CameraCommunicatorS final {
       return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
     }
     void RequestAreYouDoneSaving(::grpc::ServerContext* context, ::grpc::ByteBuffer* request, ::grpc::ServerAsyncResponseWriter< ::grpc::ByteBuffer>* response, ::grpc::CompletionQueue* new_call_cq, ::grpc::ServerCompletionQueue* notification_cq, void *tag) {
-      ::grpc::Service::RequestAsyncUnary(10, context, request, response, new_call_cq, notification_cq, tag);
+      ::grpc::Service::RequestAsyncUnary(11, context, request, response, new_call_cq, notification_cq, tag);
     }
   };
   template <class BaseClass>
@@ -1816,7 +1952,7 @@ class CameraCommunicatorS final {
     void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
    public:
     WithRawMethod_SyncMessageTrialStart() {
-      ::grpc::Service::MarkMethodRaw(11);
+      ::grpc::Service::MarkMethodRaw(12);
     }
     ~WithRawMethod_SyncMessageTrialStart() override {
       BaseClassMustBeDerivedFromService(this);
@@ -1827,7 +1963,7 @@ class CameraCommunicatorS final {
       return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
     }
     void RequestSyncMessageTrialStart(::grpc::ServerContext* context, ::grpc::ByteBuffer* request, ::grpc::ServerAsyncResponseWriter< ::grpc::ByteBuffer>* response, ::grpc::CompletionQueue* new_call_cq, ::grpc::ServerCompletionQueue* notification_cq, void *tag) {
-      ::grpc::Service::RequestAsyncUnary(11, context, request, response, new_call_cq, notification_cq, tag);
+      ::grpc::Service::RequestAsyncUnary(12, context, request, response, new_call_cq, notification_cq, tag);
     }
   };
   template <class BaseClass>
@@ -1836,7 +1972,7 @@ class CameraCommunicatorS final {
     void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
    public:
     WithRawMethod_SyncMessageTrialEnd() {
-      ::grpc::Service::MarkMethodRaw(12);
+      ::grpc::Service::MarkMethodRaw(13);
     }
     ~WithRawMethod_SyncMessageTrialEnd() override {
       BaseClassMustBeDerivedFromService(this);
@@ -1847,8 +1983,46 @@ class CameraCommunicatorS final {
       return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
     }
     void RequestSyncMessageTrialEnd(::grpc::ServerContext* context, ::grpc::ByteBuffer* request, ::grpc::ServerAsyncResponseWriter< ::grpc::ByteBuffer>* response, ::grpc::CompletionQueue* new_call_cq, ::grpc::ServerCompletionQueue* notification_cq, void *tag) {
-      ::grpc::Service::RequestAsyncUnary(12, context, request, response, new_call_cq, notification_cq, tag);
+      ::grpc::Service::RequestAsyncUnary(13, context, request, response, new_call_cq, notification_cq, tag);
     }
+  };
+  template <class BaseClass>
+  class ExperimentalWithRawCallbackMethod_SetTimestamp : public BaseClass {
+   private:
+    void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
+   public:
+    ExperimentalWithRawCallbackMethod_SetTimestamp() {
+    #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
+      ::grpc::Service::
+    #else
+      ::grpc::Service::experimental().
+    #endif
+        MarkMethodRawCallback(0,
+          new ::grpc::internal::CallbackUnaryHandler< ::grpc::ByteBuffer, ::grpc::ByteBuffer>(
+            [this](
+    #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
+                   ::grpc::CallbackServerContext*
+    #else
+                   ::grpc::experimental::CallbackServerContext*
+    #endif
+                     context, const ::grpc::ByteBuffer* request, ::grpc::ByteBuffer* response) { return this->SetTimestamp(context, request, response); }));
+    }
+    ~ExperimentalWithRawCallbackMethod_SetTimestamp() override {
+      BaseClassMustBeDerivedFromService(this);
+    }
+    // disable synchronous version of this method
+    ::grpc::Status SetTimestamp(::grpc::ServerContext* /*context*/, const ::SetTimestampRequest* /*request*/, ::SimpleResponse* /*response*/) override {
+      abort();
+      return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
+    }
+    #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
+    virtual ::grpc::ServerUnaryReactor* SetTimestamp(
+      ::grpc::CallbackServerContext* /*context*/, const ::grpc::ByteBuffer* /*request*/, ::grpc::ByteBuffer* /*response*/)
+    #else
+    virtual ::grpc::experimental::ServerUnaryReactor* SetTimestamp(
+      ::grpc::experimental::CallbackServerContext* /*context*/, const ::grpc::ByteBuffer* /*request*/, ::grpc::ByteBuffer* /*response*/)
+    #endif
+      { return nullptr; }
   };
   template <class BaseClass>
   class ExperimentalWithRawCallbackMethod_SetFramerate : public BaseClass {
@@ -1861,7 +2035,7 @@ class CameraCommunicatorS final {
     #else
       ::grpc::Service::experimental().
     #endif
-        MarkMethodRawCallback(0,
+        MarkMethodRawCallback(1,
           new ::grpc::internal::CallbackUnaryHandler< ::grpc::ByteBuffer, ::grpc::ByteBuffer>(
             [this](
     #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
@@ -1899,7 +2073,7 @@ class CameraCommunicatorS final {
     #else
       ::grpc::Service::experimental().
     #endif
-        MarkMethodRawCallback(1,
+        MarkMethodRawCallback(2,
           new ::grpc::internal::CallbackUnaryHandler< ::grpc::ByteBuffer, ::grpc::ByteBuffer>(
             [this](
     #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
@@ -1937,7 +2111,7 @@ class CameraCommunicatorS final {
     #else
       ::grpc::Service::experimental().
     #endif
-        MarkMethodRawCallback(2,
+        MarkMethodRawCallback(3,
           new ::grpc::internal::CallbackUnaryHandler< ::grpc::ByteBuffer, ::grpc::ByteBuffer>(
             [this](
     #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
@@ -1975,7 +2149,7 @@ class CameraCommunicatorS final {
     #else
       ::grpc::Service::experimental().
     #endif
-        MarkMethodRawCallback(3,
+        MarkMethodRawCallback(4,
           new ::grpc::internal::CallbackUnaryHandler< ::grpc::ByteBuffer, ::grpc::ByteBuffer>(
             [this](
     #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
@@ -2013,7 +2187,7 @@ class CameraCommunicatorS final {
     #else
       ::grpc::Service::experimental().
     #endif
-        MarkMethodRawCallback(4,
+        MarkMethodRawCallback(5,
           new ::grpc::internal::CallbackUnaryHandler< ::grpc::ByteBuffer, ::grpc::ByteBuffer>(
             [this](
     #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
@@ -2027,7 +2201,7 @@ class CameraCommunicatorS final {
       BaseClassMustBeDerivedFromService(this);
     }
     // disable synchronous version of this method
-    ::grpc::Status StartRecording(::grpc::ServerContext* /*context*/, const ::SimpleRequest* /*request*/, ::SimpleResponse* /*response*/) override {
+    ::grpc::Status StartRecording(::grpc::ServerContext* /*context*/, const ::StartRecordingRequest* /*request*/, ::SimpleResponse* /*response*/) override {
       abort();
       return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
     }
@@ -2051,7 +2225,7 @@ class CameraCommunicatorS final {
     #else
       ::grpc::Service::experimental().
     #endif
-        MarkMethodRawCallback(5,
+        MarkMethodRawCallback(6,
           new ::grpc::internal::CallbackUnaryHandler< ::grpc::ByteBuffer, ::grpc::ByteBuffer>(
             [this](
     #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
@@ -2089,7 +2263,7 @@ class CameraCommunicatorS final {
     #else
       ::grpc::Service::experimental().
     #endif
-        MarkMethodRawCallback(6,
+        MarkMethodRawCallback(7,
           new ::grpc::internal::CallbackUnaryHandler< ::grpc::ByteBuffer, ::grpc::ByteBuffer>(
             [this](
     #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
@@ -2127,7 +2301,7 @@ class CameraCommunicatorS final {
     #else
       ::grpc::Service::experimental().
     #endif
-        MarkMethodRawCallback(7,
+        MarkMethodRawCallback(8,
           new ::grpc::internal::CallbackUnaryHandler< ::grpc::ByteBuffer, ::grpc::ByteBuffer>(
             [this](
     #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
@@ -2165,7 +2339,7 @@ class CameraCommunicatorS final {
     #else
       ::grpc::Service::experimental().
     #endif
-        MarkMethodRawCallback(8,
+        MarkMethodRawCallback(9,
           new ::grpc::internal::CallbackUnaryHandler< ::grpc::ByteBuffer, ::grpc::ByteBuffer>(
             [this](
     #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
@@ -2203,7 +2377,7 @@ class CameraCommunicatorS final {
     #else
       ::grpc::Service::experimental().
     #endif
-        MarkMethodRawCallback(9,
+        MarkMethodRawCallback(10,
           new ::grpc::internal::CallbackUnaryHandler< ::grpc::ByteBuffer, ::grpc::ByteBuffer>(
             [this](
     #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
@@ -2241,7 +2415,7 @@ class CameraCommunicatorS final {
     #else
       ::grpc::Service::experimental().
     #endif
-        MarkMethodRawCallback(10,
+        MarkMethodRawCallback(11,
           new ::grpc::internal::CallbackUnaryHandler< ::grpc::ByteBuffer, ::grpc::ByteBuffer>(
             [this](
     #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
@@ -2279,7 +2453,7 @@ class CameraCommunicatorS final {
     #else
       ::grpc::Service::experimental().
     #endif
-        MarkMethodRawCallback(11,
+        MarkMethodRawCallback(12,
           new ::grpc::internal::CallbackUnaryHandler< ::grpc::ByteBuffer, ::grpc::ByteBuffer>(
             [this](
     #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
@@ -2317,7 +2491,7 @@ class CameraCommunicatorS final {
     #else
       ::grpc::Service::experimental().
     #endif
-        MarkMethodRawCallback(12,
+        MarkMethodRawCallback(13,
           new ::grpc::internal::CallbackUnaryHandler< ::grpc::ByteBuffer, ::grpc::ByteBuffer>(
             [this](
     #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
@@ -2345,12 +2519,39 @@ class CameraCommunicatorS final {
       { return nullptr; }
   };
   template <class BaseClass>
+  class WithStreamedUnaryMethod_SetTimestamp : public BaseClass {
+   private:
+    void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
+   public:
+    WithStreamedUnaryMethod_SetTimestamp() {
+      ::grpc::Service::MarkMethodStreamed(0,
+        new ::grpc::internal::StreamedUnaryHandler<
+          ::SetTimestampRequest, ::SimpleResponse>(
+            [this](::grpc::ServerContext* context,
+                   ::grpc::ServerUnaryStreamer<
+                     ::SetTimestampRequest, ::SimpleResponse>* streamer) {
+                       return this->StreamedSetTimestamp(context,
+                         streamer);
+                  }));
+    }
+    ~WithStreamedUnaryMethod_SetTimestamp() override {
+      BaseClassMustBeDerivedFromService(this);
+    }
+    // disable regular version of this method
+    ::grpc::Status SetTimestamp(::grpc::ServerContext* /*context*/, const ::SetTimestampRequest* /*request*/, ::SimpleResponse* /*response*/) override {
+      abort();
+      return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
+    }
+    // replace default version of method with streamed unary
+    virtual ::grpc::Status StreamedSetTimestamp(::grpc::ServerContext* context, ::grpc::ServerUnaryStreamer< ::SetTimestampRequest,::SimpleResponse>* server_unary_streamer) = 0;
+  };
+  template <class BaseClass>
   class WithStreamedUnaryMethod_SetFramerate : public BaseClass {
    private:
     void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
    public:
     WithStreamedUnaryMethod_SetFramerate() {
-      ::grpc::Service::MarkMethodStreamed(0,
+      ::grpc::Service::MarkMethodStreamed(1,
         new ::grpc::internal::StreamedUnaryHandler<
           ::SetFramerateRequest, ::SimpleResponse>(
             [this](::grpc::ServerContext* context,
@@ -2377,7 +2578,7 @@ class CameraCommunicatorS final {
     void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
    public:
     WithStreamedUnaryMethod_SetRecordingPeriod() {
-      ::grpc::Service::MarkMethodStreamed(1,
+      ::grpc::Service::MarkMethodStreamed(2,
         new ::grpc::internal::StreamedUnaryHandler<
           ::SetRecordingPeriodRequest, ::SimpleResponse>(
             [this](::grpc::ServerContext* context,
@@ -2404,7 +2605,7 @@ class CameraCommunicatorS final {
     void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
    public:
     WithStreamedUnaryMethod_SetReferenceCamera() {
-      ::grpc::Service::MarkMethodStreamed(2,
+      ::grpc::Service::MarkMethodStreamed(3,
         new ::grpc::internal::StreamedUnaryHandler<
           ::SetReferenceCameraRequest, ::SimpleResponse>(
             [this](::grpc::ServerContext* context,
@@ -2431,7 +2632,7 @@ class CameraCommunicatorS final {
     void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
    public:
     WithStreamedUnaryMethod_PrepareRecording() {
-      ::grpc::Service::MarkMethodStreamed(3,
+      ::grpc::Service::MarkMethodStreamed(4,
         new ::grpc::internal::StreamedUnaryHandler<
           ::SimpleRequest, ::SimpleResponse>(
             [this](::grpc::ServerContext* context,
@@ -2458,12 +2659,12 @@ class CameraCommunicatorS final {
     void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
    public:
     WithStreamedUnaryMethod_StartRecording() {
-      ::grpc::Service::MarkMethodStreamed(4,
+      ::grpc::Service::MarkMethodStreamed(5,
         new ::grpc::internal::StreamedUnaryHandler<
-          ::SimpleRequest, ::SimpleResponse>(
+          ::StartRecordingRequest, ::SimpleResponse>(
             [this](::grpc::ServerContext* context,
                    ::grpc::ServerUnaryStreamer<
-                     ::SimpleRequest, ::SimpleResponse>* streamer) {
+                     ::StartRecordingRequest, ::SimpleResponse>* streamer) {
                        return this->StreamedStartRecording(context,
                          streamer);
                   }));
@@ -2472,12 +2673,12 @@ class CameraCommunicatorS final {
       BaseClassMustBeDerivedFromService(this);
     }
     // disable regular version of this method
-    ::grpc::Status StartRecording(::grpc::ServerContext* /*context*/, const ::SimpleRequest* /*request*/, ::SimpleResponse* /*response*/) override {
+    ::grpc::Status StartRecording(::grpc::ServerContext* /*context*/, const ::StartRecordingRequest* /*request*/, ::SimpleResponse* /*response*/) override {
       abort();
       return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
     }
     // replace default version of method with streamed unary
-    virtual ::grpc::Status StreamedStartRecording(::grpc::ServerContext* context, ::grpc::ServerUnaryStreamer< ::SimpleRequest,::SimpleResponse>* server_unary_streamer) = 0;
+    virtual ::grpc::Status StreamedStartRecording(::grpc::ServerContext* context, ::grpc::ServerUnaryStreamer< ::StartRecordingRequest,::SimpleResponse>* server_unary_streamer) = 0;
   };
   template <class BaseClass>
   class WithStreamedUnaryMethod_CaptureSingleImage : public BaseClass {
@@ -2485,7 +2686,7 @@ class CameraCommunicatorS final {
     void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
    public:
     WithStreamedUnaryMethod_CaptureSingleImage() {
-      ::grpc::Service::MarkMethodStreamed(5,
+      ::grpc::Service::MarkMethodStreamed(6,
         new ::grpc::internal::StreamedUnaryHandler<
           ::SimpleRequest, ::SimpleResponse>(
             [this](::grpc::ServerContext* context,
@@ -2512,7 +2713,7 @@ class CameraCommunicatorS final {
     void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
    public:
     WithStreamedUnaryMethod_SetDirectory() {
-      ::grpc::Service::MarkMethodStreamed(6,
+      ::grpc::Service::MarkMethodStreamed(7,
         new ::grpc::internal::StreamedUnaryHandler<
           ::SetDirectoryRequest, ::SimpleResponse>(
             [this](::grpc::ServerContext* context,
@@ -2539,7 +2740,7 @@ class CameraCommunicatorS final {
     void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
    public:
     WithStreamedUnaryMethod_SetGain() {
-      ::grpc::Service::MarkMethodStreamed(7,
+      ::grpc::Service::MarkMethodStreamed(8,
         new ::grpc::internal::StreamedUnaryHandler<
           ::SetGainRequest, ::SimpleResponse>(
             [this](::grpc::ServerContext* context,
@@ -2566,7 +2767,7 @@ class CameraCommunicatorS final {
     void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
    public:
     WithStreamedUnaryMethod_SetExposure() {
-      ::grpc::Service::MarkMethodStreamed(8,
+      ::grpc::Service::MarkMethodStreamed(9,
         new ::grpc::internal::StreamedUnaryHandler<
           ::SetExposureRequest, ::SimpleResponse>(
             [this](::grpc::ServerContext* context,
@@ -2593,7 +2794,7 @@ class CameraCommunicatorS final {
     void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
    public:
     WithStreamedUnaryMethod_BreakRecording() {
-      ::grpc::Service::MarkMethodStreamed(9,
+      ::grpc::Service::MarkMethodStreamed(10,
         new ::grpc::internal::StreamedUnaryHandler<
           ::SimpleRequest, ::SimpleResponse>(
             [this](::grpc::ServerContext* context,
@@ -2620,7 +2821,7 @@ class CameraCommunicatorS final {
     void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
    public:
     WithStreamedUnaryMethod_AreYouDoneSaving() {
-      ::grpc::Service::MarkMethodStreamed(10,
+      ::grpc::Service::MarkMethodStreamed(11,
         new ::grpc::internal::StreamedUnaryHandler<
           ::SimpleRequest, ::SimpleResponse>(
             [this](::grpc::ServerContext* context,
@@ -2647,7 +2848,7 @@ class CameraCommunicatorS final {
     void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
    public:
     WithStreamedUnaryMethod_SyncMessageTrialStart() {
-      ::grpc::Service::MarkMethodStreamed(11,
+      ::grpc::Service::MarkMethodStreamed(12,
         new ::grpc::internal::StreamedUnaryHandler<
           ::Empty, ::Empty>(
             [this](::grpc::ServerContext* context,
@@ -2674,7 +2875,7 @@ class CameraCommunicatorS final {
     void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
    public:
     WithStreamedUnaryMethod_SyncMessageTrialEnd() {
-      ::grpc::Service::MarkMethodStreamed(12,
+      ::grpc::Service::MarkMethodStreamed(13,
         new ::grpc::internal::StreamedUnaryHandler<
           ::Empty, ::Empty>(
             [this](::grpc::ServerContext* context,
@@ -2695,9 +2896,9 @@ class CameraCommunicatorS final {
     // replace default version of method with streamed unary
     virtual ::grpc::Status StreamedSyncMessageTrialEnd(::grpc::ServerContext* context, ::grpc::ServerUnaryStreamer< ::Empty,::Empty>* server_unary_streamer) = 0;
   };
-  typedef WithStreamedUnaryMethod_SetFramerate<WithStreamedUnaryMethod_SetRecordingPeriod<WithStreamedUnaryMethod_SetReferenceCamera<WithStreamedUnaryMethod_PrepareRecording<WithStreamedUnaryMethod_StartRecording<WithStreamedUnaryMethod_CaptureSingleImage<WithStreamedUnaryMethod_SetDirectory<WithStreamedUnaryMethod_SetGain<WithStreamedUnaryMethod_SetExposure<WithStreamedUnaryMethod_BreakRecording<WithStreamedUnaryMethod_AreYouDoneSaving<WithStreamedUnaryMethod_SyncMessageTrialStart<WithStreamedUnaryMethod_SyncMessageTrialEnd<Service > > > > > > > > > > > > > StreamedUnaryService;
+  typedef WithStreamedUnaryMethod_SetTimestamp<WithStreamedUnaryMethod_SetFramerate<WithStreamedUnaryMethod_SetRecordingPeriod<WithStreamedUnaryMethod_SetReferenceCamera<WithStreamedUnaryMethod_PrepareRecording<WithStreamedUnaryMethod_StartRecording<WithStreamedUnaryMethod_CaptureSingleImage<WithStreamedUnaryMethod_SetDirectory<WithStreamedUnaryMethod_SetGain<WithStreamedUnaryMethod_SetExposure<WithStreamedUnaryMethod_BreakRecording<WithStreamedUnaryMethod_AreYouDoneSaving<WithStreamedUnaryMethod_SyncMessageTrialStart<WithStreamedUnaryMethod_SyncMessageTrialEnd<Service > > > > > > > > > > > > > > StreamedUnaryService;
   typedef Service SplitStreamedService;
-  typedef WithStreamedUnaryMethod_SetFramerate<WithStreamedUnaryMethod_SetRecordingPeriod<WithStreamedUnaryMethod_SetReferenceCamera<WithStreamedUnaryMethod_PrepareRecording<WithStreamedUnaryMethod_StartRecording<WithStreamedUnaryMethod_CaptureSingleImage<WithStreamedUnaryMethod_SetDirectory<WithStreamedUnaryMethod_SetGain<WithStreamedUnaryMethod_SetExposure<WithStreamedUnaryMethod_BreakRecording<WithStreamedUnaryMethod_AreYouDoneSaving<WithStreamedUnaryMethod_SyncMessageTrialStart<WithStreamedUnaryMethod_SyncMessageTrialEnd<Service > > > > > > > > > > > > > StreamedService;
+  typedef WithStreamedUnaryMethod_SetTimestamp<WithStreamedUnaryMethod_SetFramerate<WithStreamedUnaryMethod_SetRecordingPeriod<WithStreamedUnaryMethod_SetReferenceCamera<WithStreamedUnaryMethod_PrepareRecording<WithStreamedUnaryMethod_StartRecording<WithStreamedUnaryMethod_CaptureSingleImage<WithStreamedUnaryMethod_SetDirectory<WithStreamedUnaryMethod_SetGain<WithStreamedUnaryMethod_SetExposure<WithStreamedUnaryMethod_BreakRecording<WithStreamedUnaryMethod_AreYouDoneSaving<WithStreamedUnaryMethod_SyncMessageTrialStart<WithStreamedUnaryMethod_SyncMessageTrialEnd<Service > > > > > > > > > > > > > > StreamedService;
 };
 
 

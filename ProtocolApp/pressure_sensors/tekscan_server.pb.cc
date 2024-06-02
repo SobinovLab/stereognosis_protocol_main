@@ -15,6 +15,10 @@
 // @@protoc_insertion_point(includes)
 #include <google/protobuf/port_def.inc>
 namespace TekscanServerNamespace {
+class SetTimestampRequestDefaultTypeInternal {
+ public:
+  ::PROTOBUF_NAMESPACE_ID::internal::ExplicitlyConstructed<SetTimestampRequest> _instance;
+} _SetTimestampRequest_default_instance_;
 class SimpleRequestDefaultTypeInternal {
  public:
   ::PROTOBUF_NAMESPACE_ID::internal::ExplicitlyConstructed<SimpleRequest> _instance;
@@ -79,6 +83,19 @@ static void InitDefaultsscc_info_ForceResponse_tekscan_5fserver_2eproto() {
 ::PROTOBUF_NAMESPACE_ID::internal::SCCInfo<0> scc_info_ForceResponse_tekscan_5fserver_2eproto =
     {{ATOMIC_VAR_INIT(::PROTOBUF_NAMESPACE_ID::internal::SCCInfoBase::kUninitialized), 0, 0, InitDefaultsscc_info_ForceResponse_tekscan_5fserver_2eproto}, {}};
 
+static void InitDefaultsscc_info_SetTimestampRequest_tekscan_5fserver_2eproto() {
+  GOOGLE_PROTOBUF_VERIFY_VERSION;
+
+  {
+    void* ptr = &::TekscanServerNamespace::_SetTimestampRequest_default_instance_;
+    new (ptr) ::TekscanServerNamespace::SetTimestampRequest();
+    ::PROTOBUF_NAMESPACE_ID::internal::OnShutdownDestroyMessage(ptr);
+  }
+}
+
+::PROTOBUF_NAMESPACE_ID::internal::SCCInfo<0> scc_info_SetTimestampRequest_tekscan_5fserver_2eproto =
+    {{ATOMIC_VAR_INIT(::PROTOBUF_NAMESPACE_ID::internal::SCCInfoBase::kUninitialized), 0, 0, InitDefaultsscc_info_SetTimestampRequest_tekscan_5fserver_2eproto}, {}};
+
 static void InitDefaultsscc_info_SimpleRequest_tekscan_5fserver_2eproto() {
   GOOGLE_PROTOBUF_VERIFY_VERSION;
 
@@ -118,11 +135,17 @@ static void InitDefaultsscc_info_StartRecordingRequest_tekscan_5fserver_2eproto(
 ::PROTOBUF_NAMESPACE_ID::internal::SCCInfo<0> scc_info_StartRecordingRequest_tekscan_5fserver_2eproto =
     {{ATOMIC_VAR_INIT(::PROTOBUF_NAMESPACE_ID::internal::SCCInfoBase::kUninitialized), 0, 0, InitDefaultsscc_info_StartRecordingRequest_tekscan_5fserver_2eproto}, {}};
 
-static ::PROTOBUF_NAMESPACE_ID::Metadata file_level_metadata_tekscan_5fserver_2eproto[6];
+static ::PROTOBUF_NAMESPACE_ID::Metadata file_level_metadata_tekscan_5fserver_2eproto[7];
 static constexpr ::PROTOBUF_NAMESPACE_ID::EnumDescriptor const** file_level_enum_descriptors_tekscan_5fserver_2eproto = nullptr;
 static constexpr ::PROTOBUF_NAMESPACE_ID::ServiceDescriptor const** file_level_service_descriptors_tekscan_5fserver_2eproto = nullptr;
 
 const ::PROTOBUF_NAMESPACE_ID::uint32 TableStruct_tekscan_5fserver_2eproto::offsets[] PROTOBUF_SECTION_VARIABLE(protodesc_cold) = {
+  ~0u,  // no _has_bits_
+  PROTOBUF_FIELD_OFFSET(::TekscanServerNamespace::SetTimestampRequest, _internal_metadata_),
+  ~0u,  // no _extensions_
+  ~0u,  // no _oneof_case_
+  ~0u,  // no _weak_field_map_
+  PROTOBUF_FIELD_OFFSET(::TekscanServerNamespace::SetTimestampRequest, timestamp_),
   ~0u,  // no _has_bits_
   PROTOBUF_FIELD_OFFSET(::TekscanServerNamespace::SimpleRequest, _internal_metadata_),
   ~0u,  // no _extensions_
@@ -163,15 +186,17 @@ const ::PROTOBUF_NAMESPACE_ID::uint32 TableStruct_tekscan_5fserver_2eproto::offs
   ~0u,  // no _weak_field_map_
 };
 static const ::PROTOBUF_NAMESPACE_ID::internal::MigrationSchema schemas[] PROTOBUF_SECTION_VARIABLE(protodesc_cold) = {
-  { 0, -1, sizeof(::TekscanServerNamespace::SimpleRequest)},
-  { 6, -1, sizeof(::TekscanServerNamespace::SimpleResponse)},
-  { 13, -1, sizeof(::TekscanServerNamespace::StartRecordingRequest)},
-  { 19, -1, sizeof(::TekscanServerNamespace::BreakRecordingResponse)},
-  { 26, -1, sizeof(::TekscanServerNamespace::ForceResponse)},
-  { 33, -1, sizeof(::TekscanServerNamespace::Empty)},
+  { 0, -1, sizeof(::TekscanServerNamespace::SetTimestampRequest)},
+  { 6, -1, sizeof(::TekscanServerNamespace::SimpleRequest)},
+  { 12, -1, sizeof(::TekscanServerNamespace::SimpleResponse)},
+  { 19, -1, sizeof(::TekscanServerNamespace::StartRecordingRequest)},
+  { 25, -1, sizeof(::TekscanServerNamespace::BreakRecordingResponse)},
+  { 32, -1, sizeof(::TekscanServerNamespace::ForceResponse)},
+  { 39, -1, sizeof(::TekscanServerNamespace::Empty)},
 };
 
 static ::PROTOBUF_NAMESPACE_ID::Message const * const file_default_instances[] = {
+  reinterpret_cast<const ::PROTOBUF_NAMESPACE_ID::Message*>(&::TekscanServerNamespace::_SetTimestampRequest_default_instance_),
   reinterpret_cast<const ::PROTOBUF_NAMESPACE_ID::Message*>(&::TekscanServerNamespace::_SimpleRequest_default_instance_),
   reinterpret_cast<const ::PROTOBUF_NAMESPACE_ID::Message*>(&::TekscanServerNamespace::_SimpleResponse_default_instance_),
   reinterpret_cast<const ::PROTOBUF_NAMESPACE_ID::Message*>(&::TekscanServerNamespace::_StartRecordingRequest_default_instance_),
@@ -182,48 +207,247 @@ static ::PROTOBUF_NAMESPACE_ID::Message const * const file_default_instances[] =
 
 const char descriptor_table_protodef_tekscan_5fserver_2eproto[] PROTOBUF_SECTION_VARIABLE(protodesc_cold) =
   "\n\024tekscan_server.proto\022\026TekscanServerNam"
-  "espace\"\035\n\rSimpleRequest\022\014\n\004code\030\001 \001(\005\"3\n"
-  "\016SimpleResponse\022\014\n\004code\030\001 \001(\005\022\023\n\013descrip"
-  "tion\030\002 \001(\t\")\n\025StartRecordingRequest\022\020\n\010t"
-  "rialNum\030\001 \001(\005\"B\n\026BreakRecordingResponse\022"
-  "\024\n\014successLevel\030\001 \001(\005\022\022\n\nforceLevel\030\002 \001("
-  "\001\"6\n\rForceResponse\022\021\n\tleftForce\030\001 \001(\001\022\022\n"
-  "\nrightForce\030\002 \001(\001\"\007\n\005Empty2\361\003\n\rTekscanSe"
-  "rver\022i\n\016StartRecording\022-.TekscanServerNa"
-  "mespace.StartRecordingRequest\032&.TekscanS"
-  "erverNamespace.SimpleResponse\"\000\022i\n\016Break"
-  "Recording\022%.TekscanServerNamespace.Simpl"
-  "eRequest\032..TekscanServerNamespace.BreakR"
-  "ecordingResponse\"\000\022Z\n\010GetForce\022%.Tekscan"
-  "ServerNamespace.SimpleRequest\032%.TekscanS"
-  "erverNamespace.ForceResponse\"\000\022W\n\025SyncMe"
-  "ssageTrialStart\022\035.TekscanServerNamespace"
-  ".Empty\032\035.TekscanServerNamespace.Empty\"\000\022"
-  "U\n\023SyncMessageTrialEnd\022\035.TekscanServerNa"
-  "mespace.Empty\032\035.TekscanServerNamespace.E"
-  "mpty\"\000B\007\252\002\004TPSSb\006proto3"
+  "espace\"(\n\023SetTimestampRequest\022\021\n\ttimesta"
+  "mp\030\001 \001(\005\"\035\n\rSimpleRequest\022\014\n\004code\030\001 \001(\005\""
+  "3\n\016SimpleResponse\022\014\n\004code\030\001 \001(\005\022\023\n\013descr"
+  "iption\030\002 \001(\t\")\n\025StartRecordingRequest\022\020\n"
+  "\010trialNum\030\001 \001(\005\"B\n\026BreakRecordingRespons"
+  "e\022\024\n\014successLevel\030\001 \001(\005\022\022\n\nforceLevel\030\002 "
+  "\001(\001\"6\n\rForceResponse\022\021\n\tleftForce\030\001 \001(\001\022"
+  "\022\n\nrightForce\030\002 \001(\001\"\007\n\005Empty2\330\004\n\rTekscan"
+  "Server\022e\n\014SetTimestamp\022+.TekscanServerNa"
+  "mespace.SetTimestampRequest\032&.TekscanSer"
+  "verNamespace.SimpleResponse\"\000\022i\n\016StartRe"
+  "cording\022-.TekscanServerNamespace.StartRe"
+  "cordingRequest\032&.TekscanServerNamespace."
+  "SimpleResponse\"\000\022i\n\016BreakRecording\022%.Tek"
+  "scanServerNamespace.SimpleRequest\032..Teks"
+  "canServerNamespace.BreakRecordingRespons"
+  "e\"\000\022Z\n\010GetForce\022%.TekscanServerNamespace"
+  ".SimpleRequest\032%.TekscanServerNamespace."
+  "ForceResponse\"\000\022W\n\025SyncMessageTrialStart"
+  "\022\035.TekscanServerNamespace.Empty\032\035.Teksca"
+  "nServerNamespace.Empty\"\000\022U\n\023SyncMessageT"
+  "rialEnd\022\035.TekscanServerNamespace.Empty\032\035"
+  ".TekscanServerNamespace.Empty\"\000B\007\252\002\004TPSS"
+  "b\006proto3"
   ;
 static const ::PROTOBUF_NAMESPACE_ID::internal::DescriptorTable*const descriptor_table_tekscan_5fserver_2eproto_deps[1] = {
 };
-static ::PROTOBUF_NAMESPACE_ID::internal::SCCInfoBase*const descriptor_table_tekscan_5fserver_2eproto_sccs[6] = {
+static ::PROTOBUF_NAMESPACE_ID::internal::SCCInfoBase*const descriptor_table_tekscan_5fserver_2eproto_sccs[7] = {
   &scc_info_BreakRecordingResponse_tekscan_5fserver_2eproto.base,
   &scc_info_Empty_tekscan_5fserver_2eproto.base,
   &scc_info_ForceResponse_tekscan_5fserver_2eproto.base,
+  &scc_info_SetTimestampRequest_tekscan_5fserver_2eproto.base,
   &scc_info_SimpleRequest_tekscan_5fserver_2eproto.base,
   &scc_info_SimpleResponse_tekscan_5fserver_2eproto.base,
   &scc_info_StartRecordingRequest_tekscan_5fserver_2eproto.base,
 };
 static ::PROTOBUF_NAMESPACE_ID::internal::once_flag descriptor_table_tekscan_5fserver_2eproto_once;
 const ::PROTOBUF_NAMESPACE_ID::internal::DescriptorTable descriptor_table_tekscan_5fserver_2eproto = {
-  false, false, descriptor_table_protodef_tekscan_5fserver_2eproto, "tekscan_server.proto", 823,
-  &descriptor_table_tekscan_5fserver_2eproto_once, descriptor_table_tekscan_5fserver_2eproto_sccs, descriptor_table_tekscan_5fserver_2eproto_deps, 6, 0,
+  false, false, descriptor_table_protodef_tekscan_5fserver_2eproto, "tekscan_server.proto", 968,
+  &descriptor_table_tekscan_5fserver_2eproto_once, descriptor_table_tekscan_5fserver_2eproto_sccs, descriptor_table_tekscan_5fserver_2eproto_deps, 7, 0,
   schemas, file_default_instances, TableStruct_tekscan_5fserver_2eproto::offsets,
-  file_level_metadata_tekscan_5fserver_2eproto, 6, file_level_enum_descriptors_tekscan_5fserver_2eproto, file_level_service_descriptors_tekscan_5fserver_2eproto,
+  file_level_metadata_tekscan_5fserver_2eproto, 7, file_level_enum_descriptors_tekscan_5fserver_2eproto, file_level_service_descriptors_tekscan_5fserver_2eproto,
 };
 
 // Force running AddDescriptors() at dynamic initialization time.
 static bool dynamic_init_dummy_tekscan_5fserver_2eproto = (static_cast<void>(::PROTOBUF_NAMESPACE_ID::internal::AddDescriptors(&descriptor_table_tekscan_5fserver_2eproto)), true);
 namespace TekscanServerNamespace {
+
+// ===================================================================
+
+class SetTimestampRequest::_Internal {
+ public:
+};
+
+SetTimestampRequest::SetTimestampRequest(::PROTOBUF_NAMESPACE_ID::Arena* arena)
+  : ::PROTOBUF_NAMESPACE_ID::Message(arena) {
+  SharedCtor();
+  RegisterArenaDtor(arena);
+  // @@protoc_insertion_point(arena_constructor:TekscanServerNamespace.SetTimestampRequest)
+}
+SetTimestampRequest::SetTimestampRequest(const SetTimestampRequest& from)
+  : ::PROTOBUF_NAMESPACE_ID::Message() {
+  _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
+  timestamp_ = from.timestamp_;
+  // @@protoc_insertion_point(copy_constructor:TekscanServerNamespace.SetTimestampRequest)
+}
+
+void SetTimestampRequest::SharedCtor() {
+  timestamp_ = 0;
+}
+
+SetTimestampRequest::~SetTimestampRequest() {
+  // @@protoc_insertion_point(destructor:TekscanServerNamespace.SetTimestampRequest)
+  SharedDtor();
+  _internal_metadata_.Delete<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>();
+}
+
+void SetTimestampRequest::SharedDtor() {
+  GOOGLE_DCHECK(GetArena() == nullptr);
+}
+
+void SetTimestampRequest::ArenaDtor(void* object) {
+  SetTimestampRequest* _this = reinterpret_cast< SetTimestampRequest* >(object);
+  (void)_this;
+}
+void SetTimestampRequest::RegisterArenaDtor(::PROTOBUF_NAMESPACE_ID::Arena*) {
+}
+void SetTimestampRequest::SetCachedSize(int size) const {
+  _cached_size_.Set(size);
+}
+const SetTimestampRequest& SetTimestampRequest::default_instance() {
+  ::PROTOBUF_NAMESPACE_ID::internal::InitSCC(&::scc_info_SetTimestampRequest_tekscan_5fserver_2eproto.base);
+  return *internal_default_instance();
+}
+
+
+void SetTimestampRequest::Clear() {
+// @@protoc_insertion_point(message_clear_start:TekscanServerNamespace.SetTimestampRequest)
+  ::PROTOBUF_NAMESPACE_ID::uint32 cached_has_bits = 0;
+  // Prevent compiler warnings about cached_has_bits being unused
+  (void) cached_has_bits;
+
+  timestamp_ = 0;
+  _internal_metadata_.Clear<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>();
+}
+
+const char* SetTimestampRequest::_InternalParse(const char* ptr, ::PROTOBUF_NAMESPACE_ID::internal::ParseContext* ctx) {
+#define CHK_(x) if (PROTOBUF_PREDICT_FALSE(!(x))) goto failure
+  while (!ctx->Done(&ptr)) {
+    ::PROTOBUF_NAMESPACE_ID::uint32 tag;
+    ptr = ::PROTOBUF_NAMESPACE_ID::internal::ReadTag(ptr, &tag);
+    CHK_(ptr);
+    switch (tag >> 3) {
+      // int32 timestamp = 1;
+      case 1:
+        if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 8)) {
+          timestamp_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
+          CHK_(ptr);
+        } else goto handle_unusual;
+        continue;
+      default: {
+      handle_unusual:
+        if ((tag & 7) == 4 || tag == 0) {
+          ctx->SetLastTag(tag);
+          goto success;
+        }
+        ptr = UnknownFieldParse(tag,
+            _internal_metadata_.mutable_unknown_fields<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(),
+            ptr, ctx);
+        CHK_(ptr != nullptr);
+        continue;
+      }
+    }  // switch
+  }  // while
+success:
+  return ptr;
+failure:
+  ptr = nullptr;
+  goto success;
+#undef CHK_
+}
+
+::PROTOBUF_NAMESPACE_ID::uint8* SetTimestampRequest::_InternalSerialize(
+    ::PROTOBUF_NAMESPACE_ID::uint8* target, ::PROTOBUF_NAMESPACE_ID::io::EpsCopyOutputStream* stream) const {
+  // @@protoc_insertion_point(serialize_to_array_start:TekscanServerNamespace.SetTimestampRequest)
+  ::PROTOBUF_NAMESPACE_ID::uint32 cached_has_bits = 0;
+  (void) cached_has_bits;
+
+  // int32 timestamp = 1;
+  if (this->timestamp() != 0) {
+    target = stream->EnsureSpace(target);
+    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteInt32ToArray(1, this->_internal_timestamp(), target);
+  }
+
+  if (PROTOBUF_PREDICT_FALSE(_internal_metadata_.have_unknown_fields())) {
+    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormat::InternalSerializeUnknownFieldsToArray(
+        _internal_metadata_.unknown_fields<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(::PROTOBUF_NAMESPACE_ID::UnknownFieldSet::default_instance), target, stream);
+  }
+  // @@protoc_insertion_point(serialize_to_array_end:TekscanServerNamespace.SetTimestampRequest)
+  return target;
+}
+
+size_t SetTimestampRequest::ByteSizeLong() const {
+// @@protoc_insertion_point(message_byte_size_start:TekscanServerNamespace.SetTimestampRequest)
+  size_t total_size = 0;
+
+  ::PROTOBUF_NAMESPACE_ID::uint32 cached_has_bits = 0;
+  // Prevent compiler warnings about cached_has_bits being unused
+  (void) cached_has_bits;
+
+  // int32 timestamp = 1;
+  if (this->timestamp() != 0) {
+    total_size += 1 +
+      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::Int32Size(
+        this->_internal_timestamp());
+  }
+
+  if (PROTOBUF_PREDICT_FALSE(_internal_metadata_.have_unknown_fields())) {
+    return ::PROTOBUF_NAMESPACE_ID::internal::ComputeUnknownFieldsSize(
+        _internal_metadata_, total_size, &_cached_size_);
+  }
+  int cached_size = ::PROTOBUF_NAMESPACE_ID::internal::ToCachedSize(total_size);
+  SetCachedSize(cached_size);
+  return total_size;
+}
+
+void SetTimestampRequest::MergeFrom(const ::PROTOBUF_NAMESPACE_ID::Message& from) {
+// @@protoc_insertion_point(generalized_merge_from_start:TekscanServerNamespace.SetTimestampRequest)
+  GOOGLE_DCHECK_NE(&from, this);
+  const SetTimestampRequest* source =
+      ::PROTOBUF_NAMESPACE_ID::DynamicCastToGenerated<SetTimestampRequest>(
+          &from);
+  if (source == nullptr) {
+  // @@protoc_insertion_point(generalized_merge_from_cast_fail:TekscanServerNamespace.SetTimestampRequest)
+    ::PROTOBUF_NAMESPACE_ID::internal::ReflectionOps::Merge(from, this);
+  } else {
+  // @@protoc_insertion_point(generalized_merge_from_cast_success:TekscanServerNamespace.SetTimestampRequest)
+    MergeFrom(*source);
+  }
+}
+
+void SetTimestampRequest::MergeFrom(const SetTimestampRequest& from) {
+// @@protoc_insertion_point(class_specific_merge_from_start:TekscanServerNamespace.SetTimestampRequest)
+  GOOGLE_DCHECK_NE(&from, this);
+  _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
+  ::PROTOBUF_NAMESPACE_ID::uint32 cached_has_bits = 0;
+  (void) cached_has_bits;
+
+  if (from.timestamp() != 0) {
+    _internal_set_timestamp(from._internal_timestamp());
+  }
+}
+
+void SetTimestampRequest::CopyFrom(const ::PROTOBUF_NAMESPACE_ID::Message& from) {
+// @@protoc_insertion_point(generalized_copy_from_start:TekscanServerNamespace.SetTimestampRequest)
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+void SetTimestampRequest::CopyFrom(const SetTimestampRequest& from) {
+// @@protoc_insertion_point(class_specific_copy_from_start:TekscanServerNamespace.SetTimestampRequest)
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+bool SetTimestampRequest::IsInitialized() const {
+  return true;
+}
+
+void SetTimestampRequest::InternalSwap(SetTimestampRequest* other) {
+  using std::swap;
+  _internal_metadata_.Swap<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(&other->_internal_metadata_);
+  swap(timestamp_, other->timestamp_);
+}
+
+::PROTOBUF_NAMESPACE_ID::Metadata SetTimestampRequest::GetMetadata() const {
+  return GetMetadataStatic();
+}
+
 
 // ===================================================================
 
@@ -1463,6 +1687,9 @@ void Empty::InternalSwap(Empty* other) {
 // @@protoc_insertion_point(namespace_scope)
 }  // namespace TekscanServerNamespace
 PROTOBUF_NAMESPACE_OPEN
+template<> PROTOBUF_NOINLINE ::TekscanServerNamespace::SetTimestampRequest* Arena::CreateMaybeMessage< ::TekscanServerNamespace::SetTimestampRequest >(Arena* arena) {
+  return Arena::CreateMessageInternal< ::TekscanServerNamespace::SetTimestampRequest >(arena);
+}
 template<> PROTOBUF_NOINLINE ::TekscanServerNamespace::SimpleRequest* Arena::CreateMaybeMessage< ::TekscanServerNamespace::SimpleRequest >(Arena* arena) {
   return Arena::CreateMessageInternal< ::TekscanServerNamespace::SimpleRequest >(arena);
 }
