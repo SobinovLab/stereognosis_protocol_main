@@ -81,6 +81,21 @@
 #define IDC_LEFT_SECOND2                1113
 #define IDC_RIGHT_SECOND                1114
 #define IDC_RO_COUNTER_EDT				1115
+#define IDC_IP_EDT3                     1016
+#define IDC_PORT_EDT3                   1117
+#define IDC_IP_EDT4                     1118
+#define IDC_PORT_EDT4                   1119
+#define IDC_CONNECT_BTN4                1120
+#define IDC_DISCONNECT_BTN4             1121
+#define IDC_CONNECT_BTN3                1122
+#define IDC_DISCONNECT_BTN3             1123
+#define IDC_IP_EDT5                     1124
+#define IDC_PORT_EDT5                   1125
+#define IDC_CONNECT_BTN5                1126
+#define IDC_DISCONNECT_BTN5             1127
+#define IDC_TOUCH_SENSOR_SERVER_LOG_EDT3 1128
+#define IDC_TOUCH_SENSOR_SERVER_LOG_EDT4 1129
+
 
 // Next default values for new objects
 // 
