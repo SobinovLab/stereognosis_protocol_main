@@ -92,8 +92,8 @@ void Protocol::connect_camera_client_i(int i)
 		// warning?
 	}
 	else {
-		m_cameraClients[i].server_ip = params.cs_ip1; // TODO_CR deal with params.cs_ip1
-		m_cameraClients[i].port = params.cs_port1;
+		m_cameraClients[i].server_ip = params.cs_ips[i].c_str(); // TODO_CR deal with params.cs_ip1
+		m_cameraClients[i].port = params.cs_ports[i];
 		m_cameraClients[i].connect_f();
 	}
 }

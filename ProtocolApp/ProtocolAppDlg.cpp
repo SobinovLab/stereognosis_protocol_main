@@ -82,14 +82,21 @@ void CProtocolAppDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Text(pDX, IDC_PS_MINIMAL_TOUCH_FORCE_EDT, m_protocol.params.minimalTouchForce);
 
 	// cameras
-	DDX_Text(pDX, IDC_IP_EDT1, m_protocol.params.cs_ip1);
-	DDX_Text(pDX, IDC_PORT_EDT1, m_protocol.params.cs_port1);
-	DDX_Text(pDX, IDC_IP_EDT2, m_protocol.params.cs_ip2);
-	DDX_Text(pDX, IDC_PORT_EDT2, m_protocol.params.cs_port2);
-	DDX_Text(pDX, IDC_IP_EDT3, m_protocol.params.cs_ip1);
-	DDX_Text(pDX, IDC_PORT_EDT3, m_protocol.params.cs_port1);
-	DDX_Text(pDX, IDC_IP_EDT4, m_protocol.params.cs_ip2);
-	DDX_Text(pDX, IDC_PORT_EDT4, m_protocol.params.cs_port2);
+	CString cs_ip_cstr1(m_protocol.params.cs_ips[0].c_str());
+	DDX_Text(pDX, IDC_IP_EDT1, cs_ip_cstr1);
+	DDX_Text(pDX, IDC_PORT_EDT1, m_protocol.params.cs_ports[0]);
+
+	CString cs_ip_cstr2(m_protocol.params.cs_ips[1].c_str());
+	DDX_Text(pDX, IDC_IP_EDT2, cs_ip_cstr2);
+	DDX_Text(pDX, IDC_PORT_EDT2, m_protocol.params.cs_ports[1]);
+
+	CString cs_ip_cstr3(m_protocol.params.cs_ips[2].c_str());
+	DDX_Text(pDX, IDC_IP_EDT3, cs_ip_cstr3);
+	DDX_Text(pDX, IDC_PORT_EDT3, m_protocol.params.cs_ports[2]);
+
+	CString cs_ip_cstr4(m_protocol.params.cs_ips[3].c_str());
+	DDX_Text(pDX, IDC_IP_EDT4, cs_ip_cstr4);
+	DDX_Text(pDX, IDC_PORT_EDT4, m_protocol.params.cs_ports[3]);
 
 	// cameras_config
 	DDX_Text(pDX, IDC_FRAMERATE_EDT, m_protocol.params.cs_framerate);
