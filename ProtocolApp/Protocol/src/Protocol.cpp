@@ -4,7 +4,6 @@ using namespace std;
 
 constexpr auto PRECISION = "%03d";
 
-
 Protocol::Protocol()
 {
 	this->stopProtocol.store(false);
@@ -72,58 +71,55 @@ int Protocol::motors_neutral_position()
     return armClient->goToHome();
 }
 
-void Protocol::connect_camera_client1()
+int Protocol::start_camera_recording()
 {
-	if (m_cameraClient1.isConnected()) {
+	return start_camera_recording(params.counter);
+}
+
+// Camera_i methods
+// note: if cam server label is 1 (camera_server1) i is 0
+void Protocol::send_camera_timestamp(int timestamp) {
+	for (int i = 0; i < NUM_CAMERAS; i++) {
+		if (m_cameraClients[i].isConnected()) {
+			m_cameraClients[i].setTimestamp(timestamp);
+		}
+	}
+}
+
+void Protocol::connect_camera_client_i(int i)
+{
+	if (m_cameraClients[i].isConnected()) {
 		// warning?
 	}
 	else {
-		m_cameraClient1.server_ip = params.cs_ip1;
-		m_cameraClient1.port = params.cs_port1;
-
-		m_cameraClient1.connect_f();
+		m_cameraClients[i].server_ip = params.cs_ip1; // TODO_CR deal with params.cs_ip1
+		m_cameraClients[i].port = params.cs_port1;
+		m_cameraClients[i].connect_f();
 	}
 }
 
-void Protocol::connect_camera_client2()
+void Protocol::set_camera_i_gui_controls(int i, CEdit* serverLogCtrl)
 {
-	if (m_cameraClient2.isConnected()) {
-		// warning?
-	}
-	else {
-		m_cameraClient2.server_ip = params.cs_ip2;
-		m_cameraClient2.port = params.cs_port2;
-
-		m_cameraClient2.connect_f();
-	}
+	m_cameraClients[i].clientLogGuiEdt = serverLogCtrl;
 }
 
-void Protocol::disconnect_camera_client1()
+void Protocol::disconnect_camera_client_i(int i)
 {
-	m_cameraClient1.disconnect_f();
-}
-
-void Protocol::disconnect_camera_client2()
-{
-	m_cameraClient2.disconnect_f();
+	m_cameraClients[i].disconnect_f();
 }
 
 void Protocol::send_config_to_cameras()
 {
-	if (m_cameraClient1.isConnected()) {
-		m_cameraClient1.sendFramerate(params.cs_framerate);
-		m_cameraClient1.sendRecordingPeriod(params.cs_recordingPeriod);
-		m_cameraClient1.sendReferenceCamera(params.cs_refSerial);
-		m_cameraClient1.sendGain(params.cs_gain);
-		m_cameraClient1.sendExposure(params.cs_exposure);
+	for (int i = 0; i < NUM_CAMERAS; i++) {
+		if (m_cameraClients[i].isConnected()) {
+			m_cameraClients[i].sendFramerate(params.cs_framerate);
+			m_cameraClients[i].sendRecordingPeriod(params.cs_recordingPeriod);
+			m_cameraClients[i].sendReferenceCamera(params.cs_refSerial);
+			m_cameraClients[i].sendGain(params.cs_gain);
+			m_cameraClients[i].sendExposure(params.cs_exposure);
+		}
 	}
-	if (m_cameraClient2.isConnected()) {
-		m_cameraClient2.sendFramerate(params.cs_framerate);
-		m_cameraClient2.sendRecordingPeriod(params.cs_recordingPeriod);
-		m_cameraClient2.sendReferenceCamera(params.cs_refSerial);
-		m_cameraClient2.sendGain(params.cs_gain);
-		m_cameraClient2.sendExposure(params.cs_exposure);
-	}
+	
 }
 
 int Protocol::capture_single_frame()
@@ -134,12 +130,13 @@ int Protocol::capture_single_frame()
 	int answ = 0;
 	string buf;
 
-	if (m_cameraClient1.isConnected())
-		if (!m_cameraClient1.captureSingleFrame(&success))
-			answ = 1;  // to not mistake with the errors from success
-	if (m_cameraClient2.isConnected())
-		if (!m_cameraClient2.captureSingleFrame(&success))
-			answ = 1;
+	for (int i = 0; i < NUM_CAMERAS; i++) {
+		if (m_cameraClients[i].isConnected()) {
+			if (!m_cameraClients[i].captureSingleFrame(&success))
+				answ = 1;  // to not mistake with the errors from success
+		}
+	}
+
 	if (answ) {
 		buf = "Server error during capture single frame. Code " + to_string(answ);
 		logError(buf.c_str());
@@ -154,17 +151,11 @@ int Protocol::capture_single_frame()
 
 void Protocol::prepare_camera_recording()
 {
-	if (m_cameraClient1.isConnected()) {
-		m_cameraClient1.prepareRecording();
+	for (int i = 0; i < NUM_CAMERAS; i++) {
+		if (m_cameraClients[i].isConnected()) {
+			m_cameraClients[i].prepareRecording();
+		}
 	}
-	if (m_cameraClient2.isConnected()) {
-		m_cameraClient2.prepareRecording();
-	}
-}
-
-int Protocol::start_camera_recording()
-{
-	return start_camera_recording(params.counter);
 }
 
 int Protocol::start_camera_recording(long trial_number)
@@ -174,14 +165,13 @@ int Protocol::start_camera_recording(long trial_number)
 	int answ = 0;  // cameras not connected is not an error
 	string buf;
 
-	if (m_cameraClient1.isConnected()) {
-		if (!m_cameraClient1.startRecording(trial_number, &success))
-			answ = 1;  // to not mistake with the errors from success
+	for (int i = 0; i < NUM_CAMERAS; i++) {
+		if (m_cameraClients[i].isConnected()) {
+			if (!m_cameraClients[i].startRecording(trial_number, &success))
+				answ = 1;  // to not mistake with the errors from success
+		}
 	}
-	if (m_cameraClient2.isConnected()) {
-		if (!m_cameraClient2.startRecording(trial_number, &success))
-			answ = 1;  // to not mistake with the errors from success
-	}
+
 	if (answ) {
 		buf = "Server error during start camera recording. Code " + to_string(answ);
 		logError(buf.c_str());
@@ -196,27 +186,24 @@ int Protocol::start_camera_recording(long trial_number)
 
 void Protocol::break_camera_recording()
 {
-	if (m_cameraClient1.isConnected())
-		m_cameraClient1.breakRecording();
-	if (m_cameraClient2.isConnected())
-		m_cameraClient2.breakRecording();
+	for (int i = 0; i < NUM_CAMERAS; i++) {
+		if (m_cameraClients[i].isConnected()) {
+			m_cameraClients[i].breakRecording();
+		}
+	}
 }
 
 bool Protocol::did_cameras_finish_saving()
 {
-	bool answ = true;
 	int res;
-	if (m_cameraClient1.isConnected()) {
-		m_cameraClient1.areYouDoneSaving(&res);
-		if (res == 0)
-			answ = false;
+	for (int i = 0; i < NUM_CAMERAS; i++) {
+		if (m_cameraClients[i].isConnected()) {
+			m_cameraClients[i].areYouDoneSaving(&res);
+			if (res == 0)
+				return false;
+		}
 	}
-	if (answ && m_cameraClient2.isConnected()) {
-		m_cameraClient2.areYouDoneSaving(&res);
-		if (res == 0)
-			answ = false;
-	}
-	return answ;
+	return true;
 }
 
 int Protocol::wait_for_cameras_finish_saving()
@@ -239,11 +226,10 @@ int Protocol::wait_for_cameras_finish_saving()
 
 void Protocol::sync_message_trial_start()
 {
-	if (m_cameraClient1.isConnected()) {
-		m_cameraClient1.syncMessageTrialStart();
-	}
-	if (m_cameraClient2.isConnected()) {
-		m_cameraClient2.syncMessageTrialStart();
+	for (int i = 0; i < NUM_CAMERAS; i++) {
+		if (m_cameraClients[i].isConnected()) {
+			m_cameraClients[i].syncMessageTrialStart();
+		}
 	}
 
 	if (m_touchSensorClient.isConnected()) {
@@ -253,17 +239,18 @@ void Protocol::sync_message_trial_start()
 
 void Protocol::sync_message_trial_end()
 {
-	if (m_cameraClient1.isConnected()) {
-		m_cameraClient1.syncMessageTrialEnd();
-	}
-	if (m_cameraClient2.isConnected()) {
-		m_cameraClient2.syncMessageTrialEnd();
+	for (int i = 0; i < NUM_CAMERAS; i++) {
+		if (m_cameraClients[i].isConnected()) {
+			m_cameraClients[i].syncMessageTrialEnd();
+		}
 	}
 
 	if (m_touchSensorClient.isConnected()) {
 		m_touchSensorClient.syncMessageTrialEnd();
 	}
 }
+
+// END camera_i methods
 
 void Protocol::connect_pressure_sensors()
 {
@@ -311,14 +298,6 @@ void Protocol::send_pressure_sensor_timestamp(int timestamp)
 	}
 }
 
-void Protocol::send_camera_timestamp(int timestamp) {
-	if(m_cameraClient1.isConnected()) {
-		m_cameraClient1.setTimestamp(timestamp);
-	}
-	if (m_cameraClient2.isConnected()) {
-		m_cameraClient2.setTimestamp(timestamp);
-	}
-}
 
 /// <summary>
 /// Stops the recording of the pressure sensor
@@ -794,15 +773,7 @@ void Protocol::set_photoresistor_monitors(CStaticColor* front, CStaticColor* rea
     m_NIUsb6001card.setArmTouchSensors(left, right);
 }
 
-void Protocol::set_camera1_gui_controls(CEdit* serverLogCtrl)
-{
-	m_cameraClient1.clientLogGuiEdt = serverLogCtrl;
-}
 
-void Protocol::set_camera2_gui_controls(CEdit* serverLogCtrl)
-{
-	m_cameraClient2.clientLogGuiEdt = serverLogCtrl;
-}
 
 void Protocol::set_pressure_sensors_gui_controls(CEdit* serverLogCtrl)
 {

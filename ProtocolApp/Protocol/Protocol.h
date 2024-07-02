@@ -62,7 +62,7 @@ class Protocol
 		std::atomic<bool> stopProtocol;
 		std::atomic<bool> startTrial;
 		std::atomic<bool> stopTrial;
-		std::atomic<bool> deservesReward;  // user-GUI defined reward for the monkey. Overrides the calculated one.
+		std::atomic<bool> deservesReward;     // user-GUI defined reward for the monkey. Overrides the calculated one.
 		std::atomic<bool> loopAutomatically;  // Protocol automatically loops. Pressing Retreat deliberately stops the looping
 
 		// main loop that is run in a thread when StartProtocol is clicked
@@ -115,6 +115,9 @@ class Protocol
 		//////// connected devices
 		// cameras
 		void connect_camera_client1();
+		void connect_camera_client_i(int i);
+		void set_camera_i_gui_controls(int i, CEdit* serverLogCtrl);
+		void disconnect_camera_client_i(int i);
 		void connect_camera_client2();
 
 		void disconnect_camera_client1();
@@ -192,16 +195,24 @@ class Protocol
 		void start_ephys_recording();
 		void break_ephys_recording();
 
-
 		// LEDs
 		LedStrip* ledStrip = nullptr;
 
 		//////// connected devices
 		void sync_message_trial_start();
 		void sync_message_trial_end();
+		
 		// cameras
+		static const int NUM_CAMERAS = 4;
+		CameraClient m_cameraClients[NUM_CAMERAS];
+		/*
 		CameraClient m_cameraClient1;
 		CameraClient m_cameraClient2;
+		// Additional cam servers
+		CameraClient m_cameraClient3;
+		CameraClient m_cameraClient4;
+		*/
+
 		void prepare_camera_recording();  // TODO future - cameras prepare capture
 		int start_camera_recording();
 		int start_camera_recording(long trial_number);

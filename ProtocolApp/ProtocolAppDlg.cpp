@@ -160,8 +160,8 @@ BOOL CProtocolAppDlg::OnInitDialog()
 	m_protocol.mainWindow = this;
 
 	m_protocol.set_photoresistor_monitors(&m_frontPhotoresistorCtrl, &m_rearPhotoresistorCtrl, &m_leftArmSensorCtrl, &m_rightArmSensorCtrl);
-	m_protocol.set_camera1_gui_controls(&m_serverLogCtrl1);
-	m_protocol.set_camera2_gui_controls(&m_serverLogCtrl2);
+	m_protocol.set_camera_i_gui_controls(0, &m_serverLogCtrl1);
+	m_protocol.set_camera_i_gui_controls(1, &m_serverLogCtrl2);
 	m_protocol.set_pressure_sensors_gui_controls(&m_touchServerLogCtrl);
 
 	m_protocol.set_trial_buttons(&m_startTrialBtn, &m_retreatBtn, &m_retreatFlushBtn);
@@ -418,14 +418,14 @@ void CProtocolAppDlg::OnConnect1BtnClicked()
 {
 	UpdateData(FromControlsToVariables);
 
-	m_protocol.connect_camera_client1();
+	m_protocol.connect_camera_client_i(0);
 
 	toggleCameraServer1Ctrls(false);
 }
 
 void CProtocolAppDlg::OnDisconnect1BtnClicked()
 {
-	m_protocol.disconnect_camera_client1();
+	m_protocol.disconnect_camera_client_i(0);
 
 	toggleCameraServer1Ctrls(true);
 }
@@ -433,16 +433,13 @@ void CProtocolAppDlg::OnDisconnect1BtnClicked()
 void CProtocolAppDlg::OnConnect2BtnClicked()
 {
 	UpdateData(FromControlsToVariables);
-
-	m_protocol.connect_camera_client2();
-
+	m_protocol.connect_camera_client_i(1);
 	toggleCameraServer2Ctrls(false);
 }
 
 void CProtocolAppDlg::OnDisconnect2BtnClicked()
 {
-	m_protocol.disconnect_camera_client2();
-
+	m_protocol.disconnect_camera_client_i(1);
 	toggleCameraServer2Ctrls(true);
 }
 
