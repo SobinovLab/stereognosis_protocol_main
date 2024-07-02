@@ -622,8 +622,8 @@ void CProtocolAppDlg::toggleCameraServerCtrls_i(int i, bool disconnected)
 	((CEdit*)GetDlgItem(portEditID))->SetReadOnly(!disconnected);
 
 	// Buttons
-	//GetDlgItem(connectBtnID)->EnableWindow(disconnected);
-	//GetDlgItem(disconnectBtnID)->EnableWindow(!disconnected);
+	GetDlgItem(connectBtnID)->EnableWindow(disconnected);
+	GetDlgItem(disconnectBtnID)->EnableWindow(!disconnected);
 }
 
 

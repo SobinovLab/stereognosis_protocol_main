@@ -69,8 +69,8 @@
 #define IDC_SERVER_LOG_EDT2               1081
 #define IDC_SERVER_LOG_EDT3               1082
 #define IDC_SERVER_LOG_EDT4               1083
-#define IDC_TOUCH_SENSOR_SERVER_LOG_EDT3  1128
-#define IDC_TOUCH_SENSOR_SERVER_LOG_EDT4  1129
+#define IDC_TOUCH_SENSOR_SERVER_LOG_EDT3  1184
+#define IDC_TOUCH_SENSOR_SERVER_LOG_EDT4  1185
 
 // Other Controls
 #define IDC_PHOTORES_REAR_LBL             1028
@@ -95,7 +95,7 @@
 #define IDC_CONNECT_BTN1                  1126
 #define IDC_CONNECT_BTN2                  1127
 #define IDC_CONNECT_BTN3                  1128
-#define IDC_CONNECT_BTN4                  1130
+#define IDC_CONNECT_BTN4                  1129
 
 // Disconnect Buttons
 #define IDC_DISCONNECT_BTN1               1132
