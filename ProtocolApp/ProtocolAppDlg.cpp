@@ -42,6 +42,8 @@ void CProtocolAppDlg::DoDataExchange(CDataExchange* pDX)
 	// cameras
 	DDX_Control(pDX, IDC_SERVER_LOG_EDT1, m_serverLogCtrl1);
 	DDX_Control(pDX, IDC_SERVER_LOG_EDT2, m_serverLogCtrl2);
+	DDX_Control(pDX, IDC_SERVER_LOG_EDT3, m_serverLogCtrl3);
+	DDX_Control(pDX, IDC_SERVER_LOG_EDT4, m_serverLogCtrl4);
 
 	// LEDs
 	DDX_Control(pDX, IDC_LEDS_EARLY_TARGET_FORCE_LIGHT_CHK, m_ledsEarlyTargetForceLightChk);
@@ -84,6 +86,10 @@ void CProtocolAppDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Text(pDX, IDC_PORT_EDT1, m_protocol.params.cs_port1);
 	DDX_Text(pDX, IDC_IP_EDT2, m_protocol.params.cs_ip2);
 	DDX_Text(pDX, IDC_PORT_EDT2, m_protocol.params.cs_port2);
+	DDX_Text(pDX, IDC_IP_EDT3, m_protocol.params.cs_ip1);
+	DDX_Text(pDX, IDC_PORT_EDT3, m_protocol.params.cs_port1);
+	DDX_Text(pDX, IDC_IP_EDT4, m_protocol.params.cs_ip2);
+	DDX_Text(pDX, IDC_PORT_EDT4, m_protocol.params.cs_port2);
 
 	// cameras_config
 	DDX_Text(pDX, IDC_FRAMERATE_EDT, m_protocol.params.cs_framerate);
@@ -105,10 +111,16 @@ BEGIN_MESSAGE_MAP(CProtocolAppDlg, CDialogEx)
 	ON_BN_CLICKED(IDC_START_TRIAL_BTN, &OnStartTrialBtnClicked)
 	ON_BN_CLICKED(IDC_RETREAT_FLUSH_WATER_BTN, &OnRetreatFlushWaterBtnClicked)
 	ON_BN_CLICKED(IDC_RETREAT_BTN, &OnRetreatBtnClicked)
-	ON_BN_CLICKED(IDC_CONNECT_BTN1, &OnConnect1BtnClicked)
-	ON_BN_CLICKED(IDC_DISCONNECT_BTN1, &OnDisconnect1BtnClicked)
-	ON_BN_CLICKED(IDC_CONNECT_BTN2, &OnConnect2BtnClicked)
-	ON_BN_CLICKED(IDC_DISCONNECT_BTN2, &OnDisconnect2BtnClicked)
+	
+	ON_BN_CLICKED(IDC_CONNECT_BTN1, &OnConnectBtnClicked)
+	ON_BN_CLICKED(IDC_DISCONNECT_BTN1, &OnDisconnectBtnClicked)
+	ON_BN_CLICKED(IDC_CONNECT_BTN2, &OnConnectBtnClicked)
+	ON_BN_CLICKED(IDC_DISCONNECT_BTN2, &OnDisconnectBtnClicked)
+	ON_BN_CLICKED(IDC_CONNECT_BTN3, &OnConnectBtnClicked)
+	ON_BN_CLICKED(IDC_DISCONNECT_BTN3, &OnDisconnectBtnClicked)
+	ON_BN_CLICKED(IDC_CONNECT_BTN4, &OnConnectBtnClicked)
+	ON_BN_CLICKED(IDC_DISCONNECT_BTN4, &OnDisconnectBtnClicked)
+
 	ON_BN_CLICKED(IDC_SEND_CONFIG_BTN, &OnSendConfigBtnClicked)
 	ON_BN_CLICKED(IDC_CAPTURE_SINGLE_FRAME_BTN, &OnCaptureSingleFrameBtnClicked)
 	ON_BN_CLICKED(IDC_CONNECT_TOUCH_SENSOR_BTN, &OnConnectTouchSensorBtnClicked)
@@ -160,8 +172,12 @@ BOOL CProtocolAppDlg::OnInitDialog()
 	m_protocol.mainWindow = this;
 
 	m_protocol.set_photoresistor_monitors(&m_frontPhotoresistorCtrl, &m_rearPhotoresistorCtrl, &m_leftArmSensorCtrl, &m_rightArmSensorCtrl);
+
 	m_protocol.set_camera_i_gui_controls(0, &m_serverLogCtrl1);
 	m_protocol.set_camera_i_gui_controls(1, &m_serverLogCtrl2);
+	m_protocol.set_camera_i_gui_controls(2, &m_serverLogCtrl3);
+	m_protocol.set_camera_i_gui_controls(3, &m_serverLogCtrl4);
+
 	m_protocol.set_pressure_sensors_gui_controls(&m_touchServerLogCtrl);
 
 	m_protocol.set_trial_buttons(&m_startTrialBtn, &m_retreatBtn, &m_retreatFlushBtn);
@@ -199,8 +215,9 @@ BOOL CProtocolAppDlg::OnInitDialog()
 	enableRewardCtrls(true);
 
 	// cameras
-	toggleCameraServer1Ctrls(true);
-	toggleCameraServer2Ctrls(true);
+	for (int i = 0; i < Protocol::NUM_CAMERAS; i++) {
+		toggleCameraServerCtrls_i(i, true);
+	}
 
 	// touch sensor
 	toggleTouchServerCtrls(true);
@@ -414,12 +431,32 @@ void CProtocolAppDlg::OnRetreatBtnClicked()
 	stopTrial();
 }
 
+// Generic multi cam server method
+void CProtocolAppDlg::OnConnectBtnClicked()
+{
+	// Get the ID of the clicked button
+	UINT nID = ::GetDlgCtrlID(::GetFocus());
+	int index = nID - IDC_CONNECT_BTN1;
+	UpdateData(FromControlsToVariables);
+	m_protocol.connect_camera_client_i(index);
+	toggleCameraServerCtrls_i(index, false);
+}
+
+void CProtocolAppDlg::OnDisconnectBtnClicked()
+{
+	// Get the ID of the clicked button
+	UINT nID = ::GetDlgCtrlID(::GetFocus());
+	int index = nID - IDC_CONNECT_BTN1;
+	UpdateData(FromControlsToVariables);
+	m_protocol.disconnect_camera_client_i(index);
+	toggleCameraServerCtrls_i(index, true);
+}
+
+/*
 void CProtocolAppDlg::OnConnect1BtnClicked()
 {
 	UpdateData(FromControlsToVariables);
-
 	m_protocol.connect_camera_client_i(0);
-
 	toggleCameraServer1Ctrls(false);
 }
 
@@ -441,7 +478,7 @@ void CProtocolAppDlg::OnDisconnect2BtnClicked()
 {
 	m_protocol.disconnect_camera_client_i(1);
 	toggleCameraServer2Ctrls(true);
-}
+}*/
 
 void CProtocolAppDlg::OnSendConfigBtnClicked()
 {
@@ -572,29 +609,23 @@ void CProtocolAppDlg::enableRewardCtrls(bool enable)
 	GetDlgItem(IDC_FLUSH_WATER_BTN)->EnableWindow(enable && m_protocol.isRewardOn());
 }
 
-void CProtocolAppDlg::toggleCameraServer1Ctrls(bool disconnected)
+void CProtocolAppDlg::toggleCameraServerCtrls_i(int i, bool disconnected)
 {
-	// edits
-	((CEdit*)GetDlgItem(IDC_IP_EDT1))->SetReadOnly(!disconnected);
-	((CEdit*)GetDlgItem(IDC_PORT_EDT1))->SetReadOnly(!disconnected);
+	// Calculate control IDs based on the index i
+	int ipEditID = IDC_IP_EDT1 + i;
+	int portEditID = IDC_PORT_EDT1 + i;
+	int connectBtnID = IDC_CONNECT_BTN1 + i;
+	int disconnectBtnID = IDC_DISCONNECT_BTN1 + i;
 
-	// buttons
-	GetDlgItem(IDC_CONNECT_BTN1)->EnableWindow(disconnected);
+	// Edits
+	((CEdit*)GetDlgItem(ipEditID))->SetReadOnly(!disconnected);
+	((CEdit*)GetDlgItem(portEditID))->SetReadOnly(!disconnected);
 
-	GetDlgItem(IDC_DISCONNECT_BTN1)->EnableWindow(!disconnected);
+	// Buttons
+	//GetDlgItem(connectBtnID)->EnableWindow(disconnected);
+	//GetDlgItem(disconnectBtnID)->EnableWindow(!disconnected);
 }
 
-void CProtocolAppDlg::toggleCameraServer2Ctrls(bool disconnected)
-{
-	// edits
-	((CEdit*)GetDlgItem(IDC_IP_EDT2))->SetReadOnly(!disconnected);
-	((CEdit*)GetDlgItem(IDC_PORT_EDT2))->SetReadOnly(!disconnected);
-
-	// buttons
-	GetDlgItem(IDC_CONNECT_BTN2)->EnableWindow(disconnected);
-
-	GetDlgItem(IDC_DISCONNECT_BTN2)->EnableWindow(!disconnected);
-}
 
 void CProtocolAppDlg::toggleTouchServerCtrls(bool disconnected)
 {

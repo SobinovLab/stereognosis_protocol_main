@@ -86,8 +86,6 @@ class Protocol
 		CEdit* m_trialStatus;
 		CButton* loopChk;
 		void set_photoresistor_monitors(CStaticColor* front, CStaticColor* rear, CStaticColor* left, CStaticColor* right);
-		void set_camera1_gui_controls(CEdit* serverLogCtrl);
-		void set_camera2_gui_controls(CEdit* serverLogCtrl);
 		void set_pressure_sensors_gui_controls(CEdit* serverLogCtrl);
 		void set_trial_buttons(CButton* startTrialBtn, CButton* retreatBtn, CButton* retreatFlushBtn);
 
@@ -114,17 +112,14 @@ class Protocol
 
 		//////// connected devices
 		// cameras
-		void connect_camera_client1();
 		void connect_camera_client_i(int i);
 		void set_camera_i_gui_controls(int i, CEdit* serverLogCtrl);
 		void disconnect_camera_client_i(int i);
-		void connect_camera_client2();
-
-		void disconnect_camera_client1();
-		void disconnect_camera_client2();
 
 		void send_config_to_cameras();
 		int capture_single_frame();
+
+		static const int NUM_CAMERAS = 4;
 
 		// pressure sensors
 		void connect_pressure_sensors();
@@ -203,15 +198,14 @@ class Protocol
 		void sync_message_trial_end();
 		
 		// cameras
-		static const int NUM_CAMERAS = 4;
 		CameraClient m_cameraClients[NUM_CAMERAS];
-		/*
-		CameraClient m_cameraClient1;
-		CameraClient m_cameraClient2;
+		
+		//CameraClient m_cameraClient1;
+		//CameraClient m_cameraClient2;
 		// Additional cam servers
-		CameraClient m_cameraClient3;
-		CameraClient m_cameraClient4;
-		*/
+		//CameraClient m_cameraClient3;
+		//CameraClient m_cameraClient4;
+		
 
 		void prepare_camera_recording();  // TODO future - cameras prepare capture
 		int start_camera_recording();
