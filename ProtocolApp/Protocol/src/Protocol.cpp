@@ -72,6 +72,7 @@ int Protocol::motors_neutral_position()
     return armClient->goToHome();
 }
 
+
 void Protocol::connect_camera_client1()
 {
 	if (m_cameraClient1.isConnected()) {

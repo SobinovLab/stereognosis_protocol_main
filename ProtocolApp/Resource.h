@@ -80,6 +80,8 @@
 #define IDC_RO_COUNTER_EDT				1115
 #define IDC_IPS1_LST                    1116
 #define IDC_PORT1_EDT					1117
+#define IDC_CONNECT_BTN                 1118
+#define IDC_DISCONNECT_BTN              1119
 
 // Next default values for new objects
 // 
