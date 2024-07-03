@@ -81,7 +81,7 @@ void CProtocolAppDlg::DoDataExchange(CDataExchange* pDX)
 
 	// cameras
 	//DDX_Text(pDX, IDC_IP_EDT1, m_protocol.params.cs_ip1);
-	//DDX_Text(pDX, IDC_PORT_EDT1, m_protocol.params.cs_port1);
+	DDX_Text(pDX, IDC_PORT1_EDT, m_protocol.params.cs_port1);
 	//DDX_Text(pDX, IDC_IP_EDT2, m_protocol.params.cs_ip2);
 	//DDX_Text(pDX, IDC_PORT_EDT2, m_protocol.params.cs_port2);
 
@@ -147,6 +147,20 @@ BOOL CProtocolAppDlg::OnInitDialog()
 		{
 			pSysMenu->AppendMenu(MF_SEPARATOR);
 			pSysMenu->AppendMenu(MF_STRING, IDM_ABOUTBOX, strAboutMenu);
+		}
+	}
+
+	// Assuming m_protocol.params.cs_ips is a vector or array of strings
+	std::vector<CString> ips = m_protocol.params.cs_ips;
+	// Get a pointer to the listbox control
+	CListBox* pListBox = (CListBox*)GetDlgItem(IDC_IPS1_LST);
+	// Check if the pointer is valid
+	if (pListBox != nullptr)
+	{
+		// Loop through the list of IP addresses and add each to the listbox
+		for (const auto& ip : ips)
+		{
+			pListBox->AddString(ip);
 		}
 	}
 
