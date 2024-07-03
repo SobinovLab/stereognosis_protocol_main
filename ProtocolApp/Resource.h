@@ -65,10 +65,10 @@
 #define IDC_PS_TOTAL_FORCE_MAX_EDT        1098
 
 // Server Log Edits
-#define IDC_SERVER_LOG_EDT1               1053
-#define IDC_SERVER_LOG_EDT2               1081
-#define IDC_SERVER_LOG_EDT3               1082
-#define IDC_SERVER_LOG_EDT4               1083
+#define IDC_SERVER_LOG_EDT1               1153
+#define IDC_SERVER_LOG_EDT2               1181
+#define IDC_SERVER_LOG_EDT3               1182
+#define IDC_SERVER_LOG_EDT4               1183
 #define IDC_TOUCH_SENSOR_SERVER_LOG_EDT3  1184
 #define IDC_TOUCH_SENSOR_SERVER_LOG_EDT4  1185
 
