@@ -114,6 +114,7 @@ class Protocol
 
 		//////// connected devices
 		// cameras
+		void connect_camera_i_client(int i);
 		void connect_camera_client1();
 		void connect_camera_client2();
 
@@ -199,9 +200,13 @@ class Protocol
 		//////// connected devices
 		void sync_message_trial_start();
 		void sync_message_trial_end();
+		
 		// cameras
+		const static int NUM_CAMS = 4;
 		CameraClient m_cameraClient1;
 		CameraClient m_cameraClient2;
+		CameraClient m_cameraClients[NUM_CAMS];
+
 		void prepare_camera_recording();  // TODO future - cameras prepare capture
 		int start_camera_recording();
 		int start_camera_recording(long trial_number);

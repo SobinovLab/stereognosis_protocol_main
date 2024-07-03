@@ -124,6 +124,8 @@ protected:
 	afx_msg void OnStartTrialBtnClicked();
 	afx_msg void OnRetreatFlushWaterBtnClicked();
 	afx_msg void OnRetreatBtnClicked();
+	afx_msg void OnConnectAllBtnClicked();
+	afx_msg void OnDisconnectAllBtnClicked();
 
 	// CAMERA server
 	afx_msg void OnConnect1BtnClicked();

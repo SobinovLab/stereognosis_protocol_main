@@ -4,6 +4,7 @@ using namespace std;
 
 constexpr auto PRECISION = "%03d";
 
+// TODO CR, Implement server (i) methods for start/stop/sync etc
 
 Protocol::Protocol()
 {
@@ -70,6 +71,19 @@ int Protocol::motors_neutral_position()
 {
 	//return motorHub->neutral_position();
     return armClient->goToHome();
+}
+
+
+void Protocol::connect_camera_i_client(int i) {
+	if (m_cameraClients[i].isConnected()) {
+		// warning?
+	}
+	else {
+		// Assign the ip and port
+		m_cameraClients[i].server_ip = params.cs_ips[i];
+		m_cameraClients[i].port = params.cs_port;
+		m_cameraClients[i].connect_f();
+	}
 }
 
 

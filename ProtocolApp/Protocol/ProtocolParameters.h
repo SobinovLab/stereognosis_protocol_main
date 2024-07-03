@@ -78,6 +78,7 @@ public:
 
 	// camera servers
 	std::vector<CString> cs_ips = { "205.208.87.188", "205.208.63.128" };
+	long cs_port = 63874;
 	CString cs_ip1 = "205.208.87.188";
 	long cs_port1 = 63874;
 	CString cs_ip2 = "205.208.63.128";

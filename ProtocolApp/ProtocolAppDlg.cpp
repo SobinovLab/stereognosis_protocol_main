@@ -105,8 +105,8 @@ BEGIN_MESSAGE_MAP(CProtocolAppDlg, CDialogEx)
 	ON_BN_CLICKED(IDC_START_TRIAL_BTN, &OnStartTrialBtnClicked)
 	ON_BN_CLICKED(IDC_RETREAT_FLUSH_WATER_BTN, &OnRetreatFlushWaterBtnClicked)
 	ON_BN_CLICKED(IDC_RETREAT_BTN, &OnRetreatBtnClicked)
-	ON_BN_CLICKED(IDC_CONNECT_BTN1, &OnConnect1BtnClicked)
-	ON_BN_CLICKED(IDC_DISCONNECT_BTN1, &OnDisconnect1BtnClicked)
+	ON_BN_CLICKED(IDC_CONNECT_BTN, &OnConnectAllBtnClicked)
+	ON_BN_CLICKED(IDC_DISCONNECT_BTN, &OnDisconnectAllBtnClicked)
 	//ON_BN_CLICKED(IDC_CONNECT_BTN2, &OnConnect2BtnClicked)
 	//ON_BN_CLICKED(IDC_DISCONNECT_BTN2, &OnDisconnect2BtnClicked)
 	ON_BN_CLICKED(IDC_SEND_CONFIG_BTN, &OnSendConfigBtnClicked)
@@ -427,6 +427,30 @@ void CProtocolAppDlg::OnRetreatBtnClicked()
 	logInfo("Retreat button clicked.");
 	stopTrial();
 }
+
+
+void CProtocolAppDlg::OnConnectAllBtnClicked()
+{
+	UpdateData(FromControlsToVariables);
+	CListBox* pListBox = (CListBox*)GetDlgItem(IDC_IPS1_LST);
+	// Check if the pointer is valid
+	if (pListBox != nullptr)
+	{
+		int count = pListBox->GetCount();
+		// Loop through the list of IP addresses and add each to the listbox
+		for (int i=0; i<count; ++i)
+		{
+			m_protocol.connect_camera_i_client(i);
+			i++;
+		}
+	}
+}
+
+
+void CProtocolAppDlg::OnDisconnectAllBtnClicked() {
+	UpdateData(FromControlsToVariables);
+}
+
 
 void CProtocolAppDlg::OnConnect1BtnClicked()
 {
