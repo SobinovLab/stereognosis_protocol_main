@@ -40,8 +40,8 @@ void CProtocolAppDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_TOUCH_SENSOR_SERVER_LOG_EDT, m_touchServerLogCtrl);
 
 	// cameras
-	DDX_Control(pDX, IDC_SERVER_LOG_EDT1, m_serverLogCtrl1);
-	DDX_Control(pDX, IDC_SERVER_LOG_EDT2, m_serverLogCtrl2);
+	//DDX_Control(pDX, IDC_SERVER_LOG_EDT1, m_serverLogCtrl1);
+	//DDX_Control(pDX, IDC_SERVER_LOG_EDT2, m_serverLogCtrl2);
 
 	// LEDs
 	DDX_Control(pDX, IDC_LEDS_EARLY_TARGET_FORCE_LIGHT_CHK, m_ledsEarlyTargetForceLightChk);
@@ -80,10 +80,10 @@ void CProtocolAppDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Text(pDX, IDC_PS_MINIMAL_TOUCH_FORCE_EDT, m_protocol.params.minimalTouchForce);
 
 	// cameras
-	DDX_Text(pDX, IDC_IP_EDT1, m_protocol.params.cs_ip1);
-	DDX_Text(pDX, IDC_PORT_EDT1, m_protocol.params.cs_port1);
-	DDX_Text(pDX, IDC_IP_EDT2, m_protocol.params.cs_ip2);
-	DDX_Text(pDX, IDC_PORT_EDT2, m_protocol.params.cs_port2);
+	//DDX_Text(pDX, IDC_IP_EDT1, m_protocol.params.cs_ip1);
+	//DDX_Text(pDX, IDC_PORT_EDT1, m_protocol.params.cs_port1);
+	//DDX_Text(pDX, IDC_IP_EDT2, m_protocol.params.cs_ip2);
+	//DDX_Text(pDX, IDC_PORT_EDT2, m_protocol.params.cs_port2);
 
 	// cameras_config
 	DDX_Text(pDX, IDC_FRAMERATE_EDT, m_protocol.params.cs_framerate);
@@ -107,8 +107,8 @@ BEGIN_MESSAGE_MAP(CProtocolAppDlg, CDialogEx)
 	ON_BN_CLICKED(IDC_RETREAT_BTN, &OnRetreatBtnClicked)
 	ON_BN_CLICKED(IDC_CONNECT_BTN1, &OnConnect1BtnClicked)
 	ON_BN_CLICKED(IDC_DISCONNECT_BTN1, &OnDisconnect1BtnClicked)
-	ON_BN_CLICKED(IDC_CONNECT_BTN2, &OnConnect2BtnClicked)
-	ON_BN_CLICKED(IDC_DISCONNECT_BTN2, &OnDisconnect2BtnClicked)
+	//ON_BN_CLICKED(IDC_CONNECT_BTN2, &OnConnect2BtnClicked)
+	//ON_BN_CLICKED(IDC_DISCONNECT_BTN2, &OnDisconnect2BtnClicked)
 	ON_BN_CLICKED(IDC_SEND_CONFIG_BTN, &OnSendConfigBtnClicked)
 	ON_BN_CLICKED(IDC_CAPTURE_SINGLE_FRAME_BTN, &OnCaptureSingleFrameBtnClicked)
 	ON_BN_CLICKED(IDC_CONNECT_TOUCH_SENSOR_BTN, &OnConnectTouchSensorBtnClicked)
@@ -199,8 +199,8 @@ BOOL CProtocolAppDlg::OnInitDialog()
 	enableRewardCtrls(true);
 
 	// cameras
-	toggleCameraServer1Ctrls(true);
-	toggleCameraServer2Ctrls(true);
+	//toggleCameraServer1Ctrls(true);
+	//toggleCameraServer2Ctrls(true);
 
 	// touch sensor
 	toggleTouchServerCtrls(true);
@@ -590,13 +590,13 @@ void CProtocolAppDlg::toggleCameraServer1Ctrls(bool disconnected)
 void CProtocolAppDlg::toggleCameraServer2Ctrls(bool disconnected)
 {
 	// edits
-	((CEdit*)GetDlgItem(IDC_IP_EDT2))->SetReadOnly(!disconnected);
-	((CEdit*)GetDlgItem(IDC_PORT_EDT2))->SetReadOnly(!disconnected);
+	//((CEdit*)GetDlgItem(IDC_IP_EDT2))->SetReadOnly(!disconnected);
+	//((CEdit*)GetDlgItem(IDC_PORT_EDT2))->SetReadOnly(!disconnected);
 
 	// buttons
-	GetDlgItem(IDC_CONNECT_BTN2)->EnableWindow(disconnected);
+	//GetDlgItem(IDC_CONNECT_BTN2)->EnableWindow(disconnected);
 
-	GetDlgItem(IDC_DISCONNECT_BTN2)->EnableWindow(!disconnected);
+	//GetDlgItem(IDC_DISCONNECT_BTN2)->EnableWindow(!disconnected);
 }
 
 void CProtocolAppDlg::toggleTouchServerCtrls(bool disconnected)
