@@ -81,7 +81,7 @@ void CProtocolAppDlg::DoDataExchange(CDataExchange* pDX)
 
 	// cameras
 	//DDX_Text(pDX, IDC_IP_EDT1, m_protocol.params.cs_ip1);
-	DDX_Text(pDX, IDC_PORT1_EDT, m_protocol.params.cs_port1);
+	DDX_Text(pDX, IDC_PORT1_EDT, m_protocol.params.cs_port);
 	//DDX_Text(pDX, IDC_IP_EDT2, m_protocol.params.cs_ip2);
 	//DDX_Text(pDX, IDC_PORT_EDT2, m_protocol.params.cs_port2);
 

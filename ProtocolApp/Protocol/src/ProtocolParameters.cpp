@@ -165,11 +165,19 @@ int ProtocolParameters::load_json(std::string filename)
 	try
 	{
 		json cameras_json = pp_json.at("cameras");
+		cs_ips.clear();
 
-        cs_ip1 = ((string) cameras_json.value("ip1", cs_ip1)).c_str();
-        cs_port1 = cameras_json.value("port1", cs_port1);
-        cs_ip2 = ((string)cameras_json.value("ip2", cs_ip2)).c_str();
-        cs_port2 = cameras_json.value("port2", cs_port2);
+		// Add the IPs here
+		for (const auto& ip : cameras_json["cs_ips"].items())
+		{
+			std::string x = ip.value();
+			cs_ips.push_back(x.c_str());
+		}
+		
+        //cs_ip1 = ((string) cameras_json.value("ip1", cs_ip1)).c_str();
+        //cs_port1 = cameras_json.value("port1", cs_port1);
+        //cs_ip2 = ((string)cameras_json.value("ip2", cs_ip2)).c_str();
+        //cs_port2 = cameras_json.value("port2", cs_port2);
         cs_framerate = cameras_json.value("framerate", cs_framerate);
         cs_recordingPeriod = cameras_json.value("recordingPeriod", cs_recordingPeriod);
         cs_refSerial = cameras_json.value("refSerial", cs_refSerial);

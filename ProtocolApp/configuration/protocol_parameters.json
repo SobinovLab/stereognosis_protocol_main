@@ -15,10 +15,8 @@
         "pos_aperture": 0
     },
     "cameras": {
-        "ip1": "205.208.87.108",
-        "port1": 63874,
-        "ip2": "205.208.63.128",
-        "port2": 63874,
+        "cs_ips": ["205.208.87.108", "205.208.63.128"],
+        "cs_port": 63874,
         "framerate": 50,
         "recordingPeriod": 60,
         "refSerial": 22401386,

@@ -87,18 +87,20 @@ void Protocol::connect_camera_i_client(int i) {
 }
 
 
+
 void Protocol::connect_camera_client1()
 {
 	if (m_cameraClient1.isConnected()) {
 		// warning?
 	}
 	else {
-		m_cameraClient1.server_ip = params.cs_ip1;
-		m_cameraClient1.port = params.cs_port1;
+		//m_cameraClient1.server_ip = params.cs_ip1;
+		//m_cameraClient1.port = params.cs_port1;
 
 		m_cameraClient1.connect_f();
 	}
 }
+
 
 void Protocol::connect_camera_client2()
 {
@@ -106,12 +108,13 @@ void Protocol::connect_camera_client2()
 		// warning?
 	}
 	else {
-		m_cameraClient2.server_ip = params.cs_ip2;
-		m_cameraClient2.port = params.cs_port2;
+		//m_cameraClient2.server_ip = params.cs_ip2;
+		//m_cameraClient2.port = params.cs_port2;
 
 		m_cameraClient2.connect_f();
 	}
 }
+
 
 void Protocol::disconnect_camera_client1()
 {
