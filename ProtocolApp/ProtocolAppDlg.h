@@ -97,8 +97,7 @@ public:
 	CEdit m_touchServerLogCtrl;
 
 	//////// Cameras
-	void toggleCameraServer1Ctrls(bool disconnected);
-	void toggleCameraServer2Ctrls(bool disconnected);
+	void toggleCameraServerCtrls(bool disconnected);
 	
 	// edits
 	CEdit m_serverLogCtrl1;
@@ -128,10 +127,10 @@ protected:
 	afx_msg void OnDisconnectAllBtnClicked();
 
 	// CAMERA server
-	afx_msg void OnConnect1BtnClicked();
-	afx_msg void OnDisconnect1BtnClicked();
-	afx_msg void OnConnect2BtnClicked();
-	afx_msg void OnDisconnect2BtnClicked();
+	afx_msg void OnConnectBtnClicked();
+	afx_msg void OnDisconnectBtnClicked();
+	//afx_msg void OnConnect2BtnClicked();
+	//afx_msg void OnDisconnect2BtnClicked();
 	afx_msg void OnSendConfigBtnClicked();
 	afx_msg void OnCaptureSingleFrameBtnClicked();
 

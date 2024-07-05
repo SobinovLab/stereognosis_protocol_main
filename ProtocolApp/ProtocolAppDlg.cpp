@@ -441,48 +441,28 @@ void CProtocolAppDlg::OnConnectAllBtnClicked()
 		for (int i=0; i<count; ++i)
 		{
 			m_protocol.connect_camera_i_client(i);
-			i++;
 		}
 	}
+	toggleCameraServerCtrls(false);
 }
 
 
-void CProtocolAppDlg::OnDisconnectAllBtnClicked() {
-	UpdateData(FromControlsToVariables);
-}
-
-
-void CProtocolAppDlg::OnConnect1BtnClicked()
+void CProtocolAppDlg::OnDisconnectAllBtnClicked()
 {
-	UpdateData(FromControlsToVariables);
-
-	m_protocol.connect_camera_client1();
-
-	toggleCameraServer1Ctrls(false);
+	CListBox* pListBox = (CListBox*)GetDlgItem(IDC_IPS1_LST);
+	// Check if the pointer is valid
+	if (pListBox != nullptr)
+	{
+		int count = pListBox->GetCount();
+		// Loop through the list of IP addresses and add each to the listbox
+		for (int i = 0; i < count; ++i)
+		{
+			m_protocol.disconnect_camera_i_client(i);
+		}
+	}
+	toggleCameraServerCtrls(true);
 }
 
-void CProtocolAppDlg::OnDisconnect1BtnClicked()
-{
-	m_protocol.disconnect_camera_client1();
-
-	toggleCameraServer1Ctrls(true);
-}
-
-void CProtocolAppDlg::OnConnect2BtnClicked()
-{
-	UpdateData(FromControlsToVariables);
-
-	m_protocol.connect_camera_client2();
-
-	toggleCameraServer2Ctrls(false);
-}
-
-void CProtocolAppDlg::OnDisconnect2BtnClicked()
-{
-	m_protocol.disconnect_camera_client2();
-
-	toggleCameraServer2Ctrls(true);
-}
 
 void CProtocolAppDlg::OnSendConfigBtnClicked()
 {
@@ -613,18 +593,18 @@ void CProtocolAppDlg::enableRewardCtrls(bool enable)
 	GetDlgItem(IDC_FLUSH_WATER_BTN)->EnableWindow(enable && m_protocol.isRewardOn());
 }
 
-void CProtocolAppDlg::toggleCameraServer1Ctrls(bool disconnected)
+void CProtocolAppDlg::toggleCameraServerCtrls(bool disconnected)
 {
 	// edits
-	((CEdit*)GetDlgItem(IDC_IP_EDT1))->SetReadOnly(!disconnected);
-	((CEdit*)GetDlgItem(IDC_PORT_EDT1))->SetReadOnly(!disconnected);
+	//((CEdit*)GetDlgItem(IDC_PORT_EDT1))->SetReadOnly(!disconnected);
+	((CEdit*)GetDlgItem(IDC_PORT1_EDT))->SetReadOnly(!disconnected);
 
 	// buttons
-	GetDlgItem(IDC_CONNECT_BTN1)->EnableWindow(disconnected);
-
-	GetDlgItem(IDC_DISCONNECT_BTN1)->EnableWindow(!disconnected);
+	GetDlgItem(IDC_CONNECT_BTN)->EnableWindow(disconnected);
+	GetDlgItem(IDC_DISCONNECT_BTN)->EnableWindow(!disconnected);
 }
 
+/*
 void CProtocolAppDlg::toggleCameraServer2Ctrls(bool disconnected)
 {
 	// edits
@@ -636,6 +616,7 @@ void CProtocolAppDlg::toggleCameraServer2Ctrls(bool disconnected)
 
 	//GetDlgItem(IDC_DISCONNECT_BTN2)->EnableWindow(!disconnected);
 }
+*/
 
 void CProtocolAppDlg::toggleTouchServerCtrls(bool disconnected)
 {

@@ -86,8 +86,12 @@ void Protocol::connect_camera_i_client(int i) {
 	}
 }
 
+void Protocol::disconnect_camera_i_client(int i) {
+	m_cameraClients[i].disconnect_f();
+}
 
 
+/*
 void Protocol::connect_camera_client1()
 {
 	if (m_cameraClient1.isConnected()) {
@@ -124,7 +128,7 @@ void Protocol::disconnect_camera_client1()
 void Protocol::disconnect_camera_client2()
 {
 	m_cameraClient2.disconnect_f();
-}
+}*/
 
 void Protocol::send_config_to_cameras()
 {

@@ -115,8 +115,8 @@ class Protocol
 		//////// connected devices
 		// cameras
 		void connect_camera_i_client(int i);
-		void connect_camera_client1();
-		void connect_camera_client2();
+
+		void disconnect_camera_i_client(int i);
 
 		void disconnect_camera_client1();
 		void disconnect_camera_client2();
