@@ -213,8 +213,7 @@ BOOL CProtocolAppDlg::OnInitDialog()
 	enableRewardCtrls(true);
 
 	// cameras
-	//toggleCameraServer1Ctrls(true);
-	//toggleCameraServer2Ctrls(true);
+	toggleCameraServerCtrls(true);
 
 	// touch sensor
 	toggleTouchServerCtrls(true);
