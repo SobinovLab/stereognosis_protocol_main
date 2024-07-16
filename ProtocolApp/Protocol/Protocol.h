@@ -118,8 +118,9 @@ class Protocol
 
 		void disconnect_camera_i_client(int i);
 
-		void disconnect_camera_client1();
-		void disconnect_camera_client2();
+		void start_calibration_recording();
+
+		void stop_calibration_recording();
 
 		void send_config_to_cameras();
 		int capture_single_frame();

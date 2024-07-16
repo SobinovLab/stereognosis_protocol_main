@@ -107,8 +107,10 @@ BEGIN_MESSAGE_MAP(CProtocolAppDlg, CDialogEx)
 	ON_BN_CLICKED(IDC_RETREAT_BTN, &OnRetreatBtnClicked)
 	ON_BN_CLICKED(IDC_CONNECT_BTN, &OnConnectAllBtnClicked)
 	ON_BN_CLICKED(IDC_DISCONNECT_BTN, &OnDisconnectAllBtnClicked)
-	//ON_BN_CLICKED(IDC_CONNECT_BTN2, &OnConnect2BtnClicked)
-	//ON_BN_CLICKED(IDC_DISCONNECT_BTN2, &OnDisconnect2BtnClicked)
+
+	ON_BN_CLICKED(IDC_START_CALIBRATION, &OnStartCalibrationBtnClicked)
+	ON_BN_CLICKED(IDC_STOP_CALIBRATION, &OnStopCalibrationBtnClicked)
+
 	ON_BN_CLICKED(IDC_SEND_CONFIG_BTN, &OnSendConfigBtnClicked)
 	ON_BN_CLICKED(IDC_CAPTURE_SINGLE_FRAME_BTN, &OnCaptureSingleFrameBtnClicked)
 	ON_BN_CLICKED(IDC_CONNECT_TOUCH_SENSOR_BTN, &OnConnectTouchSensorBtnClicked)
@@ -214,6 +216,9 @@ BOOL CProtocolAppDlg::OnInitDialog()
 
 	// cameras
 	toggleCameraServerCtrls(true);
+
+	// cam calibration
+	toggleCalibrationControls(false);
 
 	// touch sensor
 	toggleTouchServerCtrls(true);
@@ -445,6 +450,49 @@ void CProtocolAppDlg::OnConnectAllBtnClicked()
 	toggleCameraServerCtrls(false);
 }
 
+void CProtocolAppDlg::OnStopCalibrationBtnClicked() {
+	//newProtocol::stop_calibration_recording();
+	protocolThread = new thread(&Protocol::stop_calibration_recording, &m_protocol);
+	toggleCalibrationControls(false);
+}
+
+void CProtocolAppDlg::OnStartCalibrationBtnClicked()
+{
+	if (m_protocol.getCurrentState() == ProtocolState::shutdown) {
+		// don't want to get too many clicks
+		toggleProtocolCtrls(false);
+		toggleCalibrationControls(true);
+		//GetDlgItem(IDC_STOP_PROTOCOL_BTN)->EnableWindow(false);
+
+		// DO WE CARE ABOUT Motors/Arm
+		// check if homed
+		/*
+		if (m_protocol.isMotorsOn()) {
+			if (!m_protocol.were_motors_homed())
+				AfxMessageBox("Motors were not homed. Please home them prior to starting the trial.");
+		}*/
+
+		//check if arm homed
+		/*
+		if (!m_protocol.armHomed)
+		{
+			AfxMessageBox("The arm was not homed, make sure you click the calibrate arm buton");
+			GetDlgItem(IDC_STOP_PROTOCOL_BTN)->EnableWindow(true);
+			return;
+		}*/
+
+		// in case any parameters were change
+		UpdateData(FromControlsToVariables);
+		protocolThread = new thread(&Protocol::start_calibration_recording, &m_protocol);
+
+		// enables stopping of the protocol
+		GetDlgItem(IDC_STOP_PROTOCOL_BTN)->EnableWindow(true);
+	}
+	else {
+		AfxMessageBox("Protocol was not shutdown correctly or is in process of shutting down. Wait or restart.");
+	}
+}
+
 
 void CProtocolAppDlg::OnDisconnectAllBtnClicked()
 {
@@ -590,6 +638,12 @@ void CProtocolAppDlg::enableRewardCtrls(bool enable)
 {
 	// button
 	GetDlgItem(IDC_FLUSH_WATER_BTN)->EnableWindow(enable && m_protocol.isRewardOn());
+}
+
+void CProtocolAppDlg::toggleCalibrationControls(bool startedCalibration) {
+	// buttons
+	GetDlgItem(IDC_START_CALIBRATION)->EnableWindow(!startedCalibration);
+	GetDlgItem(IDC_STOP_CALIBRATION)->EnableWindow(startedCalibration);
 }
 
 void CProtocolAppDlg::toggleCameraServerCtrls(bool disconnected)
