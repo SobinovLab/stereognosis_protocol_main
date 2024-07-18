@@ -118,8 +118,9 @@ class Protocol
 
 		void disconnect_camera_i_client(int i);
 
-		void disconnect_camera_client1();
-		void disconnect_camera_client2();
+		void start_calibration_recording();
+
+		void stop_calibration_recording();
 
 		void send_config_to_cameras();
 		int capture_single_frame();
@@ -203,9 +204,7 @@ class Protocol
 		
 		// cameras
 		const static int NUM_CAMS = 4;
-		CameraClient m_cameraClient1;
-		CameraClient m_cameraClient2;
-		CameraClient m_cameraClients[NUM_CAMS];
+		std::vector<CameraClient*> m_cameraClients;
 
 		void prepare_camera_recording();  // TODO future - cameras prepare capture
 		int start_camera_recording();

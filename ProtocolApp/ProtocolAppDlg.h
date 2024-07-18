@@ -65,6 +65,8 @@ public:
 	//////// Protocol
 	void toggleProtocolCtrls(bool stopped);
 	void enableRewardCtrls(bool enable);
+
+	void toggleCalibrationControls(bool startedCalibration);
 	
 	// buttons
 
@@ -124,11 +126,10 @@ protected:
 	afx_msg void OnRetreatFlushWaterBtnClicked();
 	afx_msg void OnRetreatBtnClicked();
 	afx_msg void OnConnectAllBtnClicked();
+	void OnStopCalibrationBtnClicked();
+	afx_msg void OnStartCalibrationBtnClicked();
 	afx_msg void OnDisconnectAllBtnClicked();
 
-	// CAMERA server
-	afx_msg void OnConnectBtnClicked();
-	afx_msg void OnDisconnectBtnClicked();
 	//afx_msg void OnConnect2BtnClicked();
 	//afx_msg void OnDisconnect2BtnClicked();
 	afx_msg void OnSendConfigBtnClicked();
