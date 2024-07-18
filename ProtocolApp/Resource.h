@@ -82,6 +82,8 @@
 #define IDC_PORT1_EDT					1117
 #define IDC_CONNECT_BTN                 1118
 #define IDC_DISCONNECT_BTN              1119
+#define IDC_START_CALIBRATION           1120
+#define IDC_STOP_CALIBRATION            1121
 
 // Next default values for new objects
 // 
