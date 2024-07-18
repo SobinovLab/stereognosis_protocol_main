@@ -141,7 +141,7 @@ void Protocol::send_config_to_cameras()
 			m_cameraClients[i]->sendExposure(params.cs_exposure);
 		}
 	}
-	
+
 }
 
 
@@ -538,7 +538,7 @@ void Protocol::run()
 			// waiting for:
 			//	Start trial button to be pressed
 			//  stop of protocol
-			
+
 			// once the state has switched to covered - arm is at rest
 			if (!arm_at_rest)
 				arm_at_rest = is_arm_at_rest();
@@ -563,7 +563,7 @@ void Protocol::run()
 		// just in case any parameters changed, pull from GUI
 		// might update the first target
 		pull_variables_from_gui();
-		
+
 		// if the trial changed, load it instead
 		if (usingLoadedSession && preset_trial_number != params.trial_number && params.trial_number < params.total_trials) {
 			matchLoadedSessionTrialToParams(session_line1, session_line2, session_values[params.trial_number]);
@@ -666,7 +666,7 @@ void Protocol::run()
 		}
 
 		// log
-		if (!stopTrial.load()) 
+		if (!stopTrial.load())
 			object_in_position_time = Times::getCurrentTimeInMilliSecs();
 
 		// stop the watch thread
@@ -899,7 +899,7 @@ void Protocol::matchLoadedSessionTrialToParams(const vector<string>& line1, cons
 				params.pos_aperture = vec[i_col];
 			}
 		}
-        
+
         if (axis == "translation_Y") {
 			if (deriv == "position") {
 				params.pos_translation_depth = vec[i_col];
@@ -1044,8 +1044,8 @@ void Protocol::openCsvLog()
 void Protocol::addLineToCsvLog(
 	const bool got_reward,
 	const bool repeating,
-	const long long trial_start_time, 
-	const long long log_sent_config_to_cameras, 
+	const long long trial_start_time,
+	const long long log_sent_config_to_cameras,
 	const long long object_in_position_time,
 	const long long arm_liftoff_time,
     const long long log_started_camera_recording, const long long log_started_ps_recording,
@@ -1092,7 +1092,7 @@ void Protocol::addLineToCsvLog(
 	{
 		// "force_target_start_time_" << i_force + 1 << "(ms), ";
 		if (i_force - 1 < m_force_target_start_times.size())
-			trialLogCsv << m_force_target_start_times[i_force - 1] << ",";	
+			trialLogCsv << m_force_target_start_times[i_force - 1] << ",";
 		else
 			trialLogCsv << "0,";
 	}
@@ -1336,7 +1336,7 @@ bool Protocol::is_arm_at_rest()
 			_arm_at_rest_start_time = new auto(Times::getCurrentTime());
 	}
 
-	if (_arm_at_rest_start_time && 
+	if (_arm_at_rest_start_time &&
 		Times::getElapsedMilliSecsSince(*_arm_at_rest_start_time) > params.photoresistor_status_switch_delay) {
 		return true;
 	}
@@ -1453,7 +1453,7 @@ void Protocol::armMonitoringThread()
 			offCounter = 0;
 			allowInterupt.store(false);
 		}
-            
+
     }
 	sprintf(msg, "Finished loop for passive, totcount: %i, allowInterupt: %i, monitorPassive: %i", totCount, allowInterupt.load() == true, monitor_passive_arm.load() == true);
 	logInfo(msg);
@@ -1498,7 +1498,7 @@ void Protocol::m_asyncTrialConditionMonitor()
 	// target force range
 	if (!m_stopAsyncTrialConditionMonitor && isLedsOn() && m_touchSensorClient.isConnected()) {
 		ledStrip->set_top_stripe_lights(
-			targetForceMin / params.targetForceTotalMax, 
+			targetForceMin / params.targetForceTotalMax,
 			targetForceMax / params.targetForceTotalMax);
 	}
 
@@ -1553,7 +1553,7 @@ void Protocol::m_asyncTrialConditionMonitor()
 				else {
 					logInfo("Going to next force level.");
 
-					// pull the new force 
+					// pull the new force
 					targetForce = additionalTargetForces.front();
 					additionalTargetForces.pop_front();  // clean
 
