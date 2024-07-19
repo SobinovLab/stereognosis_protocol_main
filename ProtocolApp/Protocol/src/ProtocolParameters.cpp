@@ -33,7 +33,7 @@ CString ProtocolParameters::make_log_filename(const std::string& timestamp_str)
 	}
 	else {
 		file_basename = experimental::filesystem::path(string(session_filename).c_str()).filename().string();
-		file_basename = "session_ " + timestamp_str + "_from_" + 
+		file_basename = "session_" + timestamp_str + "_from_" + 
 			file_basename.substr(0, file_basename.size() - 4) + ".csv";
 	}
 
