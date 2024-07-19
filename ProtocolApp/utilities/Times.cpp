@@ -32,6 +32,7 @@ std::string Times::getFormattedDateTime(std::chrono::system_clock::time_point ti
     return ss.str();
 }
 
+
 std::string Times::getFormattedDate()
 {
     return getFormattedDateTime(system_clock::now(), DATE_FORMAT);

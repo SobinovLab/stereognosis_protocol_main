@@ -40,13 +40,15 @@ public:
 
 	virtual void init();
 
+	void set_log_filename(const std::string& timestamp_str);
+
 	bool identify_pc(std::string& pc);
 
 	int load_json();
 	int load_json(std::string filename);
 
 	CString try_finding_session_csv();
-	CString make_log_filename();
+	CString make_log_filename(const std::string& timestamp_str);
 
 	/**
 	*   Protocol Parameters

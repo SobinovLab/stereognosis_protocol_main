@@ -227,6 +227,8 @@ class Protocol
 		// smart sounds
 		void playStartTaskTone();
 
+		std::string timestampToDateString(int timestamp);
+
 		//////// running protocol support
 		// calculated reward from monkey performance
 		std::atomic<bool> m_earnedReward;

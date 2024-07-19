@@ -15,6 +15,7 @@ public:
 	static long long getCurrentTimeInMilliSecs();
 
 	static std::string getFormattedDateTime();
+	std::string timestampToDateString(int timestamp);
 	static std::string getFormattedDate();
 	static std::string getFormattedDateTime(std::chrono::system_clock::time_point timePoint, std::string format);
 

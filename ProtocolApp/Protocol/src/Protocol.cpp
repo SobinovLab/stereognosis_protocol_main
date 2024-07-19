@@ -399,9 +399,23 @@ void Protocol::playStartTaskTone()
 		Sounds::playStartTaskTone();
 }
 
+// Added by CR. Exact copy of timestamp to datestring conversion done in cameras server.
+std::string Protocol::timestampToDateString(int timestamp)
+{
+	// Convert double timestamp to std::time_t
+	std::time_t ts = static_cast<std::time_t>(timestamp);
+
+	// Create a folder name based on the timestamp
+	std::tm* tm_info = std::localtime(&ts);
+	std::stringstream datetime_ss;
+	datetime_ss << std::put_time(tm_info, "%Y_%m_%d_%H_%M_%S");
+	return datetime_ss.str();
+}
+
 // This is what is run on Start Protocol Button
 void Protocol::run()
 {
+
 	logInfo("Starting protocol");
 	this->stopProtocol.store(false);
 	setCurrentState(ProtocolState::initializing); // display the state of the trial on the GUI
@@ -409,12 +423,13 @@ void Protocol::run()
 	TEKNIC_MOTOR_API_CODE motor_rets = TEKNIC_MOTOR_API_CODE::OK;
     int motorRet;
 
-	// CR: this is the timestamp we want to send from the main protocol to the pressure and cameras server
-	// Convert the time point to a time_t object
-	// Get the current time point
+	// Timestamp to send to pressure and cam servers as well as to name main session log
 	auto currentTimePoint = std::chrono::system_clock::now();
 	std::time_t currentTime = std::chrono::system_clock::to_time_t(currentTimePoint);
 	int currentTimeInSeconds = static_cast<int>(currentTime);
+	auto ds = timestampToDateString(currentTimeInSeconds);
+	params.set_log_filename(ds);
+	push_variables_to_gui(); // Update gui with new session log path
 	// Send ps and cam server timestamp
 	send_pressure_sensor_timestamp(currentTimeInSeconds);
 	send_camera_timestamp(currentTimeInSeconds);
