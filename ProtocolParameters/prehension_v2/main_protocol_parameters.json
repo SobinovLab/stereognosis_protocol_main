@@ -1,7 +1,7 @@
 {
   "protocol": {
-    "maxWaitTime": 20,
-    "intertrialWaitTime": 2,
+    "maxWaitTime": 15,
+    "intertrialWaitTime": 1,
     "primary_session_file_directory": "C:/PrehensionProtocol/session_configs/",
     "secondary_session_file_directory": "./session_configs/",
     "primary_session_log_directory": "C:/PrehensionProtocol/session_logs/",
@@ -16,41 +16,40 @@
         "pos_aperture": 0
     },
     "cameras": {
-        "ip1": "205.208.87.108",
-        "port1": 63874,
-        "ip2": "205.208.63.128",
-        "port2": 63874,
-        "framerate": 50,
+        "cs_ips": ["205.208.63.131", "205.208.87.168", "205.208.63.172", "205.208.63.60"],
+        "cs_port": 63874,
+        "framerate": 80,
         "recordingPeriod": 60,
-        "refSerial": 22401386,
+        "refSerial": 22401385,
         "exposure": "2500",
-        "gain": "20",
+        "gain": "25",
         "capture_n_frames": 10
     },
     "pressure_sensor": {
-        "ip": "205.208.87.91",
+        "ip": "localhost",
         "port": 54940,
         "targetForce": 1,
         "targetForceRelRangeMin": -0.25,
         "targetForceRelRangeMax": 100,
-        "targetForceTotalMinThreshold": 0.1,
+        "targetForceTotalMinThreshold": 0.5,
         "targetForceTotalMax": 4,
-        "thresholdPeriod": 1,
-        "thresholdForceEachProportion": 0.2,
+        "thresholdPeriod": 0.5,
+        "thresholdForceEachProportion": 0.02,
         "minimalTouchForce": 0.5
     },
     "leds": {
         "com_port": "",
+        "tmp": "Standard Serial over Bluetooth link",
         "comPortFriendlyName": "Arduino Uno",
         "run_test": 1,
         "number": 60,
         "early_target_force_lightup": 1,
         "top_stripe_color": [0, 255, 0],
         "top_brightness": 0.05,
-        "top_reverse_order": 1,
+        "top_reverse_order": 0,
         "bottom_stripe_color": [255, 0, 0],
         "bottom_brightness": 0.05,
-        "bottom_reverse_order": 1
+        "bottom_reverse_order": 0
     },
     "sounds": {
         "enabled": 0,

@@ -439,6 +439,7 @@ void Protocol::run()
 	vector<string> session_line2;
 	vector<vector<double>> session_values;
 	vector<bool> repeating_trial;
+	bool repeating_finished_trial;
 	bool usingLoadedSession;
 	rets = CsvParser::parseCSV(string(params.session_filename), session_line1, session_line2, session_values);
 	if (rets) {  // could not load
@@ -796,10 +797,11 @@ void Protocol::run()
 
 		// log the trial success, target positions and times
 		trial_finished_time = Times::getCurrentTimeInMilliSecs();
-
-		addLineToCsvLog(
-			m_earnedReward || deservesReward,
-			repeating_trial[params.trial_number],
+		if (usingLoadedSession)
+			repeating_finished_trial = repeating_trial[params.trial_number];
+		else
+			repeating_finished_trial = false;
+		addLineToCsvLog(m_earnedReward || deservesReward, repeating_finished_trial,
 			trial_start_time, log_sent_config_to_cameras, object_in_position_time,
             arm_liftoff_time,
             log_started_camera_recording, log_started_ps_recording,
