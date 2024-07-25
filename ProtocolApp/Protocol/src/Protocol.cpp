@@ -246,7 +246,9 @@ bool Protocol::did_cameras_finish_saving()
 	for (int i = 0; i < m_cameraClients.size(); i++) {
 		if (m_cameraClients[i]->isConnected())
 		{
-			m_cameraClients[i]->areYouDoneSaving(&res);
+			// the function has to return "true" and the res has to be 1
+			// if the connection fails, the res is not changed
+            res = m_cameraClients[i]->areYouDoneSaving(&res) && res;
 			if (res == 0)
 				return false;
 		}
@@ -816,9 +818,9 @@ void Protocol::run()
 		// wait for the signal from recording devices that the data has been saved - is Ready
 		rets = wait_for_cameras_finish_saving();
 		if (rets < 0) {
-			AfxMessageBox("Cameras are taking too long to save the data. Stopping the protocol.");
+			AfxMessageBox("Cameras are taking too long to save the data. Pausing automatic progress. Check camera PCs for crashing.");
 			stopTrial.store(true);
-			stopProtocol = true;
+            autoLoopToggle(false);
 		}
 
 		params.trial_number++;           // Increment trial number
