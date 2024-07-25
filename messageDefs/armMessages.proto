@@ -1,0 +1,65 @@
+syntax = "proto3";
+
+service armCommunication {
+    rpc armReady (readyRequest) returns (readyResponse) {}
+    rpc armStatus (statusRequest) returns (statusResponse) {}
+    rpc armControl (moveArm) returns (moveResponse) {}
+	rpc gripperOpen (gripperRequest) returns (moveResponse) {}
+	rpc stopArm (stopRequest) returns (moveResponse) {}
+    rpc armHome (moveHome) returns (moveResponse) {}
+    rpc armFeedback (torqueRequest) returns (stream torqueResponse) {}
+}
+
+message readyRequest{
+}
+
+message readyResponse{
+    int32 flag = 1;
+}
+
+message statusRequest {
+    int32 flag = 1;
+}
+
+message statusResponse {
+    int32 flag = 1;
+}
+
+message gripperRequest{
+	double width = 1;
+}
+
+message stopRequest {
+}
+
+message moveArm{
+    double lateral = 1;
+    double depth = 2;
+    double height = 3;
+    double theta = 4;
+    double phi = 5;
+    double chi = 6;
+    double width = 7;
+}
+
+message moveHome{
+    int32 flag = 1;
+}
+
+message moveResponse {
+    int32 responseCode = 1;
+}
+
+message torqueRequest {
+    int32 flag = 1;
+}
+
+message torqueResponse {
+    double joint1 = 1;
+    double joint2 = 2;
+    double joint3 = 3;
+    double joint4 = 4;
+    double joint5 = 5;
+    double joint6 = 6;
+    double endpoint = 7;
+}

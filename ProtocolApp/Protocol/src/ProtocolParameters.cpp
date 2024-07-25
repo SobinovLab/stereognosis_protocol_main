@@ -1,4 +1,5 @@
 #include "ProtocolParameters.h"
+#include <Protocol/Protocol.h>
 
 using namespace std;
 using json = nlohmann::json;
@@ -50,6 +51,21 @@ CString ProtocolParameters::make_log_filename()
 
 ProtocolParameters::ProtocolParameters()
 {
+	// Define vecs of ports and ips (defaults) for cam servers
+	cs_ips = {
+		"205.208.87.188",
+		"205.208.63.128",
+		"205.208.87.188",
+		"205.208.63.128"
+	};
+
+	cs_ports = {
+		63874,
+		63874,
+		63874,
+		63874
+	};
+
 	init();
 }
 
@@ -166,10 +182,11 @@ int ProtocolParameters::load_json(std::string filename)
 	{
 		json cameras_json = pp_json.at("cameras");
 
-        cs_ip1 = ((string) cameras_json.value("ip1", cs_ip1)).c_str();
-        cs_port1 = cameras_json.value("port1", cs_port1);
-        cs_ip2 = ((string)cameras_json.value("ip2", cs_ip2)).c_str();
-        cs_port2 = cameras_json.value("port2", cs_port2);
+		for (int i = 0; i < Protocol::NUM_CAMERAS; i++) {
+			cs_ips[i] = ((string)cameras_json.value("ip1", cs_ips[i])); //.c_str();
+			cs_ports[i] = cameras_json.value("port1", cs_ports[i]);
+		}
+        
         cs_framerate = cameras_json.value("framerate", cs_framerate);
         cs_recordingPeriod = cameras_json.value("recordingPeriod", cs_recordingPeriod);
         cs_refSerial = cameras_json.value("refSerial", cs_refSerial);

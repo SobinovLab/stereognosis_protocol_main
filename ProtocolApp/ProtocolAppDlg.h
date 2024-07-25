@@ -65,7 +65,7 @@ public:
 	//////// Protocol
 	void toggleProtocolCtrls(bool stopped);
 	void enableRewardCtrls(bool enable);
-	
+
 	// buttons
 
 	// edits
@@ -74,6 +74,8 @@ public:
 	// light sensors
 	CStaticColor m_frontPhotoresistorCtrl;
 	CStaticColor m_rearPhotoresistorCtrl;
+	CStaticColor m_leftArmSensorCtrl;
+	CStaticColor m_rightArmSensorCtrl;
 
 	//////// Trial
 	// buttons
@@ -95,12 +97,15 @@ public:
 	CEdit m_touchServerLogCtrl;
 
 	//////// Cameras
-	void toggleCameraServer1Ctrls(bool disconnected);
-	void toggleCameraServer2Ctrls(bool disconnected);
+	void toggleCameraServerCtrls_i(int i, bool disconnected);
+	//void toggleCameraServer1Ctrls(bool disconnected);
+	//void toggleCameraServer2Ctrls(bool disconnected);
 	
 	// edits
 	CEdit m_serverLogCtrl1;
 	CEdit m_serverLogCtrl2;
+	CEdit m_serverLogCtrl3;
+	CEdit m_serverLogCtrl4;
 
 protected:
 
@@ -123,11 +128,15 @@ protected:
 	afx_msg void OnRetreatFlushWaterBtnClicked();
 	afx_msg void OnRetreatBtnClicked();
 
+	afx_msg void OnConnectBtnClicked();
+
+	afx_msg void OnDisconnectBtnClicked();
+
 	// CAMERA server
-	afx_msg void OnConnect1BtnClicked();
-	afx_msg void OnDisconnect1BtnClicked();
-	afx_msg void OnConnect2BtnClicked();
-	afx_msg void OnDisconnect2BtnClicked();
+	//afx_msg void OnConnect1BtnClicked();
+	//afx_msg void OnDisconnect1BtnClicked();
+	//afx_msg void OnConnect2BtnClicked();
+	//afx_msg void OnDisconnect2BtnClicked();
 	afx_msg void OnSendConfigBtnClicked();
 	afx_msg void OnCaptureSingleFrameBtnClicked();
 
@@ -143,4 +152,13 @@ public:
 	afx_msg void OnBnClickedStopMotorsBtn();
 	afx_msg void OnBnClickedNeutralPositionBtn();
 	afx_msg void OnBnClickedLedsEarlyTargetForceLightChk();
+    afx_msg void OnEnChangeSessionFileEdt();
+    afx_msg void OnBnClickedMotorsChk();
+
+
+    afx_msg void OnBnClickedLeftMain();
+    afx_msg void OnBnClickedLeftSecond();
+    afx_msg void OnBnClickedRightMain();
+    afx_msg void OnBnClickedRightSecond();
+    afx_msg void OnBnClickedSplitReward();
 };

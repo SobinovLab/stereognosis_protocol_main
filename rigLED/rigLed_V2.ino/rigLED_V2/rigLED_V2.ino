@@ -6,7 +6,7 @@
 #define LED_BOTTOM 2
 #define LED_BOTH 3
 #define TEST_MSG 4
-#define MAX_LEDS 40
+#define MAX_LEDS 60
 
 #define TOP_PIN 6
 #define BOTTOM_PIN 9
@@ -91,8 +91,8 @@ void loop() {
             }
             for (int i = start_led; i < end_led; i++)
             {
-                top_leds[i].g = red;
-                top_leds[i].r = green;
+                top_leds[i].g = green;
+                top_leds[i].r = red;
                 top_leds[i].b = blue;
             }
             for (int i = end_led; i < MAX_LEDS; i++)
@@ -108,8 +108,8 @@ void loop() {
             }
             for (int i = start_led; i < end_led; i++)
             {
-                bot_leds[i].g = red;
-                bot_leds[i].r = green;
+                bot_leds[i].g = green;
+                bot_leds[i].r = red;
                 bot_leds[i].b = blue;
             }
             for (int i = end_led; i < MAX_LEDS; i++)
@@ -126,11 +126,11 @@ void loop() {
             }
             for (int i = 0; i < end_led; i++)
             {
-                top_leds[i].g = red;
-                top_leds[i].r = green;
+                top_leds[i].g = green;
+                top_leds[i].r = red;
                 top_leds[i].b = blue;
-                bot_leds[i].g = red;
-                bot_leds[i].r = green;
+                bot_leds[i].g = green;
+                bot_leds[i].r = red;
                 bot_leds[i].b = blue;
             }
             for (int i = end_led; i < MAX_LEDS; i++)

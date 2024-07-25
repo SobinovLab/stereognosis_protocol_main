@@ -23,6 +23,8 @@
 #include "CameraClient.h"
 #include "TouchSensorClient.h"
 #include "LedStrip.h"
+#include "armCinterface.h"
+#include "kinovaErrCode.h"
 
 
 enum class ProtocolState
@@ -60,11 +62,18 @@ class Protocol
 		std::atomic<bool> stopProtocol;
 		std::atomic<bool> startTrial;
 		std::atomic<bool> stopTrial;
-		std::atomic<bool> deservesReward;  // user-GUI defined reward for the monkey. Overrides the calculated one.
+		std::atomic<bool> deservesReward;     // user-GUI defined reward for the monkey. Overrides the calculated one.
 		std::atomic<bool> loopAutomatically;  // Protocol automatically loops. Pressing Retreat deliberately stops the looping
 
 		// main loop that is run in a thread when StartProtocol is clicked
 		virtual void run();
+
+        // motor
+		TeknicMotorApi* motorHub = nullptr;
+
+        // arm (replacing motorHub)
+        KinovaArmClient* armClient = nullptr;
+        bool armHomed = false;
 
 		// current state of the protocol/trial
 		void setCurrentState(ProtocolState state);
@@ -76,9 +85,7 @@ class Protocol
 		// sets of gui variables
 		CEdit* m_trialStatus;
 		CButton* loopChk;
-		void set_photoresistor_monitors(CStaticColor* front, CStaticColor* rear);
-		void set_camera1_gui_controls(CEdit* serverLogCtrl);
-		void set_camera2_gui_controls(CEdit* serverLogCtrl);
+		void set_photoresistor_monitors(CStaticColor* front, CStaticColor* rear, CStaticColor* left, CStaticColor* right);
 		void set_pressure_sensors_gui_controls(CEdit* serverLogCtrl);
 		void set_trial_buttons(CButton* startTrialBtn, CButton* retreatBtn, CButton* retreatFlushBtn);
 
@@ -90,23 +97,29 @@ class Protocol
 		// light sensors
 		std::atomic<bool> use_front_light_sensor = false;
 		std::atomic<bool> use_rear_light_sensor = false;
+        std::atomic<bool> use_left_arm_touch = false;
+        std::atomic<bool> use_right_arm_touch = false;
+        std::atomic<bool> reward_on_return = false;
+        std::atomic<bool> monitor_passive_arm = false;
+		int which_active_arm = 0; //negative for left, positive for right, 0 for unused
+        int which_passive_arm = 0; //negative for left, positive for right, 0 for unused
 
 		// motors
 		bool were_motors_homed();
-		TEKNIC_MOTOR_API_CODE home_motors();
+		int home_motors();
 		void stop_motors();
-		TEKNIC_MOTOR_API_CODE motors_neutral_position();
+		int motors_neutral_position();
 
 		//////// connected devices
 		// cameras
-		void connect_camera_client1();
-		void connect_camera_client2();
-
-		void disconnect_camera_client1();
-		void disconnect_camera_client2();
+		void connect_camera_client_i(int i);
+		void set_camera_i_gui_controls(int i, CEdit* serverLogCtrl);
+		void disconnect_camera_client_i(int i);
 
 		void send_config_to_cameras();
 		int capture_single_frame();
+
+		static const int NUM_CAMERAS = 4;
 
 		// pressure sensors
 		void connect_pressure_sensors();
@@ -142,7 +155,8 @@ class Protocol
 			const long long trial_end_time,
 			const long long log_starting_finishing_recordings, const long long log_sent_end_sync_messages,
 			const long long log_stopped_camera_recordings, const long long log_stopped_ps_recordings,
-			const long long trial_finished_time);
+			const long long trial_finished_time,
+            const long long arm_return_time);
 		void closeCsvLog();
 
 		//////// local devices
@@ -167,12 +181,14 @@ class Protocol
 		// DEPRECATED and is not used
 		int wait_until_arm_liftoff();
 
+        //Watching arm lift off in a thread
+        void armMonitoringThread();
+        std::atomic<bool> allowInterupt;
+        std::atomic<bool> monitoringThreadAlive = false;
+
 		// ephys
 		void start_ephys_recording();
 		void break_ephys_recording();
-
-		// motor
-		TeknicMotorApi* motorHub = nullptr;
 
 		// LEDs
 		LedStrip* ledStrip = nullptr;
@@ -180,9 +196,17 @@ class Protocol
 		//////// connected devices
 		void sync_message_trial_start();
 		void sync_message_trial_end();
+		
 		// cameras
-		CameraClient m_cameraClient1;
-		CameraClient m_cameraClient2;
+		CameraClient m_cameraClients[NUM_CAMERAS];
+		
+		//CameraClient m_cameraClient1;
+		//CameraClient m_cameraClient2;
+		// Additional cam servers
+		//CameraClient m_cameraClient3;
+		//CameraClient m_cameraClient4;
+		
+
 		void prepare_camera_recording();  // TODO future - cameras prepare capture
 		int start_camera_recording();
 		int start_camera_recording(long trial_number);
