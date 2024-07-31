@@ -246,7 +246,9 @@ bool Protocol::did_cameras_finish_saving()
 	for (int i = 0; i < m_cameraClients.size(); i++) {
 		if (m_cameraClients[i]->isConnected())
 		{
-			m_cameraClients[i]->areYouDoneSaving(&res);
+			// the function has to return "true" and the res has to be 1
+			// if the connection fails, the res is not changed
+            res = m_cameraClients[i]->areYouDoneSaving(&res) && res;
 			if (res == 0)
 				return false;
 		}
@@ -440,6 +442,7 @@ void Protocol::run()
 	vector<string> session_line2;
 	vector<vector<double>> session_values;
 	vector<bool> repeating_trial;
+	bool repeating_finished_trial;
 	bool usingLoadedSession;
 	rets = CsvParser::parseCSV(string(params.session_filename), session_line1, session_line2, session_values);
 	if (rets) {  // could not load
@@ -799,10 +802,11 @@ void Protocol::run()
 
 		// log the trial success, target positions and times
 		trial_finished_time = Times::getCurrentTimeInMilliSecs();
-
-		addLineToCsvLog(
-			m_earnedReward || deservesReward,
-			repeating_trial[params.trial_number],
+		if (usingLoadedSession)
+			repeating_finished_trial = repeating_trial[params.trial_number];
+		else
+			repeating_finished_trial = false;
+		addLineToCsvLog(m_earnedReward || deservesReward, repeating_finished_trial,
 			trial_start_time, log_sent_config_to_cameras, object_in_position_time,
             arm_liftoff_time,
             log_started_camera_recording, log_started_ps_recording,
@@ -817,9 +821,9 @@ void Protocol::run()
 		// wait for the signal from recording devices that the data has been saved - is Ready
 		rets = wait_for_cameras_finish_saving();
 		if (rets < 0) {
-			AfxMessageBox("Cameras are taking too long to save the data. Stopping the protocol.");
+			AfxMessageBox("Cameras are taking too long to save the data. Pausing automatic progress. Check camera PCs for crashing.");
 			stopTrial.store(true);
-			stopProtocol = true;
+            autoLoopToggle(false);
 		}
 
 		params.trial_number++;           // Increment trial number

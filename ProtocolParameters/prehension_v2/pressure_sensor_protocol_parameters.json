@@ -1,5 +1,5 @@
 {
-    "IP": "205.208.87.91",
+    "IP": "localhost",
     "port": 54940,
     "sensor_left": {
         "serial": "00110-1413",
