@@ -426,13 +426,14 @@ void Protocol::run()
 	// Timestamp to send to pressure and cam servers as well as to name main session log
 	auto currentTimePoint = std::chrono::system_clock::now();
 	std::time_t currentTime = std::chrono::system_clock::to_time_t(currentTimePoint);
-	int currentTimeInSeconds = static_cast<int>(currentTime);
-	auto ds = timestampToDateString(currentTimeInSeconds);
+	int session_start_time = static_cast<int>(currentTime);
+	auto ds = timestampToDateString(session_start_time);
 	params.set_log_filename(ds);
 	push_variables_to_gui(); // Update gui with new session log path
+
 	// Send ps and cam server timestamp
-	send_pressure_sensor_timestamp(currentTimeInSeconds);
-	send_camera_timestamp(currentTimeInSeconds);
+	send_pressure_sensor_timestamp(session_start_time);
+	send_camera_timestamp(session_start_time);
 
 	// Load all trials from session config file (BL code)
 	vector<string> session_line1;
@@ -662,9 +663,11 @@ void Protocol::run()
         thread passiveArmThread(&Protocol::armMonitoringThread, this);
 
 		// start recordings
-		// Calc trial sub number
+		send_camera_timestamp(session_start_time);
 		start_camera_recording(params.counter);  // TODO process it?
 		log_started_camera_recording = Times::getCurrentTimeInMilliSecs();
+
+		send_pressure_sensor_timestamp(session_start_time);
 		start_pressure_sensor_recording(params.counter);
 		log_started_ps_recording = Times::getCurrentTimeInMilliSecs();
 
