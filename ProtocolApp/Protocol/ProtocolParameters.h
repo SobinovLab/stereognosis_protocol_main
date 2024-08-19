@@ -40,13 +40,15 @@ public:
 
 	virtual void init();
 
+	void set_log_filename(const std::string& timestamp_str);
+
 	bool identify_pc(std::string& pc);
 
 	int load_json();
 	int load_json(std::string filename);
 
 	CString try_finding_session_csv();
-	CString make_log_filename();
+	CString make_log_filename(const std::string& timestamp_str);
 
 	/**
 	*   Protocol Parameters
@@ -68,15 +70,24 @@ public:
 	int trial_number = 0;
 	int counter = 0; // This always increments
 	int total_trials = 0;
-	double pos_translation_x = 115;			
+	double pos_translation_x = 0;
+    double pos_translation_height = 0;
+    double pos_translation_depth = 0;
 	double pos_tilt = 0;
+    double pos_pitch = 0;
+    double pos_yaw = 0;
 	double pos_aperture = 0;
 
 	// camera servers
+	std::vector<CString> cs_ips = { "205.208.87.188", "205.208.63.128" };
+	long cs_port = 63874;
+
+	/*
 	CString cs_ip1 = "205.208.87.188";
 	long cs_port1 = 63874;
 	CString cs_ip2 = "205.208.63.128";
 	long cs_port2 = 63874;
+	*/
 
 	// camera config
 	double cs_framerate = 50;

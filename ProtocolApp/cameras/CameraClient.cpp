@@ -233,12 +233,13 @@ bool CameraClient::isConnected()
 
 void CameraClient::appendClientLog(CString text)
 {
+	/*
 	if (clientLogGuiEdt) {
 		int idx = GetWindowTextLength(*clientLogGuiEdt);
 		CT2A ascii(text, CP_UTF8);
 		SendMessage(*clientLogGuiEdt, EM_SETSEL, (WPARAM)idx, (LPARAM)idx);
 		SendMessage(*clientLogGuiEdt, EM_REPLACESEL, 0, (LPARAM)ascii.m_psz);
-	}
+	}*/
 }
 
 bool CameraCommunicatorSClient::setTimestamp(int timestamp)

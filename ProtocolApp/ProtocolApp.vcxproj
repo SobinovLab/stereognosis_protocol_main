@@ -46,7 +46,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;NDEBUG;HMI_API_DYNAMIC;_WINDOWS;_USE_MATH_DEFINES;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>.\;.\Protocol;.\utilities;.\cameras;.\pressure_sensors;.\teknicMotors;.\libTeknicMotor\include;.\LEDs;$(NIDAQ_HOME)\NI-DAQ\DAQmx ANSI C Dev\include;$(MCHP_HMI_API_PATH)\include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>.\;.\Protocol;.\utilities;.\cameras;.\pressure_sensors;.\teknicMotors;.\libTeknicMotor\include;.\LEDs;$(NIDAQ_HOME)\NI-DAQ\DAQmx ANSI C Dev\include;$(MCHP_HMI_API_PATH)\include;.\kinovaArm</AdditionalIncludeDirectories>
       <ForcedIncludeFiles>stdafx.h</ForcedIncludeFiles>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <WholeProgramOptimization>false</WholeProgramOptimization>
@@ -91,6 +91,10 @@ copy /B /V /Y "$(ProjectDir)..\session_configs\*" "$(OutDir)\session_configs\" &
     <ClInclude Include="cameras\CameraClient.h" />
     <ClInclude Include="cameras\cameras_messages.grpc.pb.h" />
     <ClInclude Include="cameras\cameras_messages.pb.h" />
+    <ClInclude Include="kinovaArm\armCinterface.h" />
+    <ClInclude Include="kinovaArm\armMessages.grpc.pb.h" />
+    <ClInclude Include="kinovaArm\armMessages.pb.h" />
+    <ClInclude Include="kinovaArm\kinovaErrCode.h" />
     <ClInclude Include="LEDs\LedStrip.h" />
     <ClInclude Include="LEDs\Serial.h" />
     <ClInclude Include="LEDs\SerialEnumserParts.h" />
@@ -120,12 +124,15 @@ copy /B /V /Y "$(ProjectDir)..\session_configs\*" "$(OutDir)\session_configs\" &
     <ClCompile Include="cameras\CameraClient.cpp" />
     <ClCompile Include="cameras\cameras_messages.grpc.pb.cc" />
     <ClCompile Include="cameras\cameras_messages.pb.cc" />
+    <ClCompile Include="kinovaArm\armMessages.grpc.pb.cc" />
+    <ClCompile Include="kinovaArm\armMessages.pb.cc" />
     <ClCompile Include="LEDs\LedStrip.cpp" />
     <ClCompile Include="LEDs\Serial.cpp" />
     <ClCompile Include="LEDs\SerialEnumserParts.cpp" />
     <ClCompile Include="ProtocolApp.cpp" />
     <ClCompile Include="ProtocolAppDlg.cpp" />
     <ClCompile Include="Protocol\src\CStaticColor.cpp" />
+    <ClCompile Include="kinovaErrCode.cpp" />
     <ClCompile Include="teknicMotors\TeknicMotorApi.cpp" />
     <ClCompile Include="utilities\CEditableListBox.cpp" />
     <ClCompile Include="utilities\CEditHelper.cpp" />

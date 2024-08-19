@@ -25,15 +25,15 @@ CString ProtocolParameters::try_finding_session_csv()
 	return "";
 }
 
-CString ProtocolParameters::make_log_filename()
+CString ProtocolParameters::make_log_filename(const std::string& timestamp_str)
 {
 	string file_basename;
 	if (session_filename.GetLength() == 0) {
-		file_basename = "session_" + Times::getFormattedDateTime() + ".csv";
+		file_basename = "session_" + timestamp_str + ".csv";
 	}
 	else {
 		file_basename = experimental::filesystem::path(string(session_filename).c_str()).filename().string();
-		file_basename = "session_ " + Times::getFormattedDateTime() + "_from_" + 
+		file_basename = "session_" + timestamp_str + "_from_" + 
 			file_basename.substr(0, file_basename.size() - 4) + ".csv";
 	}
 
@@ -57,6 +57,7 @@ ProtocolParameters::~ProtocolParameters()
 {
 }
 
+
 void ProtocolParameters::init()
 {
 	if (load_json() < 0) {
@@ -64,9 +65,18 @@ void ProtocolParameters::init()
 	}
 
 	session_filename = try_finding_session_csv();
-	session_log_filename = make_log_filename();
 
+	// NOTE: This is the main session log, 
+	// DO NOT initialize name until we start protocol and send timestamp
+	//session_log_filename = make_log_filename();
 }
+
+
+// setter for log filename with timestamp str input
+void ProtocolParameters::set_log_filename(const std::string& timestamp_str) {
+	session_log_filename = make_log_filename(timestamp_str);
+}
+
 
 bool ProtocolParameters::identify_pc(std::string& pc)
 {
@@ -165,11 +175,19 @@ int ProtocolParameters::load_json(std::string filename)
 	try
 	{
 		json cameras_json = pp_json.at("cameras");
+		cs_ips.clear();
 
-        cs_ip1 = ((string) cameras_json.value("ip1", cs_ip1)).c_str();
-        cs_port1 = cameras_json.value("port1", cs_port1);
-        cs_ip2 = ((string)cameras_json.value("ip2", cs_ip2)).c_str();
-        cs_port2 = cameras_json.value("port2", cs_port2);
+		// Add the IPs here
+		for (const auto& ip : cameras_json["cs_ips"].items())
+		{
+			std::string x = ip.value();
+			cs_ips.push_back(x.c_str());
+		}
+		
+        //cs_ip1 = ((string) cameras_json.value("ip1", cs_ip1)).c_str();
+        //cs_port1 = cameras_json.value("port1", cs_port1);
+        //cs_ip2 = ((string)cameras_json.value("ip2", cs_ip2)).c_str();
+        //cs_port2 = cameras_json.value("port2", cs_port2);
         cs_framerate = cameras_json.value("framerate", cs_framerate);
         cs_recordingPeriod = cameras_json.value("recordingPeriod", cs_recordingPeriod);
         cs_refSerial = cameras_json.value("refSerial", cs_refSerial);

@@ -8,7 +8,7 @@
 #include <NIDAQmx.h>
 #include "Logger.h"
 
-extern std::atomic<bool> IS_REAR_PHOTORESISTOR_COVERED, IS_FRONT_PHOTORESISTOR_COVERED;
+extern std::atomic<bool> IS_REAR_PHOTORESISTOR_COVERED, IS_FRONT_PHOTORESISTOR_COVERED, IS_LEFT_ARMSENSOR_TOUCHED, IS_RIGHT_ARMSENSOR_TOUCHED;
 
 class NIUsb6001card
 {
@@ -36,6 +36,7 @@ public:
     // light sensors
     void setFrontPhotoresistorMonitor(CStaticColor * gui_monitor);
     void setRearPhotoresistorMonitor(CStaticColor* gui_monitor);
+    void setArmTouchSensors(CStaticColor*, CStaticColor*);
     void resetPhotoresistorsGuiMonitor();
 
     // ephys

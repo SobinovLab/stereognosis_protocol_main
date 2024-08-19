@@ -23,6 +23,8 @@ void CProtocolAppDlg::DoDataExchange(CDataExchange* pDX)
 	// protocol
 	DDX_Control(pDX, IDC_PHOTORES_FRONT_LBL, m_frontPhotoresistorCtrl);
 	DDX_Control(pDX, IDC_PHOTORES_REAR_LBL, m_rearPhotoresistorCtrl);
+	DDX_Control(pDX, IDC_TOUCH_LEFT, m_leftArmSensorCtrl);
+	DDX_Control(pDX, IDC_TOUCH_RIGHT, m_rightArmSensorCtrl);
 
 	// trial
 	DDX_Control(pDX, IDC_START_TRIAL_BTN, m_startTrialBtn);
@@ -38,8 +40,8 @@ void CProtocolAppDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_TOUCH_SENSOR_SERVER_LOG_EDT, m_touchServerLogCtrl);
 
 	// cameras
-	DDX_Control(pDX, IDC_SERVER_LOG_EDT1, m_serverLogCtrl1);
-	DDX_Control(pDX, IDC_SERVER_LOG_EDT2, m_serverLogCtrl2);
+	//DDX_Control(pDX, IDC_SERVER_LOG_EDT1, m_serverLogCtrl1);
+	//DDX_Control(pDX, IDC_SERVER_LOG_EDT2, m_serverLogCtrl2);
 
 	// LEDs
 	DDX_Control(pDX, IDC_LEDS_EARLY_TARGET_FORCE_LIGHT_CHK, m_ledsEarlyTargetForceLightChk);
@@ -78,10 +80,10 @@ void CProtocolAppDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Text(pDX, IDC_PS_MINIMAL_TOUCH_FORCE_EDT, m_protocol.params.minimalTouchForce);
 
 	// cameras
-	DDX_Text(pDX, IDC_IP_EDT1, m_protocol.params.cs_ip1);
-	DDX_Text(pDX, IDC_PORT_EDT1, m_protocol.params.cs_port1);
-	DDX_Text(pDX, IDC_IP_EDT2, m_protocol.params.cs_ip2);
-	DDX_Text(pDX, IDC_PORT_EDT2, m_protocol.params.cs_port2);
+	//DDX_Text(pDX, IDC_IP_EDT1, m_protocol.params.cs_ip1);
+	DDX_Text(pDX, IDC_PORT1_EDT, m_protocol.params.cs_port);
+	//DDX_Text(pDX, IDC_IP_EDT2, m_protocol.params.cs_ip2);
+	//DDX_Text(pDX, IDC_PORT_EDT2, m_protocol.params.cs_port2);
 
 	// cameras_config
 	DDX_Text(pDX, IDC_FRAMERATE_EDT, m_protocol.params.cs_framerate);
@@ -103,10 +105,12 @@ BEGIN_MESSAGE_MAP(CProtocolAppDlg, CDialogEx)
 	ON_BN_CLICKED(IDC_START_TRIAL_BTN, &OnStartTrialBtnClicked)
 	ON_BN_CLICKED(IDC_RETREAT_FLUSH_WATER_BTN, &OnRetreatFlushWaterBtnClicked)
 	ON_BN_CLICKED(IDC_RETREAT_BTN, &OnRetreatBtnClicked)
-	ON_BN_CLICKED(IDC_CONNECT_BTN1, &OnConnect1BtnClicked)
-	ON_BN_CLICKED(IDC_DISCONNECT_BTN1, &OnDisconnect1BtnClicked)
-	ON_BN_CLICKED(IDC_CONNECT_BTN2, &OnConnect2BtnClicked)
-	ON_BN_CLICKED(IDC_DISCONNECT_BTN2, &OnDisconnect2BtnClicked)
+	ON_BN_CLICKED(IDC_CONNECT_BTN, &OnConnectAllBtnClicked)
+	ON_BN_CLICKED(IDC_DISCONNECT_BTN, &OnDisconnectAllBtnClicked)
+
+	ON_BN_CLICKED(IDC_START_CALIBRATION, &OnStartCalibrationBtnClicked)
+	ON_BN_CLICKED(IDC_STOP_CALIBRATION, &OnStopCalibrationBtnClicked)
+
 	ON_BN_CLICKED(IDC_SEND_CONFIG_BTN, &OnSendConfigBtnClicked)
 	ON_BN_CLICKED(IDC_CAPTURE_SINGLE_FRAME_BTN, &OnCaptureSingleFrameBtnClicked)
 	ON_BN_CLICKED(IDC_CONNECT_TOUCH_SENSOR_BTN, &OnConnectTouchSensorBtnClicked)
@@ -118,6 +122,15 @@ BEGIN_MESSAGE_MAP(CProtocolAppDlg, CDialogEx)
 	ON_BN_CLICKED(IDC_STOP_MOTORS_BTN, &CProtocolAppDlg::OnBnClickedStopMotorsBtn)
 	ON_BN_CLICKED(IDC_NEUTRAL_POSITION_BTN, &CProtocolAppDlg::OnBnClickedNeutralPositionBtn)
 	ON_BN_CLICKED(IDC_LEDS_EARLY_TARGET_FORCE_LIGHT_CHK, &CProtocolAppDlg::OnBnClickedLedsEarlyTargetForceLightChk)
+    ON_EN_CHANGE(IDC_SESSION_FILE_EDT, &CProtocolAppDlg::OnEnChangeSessionFileEdt)
+    ON_BN_CLICKED(IDC_MOTORS_CHK, &CProtocolAppDlg::OnBnClickedMotorsChk)
+   
+
+    ON_BN_CLICKED(IDC_LEFT_MAIN, &CProtocolAppDlg::OnBnClickedLeftMain)
+    ON_BN_CLICKED(IDC_LEFT_SECOND, &CProtocolAppDlg::OnBnClickedLeftSecond)
+    ON_BN_CLICKED(IDC_RIGHT_MAIN, &CProtocolAppDlg::OnBnClickedRightMain)
+    ON_BN_CLICKED(IDC_RIGHT_SECOND, &CProtocolAppDlg::OnBnClickedRightSecond)
+    ON_BN_CLICKED(IDC_SPLIT_REWARD, &CProtocolAppDlg::OnBnClickedSplitReward)
 END_MESSAGE_MAP()
 
 // CProtocolAppDlg message handlers
@@ -139,6 +152,20 @@ BOOL CProtocolAppDlg::OnInitDialog()
 		}
 	}
 
+	// Assuming m_protocol.params.cs_ips is a vector or array of strings
+	std::vector<CString> ips = m_protocol.params.cs_ips;
+	// Get a pointer to the listbox control
+	CListBox* pListBox = (CListBox*)GetDlgItem(IDC_IPS1_LST);
+	// Check if the pointer is valid
+	if (pListBox != nullptr)
+	{
+		// Loop through the list of IP addresses and add each to the listbox
+		for (const auto& ip : ips)
+		{
+			pListBox->AddString(ip);
+		}
+	}
+
 	// Set the icon for this dialog.  The framework does this automatically
 	//  when the application's main window is not a dialog
 	SetIcon(m_hIcon, TRUE);			// Set big icon
@@ -148,7 +175,7 @@ BOOL CProtocolAppDlg::OnInitDialog()
 	setFontGuiTrialsCounter();  // legacy
 	m_protocol.mainWindow = this;
 
-	m_protocol.set_photoresistor_monitors(&m_frontPhotoresistorCtrl, &m_rearPhotoresistorCtrl);
+	m_protocol.set_photoresistor_monitors(&m_frontPhotoresistorCtrl, &m_rearPhotoresistorCtrl, &m_leftArmSensorCtrl, &m_rightArmSensorCtrl);
 	m_protocol.set_camera1_gui_controls(&m_serverLogCtrl1);
 	m_protocol.set_camera2_gui_controls(&m_serverLogCtrl2);
 	m_protocol.set_pressure_sensors_gui_controls(&m_touchServerLogCtrl);
@@ -167,7 +194,7 @@ BOOL CProtocolAppDlg::OnInitDialog()
 
 	// set the visibility of enabled devices on GUI
 	if (m_protocol.isLightSensorsOn()) ((CButton*)GetDlgItem(IDC_LIGHT_SENSORS_CHK))->SetCheck(BST_CHECKED);
-	if (m_protocol.isMotorsOn()) ((CButton*)GetDlgItem(IDC_MOTORS_CHK))->SetCheck(BST_CHECKED);
+	//if (m_protocol.isMotorsOn()) ((CButton*)GetDlgItem(IDC_MOTORS_CHK))->SetCheck(BST_CHECKED);
 	if (m_protocol.isRewardOn()) ((CButton*)GetDlgItem(IDC_REWARD_CHK))->SetCheck(BST_CHECKED);
 	if (m_protocol.isEphysOn()) ((CButton*)GetDlgItem(IDC_EPHYS_CHK))->SetCheck(BST_CHECKED);
 	if (m_protocol.isLedsOn()) ((CButton*)GetDlgItem(IDC_LEDS_CHK))->SetCheck(BST_CHECKED);
@@ -175,7 +202,7 @@ BOOL CProtocolAppDlg::OnInitDialog()
 	/////// Control what is enabled and initialized
 	// protocol
 	toggleProtocolCtrls(true);
-	GetDlgItem(IDC_HOME_MOTORS_BTN)->EnableWindow(m_protocol.isMotorsOn());
+	//GetDlgItem(IDC_HOME_MOTORS_BTN)->EnableWindow(m_protocol.isMotorsOn());
 	GetDlgItem(IDC_NEUTRAL_POSITION_BTN)->EnableWindow(m_protocol.isMotorsOn());
 	GetDlgItem(IDC_STOP_MOTORS_BTN)->EnableWindow(m_protocol.isMotorsOn());
 
@@ -188,8 +215,10 @@ BOOL CProtocolAppDlg::OnInitDialog()
 	enableRewardCtrls(true);
 
 	// cameras
-	toggleCameraServer1Ctrls(true);
-	toggleCameraServer2Ctrls(true);
+	toggleCameraServerCtrls(true);
+
+	// cam calibration
+	toggleCalibrationControls(false);
 
 	// touch sensor
 	toggleTouchServerCtrls(true);
@@ -334,7 +363,16 @@ void CProtocolAppDlg::OnStartProtocolBtnClicked()
 				AfxMessageBox("Motors were not homed. Please home them prior to starting the trial.");
 		}
 
+        //check if arm homed
+        if (!m_protocol.armHomed)
+        {
+            AfxMessageBox("The arm was not homed, make sure you click the calibrate arm buton");
+            GetDlgItem(IDC_STOP_PROTOCOL_BTN)->EnableWindow(true);
+            return;
+        }
+
 		// in case any parameters were changed
+		logInfo("Should be doing the right shit");
 		UpdateData(FromControlsToVariables);
 		protocolThread = new thread(&Protocol::run, &m_protocol);
 
@@ -349,6 +387,7 @@ void CProtocolAppDlg::OnStartProtocolBtnClicked()
 void CProtocolAppDlg::OnStopProtocolBtnClicked()
 {
 	// don't want too many clicks
+	logInfo("HAS THE STOP BUTTON BEEN CLICKED??");
 	GetDlgItem(IDC_STOP_PROTOCOL_BTN)->EnableWindow(false);
 
 	// this will wait until protocol handles the trial end and finishes the run thread
@@ -393,37 +432,84 @@ void CProtocolAppDlg::OnRetreatBtnClicked()
 	stopTrial();
 }
 
-void CProtocolAppDlg::OnConnect1BtnClicked()
+
+void CProtocolAppDlg::OnConnectAllBtnClicked()
 {
 	UpdateData(FromControlsToVariables);
-
-	m_protocol.connect_camera_client1();
-
-	toggleCameraServer1Ctrls(false);
+	CListBox* pListBox = (CListBox*)GetDlgItem(IDC_IPS1_LST);
+	// Check if the pointer is valid
+	if (pListBox != nullptr)
+	{
+		int count = pListBox->GetCount();
+		// Loop through the list of IP addresses and add each to the listbox
+		for (int i=0; i<count; ++i)
+		{
+			m_protocol.connect_camera_i_client(i);
+		}
+	}
+	toggleCameraServerCtrls(false);
 }
 
-void CProtocolAppDlg::OnDisconnect1BtnClicked()
+void CProtocolAppDlg::OnStopCalibrationBtnClicked() {
+	//newProtocol::stop_calibration_recording();
+	protocolThread = new thread(&Protocol::stop_calibration_recording, &m_protocol);
+	toggleCalibrationControls(false);
+}
+
+void CProtocolAppDlg::OnStartCalibrationBtnClicked()
 {
-	m_protocol.disconnect_camera_client1();
+	if (m_protocol.getCurrentState() == ProtocolState::shutdown) {
+		// don't want to get too many clicks
+		toggleProtocolCtrls(false);
+		toggleCalibrationControls(true);
+		//GetDlgItem(IDC_STOP_PROTOCOL_BTN)->EnableWindow(false);
 
-	toggleCameraServer1Ctrls(true);
+		// DO WE CARE ABOUT Motors/Arm
+		// check if homed
+		/*
+		if (m_protocol.isMotorsOn()) {
+			if (!m_protocol.were_motors_homed())
+				AfxMessageBox("Motors were not homed. Please home them prior to starting the trial.");
+		}*/
+
+		//check if arm homed
+		/*
+		if (!m_protocol.armHomed)
+		{
+			AfxMessageBox("The arm was not homed, make sure you click the calibrate arm buton");
+			GetDlgItem(IDC_STOP_PROTOCOL_BTN)->EnableWindow(true);
+			return;
+		}*/
+
+		// in case any parameters were change
+		UpdateData(FromControlsToVariables);
+		protocolThread = new thread(&Protocol::start_calibration_recording, &m_protocol);
+
+		// enables stopping of the protocol
+		GetDlgItem(IDC_STOP_PROTOCOL_BTN)->EnableWindow(true);
+	}
+	else {
+		AfxMessageBox("Protocol was not shutdown correctly or is in process of shutting down. Wait or restart.");
+	}
 }
 
-void CProtocolAppDlg::OnConnect2BtnClicked()
+
+void CProtocolAppDlg::OnDisconnectAllBtnClicked()
 {
-	UpdateData(FromControlsToVariables);
-
-	m_protocol.connect_camera_client2();
-
-	toggleCameraServer2Ctrls(false);
+	CListBox* pListBox = (CListBox*)GetDlgItem(IDC_IPS1_LST);
+	// Check if the pointer is valid
+	if (pListBox != nullptr)
+	{
+		int count = pListBox->GetCount();
+		// Loop through the list of IP addresses and add each to the listbox
+		for (int i = 0; i < count; ++i)
+		{
+			m_protocol.disconnect_camera_i_client(i);
+		}
+	}
+	toggleCameraServerCtrls(true);
 }
 
-void CProtocolAppDlg::OnDisconnect2BtnClicked()
-{
-	m_protocol.disconnect_camera_client2();
-
-	toggleCameraServer2Ctrls(true);
-}
 
 void CProtocolAppDlg::OnSendConfigBtnClicked()
 {
@@ -468,6 +554,7 @@ void CProtocolAppDlg::OnDisconnectTouchSensorBtnClicked()
 void CProtocolAppDlg::stopProtocolThread()
 {
 	if (protocolThread) {
+		logInfo("Protocol thread has done some FUCKY SHIT");
 		m_protocol.stopProtocol.store(true);
 		stopTrial();
 		// joining the thread leads to race for the interface access which is locked in this thread.
@@ -484,6 +571,7 @@ void CProtocolAppDlg::stopTrial()
 	// the retreat
 	m_protocol.stop_motors();
 	// stop trial
+	logInfo("STOpPING TRIAL FROM BUTTON WTF??");
 	m_protocol.stopTrial.store(true);
 }
 
@@ -494,9 +582,9 @@ void CProtocolAppDlg::homingMotorAction()
 		state == ProtocolState::trialReady) {
 		auto answ = m_protocol.home_motors();
 		string buf;
-		if (TeknicMotorApi::isError(answ)) {
+		if (answ < 0) {
 			buf = ("Error performing move command. Code: " + to_string((int)answ) + "." +
-				" Message: " + TeknicMotorApi::codeMessage(answ));
+				" Message: " + checkKinovaErrCode(answ));
 			AfxMessageBox(buf.c_str());
 		}
 	}
@@ -516,9 +604,9 @@ void CProtocolAppDlg::neutralPositionMotorAction()
 		state == ProtocolState::trialReady) {
 		auto answ = m_protocol.motors_neutral_position();
 		string buf;
-		if (TeknicMotorApi::isError(answ)) {
+		if (answ < 0) {
 			buf = ("Error performing move command. Code: " + to_string((int)answ) + "." +
-				" Message: " + TeknicMotorApi::codeMessage(answ));
+				" Message: " + checkKinovaErrCode(answ));
 			AfxMessageBox(buf.c_str());
 		}
 	}
@@ -552,29 +640,36 @@ void CProtocolAppDlg::enableRewardCtrls(bool enable)
 	GetDlgItem(IDC_FLUSH_WATER_BTN)->EnableWindow(enable && m_protocol.isRewardOn());
 }
 
-void CProtocolAppDlg::toggleCameraServer1Ctrls(bool disconnected)
-{
-	// edits
-	((CEdit*)GetDlgItem(IDC_IP_EDT1))->SetReadOnly(!disconnected);
-	((CEdit*)GetDlgItem(IDC_PORT_EDT1))->SetReadOnly(!disconnected);
-
+void CProtocolAppDlg::toggleCalibrationControls(bool startedCalibration) {
 	// buttons
-	GetDlgItem(IDC_CONNECT_BTN1)->EnableWindow(disconnected);
-
-	GetDlgItem(IDC_DISCONNECT_BTN1)->EnableWindow(!disconnected);
+	GetDlgItem(IDC_START_CALIBRATION)->EnableWindow(!startedCalibration);
+	GetDlgItem(IDC_STOP_CALIBRATION)->EnableWindow(startedCalibration);
 }
 
+void CProtocolAppDlg::toggleCameraServerCtrls(bool disconnected)
+{
+	// edits
+	//((CEdit*)GetDlgItem(IDC_PORT_EDT1))->SetReadOnly(!disconnected);
+	((CEdit*)GetDlgItem(IDC_PORT1_EDT))->SetReadOnly(!disconnected);
+
+	// buttons
+	GetDlgItem(IDC_CONNECT_BTN)->EnableWindow(disconnected);
+	GetDlgItem(IDC_DISCONNECT_BTN)->EnableWindow(!disconnected);
+}
+
+/*
 void CProtocolAppDlg::toggleCameraServer2Ctrls(bool disconnected)
 {
 	// edits
-	((CEdit*)GetDlgItem(IDC_IP_EDT2))->SetReadOnly(!disconnected);
-	((CEdit*)GetDlgItem(IDC_PORT_EDT2))->SetReadOnly(!disconnected);
+	//((CEdit*)GetDlgItem(IDC_IP_EDT2))->SetReadOnly(!disconnected);
+	//((CEdit*)GetDlgItem(IDC_PORT_EDT2))->SetReadOnly(!disconnected);
 
 	// buttons
-	GetDlgItem(IDC_CONNECT_BTN2)->EnableWindow(disconnected);
+	//GetDlgItem(IDC_CONNECT_BTN2)->EnableWindow(disconnected);
 
-	GetDlgItem(IDC_DISCONNECT_BTN2)->EnableWindow(!disconnected);
+	//GetDlgItem(IDC_DISCONNECT_BTN2)->EnableWindow(!disconnected);
 }
+*/
 
 void CProtocolAppDlg::toggleTouchServerCtrls(bool disconnected)
 {
@@ -591,18 +686,26 @@ void CProtocolAppDlg::toggleTouchServerCtrls(bool disconnected)
 
 void CProtocolAppDlg::OnBnClickedHomeMotorsBtn()
 {
-	GetDlgItem(IDC_HOME_MOTORS_BTN)->EnableWindow(false);
-
-	if (motorActionInProgress) {
-		AfxMessageBox("Error state. Cannot start a motor action.");
-		return;
-	}
-	motorActionInProgress = true;
-
-	AfxMessageBox("PUT THE CALIBRATION FIXATOR INTO PLACE AND CLICK OK");
-
-	// spawn a thread so it can be interrupted
-	motorActionThread = new thread(&CProtocolAppDlg::homingMotorAction, this);
+    if(((CButton*)GetDlgItem(IDC_MOTORS_CHK))->GetCheck() == BST_UNCHECKED)
+    {
+        AfxMessageBox("Initialize the motors by clicking the check button then retry this");
+        return;
+    }
+    int ret = m_protocol.armClient->armReady();
+    if(ret < 0)
+    {
+        AfxMessageBox("SOME SHIT IS FUCKED, SHOULD HAVE HOMED");
+    }
+    else
+    {
+        AfxMessageBox("Good Job, we are ready to go");
+        m_protocol.armHomed = true;
+        GetDlgItem(IDC_HOME_MOTORS_BTN)->EnableWindow(false);
+    }
+    return;
+	//*DEPRECATED* spawn a thread so it can be interrupted
+	//motorActionThread = new thread(&CProtocolAppDlg::homingMotorAction, this);
+    
 }
 
 
@@ -618,18 +721,58 @@ void CProtocolAppDlg::OnBnClickedLoopChk()
 void CProtocolAppDlg::OnBnClickedUseFrontLightSensorChk()
 {
 	if (m_useFrontLightSensorChk.GetCheck())
+    {
+        CButton* oButton = (CButton *)GetDlgItem(IDC_RIGHT_MAIN);
+        oButton->SetCheck(false);
+        OnBnClickedRightMain();
+
+        oButton = (CButton *)GetDlgItem(IDC_RIGHT_SECOND);
+        oButton->SetCheck(false);
+        OnBnClickedRightSecond();
+
+        oButton = (CButton *)GetDlgItem(IDC_LEFT_SECOND);
+        oButton->SetCheck(false);
+        OnBnClickedLeftSecond();
+
+        oButton = (CButton *)GetDlgItem(IDC_LEFT_MAIN);
+        oButton->SetCheck(false);
+        OnBnClickedLeftMain();
+
 		m_protocol.use_front_light_sensor = true;
+    }
 	else
+    {
 		m_protocol.use_front_light_sensor = false;
+    }
 }
 
 
 void CProtocolAppDlg::OnBnClickedUseRearLightSensorChk()
 {
 	if (m_useRearLightSensorChk.GetCheck())
+    {
+        CButton* oButton = (CButton *)GetDlgItem(IDC_RIGHT_MAIN);
+        oButton->SetCheck(false);
+        OnBnClickedRightMain();
+
+        oButton = (CButton *)GetDlgItem(IDC_RIGHT_SECOND);
+        oButton->SetCheck(false);
+        OnBnClickedRightSecond();
+
+        oButton = (CButton *)GetDlgItem(IDC_LEFT_SECOND);
+        oButton->SetCheck(false);
+        OnBnClickedLeftSecond();
+
+        oButton = (CButton *)GetDlgItem(IDC_LEFT_MAIN);
+        oButton->SetCheck(false);
+        OnBnClickedLeftMain();
+
 		m_protocol.use_rear_light_sensor = true;
+    }
 	else
+    {
 		m_protocol.use_rear_light_sensor = false;
+    }
 }
 
 
@@ -641,6 +784,7 @@ void CProtocolAppDlg::OnBnClickedStopMotorsBtn()
 
 void CProtocolAppDlg::OnBnClickedNeutralPositionBtn()
 {
+	logInfo("NeutralArm pressed");
 	GetDlgItem(IDC_NEUTRAL_POSITION_BTN)->EnableWindow(false);
 
 	if (motorActionInProgress) {
@@ -660,4 +804,233 @@ void CProtocolAppDlg::OnBnClickedLedsEarlyTargetForceLightChk()
 		m_protocol.params.leds_early_target_force_lightup = true;
 	else
 		m_protocol.params.leds_early_target_force_lightup = false;
+}
+
+
+void CProtocolAppDlg::OnEnChangeSessionFileEdt()
+{
+    // TODO:  If this is a RICHEDIT control, the control will not
+    // send this notification unless you override the CDialogEx::OnInitDialog()
+    // function and call CRichEditCtrl().SetEventMask()
+    // with the ENM_CHANGE flag ORed into the mask.
+
+    // TODO:  Add your control notification handler code here
+}
+
+
+void CProtocolAppDlg::OnBnClickedMotorsChk()
+{
+    int butState = ((CButton*)GetDlgItem(IDC_MOTORS_CHK))->GetCheck();
+    if(butState == BST_UNCHECKED)
+    {
+        m_protocol.armClient->connect();
+        ((CButton*)GetDlgItem(IDC_MOTORS_CHK))->SetCheck(BST_CHECKED);
+        GetDlgItem(IDC_HOME_MOTORS_BTN)->EnableWindow(true);
+    }
+    else if(butState == BST_CHECKED)
+    {
+        m_protocol.armClient->disconnect();
+        m_protocol.armHomed = false;
+		GetDlgItem(IDC_HOME_MOTORS_BTN)->EnableWindow(false);
+        ((CButton*)GetDlgItem(IDC_MOTORS_CHK))->SetCheck(BST_UNCHECKED);
+    }
+    else
+    {
+        AfxMessageBox("UHHH some weird third state has occured, try again maybe?");
+    }
+}
+
+
+
+
+
+void CProtocolAppDlg::OnBnClickedLeftMain()
+{
+	//logInfo("Clicked the left main button");
+    CButton* tmpButton = (CButton *)GetDlgItem(IDC_LEFT_MAIN);
+	CButton* oButton;
+    if(tmpButton->GetCheck())
+    {
+        oButton = (CButton *)GetDlgItem(IDC_RIGHT_MAIN);
+        oButton->SetCheck(false);
+        OnBnClickedRightMain();
+
+        oButton = (CButton *)GetDlgItem(IDC_LEFT_SECOND);
+        oButton->SetCheck(false);
+        OnBnClickedLeftSecond();
+
+        oButton = (CButton *)GetDlgItem(IDC_USE_FRONT_LIGHT_SENSOR_CHK);
+        oButton->SetCheck(false);
+        OnBnClickedUseFrontLightSensorChk();
+
+        oButton = (CButton *)GetDlgItem(IDC_USE_REAR_LIGHT_SENSOR_CHK);
+        oButton->SetCheck(false);
+        OnBnClickedUseRearLightSensorChk();
+
+		//logInfo("Left Main Button is checked");
+        m_protocol.use_left_arm_touch.store(true);
+		m_protocol.which_active_arm = 1;
+
+    }
+    else
+    {
+		//logInfo("Left Main Button is unchecked");
+		oButton = (CButton*)GetDlgItem(IDC_LEFT_SECOND);
+		if (!oButton->GetCheck())
+		{
+			m_protocol.use_left_arm_touch.store(false);
+			m_protocol.which_active_arm = 0;
+		}
+    }
+}
+
+
+void CProtocolAppDlg::OnBnClickedLeftSecond()
+{
+	//logInfo("Clicked the left second button");
+    CButton* tmpButton = (CButton *)GetDlgItem(IDC_LEFT_SECOND);
+	CButton* oButton;
+    if(tmpButton->GetCheck())
+    {
+        oButton = (CButton *)GetDlgItem(IDC_RIGHT_SECOND);
+        oButton->SetCheck(false);
+        OnBnClickedRightSecond();
+
+        oButton = (CButton *)GetDlgItem(IDC_LEFT_MAIN);
+        oButton->SetCheck(false);
+        OnBnClickedLeftMain();
+
+        oButton = (CButton *)GetDlgItem(IDC_USE_FRONT_LIGHT_SENSOR_CHK);
+        oButton->SetCheck(false);
+        OnBnClickedUseFrontLightSensorChk();
+
+        oButton = (CButton *)GetDlgItem(IDC_USE_REAR_LIGHT_SENSOR_CHK);
+        oButton->SetCheck(false);
+        OnBnClickedUseRearLightSensorChk();
+
+
+		//logInfo("Left Second Button is checked");
+        m_protocol.use_left_arm_touch.store(true);
+        m_protocol.monitor_passive_arm.store(true);
+        m_protocol.which_passive_arm = -1;
+    }
+    else
+    {
+		//logInfo("Left Second Button is unchecked");
+		oButton = (CButton*)GetDlgItem(IDC_LEFT_MAIN);
+		if (!oButton->GetCheck())
+		{
+			m_protocol.use_left_arm_touch.store(false);
+		}
+		oButton = (CButton*)GetDlgItem(IDC_RIGHT_SECOND);
+		if (!oButton->GetCheck())
+		{
+			m_protocol.monitor_passive_arm.store(false);
+			m_protocol.which_passive_arm = 0;
+		}
+    }
+}
+
+
+void CProtocolAppDlg::OnBnClickedRightMain()
+{
+	//logInfo("Clicked the right main button");
+    CButton* tmpButton = (CButton *)GetDlgItem(IDC_RIGHT_MAIN);
+	CButton* oButton;
+    if(tmpButton->GetCheck())
+    {
+        oButton = (CButton *)GetDlgItem(IDC_RIGHT_SECOND);
+        oButton->SetCheck(false);
+        OnBnClickedRightSecond();
+
+        oButton = (CButton *)GetDlgItem(IDC_LEFT_MAIN);
+        oButton->SetCheck(false);
+        OnBnClickedLeftMain();
+
+        oButton = (CButton *)GetDlgItem(IDC_USE_FRONT_LIGHT_SENSOR_CHK);
+        oButton->SetCheck(false);
+        OnBnClickedUseFrontLightSensorChk();
+
+        oButton = (CButton *)GetDlgItem(IDC_USE_REAR_LIGHT_SENSOR_CHK);
+        oButton->SetCheck(false);
+        OnBnClickedUseRearLightSensorChk();
+
+		//logInfo("Right Main Button is checked");
+        m_protocol.use_right_arm_touch.store(true);
+		m_protocol.which_active_arm = 1;
+    }
+    else
+    {
+		//logInfo("Right Main Button is unchecked");
+		oButton = (CButton*)GetDlgItem(IDC_RIGHT_SECOND);
+		if (!oButton->GetCheck())
+		{
+			m_protocol.use_right_arm_touch.store(false);
+			m_protocol.which_active_arm = 0;
+		}
+    }
+}
+
+
+void CProtocolAppDlg::OnBnClickedRightSecond()
+{
+	//logInfo("Clicked on the right second button");
+    CButton* tmpButton = (CButton *)GetDlgItem(IDC_RIGHT_SECOND);
+	CButton* oButton;
+    if(tmpButton->GetCheck())
+    {
+        oButton = (CButton *)GetDlgItem(IDC_RIGHT_MAIN);
+        oButton->SetCheck(false);
+        OnBnClickedRightMain();
+
+        oButton = (CButton *)GetDlgItem(IDC_LEFT_SECOND);
+        oButton->SetCheck(false);
+        OnBnClickedLeftSecond();
+
+        oButton = (CButton *)GetDlgItem(IDC_USE_FRONT_LIGHT_SENSOR_CHK);
+        oButton->SetCheck(false);
+        OnBnClickedUseFrontLightSensorChk();
+
+        oButton = (CButton *)GetDlgItem(IDC_USE_REAR_LIGHT_SENSOR_CHK);
+        oButton->SetCheck(false);
+        OnBnClickedUseRearLightSensorChk();
+
+		//logInfo("Right second Button is checked");
+        m_protocol.use_right_arm_touch.store(true);
+        m_protocol.monitor_passive_arm.store(true);
+        m_protocol.which_passive_arm = 1;
+    }
+    else
+    {
+		//logInfo("Right second Button is unchecked");
+		oButton = (CButton*)GetDlgItem(IDC_RIGHT_MAIN);
+		if (!oButton->GetCheck())
+		{
+			m_protocol.use_right_arm_touch.store(false);
+		}
+
+		oButton = (CButton*)GetDlgItem(IDC_LEFT_SECOND);
+		if (!oButton->GetCheck())
+		{
+			m_protocol.monitor_passive_arm.store(false);
+			m_protocol.which_passive_arm = 0;
+		}
+    }
+}
+
+
+void CProtocolAppDlg::OnBnClickedSplitReward()
+{
+	//logInfo("Clicked on the reward on return button");
+    CButton* tmpButton = (CButton *)GetDlgItem(IDC_SPLIT_REWARD);
+    if(tmpButton->GetCheck())
+    {
+		//logInfo("Reward on return Button is checked");
+        m_protocol.reward_on_return.store(true);
+    }
+    else
+    {
+		//logInfo("Reward on return button is unchecked");
+        m_protocol.reward_on_return.store(false);
+    }
 }

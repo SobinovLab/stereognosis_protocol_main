@@ -1,0 +1,1 @@
+pyuic5 -o kinovaArmGUI.py armConnection.ui
