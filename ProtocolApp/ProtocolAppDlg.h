@@ -117,6 +117,7 @@ protected:
 	afx_msg void OnStartProtocolBtnClicked();
 	afx_msg void OnStopProtocolBtnClicked();
 	afx_msg void OnBnClickedHomeMotorsBtn();
+	afx_msg void OnBnClickedTTLTestBtn();
 
 	// reward
 	afx_msg void OnFlushWaterBtnClicked();

@@ -120,6 +120,7 @@ BEGIN_MESSAGE_MAP(CProtocolAppDlg, CDialogEx)
 	ON_BN_CLICKED(IDC_USE_FRONT_LIGHT_SENSOR_CHK, &CProtocolAppDlg::OnBnClickedUseFrontLightSensorChk)
 	ON_BN_CLICKED(IDC_USE_REAR_LIGHT_SENSOR_CHK, &CProtocolAppDlg::OnBnClickedUseRearLightSensorChk)
 	ON_BN_CLICKED(IDC_STOP_MOTORS_BTN, &CProtocolAppDlg::OnBnClickedStopMotorsBtn)
+	ON_BN_CLICKED(IDC_TTL_TEST_BTN, &CProtocolAppDlg::OnBnClickedTTLTestBtn)
 	ON_BN_CLICKED(IDC_NEUTRAL_POSITION_BTN, &CProtocolAppDlg::OnBnClickedNeutralPositionBtn)
 	ON_BN_CLICKED(IDC_LEDS_EARLY_TARGET_FORCE_LIGHT_CHK, &CProtocolAppDlg::OnBnClickedLedsEarlyTargetForceLightChk)
     ON_EN_CHANGE(IDC_SESSION_FILE_EDT, &CProtocolAppDlg::OnEnChangeSessionFileEdt)
@@ -706,6 +707,11 @@ void CProtocolAppDlg::OnBnClickedHomeMotorsBtn()
 	//*DEPRECATED* spawn a thread so it can be interrupted
 	//motorActionThread = new thread(&CProtocolAppDlg::homingMotorAction, this);
     
+}
+
+void CProtocolAppDlg::OnBnClickedTTLTestBtn()
+{
+	m_protocol.ttl_test();
 }
 
 
