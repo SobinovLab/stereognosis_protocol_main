@@ -711,7 +711,9 @@ void CProtocolAppDlg::OnBnClickedHomeMotorsBtn()
 
 void CProtocolAppDlg::OnBnClickedTTLTestBtn()
 {
+	GetDlgItem(IDC_TTL_TEST_BTN)->EnableWindow(false);
 	m_protocol.ttl_test();
+	GetDlgItem(IDC_TTL_TEST_BTN)->EnableWindow(true);
 }
 
 
