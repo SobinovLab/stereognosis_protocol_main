@@ -61,10 +61,18 @@ bool TouchSensorSClient::breakRecording(std::atomic<int>* result)
 	return true;
 }
 
-bool TouchSensorSClient::getForce(std::atomic<double>* leftForce, std::atomic<double>* rightForce)
-{
+bool TouchSensorSClient::getForce(std::atomic<double>* leftForce,
+                                  std::atomic<double>* rightForce,
+                                  std::atomic<double>* topLeftForce,
+                                  std::atomic<double>* bottomLeftForce,
+                                  std::atomic<double>* topRightForce,
+                                  std::atomic<double>* bottomRightForce) {
 	leftForce->store(-1);
 	rightForce->store(-1);
+	topLeftForce->store(-1);
+	bottomLeftForce->store(-1);
+	topRightForce->store(-1);
+	bottomRightForce->store(-1);
 
 	SimpleRequest srq;
 	srq.set_code(0);
@@ -78,7 +86,11 @@ bool TouchSensorSClient::getForce(std::atomic<double>* leftForce, std::atomic<do
 	}
 
 	leftForce->store(fr.leftforce());
-	rightForce->store(fr.rightforce());
+    rightForce->store(fr.rightforce());
+    topLeftForce->store(fr.topleftforce());
+    bottomLeftForce->store(fr.bottomleftforce());
+    topRightForce->store(fr.toprightforce());
+    bottomRightForce->store(fr.bottomrightforce());
 
 	return true;
 }
@@ -201,10 +213,15 @@ void TouchSensorClient::breakRecording(std::atomic<int>* result)
 	}
 }
 
-void TouchSensorClient::getForce(std::atomic<double>* leftForce, std::atomic<double>* rightForce)
-{
+void TouchSensorClient::getForce(std::atomic<double>* leftForce,
+                                 std::atomic<double>* rightForce,
+                                 std::atomic<double>* topLeftForce,
+                                 std::atomic<double>* bottomLeftForce,
+                                 std::atomic<double>* topRightForce,
+                                 std::atomic<double>* bottomRightForce) {
 	if (tssc) {
-		tssc->getForce(leftForce, rightForce);
+    tssc->getForce(leftForce, rightForce, topLeftForce, bottomLeftForce,
+                         topRightForce, bottomRightForce);
 	}
 }
 

@@ -377,9 +377,16 @@ void Protocol::wait_until_monkey_release()
 {
 	atomic<double> leftForce = 0;
 	atomic<double> rightForce = 0;
+	// For rotation
+	atomic<double> topLeftForce = 0;
+	atomic<double> bottomLeftForce = 0;
+	atomic<double> topRightForce = 0;
+	atomic<double> bottomRightForce = 0;
 	while (m_touchSensorClient.isConnected()) {
 		// ask pressure sensor for pressure
-		m_touchSensorClient.getForce(&leftForce, &rightForce);
+          m_touchSensorClient.getForce(&leftForce, &rightForce, &topLeftForce,
+                                       &bottomLeftForce, &topRightForce,
+                                       &bottomRightForce);
 
 		if (leftForce + rightForce < params.minimalTouchForce)
 			break;
@@ -1281,7 +1288,12 @@ void Protocol::watch_early_grab()
 {
 	std::chrono::steady_clock::time_point* startTime = nullptr;
 	atomic<double> leftForce = 0;
-	atomic<double> rightForce = 0;
+    atomic<double> rightForce = 0;
+    // For rotation
+    atomic<double> topLeftForce = 0;
+    atomic<double> bottomLeftForce = 0;
+    atomic<double> topRightForce = 0;
+    atomic<double> bottomRightForce = 0;
 	while (!stopWatch) {
 		// see if monkey lifted arm
 		// if (isLightSensorsOn() && !isArmAtRest()) {
@@ -1310,7 +1322,9 @@ void Protocol::watch_early_grab()
 
 		// ask pressure sensor for pressure
 		if (m_touchSensorClient.isConnected()) {
-			m_touchSensorClient.getForce(&leftForce, &rightForce);
+                  m_touchSensorClient.getForce(
+                      &leftForce, &rightForce, &topLeftForce, &bottomLeftForce,
+                      &topRightForce, &bottomRightForce);
 
 			if (leftForce + rightForce > params.minimalTouchForce) {
 				stopTrial.store(true);
@@ -1507,7 +1521,12 @@ void Protocol::m_asyncTrialConditionMonitor()
 
 	atomic<int> result;
 	atomic<double> leftForce = 0;
-	atomic<double> rightForce = 0;
+    atomic<double> rightForce = 0;
+	// For rotation
+    atomic<double> topLeftForce = 0;
+    atomic<double> bottomLeftForce = 0;
+    atomic<double> topRightForce = 0;
+    atomic<double> bottomRightForce = 0;
 	double totalForce = 0;
 
 	// unchanging definitions (per force target)
@@ -1539,7 +1558,9 @@ void Protocol::m_asyncTrialConditionMonitor()
 	while (!m_stopAsyncTrialConditionMonitor) {
 		if (m_touchSensorClient.isConnected()) {
 			// ask touch sensor for the force on each plate
-			m_touchSensorClient.getForce(&leftForce, &rightForce);
+                  m_touchSensorClient.getForce(
+                      &leftForce, &rightForce, &topLeftForce, &bottomLeftForce,
+                      &topRightForce, &bottomRightForce);
 			totalForce = leftForce + rightForce;
 
 			// update the visualized force

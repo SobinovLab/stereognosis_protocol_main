@@ -30,7 +30,13 @@ public:
 	bool startRecording(int trialNum);
 	bool setTimestamp(int timestamp);
 	bool breakRecording(std::atomic<int>* result);
-	bool getForce(std::atomic<double>* leftForce, std::atomic<double>* rightForce);
+	bool getForce(
+		std::atomic<double>* leftForce, 
+		std::atomic<double>* rightForce,
+		std::atomic<double>* topLeftForce,
+		std::atomic<double>* bottomLeftForce,
+		std::atomic<double>* topRightForce,
+		std::atomic<double>* bottomRightForce);
 
 	bool syncMessageTrialStart();
 	bool syncMessageTrialEnd();
@@ -55,7 +61,13 @@ public:
 	void setTimestamp(int timestamp);
 	void startRecording(int trialNum);
 	virtual void breakRecording(std::atomic<int>* result);
-	virtual void getForce(std::atomic<double>* leftForce, std::atomic<double>* rightForce);
+    virtual void getForce(
+		std::atomic<double>* leftForce,
+		std::atomic<double>* rightForce,
+		std::atomic<double>* topLeftForce,
+		std::atomic<double>* bottomLeftForce,
+		std::atomic<double>* topRightForce,
+		std::atomic<double>* bottomRightForce);
 
 	void syncMessageTrialStart();
 	void syncMessageTrialEnd();
