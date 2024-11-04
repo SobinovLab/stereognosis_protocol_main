@@ -179,6 +179,10 @@ const ::PROTOBUF_NAMESPACE_ID::uint32 TableStruct_tekscan_5fserver_2eproto::offs
   ~0u,  // no _weak_field_map_
   PROTOBUF_FIELD_OFFSET(::TekscanServerNamespace::ForceResponse, leftforce_),
   PROTOBUF_FIELD_OFFSET(::TekscanServerNamespace::ForceResponse, rightforce_),
+  PROTOBUF_FIELD_OFFSET(::TekscanServerNamespace::ForceResponse, topleftforce_),
+  PROTOBUF_FIELD_OFFSET(::TekscanServerNamespace::ForceResponse, bottomleftforce_),
+  PROTOBUF_FIELD_OFFSET(::TekscanServerNamespace::ForceResponse, toprightforce_),
+  PROTOBUF_FIELD_OFFSET(::TekscanServerNamespace::ForceResponse, bottomrightforce_),
   ~0u,  // no _has_bits_
   PROTOBUF_FIELD_OFFSET(::TekscanServerNamespace::Empty, _internal_metadata_),
   ~0u,  // no _extensions_
@@ -192,7 +196,7 @@ static const ::PROTOBUF_NAMESPACE_ID::internal::MigrationSchema schemas[] PROTOB
   { 19, -1, sizeof(::TekscanServerNamespace::StartRecordingRequest)},
   { 25, -1, sizeof(::TekscanServerNamespace::BreakRecordingResponse)},
   { 32, -1, sizeof(::TekscanServerNamespace::ForceResponse)},
-  { 39, -1, sizeof(::TekscanServerNamespace::Empty)},
+  { 43, -1, sizeof(::TekscanServerNamespace::Empty)},
 };
 
 static ::PROTOBUF_NAMESPACE_ID::Message const * const file_default_instances[] = {
@@ -213,24 +217,26 @@ const char descriptor_table_protodef_tekscan_5fserver_2eproto[] PROTOBUF_SECTION
   "iption\030\002 \001(\t\")\n\025StartRecordingRequest\022\020\n"
   "\010trialNum\030\001 \001(\005\"B\n\026BreakRecordingRespons"
   "e\022\024\n\014successLevel\030\001 \001(\005\022\022\n\nforceLevel\030\002 "
-  "\001(\001\"6\n\rForceResponse\022\021\n\tleftForce\030\001 \001(\001\022"
-  "\022\n\nrightForce\030\002 \001(\001\"\007\n\005Empty2\330\004\n\rTekscan"
-  "Server\022e\n\014SetTimestamp\022+.TekscanServerNa"
-  "mespace.SetTimestampRequest\032&.TekscanSer"
-  "verNamespace.SimpleResponse\"\000\022i\n\016StartRe"
-  "cording\022-.TekscanServerNamespace.StartRe"
-  "cordingRequest\032&.TekscanServerNamespace."
-  "SimpleResponse\"\000\022i\n\016BreakRecording\022%.Tek"
-  "scanServerNamespace.SimpleRequest\032..Teks"
-  "canServerNamespace.BreakRecordingRespons"
-  "e\"\000\022Z\n\010GetForce\022%.TekscanServerNamespace"
-  ".SimpleRequest\032%.TekscanServerNamespace."
-  "ForceResponse\"\000\022W\n\025SyncMessageTrialStart"
-  "\022\035.TekscanServerNamespace.Empty\032\035.Teksca"
-  "nServerNamespace.Empty\"\000\022U\n\023SyncMessageT"
-  "rialEnd\022\035.TekscanServerNamespace.Empty\032\035"
-  ".TekscanServerNamespace.Empty\"\000B\007\252\002\004TPSS"
-  "b\006proto3"
+  "\001(\001\"\226\001\n\rForceResponse\022\021\n\tleftForce\030\001 \001(\001"
+  "\022\022\n\nrightForce\030\002 \001(\001\022\024\n\014topLeftForce\030\003 \001"
+  "(\001\022\027\n\017bottomLeftForce\030\004 \001(\001\022\025\n\rtopRightF"
+  "orce\030\005 \001(\001\022\030\n\020bottomRightForce\030\006 \001(\001\"\007\n\005"
+  "Empty2\330\004\n\rTekscanServer\022e\n\014SetTimestamp\022"
+  "+.TekscanServerNamespace.SetTimestampReq"
+  "uest\032&.TekscanServerNamespace.SimpleResp"
+  "onse\"\000\022i\n\016StartRecording\022-.TekscanServer"
+  "Namespace.StartRecordingRequest\032&.Teksca"
+  "nServerNamespace.SimpleResponse\"\000\022i\n\016Bre"
+  "akRecording\022%.TekscanServerNamespace.Sim"
+  "pleRequest\032..TekscanServerNamespace.Brea"
+  "kRecordingResponse\"\000\022Z\n\010GetForce\022%.Teksc"
+  "anServerNamespace.SimpleRequest\032%.Teksca"
+  "nServerNamespace.ForceResponse\"\000\022W\n\025Sync"
+  "MessageTrialStart\022\035.TekscanServerNamespa"
+  "ce.Empty\032\035.TekscanServerNamespace.Empty\""
+  "\000\022U\n\023SyncMessageTrialEnd\022\035.TekscanServer"
+  "Namespace.Empty\032\035.TekscanServerNamespace"
+  ".Empty\"\000B\007\252\002\004TPSSb\006proto3"
   ;
 static const ::PROTOBUF_NAMESPACE_ID::internal::DescriptorTable*const descriptor_table_tekscan_5fserver_2eproto_deps[1] = {
 };
@@ -245,7 +251,7 @@ static ::PROTOBUF_NAMESPACE_ID::internal::SCCInfoBase*const descriptor_table_tek
 };
 static ::PROTOBUF_NAMESPACE_ID::internal::once_flag descriptor_table_tekscan_5fserver_2eproto_once;
 const ::PROTOBUF_NAMESPACE_ID::internal::DescriptorTable descriptor_table_tekscan_5fserver_2eproto = {
-  false, false, descriptor_table_protodef_tekscan_5fserver_2eproto, "tekscan_server.proto", 968,
+  false, false, descriptor_table_protodef_tekscan_5fserver_2eproto, "tekscan_server.proto", 1065,
   &descriptor_table_tekscan_5fserver_2eproto_once, descriptor_table_tekscan_5fserver_2eproto_sccs, descriptor_table_tekscan_5fserver_2eproto_deps, 7, 0,
   schemas, file_default_instances, TableStruct_tekscan_5fserver_2eproto::offsets,
   file_level_metadata_tekscan_5fserver_2eproto, 7, file_level_enum_descriptors_tekscan_5fserver_2eproto, file_level_service_descriptors_tekscan_5fserver_2eproto,
@@ -1313,16 +1319,16 @@ ForceResponse::ForceResponse(const ForceResponse& from)
   : ::PROTOBUF_NAMESPACE_ID::Message() {
   _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
   ::memcpy(&leftforce_, &from.leftforce_,
-    static_cast<size_t>(reinterpret_cast<char*>(&rightforce_) -
-    reinterpret_cast<char*>(&leftforce_)) + sizeof(rightforce_));
+    static_cast<size_t>(reinterpret_cast<char*>(&bottomrightforce_) -
+    reinterpret_cast<char*>(&leftforce_)) + sizeof(bottomrightforce_));
   // @@protoc_insertion_point(copy_constructor:TekscanServerNamespace.ForceResponse)
 }
 
 void ForceResponse::SharedCtor() {
   ::memset(reinterpret_cast<char*>(this) + static_cast<size_t>(
       reinterpret_cast<char*>(&leftforce_) - reinterpret_cast<char*>(this)),
-      0, static_cast<size_t>(reinterpret_cast<char*>(&rightforce_) -
-      reinterpret_cast<char*>(&leftforce_)) + sizeof(rightforce_));
+      0, static_cast<size_t>(reinterpret_cast<char*>(&bottomrightforce_) -
+      reinterpret_cast<char*>(&leftforce_)) + sizeof(bottomrightforce_));
 }
 
 ForceResponse::~ForceResponse() {
@@ -1357,8 +1363,8 @@ void ForceResponse::Clear() {
   (void) cached_has_bits;
 
   ::memset(&leftforce_, 0, static_cast<size_t>(
-      reinterpret_cast<char*>(&rightforce_) -
-      reinterpret_cast<char*>(&leftforce_)) + sizeof(rightforce_));
+      reinterpret_cast<char*>(&bottomrightforce_) -
+      reinterpret_cast<char*>(&leftforce_)) + sizeof(bottomrightforce_));
   _internal_metadata_.Clear<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>();
 }
 
@@ -1380,6 +1386,34 @@ const char* ForceResponse::_InternalParse(const char* ptr, ::PROTOBUF_NAMESPACE_
       case 2:
         if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 17)) {
           rightforce_ = ::PROTOBUF_NAMESPACE_ID::internal::UnalignedLoad<double>(ptr);
+          ptr += sizeof(double);
+        } else goto handle_unusual;
+        continue;
+      // double topLeftForce = 3;
+      case 3:
+        if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 25)) {
+          topleftforce_ = ::PROTOBUF_NAMESPACE_ID::internal::UnalignedLoad<double>(ptr);
+          ptr += sizeof(double);
+        } else goto handle_unusual;
+        continue;
+      // double bottomLeftForce = 4;
+      case 4:
+        if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 33)) {
+          bottomleftforce_ = ::PROTOBUF_NAMESPACE_ID::internal::UnalignedLoad<double>(ptr);
+          ptr += sizeof(double);
+        } else goto handle_unusual;
+        continue;
+      // double topRightForce = 5;
+      case 5:
+        if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 41)) {
+          toprightforce_ = ::PROTOBUF_NAMESPACE_ID::internal::UnalignedLoad<double>(ptr);
+          ptr += sizeof(double);
+        } else goto handle_unusual;
+        continue;
+      // double bottomRightForce = 6;
+      case 6:
+        if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 49)) {
+          bottomrightforce_ = ::PROTOBUF_NAMESPACE_ID::internal::UnalignedLoad<double>(ptr);
           ptr += sizeof(double);
         } else goto handle_unusual;
         continue;
@@ -1423,6 +1457,30 @@ failure:
     target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteDoubleToArray(2, this->_internal_rightforce(), target);
   }
 
+  // double topLeftForce = 3;
+  if (!(this->topleftforce() <= 0 && this->topleftforce() >= 0)) {
+    target = stream->EnsureSpace(target);
+    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteDoubleToArray(3, this->_internal_topleftforce(), target);
+  }
+
+  // double bottomLeftForce = 4;
+  if (!(this->bottomleftforce() <= 0 && this->bottomleftforce() >= 0)) {
+    target = stream->EnsureSpace(target);
+    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteDoubleToArray(4, this->_internal_bottomleftforce(), target);
+  }
+
+  // double topRightForce = 5;
+  if (!(this->toprightforce() <= 0 && this->toprightforce() >= 0)) {
+    target = stream->EnsureSpace(target);
+    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteDoubleToArray(5, this->_internal_toprightforce(), target);
+  }
+
+  // double bottomRightForce = 6;
+  if (!(this->bottomrightforce() <= 0 && this->bottomrightforce() >= 0)) {
+    target = stream->EnsureSpace(target);
+    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteDoubleToArray(6, this->_internal_bottomrightforce(), target);
+  }
+
   if (PROTOBUF_PREDICT_FALSE(_internal_metadata_.have_unknown_fields())) {
     target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormat::InternalSerializeUnknownFieldsToArray(
         _internal_metadata_.unknown_fields<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(::PROTOBUF_NAMESPACE_ID::UnknownFieldSet::default_instance), target, stream);
@@ -1446,6 +1504,26 @@ size_t ForceResponse::ByteSizeLong() const {
 
   // double rightForce = 2;
   if (!(this->rightforce() <= 0 && this->rightforce() >= 0)) {
+    total_size += 1 + 8;
+  }
+
+  // double topLeftForce = 3;
+  if (!(this->topleftforce() <= 0 && this->topleftforce() >= 0)) {
+    total_size += 1 + 8;
+  }
+
+  // double bottomLeftForce = 4;
+  if (!(this->bottomleftforce() <= 0 && this->bottomleftforce() >= 0)) {
+    total_size += 1 + 8;
+  }
+
+  // double topRightForce = 5;
+  if (!(this->toprightforce() <= 0 && this->toprightforce() >= 0)) {
+    total_size += 1 + 8;
+  }
+
+  // double bottomRightForce = 6;
+  if (!(this->bottomrightforce() <= 0 && this->bottomrightforce() >= 0)) {
     total_size += 1 + 8;
   }
 
@@ -1486,6 +1564,18 @@ void ForceResponse::MergeFrom(const ForceResponse& from) {
   if (!(from.rightforce() <= 0 && from.rightforce() >= 0)) {
     _internal_set_rightforce(from._internal_rightforce());
   }
+  if (!(from.topleftforce() <= 0 && from.topleftforce() >= 0)) {
+    _internal_set_topleftforce(from._internal_topleftforce());
+  }
+  if (!(from.bottomleftforce() <= 0 && from.bottomleftforce() >= 0)) {
+    _internal_set_bottomleftforce(from._internal_bottomleftforce());
+  }
+  if (!(from.toprightforce() <= 0 && from.toprightforce() >= 0)) {
+    _internal_set_toprightforce(from._internal_toprightforce());
+  }
+  if (!(from.bottomrightforce() <= 0 && from.bottomrightforce() >= 0)) {
+    _internal_set_bottomrightforce(from._internal_bottomrightforce());
+  }
 }
 
 void ForceResponse::CopyFrom(const ::PROTOBUF_NAMESPACE_ID::Message& from) {
@@ -1510,8 +1600,8 @@ void ForceResponse::InternalSwap(ForceResponse* other) {
   using std::swap;
   _internal_metadata_.Swap<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(&other->_internal_metadata_);
   ::PROTOBUF_NAMESPACE_ID::internal::memswap<
-      PROTOBUF_FIELD_OFFSET(ForceResponse, rightforce_)
-      + sizeof(ForceResponse::rightforce_)
+      PROTOBUF_FIELD_OFFSET(ForceResponse, bottomrightforce_)
+      + sizeof(ForceResponse::bottomrightforce_)
       - PROTOBUF_FIELD_OFFSET(ForceResponse, leftforce_)>(
           reinterpret_cast<char*>(&leftforce_),
           reinterpret_cast<char*>(&other->leftforce_));

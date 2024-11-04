@@ -912,6 +912,10 @@ class ForceResponse PROTOBUF_FINAL :
   enum : int {
     kLeftForceFieldNumber = 1,
     kRightForceFieldNumber = 2,
+    kTopLeftForceFieldNumber = 3,
+    kBottomLeftForceFieldNumber = 4,
+    kTopRightForceFieldNumber = 5,
+    kBottomRightForceFieldNumber = 6,
   };
   // double leftForce = 1;
   void clear_leftforce();
@@ -931,6 +935,42 @@ class ForceResponse PROTOBUF_FINAL :
   void _internal_set_rightforce(double value);
   public:
 
+  // double topLeftForce = 3;
+  void clear_topleftforce();
+  double topleftforce() const;
+  void set_topleftforce(double value);
+  private:
+  double _internal_topleftforce() const;
+  void _internal_set_topleftforce(double value);
+  public:
+
+  // double bottomLeftForce = 4;
+  void clear_bottomleftforce();
+  double bottomleftforce() const;
+  void set_bottomleftforce(double value);
+  private:
+  double _internal_bottomleftforce() const;
+  void _internal_set_bottomleftforce(double value);
+  public:
+
+  // double topRightForce = 5;
+  void clear_toprightforce();
+  double toprightforce() const;
+  void set_toprightforce(double value);
+  private:
+  double _internal_toprightforce() const;
+  void _internal_set_toprightforce(double value);
+  public:
+
+  // double bottomRightForce = 6;
+  void clear_bottomrightforce();
+  double bottomrightforce() const;
+  void set_bottomrightforce(double value);
+  private:
+  double _internal_bottomrightforce() const;
+  void _internal_set_bottomrightforce(double value);
+  public:
+
   // @@protoc_insertion_point(class_scope:TekscanServerNamespace.ForceResponse)
  private:
   class _Internal;
@@ -940,6 +980,10 @@ class ForceResponse PROTOBUF_FINAL :
   typedef void DestructorSkippable_;
   double leftforce_;
   double rightforce_;
+  double topleftforce_;
+  double bottomleftforce_;
+  double toprightforce_;
+  double bottomrightforce_;
   mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
   friend struct ::TableStruct_tekscan_5fserver_2eproto;
 };
@@ -1316,6 +1360,86 @@ inline void ForceResponse::_internal_set_rightforce(double value) {
 inline void ForceResponse::set_rightforce(double value) {
   _internal_set_rightforce(value);
   // @@protoc_insertion_point(field_set:TekscanServerNamespace.ForceResponse.rightForce)
+}
+
+// double topLeftForce = 3;
+inline void ForceResponse::clear_topleftforce() {
+  topleftforce_ = 0;
+}
+inline double ForceResponse::_internal_topleftforce() const {
+  return topleftforce_;
+}
+inline double ForceResponse::topleftforce() const {
+  // @@protoc_insertion_point(field_get:TekscanServerNamespace.ForceResponse.topLeftForce)
+  return _internal_topleftforce();
+}
+inline void ForceResponse::_internal_set_topleftforce(double value) {
+  
+  topleftforce_ = value;
+}
+inline void ForceResponse::set_topleftforce(double value) {
+  _internal_set_topleftforce(value);
+  // @@protoc_insertion_point(field_set:TekscanServerNamespace.ForceResponse.topLeftForce)
+}
+
+// double bottomLeftForce = 4;
+inline void ForceResponse::clear_bottomleftforce() {
+  bottomleftforce_ = 0;
+}
+inline double ForceResponse::_internal_bottomleftforce() const {
+  return bottomleftforce_;
+}
+inline double ForceResponse::bottomleftforce() const {
+  // @@protoc_insertion_point(field_get:TekscanServerNamespace.ForceResponse.bottomLeftForce)
+  return _internal_bottomleftforce();
+}
+inline void ForceResponse::_internal_set_bottomleftforce(double value) {
+  
+  bottomleftforce_ = value;
+}
+inline void ForceResponse::set_bottomleftforce(double value) {
+  _internal_set_bottomleftforce(value);
+  // @@protoc_insertion_point(field_set:TekscanServerNamespace.ForceResponse.bottomLeftForce)
+}
+
+// double topRightForce = 5;
+inline void ForceResponse::clear_toprightforce() {
+  toprightforce_ = 0;
+}
+inline double ForceResponse::_internal_toprightforce() const {
+  return toprightforce_;
+}
+inline double ForceResponse::toprightforce() const {
+  // @@protoc_insertion_point(field_get:TekscanServerNamespace.ForceResponse.topRightForce)
+  return _internal_toprightforce();
+}
+inline void ForceResponse::_internal_set_toprightforce(double value) {
+  
+  toprightforce_ = value;
+}
+inline void ForceResponse::set_toprightforce(double value) {
+  _internal_set_toprightforce(value);
+  // @@protoc_insertion_point(field_set:TekscanServerNamespace.ForceResponse.topRightForce)
+}
+
+// double bottomRightForce = 6;
+inline void ForceResponse::clear_bottomrightforce() {
+  bottomrightforce_ = 0;
+}
+inline double ForceResponse::_internal_bottomrightforce() const {
+  return bottomrightforce_;
+}
+inline double ForceResponse::bottomrightforce() const {
+  // @@protoc_insertion_point(field_get:TekscanServerNamespace.ForceResponse.bottomRightForce)
+  return _internal_bottomrightforce();
+}
+inline void ForceResponse::_internal_set_bottomrightforce(double value) {
+  
+  bottomrightforce_ = value;
+}
+inline void ForceResponse::set_bottomrightforce(double value) {
+  _internal_set_bottomrightforce(value);
+  // @@protoc_insertion_point(field_set:TekscanServerNamespace.ForceResponse.bottomRightForce)
 }
 
 // -------------------------------------------------------------------
