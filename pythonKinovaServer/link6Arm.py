@@ -23,13 +23,13 @@ from google.protobuf import json_format
 
 from log import printLog
 
-from PyQt5.QtCore import QObject
+#from PyQt5.QtCore import QObject
 
 waypoint_count = 1
 #TODO add fault clearing capability
 #TODO maybe have a flexible gripper plugin
 
-class KinovaArm(QObject):
+class KinovaArm():
     '''
     This is the class that is for connecting and using the Kinova link6 arm.
     It has been designed to have commands for placing the arm in any position 
@@ -54,7 +54,7 @@ class KinovaArm(QObject):
     sense, and if there is no special meaning behind the value it defaults to 1
     -PMJ
     '''
-    CONTROLLER_ADDRESS = "169.254.131.10" #This can be set relatively arbitrarily by either the kinova webApp or tablet
+    CONTROLLER_ADDRESS = "169.254.7.42" #This can be set relatively arbitrarily by either the kinova webApp or tablet
     MQTT_PORT = 1883
     UDP_PORT = 10001
 
@@ -73,7 +73,7 @@ class KinovaArm(QObject):
     homeSet = False
 
     def __init__(self):
-        super(KinovaArm, self).__init__()
+        #super(KinovaArm, self).__init__()
         return
     
     def connectToBase(self):
@@ -574,3 +574,20 @@ class KinovaArm(QObject):
             joint_identifier += 1
         '''
         return computed_joint_angles
+
+
+    def WristTwistCommand(self, speed, duration):
+        #self.change_operating_mode("OPERATING_MODE_JOG_MANUAL")
+        command = Base_pb2.TwistCommand()
+        command.reference_frame = Base_pb2.CARTESIAN_REFERENCE_FRAME_TOOL
+        command.duration = duration            # seconds
+        command.twist.linear_x = 0.0   # m/s
+        command.twist.linear_y = 0.0   # m/s
+        command.twist.linear_z = 0.0   # m/s
+        command.twist.angular_x = 0     # deg/s
+        command.twist.angular_y = 0     # deg/s
+        command.twist.angular_z = speed     # deg/s
+
+        self.base.SendTwistCommand(command)
+
+        return

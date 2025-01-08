@@ -76,6 +76,13 @@ class armCommunication final {
     std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::moveResponse>> PrepareAsyncarmHome(::grpc::ClientContext* context, const ::moveHome& request, ::grpc::CompletionQueue* cq) {
       return std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::moveResponse>>(PrepareAsyncarmHomeRaw(context, request, cq));
     }
+    virtual ::grpc::Status armRotate(::grpc::ClientContext* context, const ::rotateRequest& request, ::rotateResponse* response) = 0;
+    std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::rotateResponse>> AsyncarmRotate(::grpc::ClientContext* context, const ::rotateRequest& request, ::grpc::CompletionQueue* cq) {
+      return std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::rotateResponse>>(AsyncarmRotateRaw(context, request, cq));
+    }
+    std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::rotateResponse>> PrepareAsyncarmRotate(::grpc::ClientContext* context, const ::rotateRequest& request, ::grpc::CompletionQueue* cq) {
+      return std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::rotateResponse>>(PrepareAsyncarmRotateRaw(context, request, cq));
+    }
     std::unique_ptr< ::grpc::ClientReaderInterface< ::torqueResponse>> armFeedback(::grpc::ClientContext* context, const ::torqueRequest& request) {
       return std::unique_ptr< ::grpc::ClientReaderInterface< ::torqueResponse>>(armFeedbackRaw(context, request));
     }
@@ -124,6 +131,12 @@ class armCommunication final {
       #else
       virtual void armHome(::grpc::ClientContext* context, const ::moveHome* request, ::moveResponse* response, ::grpc::experimental::ClientUnaryReactor* reactor) = 0;
       #endif
+      virtual void armRotate(::grpc::ClientContext* context, const ::rotateRequest* request, ::rotateResponse* response, std::function<void(::grpc::Status)>) = 0;
+      #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
+      virtual void armRotate(::grpc::ClientContext* context, const ::rotateRequest* request, ::rotateResponse* response, ::grpc::ClientUnaryReactor* reactor) = 0;
+      #else
+      virtual void armRotate(::grpc::ClientContext* context, const ::rotateRequest* request, ::rotateResponse* response, ::grpc::experimental::ClientUnaryReactor* reactor) = 0;
+      #endif
       #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
       virtual void armFeedback(::grpc::ClientContext* context, ::torqueRequest* request, ::grpc::ClientReadReactor< ::torqueResponse>* reactor) = 0;
       #else
@@ -150,6 +163,8 @@ class armCommunication final {
     virtual ::grpc::ClientAsyncResponseReaderInterface< ::moveResponse>* PrepareAsyncstopArmRaw(::grpc::ClientContext* context, const ::stopRequest& request, ::grpc::CompletionQueue* cq) = 0;
     virtual ::grpc::ClientAsyncResponseReaderInterface< ::moveResponse>* AsyncarmHomeRaw(::grpc::ClientContext* context, const ::moveHome& request, ::grpc::CompletionQueue* cq) = 0;
     virtual ::grpc::ClientAsyncResponseReaderInterface< ::moveResponse>* PrepareAsyncarmHomeRaw(::grpc::ClientContext* context, const ::moveHome& request, ::grpc::CompletionQueue* cq) = 0;
+    virtual ::grpc::ClientAsyncResponseReaderInterface< ::rotateResponse>* AsyncarmRotateRaw(::grpc::ClientContext* context, const ::rotateRequest& request, ::grpc::CompletionQueue* cq) = 0;
+    virtual ::grpc::ClientAsyncResponseReaderInterface< ::rotateResponse>* PrepareAsyncarmRotateRaw(::grpc::ClientContext* context, const ::rotateRequest& request, ::grpc::CompletionQueue* cq) = 0;
     virtual ::grpc::ClientReaderInterface< ::torqueResponse>* armFeedbackRaw(::grpc::ClientContext* context, const ::torqueRequest& request) = 0;
     virtual ::grpc::ClientAsyncReaderInterface< ::torqueResponse>* AsyncarmFeedbackRaw(::grpc::ClientContext* context, const ::torqueRequest& request, ::grpc::CompletionQueue* cq, void* tag) = 0;
     virtual ::grpc::ClientAsyncReaderInterface< ::torqueResponse>* PrepareAsyncarmFeedbackRaw(::grpc::ClientContext* context, const ::torqueRequest& request, ::grpc::CompletionQueue* cq) = 0;
@@ -199,6 +214,13 @@ class armCommunication final {
     std::unique_ptr< ::grpc::ClientAsyncResponseReader< ::moveResponse>> PrepareAsyncarmHome(::grpc::ClientContext* context, const ::moveHome& request, ::grpc::CompletionQueue* cq) {
       return std::unique_ptr< ::grpc::ClientAsyncResponseReader< ::moveResponse>>(PrepareAsyncarmHomeRaw(context, request, cq));
     }
+    ::grpc::Status armRotate(::grpc::ClientContext* context, const ::rotateRequest& request, ::rotateResponse* response) override;
+    std::unique_ptr< ::grpc::ClientAsyncResponseReader< ::rotateResponse>> AsyncarmRotate(::grpc::ClientContext* context, const ::rotateRequest& request, ::grpc::CompletionQueue* cq) {
+      return std::unique_ptr< ::grpc::ClientAsyncResponseReader< ::rotateResponse>>(AsyncarmRotateRaw(context, request, cq));
+    }
+    std::unique_ptr< ::grpc::ClientAsyncResponseReader< ::rotateResponse>> PrepareAsyncarmRotate(::grpc::ClientContext* context, const ::rotateRequest& request, ::grpc::CompletionQueue* cq) {
+      return std::unique_ptr< ::grpc::ClientAsyncResponseReader< ::rotateResponse>>(PrepareAsyncarmRotateRaw(context, request, cq));
+    }
     std::unique_ptr< ::grpc::ClientReader< ::torqueResponse>> armFeedback(::grpc::ClientContext* context, const ::torqueRequest& request) {
       return std::unique_ptr< ::grpc::ClientReader< ::torqueResponse>>(armFeedbackRaw(context, request));
     }
@@ -247,6 +269,12 @@ class armCommunication final {
       #else
       void armHome(::grpc::ClientContext* context, const ::moveHome* request, ::moveResponse* response, ::grpc::experimental::ClientUnaryReactor* reactor) override;
       #endif
+      void armRotate(::grpc::ClientContext* context, const ::rotateRequest* request, ::rotateResponse* response, std::function<void(::grpc::Status)>) override;
+      #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
+      void armRotate(::grpc::ClientContext* context, const ::rotateRequest* request, ::rotateResponse* response, ::grpc::ClientUnaryReactor* reactor) override;
+      #else
+      void armRotate(::grpc::ClientContext* context, const ::rotateRequest* request, ::rotateResponse* response, ::grpc::experimental::ClientUnaryReactor* reactor) override;
+      #endif
       #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
       void armFeedback(::grpc::ClientContext* context, ::torqueRequest* request, ::grpc::ClientReadReactor< ::torqueResponse>* reactor) override;
       #else
@@ -275,6 +303,8 @@ class armCommunication final {
     ::grpc::ClientAsyncResponseReader< ::moveResponse>* PrepareAsyncstopArmRaw(::grpc::ClientContext* context, const ::stopRequest& request, ::grpc::CompletionQueue* cq) override;
     ::grpc::ClientAsyncResponseReader< ::moveResponse>* AsyncarmHomeRaw(::grpc::ClientContext* context, const ::moveHome& request, ::grpc::CompletionQueue* cq) override;
     ::grpc::ClientAsyncResponseReader< ::moveResponse>* PrepareAsyncarmHomeRaw(::grpc::ClientContext* context, const ::moveHome& request, ::grpc::CompletionQueue* cq) override;
+    ::grpc::ClientAsyncResponseReader< ::rotateResponse>* AsyncarmRotateRaw(::grpc::ClientContext* context, const ::rotateRequest& request, ::grpc::CompletionQueue* cq) override;
+    ::grpc::ClientAsyncResponseReader< ::rotateResponse>* PrepareAsyncarmRotateRaw(::grpc::ClientContext* context, const ::rotateRequest& request, ::grpc::CompletionQueue* cq) override;
     ::grpc::ClientReader< ::torqueResponse>* armFeedbackRaw(::grpc::ClientContext* context, const ::torqueRequest& request) override;
     ::grpc::ClientAsyncReader< ::torqueResponse>* AsyncarmFeedbackRaw(::grpc::ClientContext* context, const ::torqueRequest& request, ::grpc::CompletionQueue* cq, void* tag) override;
     ::grpc::ClientAsyncReader< ::torqueResponse>* PrepareAsyncarmFeedbackRaw(::grpc::ClientContext* context, const ::torqueRequest& request, ::grpc::CompletionQueue* cq) override;
@@ -284,6 +314,7 @@ class armCommunication final {
     const ::grpc::internal::RpcMethod rpcmethod_gripperOpen_;
     const ::grpc::internal::RpcMethod rpcmethod_stopArm_;
     const ::grpc::internal::RpcMethod rpcmethod_armHome_;
+    const ::grpc::internal::RpcMethod rpcmethod_armRotate_;
     const ::grpc::internal::RpcMethod rpcmethod_armFeedback_;
   };
   static std::unique_ptr<Stub> NewStub(const std::shared_ptr< ::grpc::ChannelInterface>& channel, const ::grpc::StubOptions& options = ::grpc::StubOptions());
@@ -298,6 +329,7 @@ class armCommunication final {
     virtual ::grpc::Status gripperOpen(::grpc::ServerContext* context, const ::gripperRequest* request, ::moveResponse* response);
     virtual ::grpc::Status stopArm(::grpc::ServerContext* context, const ::stopRequest* request, ::moveResponse* response);
     virtual ::grpc::Status armHome(::grpc::ServerContext* context, const ::moveHome* request, ::moveResponse* response);
+    virtual ::grpc::Status armRotate(::grpc::ServerContext* context, const ::rotateRequest* request, ::rotateResponse* response);
     virtual ::grpc::Status armFeedback(::grpc::ServerContext* context, const ::torqueRequest* request, ::grpc::ServerWriter< ::torqueResponse>* writer);
   };
   template <class BaseClass>
@@ -421,12 +453,32 @@ class armCommunication final {
     }
   };
   template <class BaseClass>
+  class WithAsyncMethod_armRotate : public BaseClass {
+   private:
+    void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
+   public:
+    WithAsyncMethod_armRotate() {
+      ::grpc::Service::MarkMethodAsync(6);
+    }
+    ~WithAsyncMethod_armRotate() override {
+      BaseClassMustBeDerivedFromService(this);
+    }
+    // disable synchronous version of this method
+    ::grpc::Status armRotate(::grpc::ServerContext* /*context*/, const ::rotateRequest* /*request*/, ::rotateResponse* /*response*/) override {
+      abort();
+      return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
+    }
+    void RequestarmRotate(::grpc::ServerContext* context, ::rotateRequest* request, ::grpc::ServerAsyncResponseWriter< ::rotateResponse>* response, ::grpc::CompletionQueue* new_call_cq, ::grpc::ServerCompletionQueue* notification_cq, void *tag) {
+      ::grpc::Service::RequestAsyncUnary(6, context, request, response, new_call_cq, notification_cq, tag);
+    }
+  };
+  template <class BaseClass>
   class WithAsyncMethod_armFeedback : public BaseClass {
    private:
     void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
    public:
     WithAsyncMethod_armFeedback() {
-      ::grpc::Service::MarkMethodAsync(6);
+      ::grpc::Service::MarkMethodAsync(7);
     }
     ~WithAsyncMethod_armFeedback() override {
       BaseClassMustBeDerivedFromService(this);
@@ -437,10 +489,10 @@ class armCommunication final {
       return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
     }
     void RequestarmFeedback(::grpc::ServerContext* context, ::torqueRequest* request, ::grpc::ServerAsyncWriter< ::torqueResponse>* writer, ::grpc::CompletionQueue* new_call_cq, ::grpc::ServerCompletionQueue* notification_cq, void *tag) {
-      ::grpc::Service::RequestAsyncServerStreaming(6, context, request, writer, new_call_cq, notification_cq, tag);
+      ::grpc::Service::RequestAsyncServerStreaming(7, context, request, writer, new_call_cq, notification_cq, tag);
     }
   };
-  typedef WithAsyncMethod_armReady<WithAsyncMethod_armStatus<WithAsyncMethod_armControl<WithAsyncMethod_gripperOpen<WithAsyncMethod_stopArm<WithAsyncMethod_armHome<WithAsyncMethod_armFeedback<Service > > > > > > > AsyncService;
+  typedef WithAsyncMethod_armReady<WithAsyncMethod_armStatus<WithAsyncMethod_armControl<WithAsyncMethod_gripperOpen<WithAsyncMethod_stopArm<WithAsyncMethod_armHome<WithAsyncMethod_armRotate<WithAsyncMethod_armFeedback<Service > > > > > > > > AsyncService;
   template <class BaseClass>
   class ExperimentalWithCallbackMethod_armReady : public BaseClass {
    private:
@@ -724,6 +776,53 @@ class armCommunication final {
       { return nullptr; }
   };
   template <class BaseClass>
+  class ExperimentalWithCallbackMethod_armRotate : public BaseClass {
+   private:
+    void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
+   public:
+    ExperimentalWithCallbackMethod_armRotate() {
+    #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
+      ::grpc::Service::
+    #else
+      ::grpc::Service::experimental().
+    #endif
+        MarkMethodCallback(6,
+          new ::grpc::internal::CallbackUnaryHandler< ::rotateRequest, ::rotateResponse>(
+            [this](
+    #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
+                   ::grpc::CallbackServerContext*
+    #else
+                   ::grpc::experimental::CallbackServerContext*
+    #endif
+                     context, const ::rotateRequest* request, ::rotateResponse* response) { return this->armRotate(context, request, response); }));}
+    void SetMessageAllocatorFor_armRotate(
+        ::grpc::experimental::MessageAllocator< ::rotateRequest, ::rotateResponse>* allocator) {
+    #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
+      ::grpc::internal::MethodHandler* const handler = ::grpc::Service::GetHandler(6);
+    #else
+      ::grpc::internal::MethodHandler* const handler = ::grpc::Service::experimental().GetHandler(6);
+    #endif
+      static_cast<::grpc::internal::CallbackUnaryHandler< ::rotateRequest, ::rotateResponse>*>(handler)
+              ->SetMessageAllocator(allocator);
+    }
+    ~ExperimentalWithCallbackMethod_armRotate() override {
+      BaseClassMustBeDerivedFromService(this);
+    }
+    // disable synchronous version of this method
+    ::grpc::Status armRotate(::grpc::ServerContext* /*context*/, const ::rotateRequest* /*request*/, ::rotateResponse* /*response*/) override {
+      abort();
+      return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
+    }
+    #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
+    virtual ::grpc::ServerUnaryReactor* armRotate(
+      ::grpc::CallbackServerContext* /*context*/, const ::rotateRequest* /*request*/, ::rotateResponse* /*response*/)
+    #else
+    virtual ::grpc::experimental::ServerUnaryReactor* armRotate(
+      ::grpc::experimental::CallbackServerContext* /*context*/, const ::rotateRequest* /*request*/, ::rotateResponse* /*response*/)
+    #endif
+      { return nullptr; }
+  };
+  template <class BaseClass>
   class ExperimentalWithCallbackMethod_armFeedback : public BaseClass {
    private:
     void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
@@ -734,7 +833,7 @@ class armCommunication final {
     #else
       ::grpc::Service::experimental().
     #endif
-        MarkMethodCallback(6,
+        MarkMethodCallback(7,
           new ::grpc::internal::CallbackServerStreamingHandler< ::torqueRequest, ::torqueResponse>(
             [this](
     #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
@@ -762,10 +861,10 @@ class armCommunication final {
       { return nullptr; }
   };
   #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
-  typedef ExperimentalWithCallbackMethod_armReady<ExperimentalWithCallbackMethod_armStatus<ExperimentalWithCallbackMethod_armControl<ExperimentalWithCallbackMethod_gripperOpen<ExperimentalWithCallbackMethod_stopArm<ExperimentalWithCallbackMethod_armHome<ExperimentalWithCallbackMethod_armFeedback<Service > > > > > > > CallbackService;
+  typedef ExperimentalWithCallbackMethod_armReady<ExperimentalWithCallbackMethod_armStatus<ExperimentalWithCallbackMethod_armControl<ExperimentalWithCallbackMethod_gripperOpen<ExperimentalWithCallbackMethod_stopArm<ExperimentalWithCallbackMethod_armHome<ExperimentalWithCallbackMethod_armRotate<ExperimentalWithCallbackMethod_armFeedback<Service > > > > > > > > CallbackService;
   #endif
 
-  typedef ExperimentalWithCallbackMethod_armReady<ExperimentalWithCallbackMethod_armStatus<ExperimentalWithCallbackMethod_armControl<ExperimentalWithCallbackMethod_gripperOpen<ExperimentalWithCallbackMethod_stopArm<ExperimentalWithCallbackMethod_armHome<ExperimentalWithCallbackMethod_armFeedback<Service > > > > > > > ExperimentalCallbackService;
+  typedef ExperimentalWithCallbackMethod_armReady<ExperimentalWithCallbackMethod_armStatus<ExperimentalWithCallbackMethod_armControl<ExperimentalWithCallbackMethod_gripperOpen<ExperimentalWithCallbackMethod_stopArm<ExperimentalWithCallbackMethod_armHome<ExperimentalWithCallbackMethod_armRotate<ExperimentalWithCallbackMethod_armFeedback<Service > > > > > > > > ExperimentalCallbackService;
   template <class BaseClass>
   class WithGenericMethod_armReady : public BaseClass {
    private:
@@ -869,12 +968,29 @@ class armCommunication final {
     }
   };
   template <class BaseClass>
+  class WithGenericMethod_armRotate : public BaseClass {
+   private:
+    void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
+   public:
+    WithGenericMethod_armRotate() {
+      ::grpc::Service::MarkMethodGeneric(6);
+    }
+    ~WithGenericMethod_armRotate() override {
+      BaseClassMustBeDerivedFromService(this);
+    }
+    // disable synchronous version of this method
+    ::grpc::Status armRotate(::grpc::ServerContext* /*context*/, const ::rotateRequest* /*request*/, ::rotateResponse* /*response*/) override {
+      abort();
+      return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
+    }
+  };
+  template <class BaseClass>
   class WithGenericMethod_armFeedback : public BaseClass {
    private:
     void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
    public:
     WithGenericMethod_armFeedback() {
-      ::grpc::Service::MarkMethodGeneric(6);
+      ::grpc::Service::MarkMethodGeneric(7);
     }
     ~WithGenericMethod_armFeedback() override {
       BaseClassMustBeDerivedFromService(this);
@@ -1006,12 +1122,32 @@ class armCommunication final {
     }
   };
   template <class BaseClass>
+  class WithRawMethod_armRotate : public BaseClass {
+   private:
+    void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
+   public:
+    WithRawMethod_armRotate() {
+      ::grpc::Service::MarkMethodRaw(6);
+    }
+    ~WithRawMethod_armRotate() override {
+      BaseClassMustBeDerivedFromService(this);
+    }
+    // disable synchronous version of this method
+    ::grpc::Status armRotate(::grpc::ServerContext* /*context*/, const ::rotateRequest* /*request*/, ::rotateResponse* /*response*/) override {
+      abort();
+      return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
+    }
+    void RequestarmRotate(::grpc::ServerContext* context, ::grpc::ByteBuffer* request, ::grpc::ServerAsyncResponseWriter< ::grpc::ByteBuffer>* response, ::grpc::CompletionQueue* new_call_cq, ::grpc::ServerCompletionQueue* notification_cq, void *tag) {
+      ::grpc::Service::RequestAsyncUnary(6, context, request, response, new_call_cq, notification_cq, tag);
+    }
+  };
+  template <class BaseClass>
   class WithRawMethod_armFeedback : public BaseClass {
    private:
     void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
    public:
     WithRawMethod_armFeedback() {
-      ::grpc::Service::MarkMethodRaw(6);
+      ::grpc::Service::MarkMethodRaw(7);
     }
     ~WithRawMethod_armFeedback() override {
       BaseClassMustBeDerivedFromService(this);
@@ -1022,7 +1158,7 @@ class armCommunication final {
       return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
     }
     void RequestarmFeedback(::grpc::ServerContext* context, ::grpc::ByteBuffer* request, ::grpc::ServerAsyncWriter< ::grpc::ByteBuffer>* writer, ::grpc::CompletionQueue* new_call_cq, ::grpc::ServerCompletionQueue* notification_cq, void *tag) {
-      ::grpc::Service::RequestAsyncServerStreaming(6, context, request, writer, new_call_cq, notification_cq, tag);
+      ::grpc::Service::RequestAsyncServerStreaming(7, context, request, writer, new_call_cq, notification_cq, tag);
     }
   };
   template <class BaseClass>
@@ -1254,6 +1390,44 @@ class armCommunication final {
       { return nullptr; }
   };
   template <class BaseClass>
+  class ExperimentalWithRawCallbackMethod_armRotate : public BaseClass {
+   private:
+    void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
+   public:
+    ExperimentalWithRawCallbackMethod_armRotate() {
+    #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
+      ::grpc::Service::
+    #else
+      ::grpc::Service::experimental().
+    #endif
+        MarkMethodRawCallback(6,
+          new ::grpc::internal::CallbackUnaryHandler< ::grpc::ByteBuffer, ::grpc::ByteBuffer>(
+            [this](
+    #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
+                   ::grpc::CallbackServerContext*
+    #else
+                   ::grpc::experimental::CallbackServerContext*
+    #endif
+                     context, const ::grpc::ByteBuffer* request, ::grpc::ByteBuffer* response) { return this->armRotate(context, request, response); }));
+    }
+    ~ExperimentalWithRawCallbackMethod_armRotate() override {
+      BaseClassMustBeDerivedFromService(this);
+    }
+    // disable synchronous version of this method
+    ::grpc::Status armRotate(::grpc::ServerContext* /*context*/, const ::rotateRequest* /*request*/, ::rotateResponse* /*response*/) override {
+      abort();
+      return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
+    }
+    #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
+    virtual ::grpc::ServerUnaryReactor* armRotate(
+      ::grpc::CallbackServerContext* /*context*/, const ::grpc::ByteBuffer* /*request*/, ::grpc::ByteBuffer* /*response*/)
+    #else
+    virtual ::grpc::experimental::ServerUnaryReactor* armRotate(
+      ::grpc::experimental::CallbackServerContext* /*context*/, const ::grpc::ByteBuffer* /*request*/, ::grpc::ByteBuffer* /*response*/)
+    #endif
+      { return nullptr; }
+  };
+  template <class BaseClass>
   class ExperimentalWithRawCallbackMethod_armFeedback : public BaseClass {
    private:
     void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
@@ -1264,7 +1438,7 @@ class armCommunication final {
     #else
       ::grpc::Service::experimental().
     #endif
-        MarkMethodRawCallback(6,
+        MarkMethodRawCallback(7,
           new ::grpc::internal::CallbackServerStreamingHandler< ::grpc::ByteBuffer, ::grpc::ByteBuffer>(
             [this](
     #ifdef GRPC_CALLBACK_API_NONEXPERIMENTAL
@@ -1453,14 +1627,41 @@ class armCommunication final {
     // replace default version of method with streamed unary
     virtual ::grpc::Status StreamedarmHome(::grpc::ServerContext* context, ::grpc::ServerUnaryStreamer< ::moveHome,::moveResponse>* server_unary_streamer) = 0;
   };
-  typedef WithStreamedUnaryMethod_armReady<WithStreamedUnaryMethod_armStatus<WithStreamedUnaryMethod_armControl<WithStreamedUnaryMethod_gripperOpen<WithStreamedUnaryMethod_stopArm<WithStreamedUnaryMethod_armHome<Service > > > > > > StreamedUnaryService;
+  template <class BaseClass>
+  class WithStreamedUnaryMethod_armRotate : public BaseClass {
+   private:
+    void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
+   public:
+    WithStreamedUnaryMethod_armRotate() {
+      ::grpc::Service::MarkMethodStreamed(6,
+        new ::grpc::internal::StreamedUnaryHandler<
+          ::rotateRequest, ::rotateResponse>(
+            [this](::grpc::ServerContext* context,
+                   ::grpc::ServerUnaryStreamer<
+                     ::rotateRequest, ::rotateResponse>* streamer) {
+                       return this->StreamedarmRotate(context,
+                         streamer);
+                  }));
+    }
+    ~WithStreamedUnaryMethod_armRotate() override {
+      BaseClassMustBeDerivedFromService(this);
+    }
+    // disable regular version of this method
+    ::grpc::Status armRotate(::grpc::ServerContext* /*context*/, const ::rotateRequest* /*request*/, ::rotateResponse* /*response*/) override {
+      abort();
+      return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
+    }
+    // replace default version of method with streamed unary
+    virtual ::grpc::Status StreamedarmRotate(::grpc::ServerContext* context, ::grpc::ServerUnaryStreamer< ::rotateRequest,::rotateResponse>* server_unary_streamer) = 0;
+  };
+  typedef WithStreamedUnaryMethod_armReady<WithStreamedUnaryMethod_armStatus<WithStreamedUnaryMethod_armControl<WithStreamedUnaryMethod_gripperOpen<WithStreamedUnaryMethod_stopArm<WithStreamedUnaryMethod_armHome<WithStreamedUnaryMethod_armRotate<Service > > > > > > > StreamedUnaryService;
   template <class BaseClass>
   class WithSplitStreamingMethod_armFeedback : public BaseClass {
    private:
     void BaseClassMustBeDerivedFromService(const Service* /*service*/) {}
    public:
     WithSplitStreamingMethod_armFeedback() {
-      ::grpc::Service::MarkMethodStreamed(6,
+      ::grpc::Service::MarkMethodStreamed(7,
         new ::grpc::internal::SplitServerStreamingHandler<
           ::torqueRequest, ::torqueResponse>(
             [this](::grpc::ServerContext* context,
@@ -1482,7 +1683,7 @@ class armCommunication final {
     virtual ::grpc::Status StreamedarmFeedback(::grpc::ServerContext* context, ::grpc::ServerSplitStreamer< ::torqueRequest,::torqueResponse>* server_split_streamer) = 0;
   };
   typedef WithSplitStreamingMethod_armFeedback<Service > SplitStreamedService;
-  typedef WithStreamedUnaryMethod_armReady<WithStreamedUnaryMethod_armStatus<WithStreamedUnaryMethod_armControl<WithStreamedUnaryMethod_gripperOpen<WithStreamedUnaryMethod_stopArm<WithStreamedUnaryMethod_armHome<WithSplitStreamingMethod_armFeedback<Service > > > > > > > StreamedService;
+  typedef WithStreamedUnaryMethod_armReady<WithStreamedUnaryMethod_armStatus<WithStreamedUnaryMethod_armControl<WithStreamedUnaryMethod_gripperOpen<WithStreamedUnaryMethod_stopArm<WithStreamedUnaryMethod_armHome<WithStreamedUnaryMethod_armRotate<WithSplitStreamingMethod_armFeedback<Service > > > > > > > > StreamedService;
 };
 
 

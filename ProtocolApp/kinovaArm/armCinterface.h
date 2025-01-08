@@ -145,6 +145,22 @@ public:
         return resp.responsecode();
     }
 
+    int armRotate(double speed, double duration, double *retAngle)
+    {
+        grpc::ClientContext context;
+        rotateRequest req;
+        rotateResponse resp;
+        grpc::Status status = stub->armRotate(&context, req, &resp);
+        if(!status.ok())
+        {
+            std::cout << "GRPC armRotate request failed. Error: " << status.error_message() << std::endl;
+            return -20;
+        }
+        std::cout << "rotateResponse Angle: " << resp.angle() << " Status: " << resp.flag() << std::endl;
+        *retAngle = resp.angle();
+        return resp.flag();
+    }
+
     void getTorques()
     {
         //TODO: Future feature

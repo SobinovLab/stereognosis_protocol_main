@@ -266,6 +266,12 @@ class KinovaServer(QObject):
         comString = "STOP ARM"
         self.addCommandToList(comString)
         return armMessages_pb2.moveResponse(responseCode=ret)
+    
+    def armRotate(self, request, context):
+        printLog(request.speed)
+        comString = f"Rotate: {request.speed}"
+
+        return armMessages_pb2.rotateResponse(angle=0, flag=1)
 
     def armFeedback(self, request, context):
         #This is future direction where we output the torques of the arm as well, so this is nonFunctioning right now

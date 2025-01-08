@@ -717,6 +717,15 @@ void Protocol::run()
 			trialStartTime = Times::getCurrentTime();
 			playStartTaskTone();
 
+            atomic<double> leftForce = 0;
+	        atomic<double> rightForce = 0;
+	        // For rotation
+	        atomic<double> topLeftForce = 0;
+	        atomic<double> bottomLeftForce = 0;
+	        atomic<double> topRightForce = 0;
+	        atomic<double> bottomRightForce = 0;
+            double retAngle = 0;
+
 			// wait for stop trial signal from interface, success from the monitor thread, or timeout
 			while (!this->stopTrial.load() &&
 				!this->m_earnedReward.load() &&
@@ -727,6 +736,13 @@ void Protocol::run()
 					animalLifted = true;
 					arm_liftoff_time = Times::getCurrentTimeInMilliSecs();
 				}
+
+                m_touchSensorClient.getForce(&leftForce, &rightForce, &topLeftForce,
+                                       &bottomLeftForce, &topRightForce,
+                                       &bottomRightForce);
+                double rotValue = topLeftForce + bottomRightForce - topRightForce - bottomLeftForce; //Positive is clockwise
+
+                armClient->armRotate(rotValue, 1, &retAngle);
 			}
 			// if stop trial button was pressed, turn off the loop - it is reenable automatically in the beginning of trial
 			if (this->stopTrial.load() && params.disable_looping_on_manual_retreat)

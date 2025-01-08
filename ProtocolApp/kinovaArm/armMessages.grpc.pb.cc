@@ -27,6 +27,7 @@ static const char* armCommunication_method_names[] = {
   "/armCommunication/gripperOpen",
   "/armCommunication/stopArm",
   "/armCommunication/armHome",
+  "/armCommunication/armRotate",
   "/armCommunication/armFeedback",
 };
 
@@ -43,7 +44,8 @@ armCommunication::Stub::Stub(const std::shared_ptr< ::grpc::ChannelInterface>& c
   , rpcmethod_gripperOpen_(armCommunication_method_names[3], ::grpc::internal::RpcMethod::NORMAL_RPC, channel)
   , rpcmethod_stopArm_(armCommunication_method_names[4], ::grpc::internal::RpcMethod::NORMAL_RPC, channel)
   , rpcmethod_armHome_(armCommunication_method_names[5], ::grpc::internal::RpcMethod::NORMAL_RPC, channel)
-  , rpcmethod_armFeedback_(armCommunication_method_names[6], ::grpc::internal::RpcMethod::SERVER_STREAMING, channel)
+  , rpcmethod_armRotate_(armCommunication_method_names[6], ::grpc::internal::RpcMethod::NORMAL_RPC, channel)
+  , rpcmethod_armFeedback_(armCommunication_method_names[7], ::grpc::internal::RpcMethod::SERVER_STREAMING, channel)
   {}
 
 ::grpc::Status armCommunication::Stub::armReady(::grpc::ClientContext* context, const ::readyRequest& request, ::readyResponse* response) {
@@ -184,6 +186,29 @@ void armCommunication::Stub::experimental_async::armHome(::grpc::ClientContext* 
   return result;
 }
 
+::grpc::Status armCommunication::Stub::armRotate(::grpc::ClientContext* context, const ::rotateRequest& request, ::rotateResponse* response) {
+  return ::grpc::internal::BlockingUnaryCall(channel_.get(), rpcmethod_armRotate_, context, request, response);
+}
+
+void armCommunication::Stub::experimental_async::armRotate(::grpc::ClientContext* context, const ::rotateRequest* request, ::rotateResponse* response, std::function<void(::grpc::Status)> f) {
+  ::grpc::internal::CallbackUnaryCall(stub_->channel_.get(), stub_->rpcmethod_armRotate_, context, request, response, std::move(f));
+}
+
+void armCommunication::Stub::experimental_async::armRotate(::grpc::ClientContext* context, const ::rotateRequest* request, ::rotateResponse* response, ::grpc::experimental::ClientUnaryReactor* reactor) {
+  ::grpc::internal::ClientCallbackUnaryFactory::Create(stub_->channel_.get(), stub_->rpcmethod_armRotate_, context, request, response, reactor);
+}
+
+::grpc::ClientAsyncResponseReader< ::rotateResponse>* armCommunication::Stub::PrepareAsyncarmRotateRaw(::grpc::ClientContext* context, const ::rotateRequest& request, ::grpc::CompletionQueue* cq) {
+  return ::grpc::internal::ClientAsyncResponseReaderFactory< ::rotateResponse>::Create(channel_.get(), cq, rpcmethod_armRotate_, context, request, false);
+}
+
+::grpc::ClientAsyncResponseReader< ::rotateResponse>* armCommunication::Stub::AsyncarmRotateRaw(::grpc::ClientContext* context, const ::rotateRequest& request, ::grpc::CompletionQueue* cq) {
+  auto* result =
+    this->PrepareAsyncarmRotateRaw(context, request, cq);
+  result->StartCall();
+  return result;
+}
+
 ::grpc::ClientReader< ::torqueResponse>* armCommunication::Stub::armFeedbackRaw(::grpc::ClientContext* context, const ::torqueRequest& request) {
   return ::grpc::internal::ClientReaderFactory< ::torqueResponse>::Create(channel_.get(), rpcmethod_armFeedback_, context, request);
 }
@@ -263,6 +288,16 @@ armCommunication::Service::Service() {
              }, this)));
   AddMethod(new ::grpc::internal::RpcServiceMethod(
       armCommunication_method_names[6],
+      ::grpc::internal::RpcMethod::NORMAL_RPC,
+      new ::grpc::internal::RpcMethodHandler< armCommunication::Service, ::rotateRequest, ::rotateResponse>(
+          [](armCommunication::Service* service,
+             ::grpc::ServerContext* ctx,
+             const ::rotateRequest* req,
+             ::rotateResponse* resp) {
+               return service->armRotate(ctx, req, resp);
+             }, this)));
+  AddMethod(new ::grpc::internal::RpcServiceMethod(
+      armCommunication_method_names[7],
       ::grpc::internal::RpcMethod::SERVER_STREAMING,
       new ::grpc::internal::ServerStreamingHandler< armCommunication::Service, ::torqueRequest, ::torqueResponse>(
           [](armCommunication::Service* service,
@@ -312,6 +347,13 @@ armCommunication::Service::~Service() {
 }
 
 ::grpc::Status armCommunication::Service::armHome(::grpc::ServerContext* context, const ::moveHome* request, ::moveResponse* response) {
+  (void) context;
+  (void) request;
+  (void) response;
+  return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
+}
+
+::grpc::Status armCommunication::Service::armRotate(::grpc::ServerContext* context, const ::rotateRequest* request, ::rotateResponse* response) {
   (void) context;
   (void) request;
   (void) response;
