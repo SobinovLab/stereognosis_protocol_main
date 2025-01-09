@@ -54,7 +54,7 @@ class KinovaArm():
     sense, and if there is no special meaning behind the value it defaults to 1
     -PMJ
     '''
-    CONTROLLER_ADDRESS = "169.254.7.42" #This can be set relatively arbitrarily by either the kinova webApp or tablet
+    CONTROLLER_ADDRESS = "169.254.131.10" #This can be set relatively arbitrarily by either the kinova webApp or tablet
     MQTT_PORT = 1883
     UDP_PORT = 10001
 

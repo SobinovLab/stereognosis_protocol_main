@@ -268,9 +268,8 @@ class KinovaServer(QObject):
         return armMessages_pb2.moveResponse(responseCode=ret)
     
     def armRotate(self, request, context):
-        printLog(request.speed)
         comString = f"Rotate: {request.speed}"
-
+        printLog(comString)
         return armMessages_pb2.rotateResponse(angle=0, flag=1)
 
     def armFeedback(self, request, context):

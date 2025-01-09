@@ -665,8 +665,8 @@ void Protocol::run()
 
 		// start a thread that asks if monkey grabbed/lifted arm and stopTrial=1 if it did
 		stopWatch = false;
-		thread watchThread(&Protocol::watch_early_grab, this);
-
+		//thread watchThread(&Protocol::watch_early_grab, this);
+		
         allowInterupt.store(true);
 		logInfo("Starting background thread for passive arm");
         thread passiveArmThread(&Protocol::armMonitoringThread, this);
@@ -697,9 +697,10 @@ void Protocol::run()
 			object_in_position_time = Times::getCurrentTimeInMilliSecs();
 
 		// stop the watch thread
-		stopWatch = true;
-		watchThread.join();
-
+		logInfo("Is something weird happening with the watch thread? Waiting for join");
+		stopWatch.store(true);
+		//watchThread.join();
+		logInfo("Join wait is over");
 		// if the trial was not interrupted, wait for the hand liftoff
 		if (!stopTrial.load() && !rets) {
 			// TODO in the current structure does not make sense
@@ -709,6 +710,7 @@ void Protocol::run()
 		}
 
 		// if the motors made it successfully to the final position and the animal has lifted the arm
+		logInfo("Arm has reached its final position");
 		if (!stopTrial.load() && rets >= 0) {
 			bool animalLifted = false;
 			// spawn the process that monitors the async stopping conditions
@@ -727,22 +729,35 @@ void Protocol::run()
             double retAngle = 0;
 
 			// wait for stop trial signal from interface, success from the monitor thread, or timeout
+			logInfo("Beginning to wait for stop trial signal");
+			auto f = Times::getCurrentTimeInMilliSecs();
 			while (!this->stopTrial.load() &&
 				!this->m_earnedReward.load() &&
 				!Times::isTimeout(trialStartTime, params.maxWaitTime)) {
 
 				if(!animalLifted && ( (use_left_arm_touch && (which_active_arm==-1) && !IS_LEFT_ARMSENSOR_TOUCHED ) || (use_right_arm_touch && (which_active_arm == 1) && !IS_RIGHT_ARMSENSOR_TOUCHED)))
 				{
+					logInfo("Got lift off time");
 					animalLifted = true;
 					arm_liftoff_time = Times::getCurrentTimeInMilliSecs();
 				}
 
+				//logInfo("Waiting on force");
                 m_touchSensorClient.getForce(&leftForce, &rightForce, &topLeftForce,
                                        &bottomLeftForce, &topRightForce,
                                        &bottomRightForce);
-                double rotValue = topLeftForce + bottomRightForce - topRightForce - bottomLeftForce; //Positive is clockwise
+                double rotValue = topLeftForce.load() + bottomRightForce.load() - topRightForce.load() - bottomLeftForce.load(); //Positive is clockwise
+				//logInfo("Got force");
 
                 armClient->armRotate(rotValue, 1, &retAngle);
+				auto s = Times::getCurrentTimeInMilliSecs();
+				char tmp[512];
+				sprintf(tmp, "Got forces %f %f %f %f with rotvalue %f in %f", topLeftForce.load(), bottomLeftForce.load(), topRightForce.load(), bottomRightForce.load(), rotValue , s - f);
+				logInfo(tmp);
+
+				f = s;
+				Sleep(1);
+				//logInfo("Sent force to arm");
 			}
 			// if stop trial button was pressed, turn off the loop - it is reenable automatically in the beginning of trial
 			if (this->stopTrial.load() && params.disable_looping_on_manual_retreat)

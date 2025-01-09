@@ -150,6 +150,7 @@ public:
         grpc::ClientContext context;
         rotateRequest req;
         rotateResponse resp;
+        req.set_speed(speed);
         grpc::Status status = stub->armRotate(&context, req, &resp);
         if(!status.ok())
         {
