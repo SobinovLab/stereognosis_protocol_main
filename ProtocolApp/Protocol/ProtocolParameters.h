@@ -79,7 +79,7 @@ public:
 	double pos_aperture = 0;
 
 	// camera servers
-	std::vector<CString> cs_ips = { "205.208.87.188", "205.208.63.128" };
+	std::vector<CString> cs_ips = { "205.208.63.172", "205.208.63.131", "205.208.87.168"};
 	long cs_port = 63874;
 
 	/*
