@@ -417,7 +417,6 @@ std::string Protocol::timestampToDateString(int timestamp)
 // This is what is run on Start Protocol Button
 void Protocol::run()
 {
-
 	logInfo("Starting protocol");
 	this->stopProtocol.store(false);
 	setCurrentState(ProtocolState::initializing); // display the state of the trial on the GUI
@@ -1490,6 +1489,10 @@ void Protocol::start_ephys_recording()
 void Protocol::break_ephys_recording()
 {
 	m_NIUsb6001card.ephysSyncStop();
+}
+
+void Protocol::ttl_test() {
+	m_NIUsb6001card.TTLTest();
 }
 
 /// <summary>

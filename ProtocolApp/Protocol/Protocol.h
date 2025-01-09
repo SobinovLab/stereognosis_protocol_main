@@ -112,6 +112,8 @@ class Protocol
 		void stop_motors();
 		int motors_neutral_position();
 
+		void ttl_test();
+
 		//////// connected devices
 		// cameras
 		void connect_camera_i_client(int i);

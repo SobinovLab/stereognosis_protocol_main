@@ -37,7 +37,7 @@ uInt8 ACTIVATE_REWARD_BITS_MAP[1] = { 1 };
 uInt8 DEACTIVATE_REWARD_BITS_MAP[1] = { 0 };
 uInt8 *PHOTORESISTORS_STATUS = (uInt8 *)calloc(4, sizeof(uInt8)); // monitor buffer 0 covered 1 uncovered
 int32 N_PHOTORESISTORS = 4;
-static TaskHandle  AItaskHandle = 0, PhotoResistorStatus_taskHandle = 0, RewardSystem_taskHandle = 0, ephysSync_taskHandle = 0;
+static TaskHandle  AItaskHandle = 0, PhotoResistorStatus_taskHandle = 0, RewardSystem_taskHandle = 0, ephysSync_taskHandle = 0; 
 
 atomic<bool> IS_REAR_PHOTORESISTOR_COVERED;
 atomic<bool> IS_FRONT_PHOTORESISTOR_COVERED;
@@ -353,6 +353,29 @@ void NIUsb6001card::setArmTouchSensors(CStaticColor* left, CStaticColor* right)
 {
     LEFT_TOUCH_GUI_MONITOR = left;
     RIGHT_TOUCH_GUI_MONITOR = right;
+}
+
+int NIUsb6001card::TTLTest() {
+	// Add hoc function to send 5 TTL pulses
+	auto freq = 5.0; // Hz
+	auto period = 1.0 / freq; // Period of the signal
+	auto half_period = period / 2.0; 
+
+	for (int i = 0; i < 5; ++i) {
+		// Start the pulse
+		ephysSyncStart();
+
+		// Keep the pulse high for half the period
+		std::this_thread::sleep_for(std::chrono::duration<double>(half_period));
+
+		// Stop the pulse
+		ephysSyncStop();
+
+		// Keep the pulse low for the other half of the period
+		std::this_thread::sleep_for(std::chrono::duration<double>(half_period));
+	}
+
+	return 0;
 }
 
 int32 CVICALLBACK EveryNCallback(TaskHandle taskHandle, int32 everyNsamplesEventType, uInt32 nSamples, void *callbackData)

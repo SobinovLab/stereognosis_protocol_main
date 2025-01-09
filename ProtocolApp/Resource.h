@@ -50,7 +50,6 @@
 #define IDC_TOUCH_SENSOR_PORT_EDT       1078
 #define IDC_CONNECT_TOUCH_SENSOR_BTN    1079
 #define IDC_DISCONNECT_TOUCH_SENSOR_BTN 1080
-
 #define IDC_PS_HOLD_PERIOD_EDT          1082
 #define IDC_PS_MIN_PARTIAL_FORCE_EDT    1083
 #define IDC_POS_TILT_EDT                1084
@@ -84,6 +83,7 @@
 #define IDC_DISCONNECT_BTN              1119
 #define IDC_START_CALIBRATION           1120
 #define IDC_STOP_CALIBRATION            1121
+#define IDC_TTL_TEST_BTN                1122
 
 // Next default values for new objects
 // 

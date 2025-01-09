@@ -37,6 +37,7 @@ public:
     void setFrontPhotoresistorMonitor(CStaticColor * gui_monitor);
     void setRearPhotoresistorMonitor(CStaticColor* gui_monitor);
     void setArmTouchSensors(CStaticColor*, CStaticColor*);
+    int TTLTest();
     void resetPhotoresistorsGuiMonitor();
 
     // ephys
