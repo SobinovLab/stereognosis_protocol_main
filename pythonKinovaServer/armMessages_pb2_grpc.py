@@ -64,6 +64,11 @@ class armCommunicationStub(object):
                 request_serializer=armMessages__pb2.moveHome.SerializeToString,
                 response_deserializer=armMessages__pb2.moveResponse.FromString,
                 _registered_method=True)
+        self.armRotateMode = channel.unary_unary(
+                '/armCommunication/armRotateMode',
+                request_serializer=armMessages__pb2.rotationModeRequest.SerializeToString,
+                response_deserializer=armMessages__pb2.statusResponse.FromString,
+                _registered_method=True)
         self.armRotate = channel.unary_unary(
                 '/armCommunication/armRotate',
                 request_serializer=armMessages__pb2.rotateRequest.SerializeToString,
@@ -115,6 +120,12 @@ class armCommunicationServicer(object):
         context.set_details('Method not implemented!')
         raise NotImplementedError('Method not implemented!')
 
+    def armRotateMode(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
     def armRotate(self, request, context):
         """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
@@ -159,6 +170,11 @@ def add_armCommunicationServicer_to_server(servicer, server):
                     servicer.armHome,
                     request_deserializer=armMessages__pb2.moveHome.FromString,
                     response_serializer=armMessages__pb2.moveResponse.SerializeToString,
+            ),
+            'armRotateMode': grpc.unary_unary_rpc_method_handler(
+                    servicer.armRotateMode,
+                    request_deserializer=armMessages__pb2.rotationModeRequest.FromString,
+                    response_serializer=armMessages__pb2.statusResponse.SerializeToString,
             ),
             'armRotate': grpc.unary_unary_rpc_method_handler(
                     servicer.armRotate,
@@ -333,6 +349,33 @@ class armCommunication(object):
             '/armCommunication/armHome',
             armMessages__pb2.moveHome.SerializeToString,
             armMessages__pb2.moveResponse.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
+
+    @staticmethod
+    def armRotateMode(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/armCommunication/armRotateMode',
+            armMessages__pb2.rotationModeRequest.SerializeToString,
+            armMessages__pb2.statusResponse.FromString,
             options,
             channel_credentials,
             insecure,

@@ -267,6 +267,13 @@ class KinovaServer(QObject):
         self.addCommandToList(comString)
         return armMessages_pb2.moveResponse(responseCode=ret)
     
+    def armRotateMode(self, request, context):
+        ret = self.arm.change_operating_mode(OPERATING_MODE_JOG_MANUAL)
+        printLog("Start rotationMode message")
+        comString = "RMode Start"
+        self.addCommandToList(comString)
+        return armMessages_pb2.statusResponse(responseCode=0)
+
     def armRotate(self, request, context):
         comString = f"Rotate: {request.speed}"
         printLog(comString)

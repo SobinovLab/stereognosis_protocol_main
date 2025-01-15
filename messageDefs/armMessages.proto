@@ -7,6 +7,7 @@ service armCommunication {
 	rpc gripperOpen (gripperRequest) returns (moveResponse) {}
 	rpc stopArm (stopRequest) returns (moveResponse) {}
     rpc armHome (moveHome) returns (moveResponse) {}
+    rpc armRotateMode (rotationModeRequest) returns (statusResponse) {}
     rpc armRotate (rotateRequest) returns (rotateResponse) {}
     rpc armFeedback (torqueRequest) returns (stream torqueResponse) {}
 }
@@ -49,6 +50,10 @@ message moveHome{
 
 message moveResponse {
     int32 responseCode = 1;
+}
+
+message rotationModeRequest {
+    int32 flag = 1;
 }
 
 message rotateRequest {

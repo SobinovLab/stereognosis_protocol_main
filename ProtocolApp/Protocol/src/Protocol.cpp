@@ -731,6 +731,7 @@ void Protocol::run()
 			// wait for stop trial signal from interface, success from the monitor thread, or timeout
 			logInfo("Beginning to wait for stop trial signal");
 			auto f = Times::getCurrentTimeInMilliSecs();
+			armClient->armRotateMode();
 			while (!this->stopTrial.load() &&
 				!this->m_earnedReward.load() &&
 				!Times::isTimeout(trialStartTime, params.maxWaitTime)) {
@@ -756,7 +757,7 @@ void Protocol::run()
 				logInfo(tmp);
 
 				f = s;
-				Sleep(1);
+				Sleep(5);
 				//logInfo("Sent force to arm");
 			}
 			// if stop trial button was pressed, turn off the loop - it is reenable automatically in the beginning of trial

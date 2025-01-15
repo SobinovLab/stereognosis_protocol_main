@@ -66,6 +66,12 @@ class moveResponse(_message.Message):
     responseCode: int
     def __init__(self, responseCode: _Optional[int] = ...) -> None: ...
 
+class rotationModeRequest(_message.Message):
+    __slots__ = ("flag",)
+    FLAG_FIELD_NUMBER: _ClassVar[int]
+    flag: int
+    def __init__(self, flag: _Optional[int] = ...) -> None: ...
+
 class rotateRequest(_message.Message):
     __slots__ = ("speed", "duration")
     SPEED_FIELD_NUMBER: _ClassVar[int]

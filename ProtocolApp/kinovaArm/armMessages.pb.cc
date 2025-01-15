@@ -50,6 +50,10 @@ class moveResponseDefaultTypeInternal {
  public:
   ::PROTOBUF_NAMESPACE_ID::internal::ExplicitlyConstructed<moveResponse> _instance;
 } _moveResponse_default_instance_;
+class rotationModeRequestDefaultTypeInternal {
+ public:
+  ::PROTOBUF_NAMESPACE_ID::internal::ExplicitlyConstructed<rotationModeRequest> _instance;
+} _rotationModeRequest_default_instance_;
 class rotateRequestDefaultTypeInternal {
  public:
   ::PROTOBUF_NAMESPACE_ID::internal::ExplicitlyConstructed<rotateRequest> _instance;
@@ -170,6 +174,19 @@ static void InitDefaultsscc_info_rotateResponse_armMessages_2eproto() {
 ::PROTOBUF_NAMESPACE_ID::internal::SCCInfo<0> scc_info_rotateResponse_armMessages_2eproto =
     {{ATOMIC_VAR_INIT(::PROTOBUF_NAMESPACE_ID::internal::SCCInfoBase::kUninitialized), 0, 0, InitDefaultsscc_info_rotateResponse_armMessages_2eproto}, {}};
 
+static void InitDefaultsscc_info_rotationModeRequest_armMessages_2eproto() {
+  GOOGLE_PROTOBUF_VERIFY_VERSION;
+
+  {
+    void* ptr = &::_rotationModeRequest_default_instance_;
+    new (ptr) ::rotationModeRequest();
+    ::PROTOBUF_NAMESPACE_ID::internal::OnShutdownDestroyMessage(ptr);
+  }
+}
+
+::PROTOBUF_NAMESPACE_ID::internal::SCCInfo<0> scc_info_rotationModeRequest_armMessages_2eproto =
+    {{ATOMIC_VAR_INIT(::PROTOBUF_NAMESPACE_ID::internal::SCCInfoBase::kUninitialized), 0, 0, InitDefaultsscc_info_rotationModeRequest_armMessages_2eproto}, {}};
+
 static void InitDefaultsscc_info_statusRequest_armMessages_2eproto() {
   GOOGLE_PROTOBUF_VERIFY_VERSION;
 
@@ -235,7 +252,7 @@ static void InitDefaultsscc_info_torqueResponse_armMessages_2eproto() {
 ::PROTOBUF_NAMESPACE_ID::internal::SCCInfo<0> scc_info_torqueResponse_armMessages_2eproto =
     {{ATOMIC_VAR_INIT(::PROTOBUF_NAMESPACE_ID::internal::SCCInfoBase::kUninitialized), 0, 0, InitDefaultsscc_info_torqueResponse_armMessages_2eproto}, {}};
 
-static ::PROTOBUF_NAMESPACE_ID::Metadata file_level_metadata_armMessages_2eproto[13];
+static ::PROTOBUF_NAMESPACE_ID::Metadata file_level_metadata_armMessages_2eproto[14];
 static constexpr ::PROTOBUF_NAMESPACE_ID::EnumDescriptor const** file_level_enum_descriptors_armMessages_2eproto = nullptr;
 static constexpr ::PROTOBUF_NAMESPACE_ID::ServiceDescriptor const** file_level_service_descriptors_armMessages_2eproto = nullptr;
 
@@ -299,6 +316,12 @@ const ::PROTOBUF_NAMESPACE_ID::uint32 TableStruct_armMessages_2eproto::offsets[]
   ~0u,  // no _weak_field_map_
   PROTOBUF_FIELD_OFFSET(::moveResponse, responsecode_),
   ~0u,  // no _has_bits_
+  PROTOBUF_FIELD_OFFSET(::rotationModeRequest, _internal_metadata_),
+  ~0u,  // no _extensions_
+  ~0u,  // no _oneof_case_
+  ~0u,  // no _weak_field_map_
+  PROTOBUF_FIELD_OFFSET(::rotationModeRequest, flag_),
+  ~0u,  // no _has_bits_
   PROTOBUF_FIELD_OFFSET(::rotateRequest, _internal_metadata_),
   ~0u,  // no _extensions_
   ~0u,  // no _oneof_case_
@@ -341,10 +364,11 @@ static const ::PROTOBUF_NAMESPACE_ID::internal::MigrationSchema schemas[] PROTOB
   { 34, -1, sizeof(::moveArm)},
   { 46, -1, sizeof(::moveHome)},
   { 52, -1, sizeof(::moveResponse)},
-  { 58, -1, sizeof(::rotateRequest)},
-  { 65, -1, sizeof(::rotateResponse)},
-  { 72, -1, sizeof(::torqueRequest)},
-  { 78, -1, sizeof(::torqueResponse)},
+  { 58, -1, sizeof(::rotationModeRequest)},
+  { 64, -1, sizeof(::rotateRequest)},
+  { 71, -1, sizeof(::rotateResponse)},
+  { 78, -1, sizeof(::torqueRequest)},
+  { 84, -1, sizeof(::torqueResponse)},
 };
 
 static ::PROTOBUF_NAMESPACE_ID::Message const * const file_default_instances[] = {
@@ -357,6 +381,7 @@ static ::PROTOBUF_NAMESPACE_ID::Message const * const file_default_instances[] =
   reinterpret_cast<const ::PROTOBUF_NAMESPACE_ID::Message*>(&::_moveArm_default_instance_),
   reinterpret_cast<const ::PROTOBUF_NAMESPACE_ID::Message*>(&::_moveHome_default_instance_),
   reinterpret_cast<const ::PROTOBUF_NAMESPACE_ID::Message*>(&::_moveResponse_default_instance_),
+  reinterpret_cast<const ::PROTOBUF_NAMESPACE_ID::Message*>(&::_rotationModeRequest_default_instance_),
   reinterpret_cast<const ::PROTOBUF_NAMESPACE_ID::Message*>(&::_rotateRequest_default_instance_),
   reinterpret_cast<const ::PROTOBUF_NAMESPACE_ID::Message*>(&::_rotateResponse_default_instance_),
   reinterpret_cast<const ::PROTOBUF_NAMESPACE_ID::Message*>(&::_torqueRequest_default_instance_),
@@ -372,28 +397,30 @@ const char descriptor_table_protodef_armMessages_2eproto[] PROTOBUF_SECTION_VARI
   "\001 \001(\001\022\r\n\005depth\030\002 \001(\001\022\016\n\006height\030\003 \001(\001\022\r\n\005"
   "theta\030\004 \001(\001\022\013\n\003phi\030\005 \001(\001\022\013\n\003chi\030\006 \001(\001\022\r\n"
   "\005width\030\007 \001(\001\"\030\n\010moveHome\022\014\n\004flag\030\001 \001(\005\"$"
-  "\n\014moveResponse\022\024\n\014responseCode\030\001 \001(\005\"0\n\r"
-  "rotateRequest\022\r\n\005speed\030\001 \001(\001\022\020\n\010duration"
-  "\030\002 \001(\001\"-\n\016rotateResponse\022\r\n\005angle\030\001 \001(\001\022"
-  "\014\n\004flag\030\002 \001(\005\"\035\n\rtorqueRequest\022\014\n\004flag\030\001"
-  " \001(\005\"\202\001\n\016torqueResponse\022\016\n\006joint1\030\001 \001(\001\022"
-  "\016\n\006joint2\030\002 \001(\001\022\016\n\006joint3\030\003 \001(\001\022\016\n\006joint"
-  "4\030\004 \001(\001\022\016\n\006joint5\030\005 \001(\001\022\016\n\006joint6\030\006 \001(\001\022"
-  "\020\n\010endpoint\030\007 \001(\0012\376\002\n\020armCommunication\022+"
-  "\n\010armReady\022\r.readyRequest\032\016.readyRespons"
-  "e\"\000\022.\n\tarmStatus\022\016.statusRequest\032\017.statu"
-  "sResponse\"\000\022\'\n\narmControl\022\010.moveArm\032\r.mo"
-  "veResponse\"\000\022/\n\013gripperOpen\022\017.gripperReq"
-  "uest\032\r.moveResponse\"\000\022(\n\007stopArm\022\014.stopR"
-  "equest\032\r.moveResponse\"\000\022%\n\007armHome\022\t.mov"
-  "eHome\032\r.moveResponse\"\000\022.\n\tarmRotate\022\016.ro"
-  "tateRequest\032\017.rotateResponse\"\000\0222\n\013armFee"
-  "dback\022\016.torqueRequest\032\017.torqueResponse\"\000"
-  "0\001b\006proto3"
+  "\n\014moveResponse\022\024\n\014responseCode\030\001 \001(\005\"#\n\023"
+  "rotationModeRequest\022\014\n\004flag\030\001 \001(\005\"0\n\rrot"
+  "ateRequest\022\r\n\005speed\030\001 \001(\001\022\020\n\010duration\030\002 "
+  "\001(\001\"-\n\016rotateResponse\022\r\n\005angle\030\001 \001(\001\022\014\n\004"
+  "flag\030\002 \001(\005\"\035\n\rtorqueRequest\022\014\n\004flag\030\001 \001("
+  "\005\"\202\001\n\016torqueResponse\022\016\n\006joint1\030\001 \001(\001\022\016\n\006"
+  "joint2\030\002 \001(\001\022\016\n\006joint3\030\003 \001(\001\022\016\n\006joint4\030\004"
+  " \001(\001\022\016\n\006joint5\030\005 \001(\001\022\016\n\006joint6\030\006 \001(\001\022\020\n\010"
+  "endpoint\030\007 \001(\0012\270\003\n\020armCommunication\022+\n\010a"
+  "rmReady\022\r.readyRequest\032\016.readyResponse\"\000"
+  "\022.\n\tarmStatus\022\016.statusRequest\032\017.statusRe"
+  "sponse\"\000\022\'\n\narmControl\022\010.moveArm\032\r.moveR"
+  "esponse\"\000\022/\n\013gripperOpen\022\017.gripperReques"
+  "t\032\r.moveResponse\"\000\022(\n\007stopArm\022\014.stopRequ"
+  "est\032\r.moveResponse\"\000\022%\n\007armHome\022\t.moveHo"
+  "me\032\r.moveResponse\"\000\0228\n\rarmRotateMode\022\024.r"
+  "otationModeRequest\032\017.statusResponse\"\000\022.\n"
+  "\tarmRotate\022\016.rotateRequest\032\017.rotateRespo"
+  "nse\"\000\0222\n\013armFeedback\022\016.torqueRequest\032\017.t"
+  "orqueResponse\"\0000\001b\006proto3"
   ;
 static const ::PROTOBUF_NAMESPACE_ID::internal::DescriptorTable*const descriptor_table_armMessages_2eproto_deps[1] = {
 };
-static ::PROTOBUF_NAMESPACE_ID::internal::SCCInfoBase*const descriptor_table_armMessages_2eproto_sccs[13] = {
+static ::PROTOBUF_NAMESPACE_ID::internal::SCCInfoBase*const descriptor_table_armMessages_2eproto_sccs[14] = {
   &scc_info_gripperRequest_armMessages_2eproto.base,
   &scc_info_moveArm_armMessages_2eproto.base,
   &scc_info_moveHome_armMessages_2eproto.base,
@@ -402,6 +429,7 @@ static ::PROTOBUF_NAMESPACE_ID::internal::SCCInfoBase*const descriptor_table_arm
   &scc_info_readyResponse_armMessages_2eproto.base,
   &scc_info_rotateRequest_armMessages_2eproto.base,
   &scc_info_rotateResponse_armMessages_2eproto.base,
+  &scc_info_rotationModeRequest_armMessages_2eproto.base,
   &scc_info_statusRequest_armMessages_2eproto.base,
   &scc_info_statusResponse_armMessages_2eproto.base,
   &scc_info_stopRequest_armMessages_2eproto.base,
@@ -410,10 +438,10 @@ static ::PROTOBUF_NAMESPACE_ID::internal::SCCInfoBase*const descriptor_table_arm
 };
 static ::PROTOBUF_NAMESPACE_ID::internal::once_flag descriptor_table_armMessages_2eproto_once;
 const ::PROTOBUF_NAMESPACE_ID::internal::DescriptorTable descriptor_table_armMessages_2eproto = {
-  false, false, descriptor_table_protodef_armMessages_2eproto, "armMessages.proto", 1010,
-  &descriptor_table_armMessages_2eproto_once, descriptor_table_armMessages_2eproto_sccs, descriptor_table_armMessages_2eproto_deps, 13, 0,
+  false, false, descriptor_table_protodef_armMessages_2eproto, "armMessages.proto", 1105,
+  &descriptor_table_armMessages_2eproto_once, descriptor_table_armMessages_2eproto_sccs, descriptor_table_armMessages_2eproto_deps, 14, 0,
   schemas, file_default_instances, TableStruct_armMessages_2eproto::offsets,
-  file_level_metadata_armMessages_2eproto, 13, file_level_enum_descriptors_armMessages_2eproto, file_level_service_descriptors_armMessages_2eproto,
+  file_level_metadata_armMessages_2eproto, 14, file_level_enum_descriptors_armMessages_2eproto, file_level_service_descriptors_armMessages_2eproto,
 };
 
 // Force running AddDescriptors() at dynamic initialization time.
@@ -2237,6 +2265,200 @@ void moveResponse::InternalSwap(moveResponse* other) {
 
 // ===================================================================
 
+class rotationModeRequest::_Internal {
+ public:
+};
+
+rotationModeRequest::rotationModeRequest(::PROTOBUF_NAMESPACE_ID::Arena* arena)
+  : ::PROTOBUF_NAMESPACE_ID::Message(arena) {
+  SharedCtor();
+  RegisterArenaDtor(arena);
+  // @@protoc_insertion_point(arena_constructor:rotationModeRequest)
+}
+rotationModeRequest::rotationModeRequest(const rotationModeRequest& from)
+  : ::PROTOBUF_NAMESPACE_ID::Message() {
+  _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
+  flag_ = from.flag_;
+  // @@protoc_insertion_point(copy_constructor:rotationModeRequest)
+}
+
+void rotationModeRequest::SharedCtor() {
+  flag_ = 0;
+}
+
+rotationModeRequest::~rotationModeRequest() {
+  // @@protoc_insertion_point(destructor:rotationModeRequest)
+  SharedDtor();
+  _internal_metadata_.Delete<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>();
+}
+
+void rotationModeRequest::SharedDtor() {
+  GOOGLE_DCHECK(GetArena() == nullptr);
+}
+
+void rotationModeRequest::ArenaDtor(void* object) {
+  rotationModeRequest* _this = reinterpret_cast< rotationModeRequest* >(object);
+  (void)_this;
+}
+void rotationModeRequest::RegisterArenaDtor(::PROTOBUF_NAMESPACE_ID::Arena*) {
+}
+void rotationModeRequest::SetCachedSize(int size) const {
+  _cached_size_.Set(size);
+}
+const rotationModeRequest& rotationModeRequest::default_instance() {
+  ::PROTOBUF_NAMESPACE_ID::internal::InitSCC(&::scc_info_rotationModeRequest_armMessages_2eproto.base);
+  return *internal_default_instance();
+}
+
+
+void rotationModeRequest::Clear() {
+// @@protoc_insertion_point(message_clear_start:rotationModeRequest)
+  ::PROTOBUF_NAMESPACE_ID::uint32 cached_has_bits = 0;
+  // Prevent compiler warnings about cached_has_bits being unused
+  (void) cached_has_bits;
+
+  flag_ = 0;
+  _internal_metadata_.Clear<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>();
+}
+
+const char* rotationModeRequest::_InternalParse(const char* ptr, ::PROTOBUF_NAMESPACE_ID::internal::ParseContext* ctx) {
+#define CHK_(x) if (PROTOBUF_PREDICT_FALSE(!(x))) goto failure
+  while (!ctx->Done(&ptr)) {
+    ::PROTOBUF_NAMESPACE_ID::uint32 tag;
+    ptr = ::PROTOBUF_NAMESPACE_ID::internal::ReadTag(ptr, &tag);
+    CHK_(ptr);
+    switch (tag >> 3) {
+      // int32 flag = 1;
+      case 1:
+        if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 8)) {
+          flag_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
+          CHK_(ptr);
+        } else goto handle_unusual;
+        continue;
+      default: {
+      handle_unusual:
+        if ((tag & 7) == 4 || tag == 0) {
+          ctx->SetLastTag(tag);
+          goto success;
+        }
+        ptr = UnknownFieldParse(tag,
+            _internal_metadata_.mutable_unknown_fields<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(),
+            ptr, ctx);
+        CHK_(ptr != nullptr);
+        continue;
+      }
+    }  // switch
+  }  // while
+success:
+  return ptr;
+failure:
+  ptr = nullptr;
+  goto success;
+#undef CHK_
+}
+
+::PROTOBUF_NAMESPACE_ID::uint8* rotationModeRequest::_InternalSerialize(
+    ::PROTOBUF_NAMESPACE_ID::uint8* target, ::PROTOBUF_NAMESPACE_ID::io::EpsCopyOutputStream* stream) const {
+  // @@protoc_insertion_point(serialize_to_array_start:rotationModeRequest)
+  ::PROTOBUF_NAMESPACE_ID::uint32 cached_has_bits = 0;
+  (void) cached_has_bits;
+
+  // int32 flag = 1;
+  if (this->flag() != 0) {
+    target = stream->EnsureSpace(target);
+    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteInt32ToArray(1, this->_internal_flag(), target);
+  }
+
+  if (PROTOBUF_PREDICT_FALSE(_internal_metadata_.have_unknown_fields())) {
+    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormat::InternalSerializeUnknownFieldsToArray(
+        _internal_metadata_.unknown_fields<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(::PROTOBUF_NAMESPACE_ID::UnknownFieldSet::default_instance), target, stream);
+  }
+  // @@protoc_insertion_point(serialize_to_array_end:rotationModeRequest)
+  return target;
+}
+
+size_t rotationModeRequest::ByteSizeLong() const {
+// @@protoc_insertion_point(message_byte_size_start:rotationModeRequest)
+  size_t total_size = 0;
+
+  ::PROTOBUF_NAMESPACE_ID::uint32 cached_has_bits = 0;
+  // Prevent compiler warnings about cached_has_bits being unused
+  (void) cached_has_bits;
+
+  // int32 flag = 1;
+  if (this->flag() != 0) {
+    total_size += 1 +
+      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::Int32Size(
+        this->_internal_flag());
+  }
+
+  if (PROTOBUF_PREDICT_FALSE(_internal_metadata_.have_unknown_fields())) {
+    return ::PROTOBUF_NAMESPACE_ID::internal::ComputeUnknownFieldsSize(
+        _internal_metadata_, total_size, &_cached_size_);
+  }
+  int cached_size = ::PROTOBUF_NAMESPACE_ID::internal::ToCachedSize(total_size);
+  SetCachedSize(cached_size);
+  return total_size;
+}
+
+void rotationModeRequest::MergeFrom(const ::PROTOBUF_NAMESPACE_ID::Message& from) {
+// @@protoc_insertion_point(generalized_merge_from_start:rotationModeRequest)
+  GOOGLE_DCHECK_NE(&from, this);
+  const rotationModeRequest* source =
+      ::PROTOBUF_NAMESPACE_ID::DynamicCastToGenerated<rotationModeRequest>(
+          &from);
+  if (source == nullptr) {
+  // @@protoc_insertion_point(generalized_merge_from_cast_fail:rotationModeRequest)
+    ::PROTOBUF_NAMESPACE_ID::internal::ReflectionOps::Merge(from, this);
+  } else {
+  // @@protoc_insertion_point(generalized_merge_from_cast_success:rotationModeRequest)
+    MergeFrom(*source);
+  }
+}
+
+void rotationModeRequest::MergeFrom(const rotationModeRequest& from) {
+// @@protoc_insertion_point(class_specific_merge_from_start:rotationModeRequest)
+  GOOGLE_DCHECK_NE(&from, this);
+  _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
+  ::PROTOBUF_NAMESPACE_ID::uint32 cached_has_bits = 0;
+  (void) cached_has_bits;
+
+  if (from.flag() != 0) {
+    _internal_set_flag(from._internal_flag());
+  }
+}
+
+void rotationModeRequest::CopyFrom(const ::PROTOBUF_NAMESPACE_ID::Message& from) {
+// @@protoc_insertion_point(generalized_copy_from_start:rotationModeRequest)
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+void rotationModeRequest::CopyFrom(const rotationModeRequest& from) {
+// @@protoc_insertion_point(class_specific_copy_from_start:rotationModeRequest)
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+bool rotationModeRequest::IsInitialized() const {
+  return true;
+}
+
+void rotationModeRequest::InternalSwap(rotationModeRequest* other) {
+  using std::swap;
+  _internal_metadata_.Swap<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(&other->_internal_metadata_);
+  swap(flag_, other->flag_);
+}
+
+::PROTOBUF_NAMESPACE_ID::Metadata rotationModeRequest::GetMetadata() const {
+  return GetMetadataStatic();
+}
+
+
+// ===================================================================
+
 class rotateRequest::_Internal {
  public:
 };
@@ -3239,6 +3461,9 @@ template<> PROTOBUF_NOINLINE ::moveHome* Arena::CreateMaybeMessage< ::moveHome >
 }
 template<> PROTOBUF_NOINLINE ::moveResponse* Arena::CreateMaybeMessage< ::moveResponse >(Arena* arena) {
   return Arena::CreateMessageInternal< ::moveResponse >(arena);
+}
+template<> PROTOBUF_NOINLINE ::rotationModeRequest* Arena::CreateMaybeMessage< ::rotationModeRequest >(Arena* arena) {
+  return Arena::CreateMessageInternal< ::rotationModeRequest >(arena);
 }
 template<> PROTOBUF_NOINLINE ::rotateRequest* Arena::CreateMaybeMessage< ::rotateRequest >(Arena* arena) {
   return Arena::CreateMessageInternal< ::rotateRequest >(arena);

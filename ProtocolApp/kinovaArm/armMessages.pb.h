@@ -46,7 +46,7 @@ struct TableStruct_armMessages_2eproto {
     PROTOBUF_SECTION_VARIABLE(protodesc_cold);
   static const ::PROTOBUF_NAMESPACE_ID::internal::AuxiliaryParseTableField aux[]
     PROTOBUF_SECTION_VARIABLE(protodesc_cold);
-  static const ::PROTOBUF_NAMESPACE_ID::internal::ParseTable schema[13]
+  static const ::PROTOBUF_NAMESPACE_ID::internal::ParseTable schema[14]
     PROTOBUF_SECTION_VARIABLE(protodesc_cold);
   static const ::PROTOBUF_NAMESPACE_ID::internal::FieldMetadata field_metadata[];
   static const ::PROTOBUF_NAMESPACE_ID::internal::SerializationTable serialization_table[];
@@ -77,6 +77,9 @@ extern rotateRequestDefaultTypeInternal _rotateRequest_default_instance_;
 class rotateResponse;
 class rotateResponseDefaultTypeInternal;
 extern rotateResponseDefaultTypeInternal _rotateResponse_default_instance_;
+class rotationModeRequest;
+class rotationModeRequestDefaultTypeInternal;
+extern rotationModeRequestDefaultTypeInternal _rotationModeRequest_default_instance_;
 class statusRequest;
 class statusRequestDefaultTypeInternal;
 extern statusRequestDefaultTypeInternal _statusRequest_default_instance_;
@@ -101,6 +104,7 @@ template<> ::readyRequest* Arena::CreateMaybeMessage<::readyRequest>(Arena*);
 template<> ::readyResponse* Arena::CreateMaybeMessage<::readyResponse>(Arena*);
 template<> ::rotateRequest* Arena::CreateMaybeMessage<::rotateRequest>(Arena*);
 template<> ::rotateResponse* Arena::CreateMaybeMessage<::rotateResponse>(Arena*);
+template<> ::rotationModeRequest* Arena::CreateMaybeMessage<::rotationModeRequest>(Arena*);
 template<> ::statusRequest* Arena::CreateMaybeMessage<::statusRequest>(Arena*);
 template<> ::statusResponse* Arena::CreateMaybeMessage<::statusResponse>(Arena*);
 template<> ::stopRequest* Arena::CreateMaybeMessage<::stopRequest>(Arena*);
@@ -1374,6 +1378,142 @@ class moveResponse PROTOBUF_FINAL :
 };
 // -------------------------------------------------------------------
 
+class rotationModeRequest PROTOBUF_FINAL :
+    public ::PROTOBUF_NAMESPACE_ID::Message /* @@protoc_insertion_point(class_definition:rotationModeRequest) */ {
+ public:
+  inline rotationModeRequest() : rotationModeRequest(nullptr) {}
+  virtual ~rotationModeRequest();
+
+  rotationModeRequest(const rotationModeRequest& from);
+  rotationModeRequest(rotationModeRequest&& from) noexcept
+    : rotationModeRequest() {
+    *this = ::std::move(from);
+  }
+
+  inline rotationModeRequest& operator=(const rotationModeRequest& from) {
+    CopyFrom(from);
+    return *this;
+  }
+  inline rotationModeRequest& operator=(rotationModeRequest&& from) noexcept {
+    if (GetArena() == from.GetArena()) {
+      if (this != &from) InternalSwap(&from);
+    } else {
+      CopyFrom(from);
+    }
+    return *this;
+  }
+
+  static const ::PROTOBUF_NAMESPACE_ID::Descriptor* descriptor() {
+    return GetDescriptor();
+  }
+  static const ::PROTOBUF_NAMESPACE_ID::Descriptor* GetDescriptor() {
+    return GetMetadataStatic().descriptor;
+  }
+  static const ::PROTOBUF_NAMESPACE_ID::Reflection* GetReflection() {
+    return GetMetadataStatic().reflection;
+  }
+  static const rotationModeRequest& default_instance();
+
+  static inline const rotationModeRequest* internal_default_instance() {
+    return reinterpret_cast<const rotationModeRequest*>(
+               &_rotationModeRequest_default_instance_);
+  }
+  static constexpr int kIndexInFileMessages =
+    9;
+
+  friend void swap(rotationModeRequest& a, rotationModeRequest& b) {
+    a.Swap(&b);
+  }
+  inline void Swap(rotationModeRequest* other) {
+    if (other == this) return;
+    if (GetArena() == other->GetArena()) {
+      InternalSwap(other);
+    } else {
+      ::PROTOBUF_NAMESPACE_ID::internal::GenericSwap(this, other);
+    }
+  }
+  void UnsafeArenaSwap(rotationModeRequest* other) {
+    if (other == this) return;
+    GOOGLE_DCHECK(GetArena() == other->GetArena());
+    InternalSwap(other);
+  }
+
+  // implements Message ----------------------------------------------
+
+  inline rotationModeRequest* New() const final {
+    return CreateMaybeMessage<rotationModeRequest>(nullptr);
+  }
+
+  rotationModeRequest* New(::PROTOBUF_NAMESPACE_ID::Arena* arena) const final {
+    return CreateMaybeMessage<rotationModeRequest>(arena);
+  }
+  void CopyFrom(const ::PROTOBUF_NAMESPACE_ID::Message& from) final;
+  void MergeFrom(const ::PROTOBUF_NAMESPACE_ID::Message& from) final;
+  void CopyFrom(const rotationModeRequest& from);
+  void MergeFrom(const rotationModeRequest& from);
+  PROTOBUF_ATTRIBUTE_REINITIALIZES void Clear() final;
+  bool IsInitialized() const final;
+
+  size_t ByteSizeLong() const final;
+  const char* _InternalParse(const char* ptr, ::PROTOBUF_NAMESPACE_ID::internal::ParseContext* ctx) final;
+  ::PROTOBUF_NAMESPACE_ID::uint8* _InternalSerialize(
+      ::PROTOBUF_NAMESPACE_ID::uint8* target, ::PROTOBUF_NAMESPACE_ID::io::EpsCopyOutputStream* stream) const final;
+  int GetCachedSize() const final { return _cached_size_.Get(); }
+
+  private:
+  inline void SharedCtor();
+  inline void SharedDtor();
+  void SetCachedSize(int size) const final;
+  void InternalSwap(rotationModeRequest* other);
+  friend class ::PROTOBUF_NAMESPACE_ID::internal::AnyMetadata;
+  static ::PROTOBUF_NAMESPACE_ID::StringPiece FullMessageName() {
+    return "rotationModeRequest";
+  }
+  protected:
+  explicit rotationModeRequest(::PROTOBUF_NAMESPACE_ID::Arena* arena);
+  private:
+  static void ArenaDtor(void* object);
+  inline void RegisterArenaDtor(::PROTOBUF_NAMESPACE_ID::Arena* arena);
+  public:
+
+  ::PROTOBUF_NAMESPACE_ID::Metadata GetMetadata() const final;
+  private:
+  static ::PROTOBUF_NAMESPACE_ID::Metadata GetMetadataStatic() {
+    ::PROTOBUF_NAMESPACE_ID::internal::AssignDescriptors(&::descriptor_table_armMessages_2eproto);
+    return ::descriptor_table_armMessages_2eproto.file_level_metadata[kIndexInFileMessages];
+  }
+
+  public:
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  enum : int {
+    kFlagFieldNumber = 1,
+  };
+  // int32 flag = 1;
+  void clear_flag();
+  ::PROTOBUF_NAMESPACE_ID::int32 flag() const;
+  void set_flag(::PROTOBUF_NAMESPACE_ID::int32 value);
+  private:
+  ::PROTOBUF_NAMESPACE_ID::int32 _internal_flag() const;
+  void _internal_set_flag(::PROTOBUF_NAMESPACE_ID::int32 value);
+  public:
+
+  // @@protoc_insertion_point(class_scope:rotationModeRequest)
+ private:
+  class _Internal;
+
+  template <typename T> friend class ::PROTOBUF_NAMESPACE_ID::Arena::InternalHelper;
+  typedef void InternalArenaConstructable_;
+  typedef void DestructorSkippable_;
+  ::PROTOBUF_NAMESPACE_ID::int32 flag_;
+  mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
+  friend struct ::TableStruct_armMessages_2eproto;
+};
+// -------------------------------------------------------------------
+
 class rotateRequest PROTOBUF_FINAL :
     public ::PROTOBUF_NAMESPACE_ID::Message /* @@protoc_insertion_point(class_definition:rotateRequest) */ {
  public:
@@ -1415,7 +1555,7 @@ class rotateRequest PROTOBUF_FINAL :
                &_rotateRequest_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    9;
+    10;
 
   friend void swap(rotateRequest& a, rotateRequest& b) {
     a.Swap(&b);
@@ -1562,7 +1702,7 @@ class rotateResponse PROTOBUF_FINAL :
                &_rotateResponse_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    10;
+    11;
 
   friend void swap(rotateResponse& a, rotateResponse& b) {
     a.Swap(&b);
@@ -1709,7 +1849,7 @@ class torqueRequest PROTOBUF_FINAL :
                &_torqueRequest_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    11;
+    12;
 
   friend void swap(torqueRequest& a, torqueRequest& b) {
     a.Swap(&b);
@@ -1845,7 +1985,7 @@ class torqueResponse PROTOBUF_FINAL :
                &_torqueResponse_default_instance_);
   }
   static constexpr int kIndexInFileMessages =
-    12;
+    13;
 
   friend void swap(torqueResponse& a, torqueResponse& b) {
     a.Swap(&b);
@@ -2309,6 +2449,30 @@ inline void moveResponse::set_responsecode(::PROTOBUF_NAMESPACE_ID::int32 value)
 
 // -------------------------------------------------------------------
 
+// rotationModeRequest
+
+// int32 flag = 1;
+inline void rotationModeRequest::clear_flag() {
+  flag_ = 0;
+}
+inline ::PROTOBUF_NAMESPACE_ID::int32 rotationModeRequest::_internal_flag() const {
+  return flag_;
+}
+inline ::PROTOBUF_NAMESPACE_ID::int32 rotationModeRequest::flag() const {
+  // @@protoc_insertion_point(field_get:rotationModeRequest.flag)
+  return _internal_flag();
+}
+inline void rotationModeRequest::_internal_set_flag(::PROTOBUF_NAMESPACE_ID::int32 value) {
+  
+  flag_ = value;
+}
+inline void rotationModeRequest::set_flag(::PROTOBUF_NAMESPACE_ID::int32 value) {
+  _internal_set_flag(value);
+  // @@protoc_insertion_point(field_set:rotationModeRequest.flag)
+}
+
+// -------------------------------------------------------------------
+
 // rotateRequest
 
 // double speed = 1;
@@ -2566,6 +2730,8 @@ inline void torqueResponse::set_endpoint(double value) {
 #ifdef __GNUC__
   #pragma GCC diagnostic pop
 #endif  // __GNUC__
+// -------------------------------------------------------------------
+
 // -------------------------------------------------------------------
 
 // -------------------------------------------------------------------

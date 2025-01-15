@@ -145,6 +145,21 @@ public:
         return resp.responsecode();
     }
 
+    int armRotateMode()
+    {
+        grpc::ClientContext context;
+        rotationModeRequest req;
+        statusResponse resp;
+        grpc::Status status = stub->stopArm(&context, req, &resp);
+        if (!status.ok())
+        {
+            std::cout << "GRPC armRotationMode request failed. Error: " << status.error_message() << std::endl;
+            return -20;
+        }
+        std::cout << "RMode Status: " << resp.flag() << std::endl;
+        return resp.flag();
+    }
+
     int armRotate(double speed, double duration, double *retAngle)
     {
         grpc::ClientContext context;

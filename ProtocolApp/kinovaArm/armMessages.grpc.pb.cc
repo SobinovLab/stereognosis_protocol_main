@@ -27,6 +27,7 @@ static const char* armCommunication_method_names[] = {
   "/armCommunication/gripperOpen",
   "/armCommunication/stopArm",
   "/armCommunication/armHome",
+  "/armCommunication/armRotateMode",
   "/armCommunication/armRotate",
   "/armCommunication/armFeedback",
 };
@@ -44,8 +45,9 @@ armCommunication::Stub::Stub(const std::shared_ptr< ::grpc::ChannelInterface>& c
   , rpcmethod_gripperOpen_(armCommunication_method_names[3], ::grpc::internal::RpcMethod::NORMAL_RPC, channel)
   , rpcmethod_stopArm_(armCommunication_method_names[4], ::grpc::internal::RpcMethod::NORMAL_RPC, channel)
   , rpcmethod_armHome_(armCommunication_method_names[5], ::grpc::internal::RpcMethod::NORMAL_RPC, channel)
-  , rpcmethod_armRotate_(armCommunication_method_names[6], ::grpc::internal::RpcMethod::NORMAL_RPC, channel)
-  , rpcmethod_armFeedback_(armCommunication_method_names[7], ::grpc::internal::RpcMethod::SERVER_STREAMING, channel)
+  , rpcmethod_armRotateMode_(armCommunication_method_names[6], ::grpc::internal::RpcMethod::NORMAL_RPC, channel)
+  , rpcmethod_armRotate_(armCommunication_method_names[7], ::grpc::internal::RpcMethod::NORMAL_RPC, channel)
+  , rpcmethod_armFeedback_(armCommunication_method_names[8], ::grpc::internal::RpcMethod::SERVER_STREAMING, channel)
   {}
 
 ::grpc::Status armCommunication::Stub::armReady(::grpc::ClientContext* context, const ::readyRequest& request, ::readyResponse* response) {
@@ -186,6 +188,29 @@ void armCommunication::Stub::experimental_async::armHome(::grpc::ClientContext* 
   return result;
 }
 
+::grpc::Status armCommunication::Stub::armRotateMode(::grpc::ClientContext* context, const ::rotationModeRequest& request, ::statusResponse* response) {
+  return ::grpc::internal::BlockingUnaryCall(channel_.get(), rpcmethod_armRotateMode_, context, request, response);
+}
+
+void armCommunication::Stub::experimental_async::armRotateMode(::grpc::ClientContext* context, const ::rotationModeRequest* request, ::statusResponse* response, std::function<void(::grpc::Status)> f) {
+  ::grpc::internal::CallbackUnaryCall(stub_->channel_.get(), stub_->rpcmethod_armRotateMode_, context, request, response, std::move(f));
+}
+
+void armCommunication::Stub::experimental_async::armRotateMode(::grpc::ClientContext* context, const ::rotationModeRequest* request, ::statusResponse* response, ::grpc::experimental::ClientUnaryReactor* reactor) {
+  ::grpc::internal::ClientCallbackUnaryFactory::Create(stub_->channel_.get(), stub_->rpcmethod_armRotateMode_, context, request, response, reactor);
+}
+
+::grpc::ClientAsyncResponseReader< ::statusResponse>* armCommunication::Stub::PrepareAsyncarmRotateModeRaw(::grpc::ClientContext* context, const ::rotationModeRequest& request, ::grpc::CompletionQueue* cq) {
+  return ::grpc::internal::ClientAsyncResponseReaderFactory< ::statusResponse>::Create(channel_.get(), cq, rpcmethod_armRotateMode_, context, request, false);
+}
+
+::grpc::ClientAsyncResponseReader< ::statusResponse>* armCommunication::Stub::AsyncarmRotateModeRaw(::grpc::ClientContext* context, const ::rotationModeRequest& request, ::grpc::CompletionQueue* cq) {
+  auto* result =
+    this->PrepareAsyncarmRotateModeRaw(context, request, cq);
+  result->StartCall();
+  return result;
+}
+
 ::grpc::Status armCommunication::Stub::armRotate(::grpc::ClientContext* context, const ::rotateRequest& request, ::rotateResponse* response) {
   return ::grpc::internal::BlockingUnaryCall(channel_.get(), rpcmethod_armRotate_, context, request, response);
 }
@@ -289,6 +314,16 @@ armCommunication::Service::Service() {
   AddMethod(new ::grpc::internal::RpcServiceMethod(
       armCommunication_method_names[6],
       ::grpc::internal::RpcMethod::NORMAL_RPC,
+      new ::grpc::internal::RpcMethodHandler< armCommunication::Service, ::rotationModeRequest, ::statusResponse>(
+          [](armCommunication::Service* service,
+             ::grpc::ServerContext* ctx,
+             const ::rotationModeRequest* req,
+             ::statusResponse* resp) {
+               return service->armRotateMode(ctx, req, resp);
+             }, this)));
+  AddMethod(new ::grpc::internal::RpcServiceMethod(
+      armCommunication_method_names[7],
+      ::grpc::internal::RpcMethod::NORMAL_RPC,
       new ::grpc::internal::RpcMethodHandler< armCommunication::Service, ::rotateRequest, ::rotateResponse>(
           [](armCommunication::Service* service,
              ::grpc::ServerContext* ctx,
@@ -297,7 +332,7 @@ armCommunication::Service::Service() {
                return service->armRotate(ctx, req, resp);
              }, this)));
   AddMethod(new ::grpc::internal::RpcServiceMethod(
-      armCommunication_method_names[7],
+      armCommunication_method_names[8],
       ::grpc::internal::RpcMethod::SERVER_STREAMING,
       new ::grpc::internal::ServerStreamingHandler< armCommunication::Service, ::torqueRequest, ::torqueResponse>(
           [](armCommunication::Service* service,
@@ -347,6 +382,13 @@ armCommunication::Service::~Service() {
 }
 
 ::grpc::Status armCommunication::Service::armHome(::grpc::ServerContext* context, const ::moveHome* request, ::moveResponse* response) {
+  (void) context;
+  (void) request;
+  (void) response;
+  return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
+}
+
+::grpc::Status armCommunication::Service::armRotateMode(::grpc::ServerContext* context, const ::rotationModeRequest* request, ::statusResponse* response) {
   (void) context;
   (void) request;
   (void) response;
