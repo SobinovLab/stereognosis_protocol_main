@@ -327,6 +327,10 @@ const ::PROTOBUF_NAMESPACE_ID::uint32 TableStruct_armMessages_2eproto::offsets[]
   ~0u,  // no _oneof_case_
   ~0u,  // no _weak_field_map_
   PROTOBUF_FIELD_OFFSET(::rotateRequest, speed_),
+  PROTOBUF_FIELD_OFFSET(::rotateRequest, tl_),
+  PROTOBUF_FIELD_OFFSET(::rotateRequest, bl_),
+  PROTOBUF_FIELD_OFFSET(::rotateRequest, tr_),
+  PROTOBUF_FIELD_OFFSET(::rotateRequest, br_),
   PROTOBUF_FIELD_OFFSET(::rotateRequest, duration_),
   ~0u,  // no _has_bits_
   PROTOBUF_FIELD_OFFSET(::rotateResponse, _internal_metadata_),
@@ -366,9 +370,9 @@ static const ::PROTOBUF_NAMESPACE_ID::internal::MigrationSchema schemas[] PROTOB
   { 52, -1, sizeof(::moveResponse)},
   { 58, -1, sizeof(::rotationModeRequest)},
   { 64, -1, sizeof(::rotateRequest)},
-  { 71, -1, sizeof(::rotateResponse)},
-  { 78, -1, sizeof(::torqueRequest)},
-  { 84, -1, sizeof(::torqueResponse)},
+  { 75, -1, sizeof(::rotateResponse)},
+  { 82, -1, sizeof(::torqueRequest)},
+  { 88, -1, sizeof(::torqueResponse)},
 };
 
 static ::PROTOBUF_NAMESPACE_ID::Message const * const file_default_instances[] = {
@@ -398,25 +402,26 @@ const char descriptor_table_protodef_armMessages_2eproto[] PROTOBUF_SECTION_VARI
   "theta\030\004 \001(\001\022\013\n\003phi\030\005 \001(\001\022\013\n\003chi\030\006 \001(\001\022\r\n"
   "\005width\030\007 \001(\001\"\030\n\010moveHome\022\014\n\004flag\030\001 \001(\005\"$"
   "\n\014moveResponse\022\024\n\014responseCode\030\001 \001(\005\"#\n\023"
-  "rotationModeRequest\022\014\n\004flag\030\001 \001(\005\"0\n\rrot"
-  "ateRequest\022\r\n\005speed\030\001 \001(\001\022\020\n\010duration\030\002 "
-  "\001(\001\"-\n\016rotateResponse\022\r\n\005angle\030\001 \001(\001\022\014\n\004"
-  "flag\030\002 \001(\005\"\035\n\rtorqueRequest\022\014\n\004flag\030\001 \001("
-  "\005\"\202\001\n\016torqueResponse\022\016\n\006joint1\030\001 \001(\001\022\016\n\006"
-  "joint2\030\002 \001(\001\022\016\n\006joint3\030\003 \001(\001\022\016\n\006joint4\030\004"
-  " \001(\001\022\016\n\006joint5\030\005 \001(\001\022\016\n\006joint6\030\006 \001(\001\022\020\n\010"
-  "endpoint\030\007 \001(\0012\270\003\n\020armCommunication\022+\n\010a"
-  "rmReady\022\r.readyRequest\032\016.readyResponse\"\000"
-  "\022.\n\tarmStatus\022\016.statusRequest\032\017.statusRe"
-  "sponse\"\000\022\'\n\narmControl\022\010.moveArm\032\r.moveR"
-  "esponse\"\000\022/\n\013gripperOpen\022\017.gripperReques"
-  "t\032\r.moveResponse\"\000\022(\n\007stopArm\022\014.stopRequ"
-  "est\032\r.moveResponse\"\000\022%\n\007armHome\022\t.moveHo"
-  "me\032\r.moveResponse\"\000\0228\n\rarmRotateMode\022\024.r"
-  "otationModeRequest\032\017.statusResponse\"\000\022.\n"
-  "\tarmRotate\022\016.rotateRequest\032\017.rotateRespo"
-  "nse\"\000\0222\n\013armFeedback\022\016.torqueRequest\032\017.t"
-  "orqueResponse\"\0000\001b\006proto3"
+  "rotationModeRequest\022\014\n\004flag\030\001 \001(\005\"`\n\rrot"
+  "ateRequest\022\r\n\005speed\030\001 \001(\001\022\n\n\002tl\030\002 \001(\001\022\n\n"
+  "\002bl\030\003 \001(\001\022\n\n\002tr\030\004 \001(\001\022\n\n\002br\030\005 \001(\001\022\020\n\010dur"
+  "ation\030\006 \001(\001\"-\n\016rotateResponse\022\r\n\005angle\030\001"
+  " \001(\001\022\014\n\004flag\030\002 \001(\005\"\035\n\rtorqueRequest\022\014\n\004f"
+  "lag\030\001 \001(\005\"\202\001\n\016torqueResponse\022\016\n\006joint1\030\001"
+  " \001(\001\022\016\n\006joint2\030\002 \001(\001\022\016\n\006joint3\030\003 \001(\001\022\016\n\006"
+  "joint4\030\004 \001(\001\022\016\n\006joint5\030\005 \001(\001\022\016\n\006joint6\030\006"
+  " \001(\001\022\020\n\010endpoint\030\007 \001(\0012\270\003\n\020armCommunicat"
+  "ion\022+\n\010armReady\022\r.readyRequest\032\016.readyRe"
+  "sponse\"\000\022.\n\tarmStatus\022\016.statusRequest\032\017."
+  "statusResponse\"\000\022\'\n\narmControl\022\010.moveArm"
+  "\032\r.moveResponse\"\000\022/\n\013gripperOpen\022\017.gripp"
+  "erRequest\032\r.moveResponse\"\000\022(\n\007stopArm\022\014."
+  "stopRequest\032\r.moveResponse\"\000\022%\n\007armHome\022"
+  "\t.moveHome\032\r.moveResponse\"\000\0228\n\rarmRotate"
+  "Mode\022\024.rotationModeRequest\032\017.statusRespo"
+  "nse\"\000\022.\n\tarmRotate\022\016.rotateRequest\032\017.rot"
+  "ateResponse\"\000\0222\n\013armFeedback\022\016.torqueReq"
+  "uest\032\017.torqueResponse\"\0000\001b\006proto3"
   ;
 static const ::PROTOBUF_NAMESPACE_ID::internal::DescriptorTable*const descriptor_table_armMessages_2eproto_deps[1] = {
 };
@@ -438,7 +443,7 @@ static ::PROTOBUF_NAMESPACE_ID::internal::SCCInfoBase*const descriptor_table_arm
 };
 static ::PROTOBUF_NAMESPACE_ID::internal::once_flag descriptor_table_armMessages_2eproto_once;
 const ::PROTOBUF_NAMESPACE_ID::internal::DescriptorTable descriptor_table_armMessages_2eproto = {
-  false, false, descriptor_table_protodef_armMessages_2eproto, "armMessages.proto", 1105,
+  false, false, descriptor_table_protodef_armMessages_2eproto, "armMessages.proto", 1153,
   &descriptor_table_armMessages_2eproto_once, descriptor_table_armMessages_2eproto_sccs, descriptor_table_armMessages_2eproto_deps, 14, 0,
   schemas, file_default_instances, TableStruct_armMessages_2eproto::offsets,
   file_level_metadata_armMessages_2eproto, 14, file_level_enum_descriptors_armMessages_2eproto, file_level_service_descriptors_armMessages_2eproto,
@@ -2536,9 +2541,37 @@ const char* rotateRequest::_InternalParse(const char* ptr, ::PROTOBUF_NAMESPACE_
           ptr += sizeof(double);
         } else goto handle_unusual;
         continue;
-      // double duration = 2;
+      // double tl = 2;
       case 2:
         if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 17)) {
+          tl_ = ::PROTOBUF_NAMESPACE_ID::internal::UnalignedLoad<double>(ptr);
+          ptr += sizeof(double);
+        } else goto handle_unusual;
+        continue;
+      // double bl = 3;
+      case 3:
+        if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 25)) {
+          bl_ = ::PROTOBUF_NAMESPACE_ID::internal::UnalignedLoad<double>(ptr);
+          ptr += sizeof(double);
+        } else goto handle_unusual;
+        continue;
+      // double tr = 4;
+      case 4:
+        if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 33)) {
+          tr_ = ::PROTOBUF_NAMESPACE_ID::internal::UnalignedLoad<double>(ptr);
+          ptr += sizeof(double);
+        } else goto handle_unusual;
+        continue;
+      // double br = 5;
+      case 5:
+        if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 41)) {
+          br_ = ::PROTOBUF_NAMESPACE_ID::internal::UnalignedLoad<double>(ptr);
+          ptr += sizeof(double);
+        } else goto handle_unusual;
+        continue;
+      // double duration = 6;
+      case 6:
+        if (PROTOBUF_PREDICT_TRUE(static_cast<::PROTOBUF_NAMESPACE_ID::uint8>(tag) == 49)) {
           duration_ = ::PROTOBUF_NAMESPACE_ID::internal::UnalignedLoad<double>(ptr);
           ptr += sizeof(double);
         } else goto handle_unusual;
@@ -2577,10 +2610,34 @@ failure:
     target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteDoubleToArray(1, this->_internal_speed(), target);
   }
 
-  // double duration = 2;
+  // double tl = 2;
+  if (!(this->tl() <= 0 && this->tl() >= 0)) {
+    target = stream->EnsureSpace(target);
+    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteDoubleToArray(2, this->_internal_tl(), target);
+  }
+
+  // double bl = 3;
+  if (!(this->bl() <= 0 && this->bl() >= 0)) {
+    target = stream->EnsureSpace(target);
+    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteDoubleToArray(3, this->_internal_bl(), target);
+  }
+
+  // double tr = 4;
+  if (!(this->tr() <= 0 && this->tr() >= 0)) {
+    target = stream->EnsureSpace(target);
+    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteDoubleToArray(4, this->_internal_tr(), target);
+  }
+
+  // double br = 5;
+  if (!(this->br() <= 0 && this->br() >= 0)) {
+    target = stream->EnsureSpace(target);
+    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteDoubleToArray(5, this->_internal_br(), target);
+  }
+
+  // double duration = 6;
   if (!(this->duration() <= 0 && this->duration() >= 0)) {
     target = stream->EnsureSpace(target);
-    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteDoubleToArray(2, this->_internal_duration(), target);
+    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::WriteDoubleToArray(6, this->_internal_duration(), target);
   }
 
   if (PROTOBUF_PREDICT_FALSE(_internal_metadata_.have_unknown_fields())) {
@@ -2604,7 +2661,27 @@ size_t rotateRequest::ByteSizeLong() const {
     total_size += 1 + 8;
   }
 
-  // double duration = 2;
+  // double tl = 2;
+  if (!(this->tl() <= 0 && this->tl() >= 0)) {
+    total_size += 1 + 8;
+  }
+
+  // double bl = 3;
+  if (!(this->bl() <= 0 && this->bl() >= 0)) {
+    total_size += 1 + 8;
+  }
+
+  // double tr = 4;
+  if (!(this->tr() <= 0 && this->tr() >= 0)) {
+    total_size += 1 + 8;
+  }
+
+  // double br = 5;
+  if (!(this->br() <= 0 && this->br() >= 0)) {
+    total_size += 1 + 8;
+  }
+
+  // double duration = 6;
   if (!(this->duration() <= 0 && this->duration() >= 0)) {
     total_size += 1 + 8;
   }
@@ -2642,6 +2719,18 @@ void rotateRequest::MergeFrom(const rotateRequest& from) {
 
   if (!(from.speed() <= 0 && from.speed() >= 0)) {
     _internal_set_speed(from._internal_speed());
+  }
+  if (!(from.tl() <= 0 && from.tl() >= 0)) {
+    _internal_set_tl(from._internal_tl());
+  }
+  if (!(from.bl() <= 0 && from.bl() >= 0)) {
+    _internal_set_bl(from._internal_bl());
+  }
+  if (!(from.tr() <= 0 && from.tr() >= 0)) {
+    _internal_set_tr(from._internal_tr());
+  }
+  if (!(from.br() <= 0 && from.br() >= 0)) {
+    _internal_set_br(from._internal_br());
   }
   if (!(from.duration() <= 0 && from.duration() >= 0)) {
     _internal_set_duration(from._internal_duration());

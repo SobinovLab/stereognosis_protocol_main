@@ -749,15 +749,15 @@ void Protocol::run()
                                        &bottomRightForce);
                 double rotValue = topLeftForce.load() + bottomRightForce.load() - topRightForce.load() - bottomLeftForce.load(); //Positive is clockwise
 				//logInfo("Got force");
-
-                armClient->armRotate(rotValue, 1, &retAngle);
 				auto s = Times::getCurrentTimeInMilliSecs();
 				char tmp[512];
-				sprintf(tmp, "Got forces %f %f %f %f with rotvalue %f in %f", topLeftForce.load(), bottomLeftForce.load(), topRightForce.load(), bottomRightForce.load(), rotValue , s - f);
-				logInfo(tmp);
+				sprintf(tmp, "Got forces %lf %lf %lf %lf with rotvalue %lf in %lld", topLeftForce.load(), bottomLeftForce.load(), topRightForce.load(), bottomRightForce.load(), rotValue, f - s);
+				//logInfo(tmp);
 
+                //armClient->armRotate(rotValue, 1, &retAngle);
+				armClient->armRotate(topLeftForce.load(), bottomLeftForce.load(), topRightForce.load(), bottomRightForce.load(), 1, &retAngle);
 				f = s;
-				Sleep(5);
+				Sleep(30);
 				//logInfo("Sent force to arm");
 			}
 			// if stop trial button was pressed, turn off the loop - it is reenable automatically in the beginning of trial

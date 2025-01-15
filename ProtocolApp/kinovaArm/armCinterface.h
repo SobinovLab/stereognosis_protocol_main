@@ -150,7 +150,7 @@ public:
         grpc::ClientContext context;
         rotationModeRequest req;
         statusResponse resp;
-        grpc::Status status = stub->stopArm(&context, req, &resp);
+        grpc::Status status = stub->armRotateMode(&context, req, &resp);
         if (!status.ok())
         {
             std::cout << "GRPC armRotationMode request failed. Error: " << status.error_message() << std::endl;
@@ -160,15 +160,24 @@ public:
         return resp.flag();
     }
 
-    int armRotate(double speed, double duration, double *retAngle)
+    int armRotate(double topLeft, double bottomLeft, double topRight, double bottomRight, double duration, double *retAngle)
     {
+        char tmp[512];
+        sprintf(tmp, "Forces %lf %lf %lf %lf ", topLeft, bottomLeft, topRight, bottomRight);
+        //logInfo(tmp);
         grpc::ClientContext context;
         rotateRequest req;
         rotateResponse resp;
-        req.set_speed(speed);
+        req.set_bl(bottomLeft);
+        req.set_tl(topLeft);
+        req.set_br(bottomRight);
+        req.set_tr(topRight);
+        req.set_speed(0);
+        req.set_duration(0);
         grpc::Status status = stub->armRotate(&context, req, &resp);
         if(!status.ok())
         {
+            logInfo("FUCK WHAT");
             std::cout << "GRPC armRotate request failed. Error: " << status.error_message() << std::endl;
             return -20;
         }

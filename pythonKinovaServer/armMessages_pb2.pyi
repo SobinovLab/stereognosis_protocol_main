@@ -73,12 +73,20 @@ class rotationModeRequest(_message.Message):
     def __init__(self, flag: _Optional[int] = ...) -> None: ...
 
 class rotateRequest(_message.Message):
-    __slots__ = ("speed", "duration")
+    __slots__ = ("speed", "tl", "bl", "tr", "br", "duration")
     SPEED_FIELD_NUMBER: _ClassVar[int]
+    TL_FIELD_NUMBER: _ClassVar[int]
+    BL_FIELD_NUMBER: _ClassVar[int]
+    TR_FIELD_NUMBER: _ClassVar[int]
+    BR_FIELD_NUMBER: _ClassVar[int]
     DURATION_FIELD_NUMBER: _ClassVar[int]
     speed: float
+    tl: float
+    bl: float
+    tr: float
+    br: float
     duration: float
-    def __init__(self, speed: _Optional[float] = ..., duration: _Optional[float] = ...) -> None: ...
+    def __init__(self, speed: _Optional[float] = ..., tl: _Optional[float] = ..., bl: _Optional[float] = ..., tr: _Optional[float] = ..., br: _Optional[float] = ..., duration: _Optional[float] = ...) -> None: ...
 
 class rotateResponse(_message.Message):
     __slots__ = ("angle", "flag")

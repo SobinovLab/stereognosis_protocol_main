@@ -58,7 +58,11 @@ message rotationModeRequest {
 
 message rotateRequest {
     double speed = 1; //deg/s
-    double duration = 2; //ms
+    double tl = 2;
+    double bl = 3;
+    double tr = 4;
+    double br = 5;
+    double duration = 6; //ms
 }
 
 message rotateResponse {

@@ -1627,7 +1627,11 @@ class rotateRequest PROTOBUF_FINAL :
 
   enum : int {
     kSpeedFieldNumber = 1,
-    kDurationFieldNumber = 2,
+    kTlFieldNumber = 2,
+    kBlFieldNumber = 3,
+    kTrFieldNumber = 4,
+    kBrFieldNumber = 5,
+    kDurationFieldNumber = 6,
   };
   // double speed = 1;
   void clear_speed();
@@ -1638,7 +1642,43 @@ class rotateRequest PROTOBUF_FINAL :
   void _internal_set_speed(double value);
   public:
 
-  // double duration = 2;
+  // double tl = 2;
+  void clear_tl();
+  double tl() const;
+  void set_tl(double value);
+  private:
+  double _internal_tl() const;
+  void _internal_set_tl(double value);
+  public:
+
+  // double bl = 3;
+  void clear_bl();
+  double bl() const;
+  void set_bl(double value);
+  private:
+  double _internal_bl() const;
+  void _internal_set_bl(double value);
+  public:
+
+  // double tr = 4;
+  void clear_tr();
+  double tr() const;
+  void set_tr(double value);
+  private:
+  double _internal_tr() const;
+  void _internal_set_tr(double value);
+  public:
+
+  // double br = 5;
+  void clear_br();
+  double br() const;
+  void set_br(double value);
+  private:
+  double _internal_br() const;
+  void _internal_set_br(double value);
+  public:
+
+  // double duration = 6;
   void clear_duration();
   double duration() const;
   void set_duration(double value);
@@ -1655,6 +1695,10 @@ class rotateRequest PROTOBUF_FINAL :
   typedef void InternalArenaConstructable_;
   typedef void DestructorSkippable_;
   double speed_;
+  double tl_;
+  double bl_;
+  double tr_;
+  double br_;
   double duration_;
   mutable ::PROTOBUF_NAMESPACE_ID::internal::CachedSize _cached_size_;
   friend struct ::TableStruct_armMessages_2eproto;
@@ -2495,7 +2539,87 @@ inline void rotateRequest::set_speed(double value) {
   // @@protoc_insertion_point(field_set:rotateRequest.speed)
 }
 
-// double duration = 2;
+// double tl = 2;
+inline void rotateRequest::clear_tl() {
+  tl_ = 0;
+}
+inline double rotateRequest::_internal_tl() const {
+  return tl_;
+}
+inline double rotateRequest::tl() const {
+  // @@protoc_insertion_point(field_get:rotateRequest.tl)
+  return _internal_tl();
+}
+inline void rotateRequest::_internal_set_tl(double value) {
+  
+  tl_ = value;
+}
+inline void rotateRequest::set_tl(double value) {
+  _internal_set_tl(value);
+  // @@protoc_insertion_point(field_set:rotateRequest.tl)
+}
+
+// double bl = 3;
+inline void rotateRequest::clear_bl() {
+  bl_ = 0;
+}
+inline double rotateRequest::_internal_bl() const {
+  return bl_;
+}
+inline double rotateRequest::bl() const {
+  // @@protoc_insertion_point(field_get:rotateRequest.bl)
+  return _internal_bl();
+}
+inline void rotateRequest::_internal_set_bl(double value) {
+  
+  bl_ = value;
+}
+inline void rotateRequest::set_bl(double value) {
+  _internal_set_bl(value);
+  // @@protoc_insertion_point(field_set:rotateRequest.bl)
+}
+
+// double tr = 4;
+inline void rotateRequest::clear_tr() {
+  tr_ = 0;
+}
+inline double rotateRequest::_internal_tr() const {
+  return tr_;
+}
+inline double rotateRequest::tr() const {
+  // @@protoc_insertion_point(field_get:rotateRequest.tr)
+  return _internal_tr();
+}
+inline void rotateRequest::_internal_set_tr(double value) {
+  
+  tr_ = value;
+}
+inline void rotateRequest::set_tr(double value) {
+  _internal_set_tr(value);
+  // @@protoc_insertion_point(field_set:rotateRequest.tr)
+}
+
+// double br = 5;
+inline void rotateRequest::clear_br() {
+  br_ = 0;
+}
+inline double rotateRequest::_internal_br() const {
+  return br_;
+}
+inline double rotateRequest::br() const {
+  // @@protoc_insertion_point(field_get:rotateRequest.br)
+  return _internal_br();
+}
+inline void rotateRequest::_internal_set_br(double value) {
+  
+  br_ = value;
+}
+inline void rotateRequest::set_br(double value) {
+  _internal_set_br(value);
+  // @@protoc_insertion_point(field_set:rotateRequest.br)
+}
+
+// double duration = 6;
 inline void rotateRequest::clear_duration() {
   duration_ = 0;
 }

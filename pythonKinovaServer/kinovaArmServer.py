@@ -268,15 +268,23 @@ class KinovaServer(QObject):
         return armMessages_pb2.moveResponse(responseCode=ret)
     
     def armRotateMode(self, request, context):
-        ret = self.arm.change_operating_mode(OPERATING_MODE_JOG_MANUAL)
+        self.arm.change_operating_mode('OPERATING_MODE_MONITORED_STOP')
+        time.sleep(.2)
+        ret = self.arm.change_operating_mode('OPERATING_MODE_JOG_MANUAL')
         printLog("Start rotationMode message")
         comString = "RMode Start"
         self.addCommandToList(comString)
-        return armMessages_pb2.statusResponse(responseCode=0)
+        return armMessages_pb2.statusResponse(flag=0)
 
     def armRotate(self, request, context):
-        comString = f"Rotate: {request.speed}"
+        rotateVal = request.tr - request.tl + request.bl - request.br
+        comString = f"Rotate: TL: {request.tl}, BL: {request.bl}, TR: {request.tr}, BR: {request.br}, ROTATE: {rotateVal}"
         printLog(comString)
+        if abs(rotateVal) > .5:
+            self.arm.WristTwistCommand(rotateVal, .05)
+        else:
+            self.arm.WristTwistCommand(0, .05)
+        
         return armMessages_pb2.rotateResponse(angle=0, flag=1)
 
     def armFeedback(self, request, context):
