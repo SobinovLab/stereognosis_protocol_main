@@ -576,8 +576,7 @@ class KinovaArm():
         return computed_joint_angles
 
 
-    def WristTwistCommand(self, speed, duration):
-        #self.change_operating_mode("OPERATING_MODE_JOG_MANUAL")
+    def WristTwistCommand(self, speed, duration): 
         command = Base_pb2.TwistCommand()
         command.reference_frame = Base_pb2.CARTESIAN_REFERENCE_FRAME_TOOL
         command.duration = duration            # seconds
