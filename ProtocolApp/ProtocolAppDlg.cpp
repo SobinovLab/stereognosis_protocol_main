@@ -692,7 +692,8 @@ void CProtocolAppDlg::OnBnClickedHomeMotorsBtn()
         AfxMessageBox("Initialize the motors by clicking the check button then retry this");
         return;
     }
-    int ret = m_protocol.armClient->armReady();
+    int ret = 0;
+     //m_protocol.armClient->armReady();
     if(ret < 0)
     {
         AfxMessageBox("SOME SHIT IS FUCKED, SHOULD HAVE HOMED");
@@ -831,13 +832,13 @@ void CProtocolAppDlg::OnBnClickedMotorsChk()
     int butState = ((CButton*)GetDlgItem(IDC_MOTORS_CHK))->GetCheck();
     if(butState == BST_UNCHECKED)
     {
-        m_protocol.armClient->connect();
+        //m_protocol.armClient->connect();
         ((CButton*)GetDlgItem(IDC_MOTORS_CHK))->SetCheck(BST_CHECKED);
         GetDlgItem(IDC_HOME_MOTORS_BTN)->EnableWindow(true);
     }
     else if(butState == BST_CHECKED)
     {
-        m_protocol.armClient->disconnect();
+        //m_protocol.armClient->disconnect();
         m_protocol.armHomed = false;
 		GetDlgItem(IDC_HOME_MOTORS_BTN)->EnableWindow(false);
         ((CButton*)GetDlgItem(IDC_MOTORS_CHK))->SetCheck(BST_UNCHECKED);

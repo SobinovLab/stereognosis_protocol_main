@@ -137,6 +137,11 @@ public:
 	double sounds_minfreq = 450;
 	double sounds_maxfreq = 550;
 
+	// proximity sensor
+    std::string prox_com_port = "";
+    int prox_detection_period_ms = 200;
+    int prox_timeout_ms = 200;
+
 	// motors
 	std::string motors_axes_filename = "./configuration/axes_stereognosis.json";
 	std::string motors_motors_filename = "./configuration/motors_stereognosis1.json";

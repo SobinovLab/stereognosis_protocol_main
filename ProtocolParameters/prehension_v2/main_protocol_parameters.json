@@ -61,5 +61,10 @@
     "motors": {
         "axes_filename": "C:/PrehensionProtocol/motors/axes_prehension_v2.json",
         "motors_filename": "C:/PrehensionProtocol/motors/motors_prehension_v2.json"
+    },
+    "proximity_sensor": {
+        "com_port": "",
+        "detection_period_ms": 200,
+        "timeout_ms": 200
     }
 }

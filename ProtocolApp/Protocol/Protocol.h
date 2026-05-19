@@ -25,6 +25,7 @@
 #include "LedStrip.h"
 #include "armCinterface.h"
 #include "kinovaErrCode.h"
+#include "ArduinoE18Detector.h"
 
 
 enum class ProtocolState
@@ -72,7 +73,8 @@ class Protocol
 		TeknicMotorApi* motorHub = nullptr;
 
         // arm (replacing motorHub)
-        KinovaArmClient* armClient = nullptr;
+		// ARS: disabling robot for transport task
+        // KinovaArmClient* armClient = nullptr;
         bool armHomed = false;
 
 		// current state of the protocol/trial
@@ -199,6 +201,9 @@ class Protocol
 
 		// LEDs
 		LedStrip* ledStrip = nullptr;
+
+		// proximity sensor
+		ArduinoE18Detector* arduinoE18Detector = nullptr;
 
 		//////// connected devices
 		void sync_message_trial_start();

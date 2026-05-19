@@ -290,5 +290,20 @@ int ProtocolParameters::load_json(std::string filename)
 		logWarning(buf.c_str());
 	}
 
+    // proximity sensor
+    try {
+        json proximity_sensor_json = pp_json.at("proximity_sensor");
+
+		prox_com_port =
+            proximity_sensor_json.value("com_port", prox_com_port);
+        prox_detection_period_ms = proximity_sensor_json.value(
+              "detection_period_ms", prox_detection_period_ms);
+        prox_timeout_ms = proximity_sensor_json.value("timeout_ms", prox_timeout_ms);
+    } catch (const json::exception& e) {
+        buf = "Error reading 'proximity_sensor' entry of json file. Using defaults." +
+            string(e.what());
+        logWarning(buf.c_str());
+    }
+
 	return 0;
 }

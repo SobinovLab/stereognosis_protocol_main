@@ -66,19 +66,20 @@ bool Protocol::were_motors_homed()
 int Protocol::home_motors()
 {
 	//return motorHub->home();
-    return armClient->goToHome();
+  return 0;  // armClient->goToHome();
 }
 
 void Protocol::stop_motors()
 {
-    armClient->stopArm();
+    // armClient->stopArm();
 	//motorHub->stop();
 }
 
 int Protocol::motors_neutral_position()
 {
 	//return motorHub->neutral_position();
-    return armClient->goToHome();
+  return 0;
+  // armClient->goToHome();
 }
 
 
@@ -623,8 +624,8 @@ void Protocol::run()
 		//vector<double> positions = { params.pos_translation_x, params.pos_tilt, params.pos_aperture };
 		rets = 0;
 		motorRet = 1;
-		if (!stopTrial.load())
-			motorRet = armClient->preshape(params.pos_aperture);
+		//if (!stopTrial.load())
+		//	motorRet = armClient->preshape(params.pos_aperture);
 		if (motorRet < 0)
 		{
 			// bad error
@@ -676,7 +677,11 @@ void Protocol::run()
 		// approach
 		if (!rets && !stopTrial.load()) {
 			//motor_rets = motorHub->approach(axes, positions);
-            motorRet = armClient->moveToPosition(params.pos_translation_x, params.pos_translation_depth, params.pos_translation_height, params.pos_tilt, 0, 0, params.pos_aperture);
+                  motorRet = 1;
+                   //armClient->moveToPosition(
+                      //params.pos_translation_x, params.pos_translation_depth,
+                      //params.pos_translation_height, params.pos_tilt, 0, 0,
+                      //params.pos_aperture);
 			if (motorRet < 0)
 			{
                 logError("Bad motor error encountered during approach. Interrupting the protocol. Error is the following");
@@ -705,7 +710,12 @@ void Protocol::run()
 		if (!stopTrial.load() && rets >= 0) {
 			bool animalLifted = false;
 			// spawn the process that monitors the async stopping conditions
-			m_asyncTrialSuccessMonitorThread = new thread(&Protocol::m_asyncTrialConditionMonitor, this);
+            //m_asyncTrialSuccessMonitorThread = new thread(&Protocol::m_asyncTrialConditionMonitor, this);
+            m_earnedReward = false;
+            m_stopAsyncTrialConditionMonitor = false;
+			m_asyncTrialSuccessMonitorThread = new thread(&ArduinoE18Detector::waitDetectedStable,
+                           this->arduinoE18Detector, std::ref(m_earnedReward),
+                           std::ref(m_stopAsyncTrialConditionMonitor));
             log_started_monitoring_ps = Times::getCurrentTimeInMilliSecs();
 			trialStartTime = Times::getCurrentTime();
 			playStartTaskTone();
@@ -782,7 +792,7 @@ void Protocol::run()
 
 		// retreat motors
 		//motorHub->retreat();
-        armClient->goToHome();
+        //armClient->goToHome();
 		log_starting_finishing_recordings = Times::getCurrentTimeInMilliSecs();
 
 		// sync again
@@ -835,7 +845,7 @@ void Protocol::run()
 
 	// retreat motors
 	//motorHub->retreat();
-    armClient->goToHome();
+    //armClient->goToHome();
 
 	// release all devices in the destructor
 	closeCsvLog();
@@ -1195,10 +1205,10 @@ void Protocol::initDevices()
 		motorHub = new TeknicMotorApi(params.motors_motors_filename, params.motors_axes_filename);
 	}
 
-    if(armClient)
-        logWarning("Arm Client already initialized, cannot init again");
-    else
-        armClient = new KinovaArmClient();
+    //if(armClient)
+    //    logWarning("Arm Client already initialized, cannot init again");
+    //else
+    //    armClient = new KinovaArmClient();
 
 	// LEDs
 	if (ledStrip) {
@@ -1224,6 +1234,16 @@ void Protocol::initDevices()
 			logInfo("Finished LED test.");
 		}
 	}
+
+	// proximity sensor
+	if (arduinoE18Detector) {
+		logWarning("Proximity sensor arduinoE18Detector already initialized, cannot init again.");
+    } else {
+        arduinoE18Detector = new ArduinoE18Detector(params.prox_com_port);
+		arduinoE18Detector->detection_period_ms = params.prox_detection_period_ms;
+        arduinoE18Detector->timeout_ms = params.prox_timeout_ms;
+        arduinoE18Detector->connect();
+	}
 }
 
 void Protocol::releaseDevices()
@@ -1237,17 +1257,23 @@ void Protocol::releaseDevices()
 		motorHub = nullptr;
 	}
 
-    if(armClient)
-    {
-        delete armClient;
-        armClient = nullptr;
-    }
+    //if(armClient)
+    //{
+    //    delete armClient;
+    //    armClient = nullptr;
+    //}
 
 	// LEDs
 	if (ledStrip) {  // check if nullptr
 		delete ledStrip;
 		ledStrip = nullptr;
-	}
+        }
+
+    // proximity sensor
+    if (arduinoE18Detector) {  // check if nullptr
+        delete arduinoE18Detector;
+        arduinoE18Detector = nullptr;
+    }
 }
 
 bool Protocol::isMotorsOn()
