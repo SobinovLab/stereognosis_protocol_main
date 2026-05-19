@@ -358,19 +358,19 @@ void CProtocolAppDlg::OnStartProtocolBtnClicked()
 		toggleProtocolCtrls(false);
 		GetDlgItem(IDC_STOP_PROTOCOL_BTN)->EnableWindow(false);
 
-		// check if homed
-		if (m_protocol.isMotorsOn()) {
-			if (!m_protocol.were_motors_homed())
-				AfxMessageBox("Motors were not homed. Please home them prior to starting the trial.");
-		}
+		//// check if homed
+		//if (m_protocol.isMotorsOn()) {
+		//	if (!m_protocol.were_motors_homed())
+		//		AfxMessageBox("Motors were not homed. Please home them prior to starting the trial.");
+		//}
 
-        //check if arm homed
-        if (!m_protocol.armHomed)
-        {
-            AfxMessageBox("The arm was not homed, make sure you click the calibrate arm buton");
-            GetDlgItem(IDC_STOP_PROTOCOL_BTN)->EnableWindow(true);
-            return;
-        }
+  //      //check if arm homed
+  //      if (!m_protocol.armHomed)
+  //      {
+  //          AfxMessageBox("The arm was not homed, make sure you click the calibrate arm buton");
+  //          GetDlgItem(IDC_STOP_PROTOCOL_BTN)->EnableWindow(true);
+  //          return;
+  //      }
 
 		// in case any parameters were changed
 		logInfo("Should be doing the right shit");
