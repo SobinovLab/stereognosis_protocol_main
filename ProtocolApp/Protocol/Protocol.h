@@ -25,7 +25,7 @@
 #include "LedStrip.h"
 #include "armCinterface.h"
 #include "kinovaErrCode.h"
-#include "ArduinoE18Detector.h"
+#include "ArduinoBreakBeamDetector.h"
 
 
 enum class ProtocolState
@@ -203,7 +203,7 @@ class Protocol
 		LedStrip* ledStrip = nullptr;
 
 		// proximity sensor
-		ArduinoE18Detector* arduinoE18Detector = nullptr;
+		ArduinoBreakBeamDetector* arduinoBreakBeamDetector = nullptr;
 
 		//////// connected devices
 		void sync_message_trial_start();

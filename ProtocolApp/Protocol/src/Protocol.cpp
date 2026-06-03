@@ -713,8 +713,8 @@ void Protocol::run()
             //m_asyncTrialSuccessMonitorThread = new thread(&Protocol::m_asyncTrialConditionMonitor, this);
             m_earnedReward = false;
             m_stopAsyncTrialConditionMonitor = false;
-			m_asyncTrialSuccessMonitorThread = new thread(&ArduinoE18Detector::waitDetectedStable,
-                           this->arduinoE18Detector, std::ref(m_earnedReward),
+			m_asyncTrialSuccessMonitorThread = new thread(&ArduinoBreakBeamDetector::waitDetectedStable,
+                           this->arduinoBreakBeamDetector, std::ref(m_earnedReward),
                            std::ref(m_stopAsyncTrialConditionMonitor));
             log_started_monitoring_ps = Times::getCurrentTimeInMilliSecs();
 			trialStartTime = Times::getCurrentTime();
@@ -1235,14 +1235,14 @@ void Protocol::initDevices()
 		}
 	}
 
-	// proximity sensor
-	if (arduinoE18Detector) {
-		logWarning("Proximity sensor arduinoE18Detector already initialized, cannot init again.");
+	// break-beam sensor
+	if (arduinoBreakBeamDetector) {
+		logWarning("Break-beam sensor arduinoBreakBeamDetector already initialized, cannot init again.");
     } else {
-        arduinoE18Detector = new ArduinoE18Detector(params.prox_com_port);
-		arduinoE18Detector->detection_period_ms = params.prox_detection_period_ms;
-        arduinoE18Detector->timeout_ms = params.prox_timeout_ms;
-        arduinoE18Detector->connect();
+        arduinoBreakBeamDetector = new ArduinoBreakBeamDetector(params.prox_com_port);
+		arduinoBreakBeamDetector->detection_period_ms = params.prox_detection_period_ms;
+        arduinoBreakBeamDetector->timeout_ms = params.prox_timeout_ms;
+        arduinoBreakBeamDetector->connect();
 	}
 }
 
@@ -1269,10 +1269,10 @@ void Protocol::releaseDevices()
 		ledStrip = nullptr;
         }
 
-    // proximity sensor
-    if (arduinoE18Detector) {  // check if nullptr
-        delete arduinoE18Detector;
-        arduinoE18Detector = nullptr;
+    // break-beam sensor
+    if (arduinoBreakBeamDetector) {  // check if nullptr
+        delete arduinoBreakBeamDetector;
+        arduinoBreakBeamDetector = nullptr;
     }
 }
 

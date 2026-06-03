@@ -100,7 +100,7 @@ copy /B /V /Y "$(ProjectDir)..\session_configs\*" "$(OutDir)\session_configs\" &
     <ClInclude Include="LEDs\SerialEnumserParts.h" />
     <ClInclude Include="ProtocolApp.h" />
     <ClInclude Include="ProtocolAppDlg.h" />
-    <ClInclude Include="Protocol\ArduinoE18Detector.h" />
+    <ClInclude Include="Protocol\ArduinoBreakBeamDetector.h" />
     <ClInclude Include="Protocol\CStaticColor.h" />
     <ClInclude Include="teknicMotors\TeknicMotorApi.h" />
     <ClInclude Include="utilities\CEditableListBox.h" />
