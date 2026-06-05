@@ -52,7 +52,7 @@ class ArduinoBreakBeamDetector {
 
   // Query once: true if beam was broken in the Arduino's last 500 ms window.
   bool isDetected() {
-    if (!ensureConnected()) return false;
+    if (ensureConnected()) return false;
     writeLine("GET");
     std::string line = readLine(this->timeout_ms);
     return (line == "1");
@@ -61,7 +61,7 @@ class ArduinoBreakBeamDetector {
   // Clear the Arduino's break-event memory. Call between trials so leftover
   // state from the previous trial cannot satisfy the next one.
   void resetState() {
-    if (!ensureConnected()) return;
+    if (ensureConnected()) return;
     writeLine("RESET");
     try { readLine(this->timeout_ms); } catch (...) {}  // consume "OK"
   }
@@ -71,7 +71,8 @@ class ArduinoBreakBeamDetector {
   bool waitDetectedStable(
       std::atomic<bool>& m_earnedReward,
       std::atomic<bool>& m_stopAsyncTrialConditionMonitor) {
-    if (!ensureConnected()) return false;
+    if (ensureConnected()) 
+        return false;
 
     auto start = std::chrono::steady_clock::now();
     bool inDetection = false;

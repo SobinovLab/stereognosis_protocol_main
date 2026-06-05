@@ -59,5 +59,10 @@
     "motors": {
         "axes_filename": "C:/PrehensionProtocol/motors/axes_stereognosis_v1.json",
         "motors_filename": "C:/PrehensionProtocol/motors/motors_stereognosis_v1.json"
+    },
+    "proximity_sensor": {
+        "com_port": "COM9",
+        "detection_period_ms": 200,
+        "timeout_ms": 200
     }
 }
