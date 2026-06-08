@@ -292,15 +292,19 @@ BOOL CProtocolAppDlg::PreTranslateMessage(MSG* pMsg)
 		case 's':
 		case 'S':
 			OnKeyPress_S();
+			break;
 		case 't':
 		case 'T':
 			OnKeyPress_T();
+			break;
 		case 'w':
 		case 'W':
 			OnKeyPress_W();
+			break;
 		case 'f':
 		case 'F':
 			OnKeyPress_F();
+			break;
 		default:
 			break;
 		}
