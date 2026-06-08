@@ -1303,6 +1303,7 @@ void Protocol::watch_early_grab()
 		}
 
 		if (startTime && Times::isTimeout(*startTime, params.photoresistor_status_switch_delay / 1000)) {
+			logInfo("Lifted arm timed out, cancelling trial");
 			stopTrial.store(true);
 			stop_motors();
 			break;
@@ -1452,6 +1453,7 @@ int Protocol::wait_until_arm_liftoff()
 
 void Protocol::armMonitoringThread()
 {
+	std::chrono::steady_clock::time_point* startTime = nullptr;
     int offCounter = 0;
 	char msg[256];
 	sprintf(msg, "This is the background thread for passive, allowInterupt: %i, monitorPassive: %i", allowInterupt.load() == true, monitor_passive_arm.load() == true);

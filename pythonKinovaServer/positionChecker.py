@@ -67,18 +67,19 @@ def analyze(arm, pos, check, move=False):
 	return
 
 
-lateral = range(245, 381, 5)
-depth = range(0, 401, 5)
-height = range(-100, 101, 5)
+#lateral = range(245, 381, 5)
+#depth = range(0, 401, 5)
+#height = range(-100, 101, 5)
+#tilt = [0]
+#pitch = [0]
+#yaw = [0]
+
+lateral = [8]
+depth = [220]
+height = [-15]
 tilt = [0]
 pitch = [0]
 yaw = [0]
-#lateral = [-125]
-#depth = [345]
-#height = [-45]
-#tilt = [-20, 20]
-#pitch = [0]
-#yaw = [0]
 
 f1 = open("simpleCheck2.csv", "w")
 f2 = open("completeCheck.csv", "w")
