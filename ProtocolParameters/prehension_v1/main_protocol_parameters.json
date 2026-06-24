@@ -16,11 +16,11 @@
         "pos_aperture": 0
     },
     "cameras": {
-        "ip1": "205.208.63.167",
+        "ip1": "205.208.87.108",
         "port1": 63874,
-        "ip2": "205.208.63.60",
+        "ip2": "205.208.63.128",
         "port2": 63874,
-        "framerate": 40,
+        "framerate": 50,
         "recordingPeriod": 60,
         "refSerial": 22401386,
         "exposure": "2500",
@@ -28,7 +28,7 @@
         "capture_n_frames": 10
     },
     "pressure_sensor": {
-        "ip": "205.208.63.251",
+        "ip": "205.208.63.200",
         "port": 54940,
         "targetForce": 1,
         "targetForceRelRangeMin": -0.25,

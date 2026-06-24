@@ -16,9 +16,9 @@
         "pos_aperture": 0
     },
     "cameras": {
-        "cs_ips": ["128.135.148.82", "128.135.148.111", "128.135.148.93", "128.135.148.114"],
+        "cs_ips": ["205.208.63.131"],
         "cs_port": 63874,
-        "framerate": 80,
+        "framerate": 30,
         "recordingPeriod": 60,
         "refSerial": 22401385,
         "exposure": "2500",
@@ -52,11 +52,11 @@
         "bottom_reverse_order": 0
     },
     "sounds": {
-        "enabled": 0,
+        "enabled": 1,
         "minforce": 2,
         "maxforce": 3.75,
-        "minfreq": 450,
-        "maxfreq": 550
+        "minfreq": 500,
+        "maxfreq": 500
     },
     "motors": {
         "axes_filename": "C:/PrehensionProtocol/motors/axes_prehension_v2.json",

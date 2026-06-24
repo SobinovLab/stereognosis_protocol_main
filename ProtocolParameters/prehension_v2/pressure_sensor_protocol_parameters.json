@@ -4,12 +4,12 @@
     "sensor_left": {
         "serial": "00110-1413",
         "description": "orange",
-        "calibration": "C:/PrehensionProtocol/pressure_sensors/00110-1413cal_2023_02_07.cal"
+        "calibration": "C:/PrehensionProtocol/pressure_sensors/00110-1413cal_2026_03_06.cal"
     },
     "sensor_right": {
         "serial": "00110-1365",
         "description": "blue",
-        "calibration": "C:/PrehensionProtocol/pressure_sensors/00110-1365cal_2023_02_07.cal"
+        "calibration": "C:/PrehensionProtocol/pressure_sensors/00110-1365cal_2026_06_24.cal"
     },
     "sensor_map": "C:/PrehensionProtocol/pressure_sensors/5076.mp",
     "default_output_folder": "D:/tekscan_data/",
