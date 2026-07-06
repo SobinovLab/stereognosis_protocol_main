@@ -17,6 +17,7 @@
 #define IDC_TOUCH_RIGHT                 1030
 #define IDC_CURRENT_TRIAL_EDT           1031
 #define IDC_TOUCH_LEFT                  1032
+#define IDC_BREAKBEAM                   1033
 #define IDC_MAX_WAIT_EDT_BOX            1034
 #define IDC_START_TRIAL_BTN             1035
 #define IDC_RETREAT_FLUSH_WATER_BTN     1036
@@ -73,17 +74,20 @@
 #define IDC_LEFT_SECOND                 1110
 #define IDC_SPLIT_REWARD                1111
 #define IDC_SPLIT_REWARD1               1111
+#define IDC_EDIT_NUM_SUC_TRIALS         1112
 #define IDC_RIGHT_MAIN                  1113
 #define IDC_LEFT_SECOND2                1113
 #define IDC_RIGHT_SECOND                1114
-#define IDC_RO_COUNTER_EDT				1115
+#define IDC_RO_COUNTER_EDT              1115
 #define IDC_IPS1_LST                    1116
-#define IDC_PORT1_EDT					1117
+#define IDC_PORT1_EDT                   1117
 #define IDC_CONNECT_BTN                 1118
 #define IDC_DISCONNECT_BTN              1119
 #define IDC_START_CALIBRATION           1120
 #define IDC_STOP_CALIBRATION            1121
 #define IDC_TTL_TEST_BTN                1122
+#define IDC_EDIT2                       1123
+#define IDC_EDIT_NUM_FAILED_TRIALS      1123
 
 // Next default values for new objects
 // 
@@ -91,7 +95,7 @@
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        130
 #define _APS_NEXT_COMMAND_VALUE         32771
-#define _APS_NEXT_CONTROL_VALUE         1112
+#define _APS_NEXT_CONTROL_VALUE         1124
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif

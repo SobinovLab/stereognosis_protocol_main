@@ -79,6 +79,9 @@ public:
 	CStaticColor m_leftArmSensorCtrl;
 	CStaticColor m_rightArmSensorCtrl;
 
+	// break-beam sensor
+	CStaticColor m_breakBeamCtrl;
+
 	//////// Trial
 	// buttons
 	CButton m_startTrialBtn;

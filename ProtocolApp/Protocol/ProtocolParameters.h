@@ -70,6 +70,10 @@ public:
 	int trial_number = 0;
 	int counter = 0; // This always increments
 	int total_trials = 0;
+	// Session-cumulative outcome counters (GUI display only). Not reset between
+	// protocol runs so they survive stopping/restarting the protocol.
+	int num_successful_trials = 0;
+	int num_failed_trials = 0;
 	double pos_translation_x = 0;
     double pos_translation_height = 0;
     double pos_translation_depth = 0;

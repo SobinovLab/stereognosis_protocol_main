@@ -88,6 +88,7 @@ class Protocol
 		CEdit* m_trialStatus;
 		CButton* loopChk;
 		void set_photoresistor_monitors(CStaticColor* front, CStaticColor* rear, CStaticColor* left, CStaticColor* right);
+		void set_breakbeam_monitor(CStaticColor* breakBeam);
 		void set_camera1_gui_controls(CEdit* serverLogCtrl);
 		void set_camera2_gui_controls(CEdit* serverLogCtrl);
 		void set_pressure_sensors_gui_controls(CEdit* serverLogCtrl);
@@ -204,6 +205,21 @@ class Protocol
 
 		// proximity sensor
 		ArduinoBreakBeamDetector* arduinoBreakBeamDetector = nullptr;
+		// Current break-beam state (true = beam covered/broken). Continuously
+		// updated by breakBeamMonitorThread(); read by the trial-success checks
+		// instead of querying the Arduino directly.
+		std::atomic<bool> m_breakBeamCovered = false;
+		// GUI monitor for the break-beam state (IDC_BREAKBEAM): black when the
+		// beam is covered, white when clear. Styled like the photoresistor labels.
+		CStaticColor* m_breakBeamCtrl = nullptr;
+		// Background thread that constantly polls the Arduino and mirrors its
+		// state into m_breakBeamCovered and the IDC_BREAKBEAM GUI field.
+		std::thread* m_breakBeamMonitorThread = nullptr;
+		std::atomic<bool> m_stopBreakBeamMonitor = false;
+		void breakBeamMonitorThread();
+		// Watches m_breakBeamCovered and sets m_earnedReward once the beam
+		// stays covered for detection_period_ms (per-trial success monitor).
+		void m_breakBeamTrialSuccessMonitor();
 
 		//////// connected devices
 		void sync_message_trial_start();

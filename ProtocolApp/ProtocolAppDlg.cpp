@@ -25,6 +25,7 @@ void CProtocolAppDlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_PHOTORES_REAR_LBL, m_rearPhotoresistorCtrl);
 	DDX_Control(pDX, IDC_TOUCH_LEFT, m_leftArmSensorCtrl);
 	DDX_Control(pDX, IDC_TOUCH_RIGHT, m_rightArmSensorCtrl);
+	DDX_Control(pDX, IDC_BREAKBEAM, m_breakBeamCtrl);
 
 	// trial
 	DDX_Control(pDX, IDC_START_TRIAL_BTN, m_startTrialBtn);
@@ -60,6 +61,10 @@ void CProtocolAppDlg::DoDataExchange(CDataExchange* pDX)
 
 	// Set total counter
 	DDX_Text(pDX, IDC_RO_COUNTER_EDT, m_protocol.params.counter);
+
+	// successful / failed trial counters (read-only, push only)
+	DDX_Text(pDX, IDC_EDIT_NUM_SUC_TRIALS, m_protocol.params.num_successful_trials);
+	DDX_Text(pDX, IDC_EDIT_NUM_FAILED_TRIALS, m_protocol.params.num_failed_trials);
 
 	DDX_Text(pDX, IDC_POS_TRANSLATION_X_EDT, m_protocol.params.pos_translation_x);
 	DDX_Text(pDX, IDC_POS_TILT_EDT, m_protocol.params.pos_tilt);
@@ -177,6 +182,7 @@ BOOL CProtocolAppDlg::OnInitDialog()
 	m_protocol.mainWindow = this;
 
 	m_protocol.set_photoresistor_monitors(&m_frontPhotoresistorCtrl, &m_rearPhotoresistorCtrl, &m_leftArmSensorCtrl, &m_rightArmSensorCtrl);
+	m_protocol.set_breakbeam_monitor(&m_breakBeamCtrl);
 	m_protocol.set_camera1_gui_controls(&m_serverLogCtrl1);
 	m_protocol.set_camera2_gui_controls(&m_serverLogCtrl2);
 	m_protocol.set_pressure_sensors_gui_controls(&m_touchServerLogCtrl);
@@ -292,15 +298,19 @@ BOOL CProtocolAppDlg::PreTranslateMessage(MSG* pMsg)
 		case 's':
 		case 'S':
 			OnKeyPress_S();
+            break;
 		case 't':
 		case 'T':
-			OnKeyPress_T();
+            OnKeyPress_T();
+            break;
 		case 'w':
 		case 'W':
-			OnKeyPress_W();
+            OnKeyPress_W();
+            break;
 		case 'f':
 		case 'F':
-			OnKeyPress_F();
+            OnKeyPress_F();
+            break;
 		default:
 			break;
 		}

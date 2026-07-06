@@ -63,7 +63,7 @@
         "motors_filename": "C:/PrehensionProtocol/motors/motors_prehension_v2.json"
     },
     "proximity_sensor": {
-        "com_port": "COM9",
+        "com_port": "COM8",
         "detection_period_ms": 200,
         "timeout_ms": 200
     }

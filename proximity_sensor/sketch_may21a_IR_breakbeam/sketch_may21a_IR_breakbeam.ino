@@ -10,7 +10,7 @@ static const uint8_t BEAM_PIN = 4;
 // If your module is inverted, set this to HIGH instead.
 static const uint8_t BROKEN_LEVEL = LOW;
 
-static const uint16_t WINDOW_MS = 500;
+static const uint16_t WINDOW_MS = 300;
 
 // Debounce/glitch filtering (optional but cheap):
 // require the same level N consecutive reads before accepting a change.

@@ -1,7 +1,7 @@
 {
     "protocol": {
         "maxWaitTime": 20,
-        "intertrialWaitTime": 2 ,
+        "intertrialWaitTime": 6 ,
         "primary_session_file_directory": "C:/PrehensionProtocol/session_configs/",
         "secondary_session_file_directory": "./session_configs/",
         "primary_session_log_directory": "C:/PrehensionProtocol/session_logs/",
@@ -61,7 +61,7 @@
         "motors_filename": "C:/PrehensionProtocol/motors/motors_stereognosis_v1.json"
     },
     "proximity_sensor": {
-        "com_port": "COM9",
+        "com_port": "COM8",
         "detection_period_ms": 200,
         "timeout_ms": 200
     }

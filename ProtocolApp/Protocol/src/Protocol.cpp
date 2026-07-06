@@ -713,9 +713,9 @@ void Protocol::run()
             //m_asyncTrialSuccessMonitorThread = new thread(&Protocol::m_asyncTrialConditionMonitor, this);
             m_earnedReward = false;
             m_stopAsyncTrialConditionMonitor = false;
-			m_asyncTrialSuccessMonitorThread = new thread(&ArduinoBreakBeamDetector::waitDetectedStable,
-                           this->arduinoBreakBeamDetector, std::ref(m_earnedReward),
-                           std::ref(m_stopAsyncTrialConditionMonitor));
+			// Success is judged off the continuously-updated m_breakBeamCovered
+			// variable, not by querying the Arduino from this thread.
+			m_asyncTrialSuccessMonitorThread = new thread(&Protocol::m_breakBeamTrialSuccessMonitor, this);
             log_started_monitoring_ps = Times::getCurrentTimeInMilliSecs();
 			trialStartTime = Times::getCurrentTime();
 			playStartTaskTone();
@@ -766,6 +766,7 @@ void Protocol::run()
 
 		// Give the reward or not
 		if (m_earnedReward || deservesReward) {
+			params.num_successful_trials++;
 			reward();
             if(reward_on_return.load())
             {
@@ -780,6 +781,7 @@ void Protocol::run()
             }
 		}
 		else {
+			params.num_failed_trials++;
 			Sounds::playErrorTone();
 
 			// append the failed trial to the end
@@ -789,6 +791,8 @@ void Protocol::run()
 				repeating_trial.push_back(true);
 			}
 		}
+		// reflect the updated success/failure counters on the GUI
+		push_variables_to_gui();
 
 		// retreat motors
 		//motorHub->retreat();
@@ -859,6 +863,11 @@ void Protocol::set_photoresistor_monitors(CStaticColor* front, CStaticColor* rea
 	m_NIUsb6001card.setFrontPhotoresistorMonitor(front);
 	m_NIUsb6001card.setRearPhotoresistorMonitor(rear);
     m_NIUsb6001card.setArmTouchSensors(left, right);
+}
+
+void Protocol::set_breakbeam_monitor(CStaticColor* breakBeam)
+{
+	m_breakBeamCtrl = breakBeam;
 }
 
 
@@ -1244,6 +1253,12 @@ void Protocol::initDevices()
         arduinoBreakBeamDetector->timeout_ms = params.prox_timeout_ms;
         arduinoBreakBeamDetector->connect();
 	}
+
+	// Continuously mirror the break-beam state into m_breakBeamCovered and the GUI.
+	if (!m_breakBeamMonitorThread) {
+		m_stopBreakBeamMonitor = false;
+		m_breakBeamMonitorThread = new thread(&Protocol::breakBeamMonitorThread, this);
+	}
 }
 
 void Protocol::releaseDevices()
@@ -1269,11 +1284,91 @@ void Protocol::releaseDevices()
 		ledStrip = nullptr;
         }
 
-    // break-beam sensor
+    // break-beam sensor: stop the monitor thread before releasing the device
+    if (m_breakBeamMonitorThread) {
+        m_stopBreakBeamMonitor = true;
+        m_breakBeamMonitorThread->join();
+        delete m_breakBeamMonitorThread;
+        m_breakBeamMonitorThread = nullptr;
+    }
     if (arduinoBreakBeamDetector) {  // check if nullptr
         delete arduinoBreakBeamDetector;
         arduinoBreakBeamDetector = nullptr;
     }
+}
+
+// Continuously polls the break-beam sensor and mirrors its state into the
+// thread-safe m_breakBeamCovered variable and the IDC_BREAKBEAM GUI field.
+// This is the only place that talks to the Arduino for beam state.
+void Protocol::breakBeamMonitorThread()
+{
+	// black when covered, white when clear (same style as photoresistor labels)
+	const COLORREF coveredColor = RGB(0, 0, 0);
+	const COLORREF clearColor = RGB(255, 255, 255);
+
+	bool guiInit = false;   // becomes true after the first GUI write
+	bool lastWritten = false;
+	while (!m_stopBreakBeamMonitor.load()) {
+		bool covered = false;
+		if (arduinoBreakBeamDetector) {
+			try {
+				covered = arduinoBreakBeamDetector->isDetected();
+			} catch (...) {
+				// On a read error/timeout, treat as not covered for robustness.
+				covered = false;
+			}
+		}
+		m_breakBeamCovered.store(covered);
+
+		// Reflect the state on the GUI only when it changes, to avoid needless
+		// redraws. m_breakBeamCtrl may be null until the dialog is up, so force
+		// a write the first time it becomes available.
+		if (m_breakBeamCtrl && (!guiInit || covered != lastWritten)) {
+			m_breakBeamCtrl->SetBkColor(covered ? coveredColor : clearColor);
+			lastWritten = covered;
+			guiInit = true;
+		}
+
+		std::this_thread::sleep_for(std::chrono::milliseconds(
+			arduinoBreakBeamDetector ? arduinoBreakBeamDetector->poll_sleep_ms : 5));
+	}
+}
+
+// Per-trial success monitor: reads the continuously-updated m_breakBeamCovered
+// variable (instead of querying the Arduino) and sets m_earnedReward once the
+// beam has stayed covered for detection_period_ms.
+void Protocol::m_breakBeamTrialSuccessMonitor()
+{
+	if (!arduinoBreakBeamDetector)
+		return;
+	const int detection_period_ms = arduinoBreakBeamDetector->detection_period_ms;
+	const int poll_sleep_ms = arduinoBreakBeamDetector->poll_sleep_ms;
+
+	bool inDetection = false;
+	auto detectStart = std::chrono::steady_clock::now();
+
+	while (!m_stopAsyncTrialConditionMonitor.load()) {
+		bool det = m_breakBeamCovered.load();
+		auto now = std::chrono::steady_clock::now();
+
+		if (det) {
+			if (!inDetection) {
+				inDetection = true;
+				detectStart = now;
+			} else {
+				auto durMs = (int)std::chrono::duration_cast<std::chrono::milliseconds>(
+					now - detectStart).count();
+				if (durMs >= detection_period_ms) {
+					m_earnedReward.store(true);
+					return;
+				}
+			}
+		} else {
+			inDetection = false;
+		}
+
+		std::this_thread::sleep_for(std::chrono::milliseconds(poll_sleep_ms));
+	}
 }
 
 bool Protocol::isMotorsOn()
