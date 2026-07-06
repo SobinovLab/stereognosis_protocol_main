@@ -21,6 +21,7 @@ static inline bool beamBroken() {
 
 void setup() {
   pinMode(BEAM_PIN, INPUT_PULLUP);
+  pinMode(LED_BUILTIN, OUTPUT);  // on-board LED (pin 13) indicates beam state
   Serial.begin(115200);
   Serial.println("READY BREAKBEAM_PERIODIC");
 }
@@ -35,6 +36,9 @@ void loop() {
     // Guard against drift if the loop was ever delayed by more than one period.
     if ((uint32_t)(now - lastSampleMs) >= SAMPLE_INTERVAL_MS) lastSampleMs = now;
 
-    Serial.println(beamBroken() ? "COVERED" : "CLEAR");
+    bool broken = beamBroken();
+    // LED on when the beam is clear, off when it is covered.
+    digitalWrite(LED_BUILTIN, broken ? LOW : HIGH);
+    Serial.println(broken ? "COVERED" : "CLEAR");
   }
 }
