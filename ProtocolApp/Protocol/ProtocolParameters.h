@@ -70,6 +70,8 @@ public:
 	int trial_number = 0;
 	int counter = 0; // This always increments
 	int total_trials = 0;
+	int num_successful_trials = 0;  // running count, not wiped on stop
+	int num_failed_trials = 0;      // running count, not wiped on stop
 	double pos_translation_x = 0;
     double pos_translation_height = 0;
     double pos_translation_depth = 0;

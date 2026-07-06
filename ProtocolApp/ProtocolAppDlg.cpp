@@ -61,6 +61,10 @@ void CProtocolAppDlg::DoDataExchange(CDataExchange* pDX)
 	// Set total counter
 	DDX_Text(pDX, IDC_RO_COUNTER_EDT, m_protocol.params.counter);
 
+	// Successful / failed trial counters (read-only, not wiped on stop)
+	DDX_Text(pDX, IDC_EDIT_NUM_SUC_TRIALS, m_protocol.params.num_successful_trials);
+	DDX_Text(pDX, IDC_EDIT_NUM_FAILED_TRIALS, m_protocol.params.num_failed_trials);
+
 	DDX_Text(pDX, IDC_POS_TRANSLATION_X_EDT, m_protocol.params.pos_translation_x);
 	DDX_Text(pDX, IDC_POS_TILT_EDT, m_protocol.params.pos_tilt);
 	DDX_Text(pDX, IDC_POS_APERTURE_EDT, m_protocol.params.pos_aperture);

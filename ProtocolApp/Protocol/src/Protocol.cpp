@@ -756,6 +756,7 @@ void Protocol::run()
 
 		// Give the reward or not
 		if (m_earnedReward || deservesReward) {
+			params.num_successful_trials++;
 			reward();
             if(reward_on_return.load())
             {
@@ -770,6 +771,7 @@ void Protocol::run()
             }
 		}
 		else {
+			params.num_failed_trials++;
 			Sounds::playErrorTone();
 
 			// append the failed trial to the end
