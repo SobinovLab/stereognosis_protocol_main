@@ -573,8 +573,8 @@ void Protocol::run()
 		// The usual place to exit the protocol, if not at the end of a trial
 		if (stopProtocol.load())
 			break;
-		// Default behavior is looping - after the first trial
-		autoLoopToggle(true);
+		// Default behavior is looping - after the first trial - not for TRANSPORT for now
+		autoLoopToggle(false);
 
 		// GUI Can't click on StartTrial anymore
 		trialFieldsEnableStart(false);
@@ -767,6 +767,7 @@ void Protocol::run()
 		// Give the reward or not
 		if (m_earnedReward || deservesReward) {
 			params.num_successful_trials++;
+			Sounds::playTone(550);
 			reward();
             if(reward_on_return.load())
             {

@@ -186,6 +186,9 @@ LedStrip::LedStrip(std::string led_port, std::string comPortFriendlyName)
     message_buffer[17] = '0';
     message_buffer[18] = '0';
     message_buffer[19] = '\0';
+
+
+    initializedCorrectly = false;
 }
 
 LedStrip::~LedStrip()

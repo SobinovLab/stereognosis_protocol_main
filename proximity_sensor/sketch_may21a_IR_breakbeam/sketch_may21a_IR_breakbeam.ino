@@ -77,6 +77,7 @@ static void handleCommand(const char* s) {
 
 void setup() {
   pinMode(BEAM_PIN, INPUT_PULLUP);
+  pinMode(LED_BUILTIN, OUTPUT);  // on-board LED (pin 13) indicates beam state
   Serial.begin(115200);
   Serial.println("READY BREAKBEAM");
 }
@@ -117,6 +118,8 @@ void loop() {
     everBroken = true;
     interrupts();
   }
+
+  digitalWrite(LED_BUILTIN, stable ? LOW : HIGH);
 
   // === NON-BLOCKING SERIAL COMMAND HANDLING ===
   while (Serial.available() > 0) {
