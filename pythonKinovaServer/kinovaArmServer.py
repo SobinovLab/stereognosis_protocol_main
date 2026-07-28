@@ -164,7 +164,7 @@ class KinovaServer(QObject):
 
         if wait:
             printLog("Waiting for gripper event")
-            self.gripperEvent.wait()
+            #self.gripperEvent.wait()
             printLog("Finished waiting for event")
         self.movementLock.release()
         printLog("Finished with openGripper")

@@ -340,11 +340,13 @@ class KinovaArm(QObject):
             return (-3, e)
     
     def activateGripper(self):
+        return (1, None)
         activate_input = {}
         action_name = "Activate"
         return self.pluginCommand(action_name, activate_input)
     
     def moveGripper(self, width, velocity=64, force=10):
+        return (1, None)
         maxWidth = 42
         minWidth = 0
         maxVal = 243 #255 is actually fully closed but the math is easier this way
